@@ -17,3 +17,7 @@ import Theaetetus.GraphHomology
 -- The matrix quadratic layer and the Gaussian periodization bound
 import Theaetetus.QuadraticAction
 import Theaetetus.Periodization
+
+-- Fiber products and Boltzmann coarse-graining
+import Theaetetus.Pullback
+import Theaetetus.CoarseGrain
