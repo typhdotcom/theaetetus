@@ -33,3 +33,6 @@ import Theaetetus.GraphInstances
 
 -- The residue tower: reductions, residue actions, tower maps
 import Theaetetus.Tower
+
+-- The defect on the tower: the cross-ratio law, CRT, the C₃ bridge
+import Theaetetus.CrossRatio
