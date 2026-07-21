@@ -1,24 +1,28 @@
 import Theaetetus.CrossRatio
 import Theaetetus.Submodular
-import Mathlib.Analysis.Normed.Group.Tannery
+import Theaetetus.PartitionTower
 
-/-! # Toward the classification: the kernel on the first carrier
+/-! # The classification: Euler-factorizable towers
 
-**Q3, first slice.** Call a carrier **Euler-factorizable** when its
-defect matrix vanishes identically — equivalently, when its residue
-complexity is a valuation on the divisibility lattice, the algebraic
-shadow of an Euler product. Q3 conjectures only rank zero qualifies.
+**Q3.** Call a tower **Euler-factorizable** when its defect matrix
+vanishes identically — equivalently, when its complexity is a
+valuation on the divisibility lattice, the algebraic shadow of an
+Euler product. This module settles the question at every level the
+program formalizes, by instantiating the abstract classification of
+`PartitionTower.lean`:
 
-On the first nontrivial carrier the question is now settled
-completely: through the carrier bridge
-(`cycle3_towerDefect_eq_defect`) and Q1 at rank one
-(`defect_neg_of_incomparable`, `defect_eq_zero_iff`), the tower
-defect of `C₃` is strictly negative at **every** incomparable pair
-(`cycle3_towerDefect_neg_of_incomparable`), and its kernel is
-**exactly** the chain relation (`cycle3_towerDefect_eq_zero_iff`) —
-the first complete kernel computation of a defect matrix at carrier
-level. In particular `C₃` is as far from Euler-factorizable as a
-carrier can be: the failure is witnessed everywhere off the chains. -/
+* **every positive-definite lattice action** is a partition tower
+  (`QuadLatticeAction.toPartitionTower`), so its intrinsic defect
+  vanishes identically iff the lattice is trivial
+  (`QuadLatticeAction.defect_forall_eq_zero_iff`);
+* **every graph carrier** instantiates through its intrinsic bundle,
+  and the cross-ratio law identifies its residue-complexity defect
+  with the tower's (`towerDefect_eq_partitionTower_defect`) — the
+  carrier classification (`towerDefect_forall_eq_zero_iff`) and the
+  asymptotic sign (`eventually_towerDefect_neg`) follow;
+* on **`C₃`** the per-pair kernel is computed exactly through the
+  carrier bridge and Q1 at rank one: the kernel is the chain
+  relation (`cycle3_towerDefect_eq_zero_iff`). -/
 
 namespace Theaetetus
 
@@ -39,25 +43,82 @@ theorem cycle3_towerDefect_eq_zero_iff (q q' : ℕ) [NeZero q] [NeZero q'] :
   rw [cycle3_towerDefect_eq_defect]
   exact defect_eq_zero_iff (by norm_num)
 
-/-! ## The classification, for every carrier
+/-! ## Every lattice action is a partition tower
 
-**Q3, closed at carrier level.** The saturation argument: at large
-resolution only the modal class survives, so along the staircase of
-coprime pairs `(n+1, n+2)` the tower defect converges to
-`−log Z(1)` — strictly negative whenever the carrier has a cycle.
-Hence the defect matrix of a carrier vanishes identically **iff**
-its cycle lattice is trivial (`towerDefect_forall_eq_zero_iff`):
-only the carriers with `b₁ = 0` are Euler-factorizable, exactly as
-Q3 conjectured. On carriers with a cycle the sign of Q1 appears
-asymptotically (`eventually_towerDefect_neg`) — in every rank. -/
-
-namespace IncidenceGraph
+The abstract classification instantiates at the full generality of
+the bundled lattice actions: sectors are the lattice points, energy
+the quadratic form, the modal sector the origin — positivity off the
+origin is the bundle's integral positivity, summability is the
+bundle's. **Q3 holds for every positive-definite lattice**: the
+intrinsic tower defect vanishes identically iff the lattice is
+trivial. What a graph carrier adds on top is the residue-complexity
+reading: its cross-ratio law *derives* this defect from the
+complexities of honest residue actions, rather than defining it. -/
 
 universe u v
+
+namespace QuadLatticeAction
+
+variable (Q : QuadLatticeAction.{u})
+
+/-- **Every positive-definite lattice action is a partition tower**:
+sectors the lattice points, energy the form, modal sector the
+origin. -/
+noncomputable def toPartitionTower : PartitionTower.{u} where
+  toSectorAction := Q.toSectorAction
+  modal := (0 : Q.Λ)
+  E_modal := Q.form_zero_left 0
+  E_pos := fun a ha => Q.form_posDef a ha
+
+/-- **Q3 FOR EVERY POSITIVE-DEFINITE LATTICE**: the intrinsic tower
+defect vanishes at every pair of resolutions iff the lattice is
+trivial. -/
+theorem defect_forall_eq_zero_iff :
+    (∀ q q' : ℕ, q ≠ 0 → q' ≠ 0 → Q.toPartitionTower.defect q q' = 0)
+      ↔ Subsingleton Q.Λ := by
+  rw [Q.toPartitionTower.defect_forall_eq_zero_iff]
+  exact ⟨fun h => ⟨fun a b => (h a).trans (h b).symm⟩,
+    fun h κ => @Subsingleton.elim _ h κ _⟩
+
+end QuadLatticeAction
+
+/-! ## The classification for every carrier — by instantiation
+
+The carrier's classification is no longer proved directly: the
+intrinsic bundle is a partition tower, the cross-ratio law reads the
+residue-complexity defect as the tower's defect, and the abstract
+theorems descend. Only the strict base excess keeps a carrier-level
+proof, because the carrier can say more (`β > 0`, not just
+`β ≥ 1`, through the scaled bundle's summability). -/
+
+namespace IncidenceGraph
 
 open Filter Topology
 
 variable (G : IncidenceGraph.{u, v})
+
+/-- **The carrier as a partition tower** — the lattice-action
+instance, specialized to the intrinsic bundle. -/
+noncomputable def toPartitionTower : PartitionTower.{v} :=
+  G.classQuadAction.toPartitionTower
+
+/-- The tower's scaled partition function is the carrier's. -/
+theorem toPartitionTower_Z (β : ℝ) :
+    G.toPartitionTower.Z β = G.classScaledPartFn β := rfl
+
+/-- **The cross-ratio law, read as instantiation**: the carrier's
+residue-complexity defect is its partition tower's defect. -/
+theorem towerDefect_eq_partitionTower_defect (q q' : ℕ)
+    [NeZero q] [NeZero q'] :
+    G.towerDefect q q' = G.toPartitionTower.defect q q' := by
+  rw [G.crossRatio_law q q']
+  rfl
+
+/-- **Saturation**: at infinite inverse temperature only the modal
+class survives — the abstract theorem, instantiated. -/
+theorem tendsto_classScaledPartFn_atTop :
+    Tendsto G.classScaledPartFn atTop (𝓝 1) :=
+  G.toPartitionTower.tendsto_Z_atTop
 
 /-- The β-scaled class partition function, in Boltzmann-sum form. -/
 private lemma classScaledPartFn_eq_tsum (β : ℝ) :
@@ -65,45 +126,10 @@ private lemma classScaledPartFn_eq_tsum (β : ℝ) :
       = ∑' κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ),
           Real.exp (-(β * G.harmonicEnergy κ)) := rfl
 
-/-- **Saturation**: at infinite inverse temperature only the modal
-class survives — the class Boltzmann sum tends to `1`, by dominated
-convergence against the `β = 1` weight. -/
-theorem tendsto_classScaledPartFn_atTop :
-    Tendsto G.classScaledPartFn atTop (𝓝 1) := by
-  classical
-  have hb : Summable (fun κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ) =>
-      Real.exp (-G.harmonicEnergy κ)) := G.classQuadAction.summable
-  have hlim := tendsto_tsum_of_dominated_convergence (𝓕 := atTop)
-    (f := fun (β : ℝ) (κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ)) =>
-      Real.exp (-(β * G.harmonicEnergy κ)))
-    (g := fun κ => if κ = 0 then (1 : ℝ) else 0)
-    (bound := fun κ => Real.exp (-G.harmonicEnergy κ)) hb
-    (by
-      intro κ
-      by_cases hκ : κ = 0
-      · subst hκ
-        simp only [G.harmonicEnergy_zero, mul_zero, neg_zero, Real.exp_zero]
-        exact tendsto_const_nhds
-      · simp only [if_neg hκ]
-        have hE : 0 < G.harmonicEnergy κ := G.harmonicEnergy_pos hκ
-        have h1 : Tendsto (fun β : ℝ => β * G.harmonicEnergy κ) atTop atTop :=
-          (tendsto_mul_const_atTop_of_pos hE).mpr tendsto_id
-        have h2 := Real.tendsto_exp_neg_atTop_nhds_zero.comp h1
-        simpa only [Function.comp_def] using h2)
-    (by
-      filter_upwards [eventually_ge_atTop (1 : ℝ)] with β hβ
-      intro κ
-      have hE : 0 ≤ G.harmonicEnergy κ := G.classQuadAction.form_self_nonneg κ
-      rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-      apply Real.exp_le_exp.mpr
-      nlinarith)
-  rw [tsum_ite_eq (0 : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ))
-    (fun _ => (1 : ℝ))] at hlim
-  exact hlim
-
 /-- **The base complexity is positive on a carrier with a cycle**: a
 nonzero class contributes strictly to the Boltzmann sum at any
-inverse temperature. -/
+inverse temperature — stronger than the abstract `β ≥ 1` bound,
+through the scaled bundle's summability. -/
 theorem one_lt_classScaledPartFn {β : ℝ} (hβ : 0 < β)
     (hnt : ∃ κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ), κ ≠ 0) :
     1 < G.classScaledPartFn β := by
@@ -135,56 +161,26 @@ theorem one_lt_classScaledPartFn {β : ℝ} (hβ : 0 < β)
     _ < ∑' κ, Real.exp (-(β * G.harmonicEnergy κ)) :=
         hf.tsum_lt_tsum hle hstrict hg
 
-/-- A carrier with trivial cycle lattice has trivial Boltzmann sums:
-only the modal class contributes, at every inverse temperature. -/
+/-- A carrier with trivial cycle lattice has trivial Boltzmann sums —
+the abstract collapse, instantiated. -/
 theorem classScaledPartFn_eq_one_of_subsingleton
-    [Subsingleton ((G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ))] (β : ℝ) :
-    G.classScaledPartFn β = 1 := by
-  rw [classScaledPartFn_eq_tsum,
-    tsum_eq_single 0 (fun κ hκ => absurd (Subsingleton.elim κ 0) hκ),
-    G.harmonicEnergy_zero]
-  simp
-
-private lemma coprime_succ_succ (n : ℕ) : Nat.Coprime (n + 1) (n + 2) :=
-  Nat.coprime_self_add_right.mpr (Nat.coprime_one_right _)
+    [hsub : Subsingleton ((G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ))] (β : ℝ) :
+    G.classScaledPartFn β = 1 :=
+  G.toPartitionTower.Z_eq_one_of_forall_eq
+    (fun κ => @Subsingleton.elim _ hsub κ _) β
 
 /-- **The saturation limit of the defect**: along the staircase of
 coprime pairs `(n+1, n+2)` the tower defect converges to minus the
-base complexity `−log Z(1)` — three of the four cross-ratio terms
-saturate, and the shared trivial constraint remains. -/
+base complexity `−log Z(1)` — the abstract staircase limit, read
+through the cross-ratio bridge. -/
 theorem tendsto_towerDefect_succ :
     Tendsto (fun n : ℕ => G.towerDefect (n + 1) (n + 2)) atTop
       (𝓝 (-Real.log (G.classScaledPartFn 1))) := by
-  have hzero : ∀ a : ℕ → ℕ, Tendsto a atTop atTop →
-      Tendsto (fun n => Real.log (G.classScaledPartFn ((a n : ℝ) ^ 2))) atTop
-        (𝓝 0) := by
-    intro a ha
-    have hcast : Tendsto (fun n => ((a n : ℝ))) atTop atTop :=
-      tendsto_natCast_atTop_atTop.comp ha
-    have hsq : Tendsto (fun n => ((a n : ℝ)) ^ 2) atTop atTop :=
-      (tendsto_pow_atTop two_ne_zero).comp hcast
-    have hZ : Tendsto (fun n => G.classScaledPartFn ((a n : ℝ) ^ 2)) atTop
-        (𝓝 1) := G.tendsto_classScaledPartFn_atTop.comp hsq
-    have hlog := (Real.continuousAt_log one_ne_zero).tendsto.comp hZ
-    simpa only [Function.comp_def, Real.log_one] using hlog
-  have hA := hzero (fun n => n + 1) (tendsto_add_atTop_nat 1)
-  have hB := hzero (fun n => n + 2) (tendsto_add_atTop_nat 2)
-  have hL := hzero (fun n => (n + 1) * (n + 2))
-    (tendsto_atTop_mono (fun n => by nlinarith) (tendsto_add_atTop_nat 1))
-  have hlaw : ∀ n : ℕ, G.towerDefect (n + 1) (n + 2)
-      = (Real.log (G.classScaledPartFn (((n + 1 : ℕ) : ℝ) ^ 2))
-          + Real.log (G.classScaledPartFn (((n + 2 : ℕ) : ℝ) ^ 2)))
-        - (Real.log (G.classScaledPartFn 1)
-          + Real.log (G.classScaledPartFn ((((n + 1) * (n + 2) : ℕ) : ℝ) ^ 2))) := by
-    intro n
-    have h := G.crossRatio_law (n + 1) (n + 2)
-    rw [show Nat.gcd (n + 1) (n + 2) = 1 from coprime_succ_succ n,
-      Nat.Coprime.lcm_eq_mul (coprime_succ_succ n)] at h
-    simpa using h
-  simp only [hlaw]
-  have hlim := (hA.add hB).sub
-    ((tendsto_const_nhds (x := Real.log (G.classScaledPartFn 1))).add hL)
-  simpa using hlim
+  have h := G.toPartitionTower.tendsto_defect_succ
+  have heq : ∀ n : ℕ, G.toPartitionTower.defect (n + 1) (n + 2)
+      = G.towerDefect (n + 1) (n + 2) := fun n =>
+    (G.towerDefect_eq_partitionTower_defect (n + 1) (n + 2)).symm
+  simpa only [heq] using h
 
 /-- **The sign appears asymptotically in every rank**: on a carrier
 with a cycle, the tower defect is eventually strictly negative along
@@ -192,39 +188,32 @@ the staircase — Q1's sign, at the saturation end, for every carrier. -/
 theorem eventually_towerDefect_neg
     (hnt : ∃ κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ), κ ≠ 0) :
     ∀ᶠ n : ℕ in atTop, G.towerDefect (n + 1) (n + 2) < 0 := by
-  have hpos : 0 < Real.log (G.classScaledPartFn 1) :=
-    Real.log_pos (G.one_lt_classScaledPartFn one_pos hnt)
-  exact G.tendsto_towerDefect_succ.eventually_lt_const (by linarith)
+  obtain ⟨κ₀, hκ₀⟩ := hnt
+  filter_upwards [G.toPartitionTower.eventually_defect_neg ⟨κ₀, hκ₀⟩] with n hn
+  rwa [G.towerDefect_eq_partitionTower_defect]
 
 /-- **Q3, CLASSIFIED FOR EVERY CARRIER**: the defect matrix of a
 carrier vanishes identically iff its cycle lattice is trivial — the
-Euler-factorizable carriers are exactly those with `b₁ = 0`. One
-direction is the saturation limit against a nonzero class; the other
-is the collapse of every Boltzmann sum to the modal term. -/
+Euler-factorizable carriers are exactly those with `b₁ = 0`. The
+abstract classification, read through the cross-ratio bridge. -/
 theorem towerDefect_forall_eq_zero_iff :
     (∀ (q q' : ℕ) [NeZero q] [NeZero q'], G.towerDefect q q' = 0)
       ↔ Subsingleton ((G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ)) := by
   constructor
   · intro h
-    by_contra hns
-    rw [not_subsingleton_iff_nontrivial] at hns
-    have hnt : ∃ κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ), κ ≠ 0 :=
-      exists_ne 0
-    have hpos : 0 < Real.log (G.classScaledPartFn 1) :=
-      Real.log_pos (G.one_lt_classScaledPartFn one_pos hnt)
-    have hlim := G.tendsto_towerDefect_succ
-    rw [show (fun n : ℕ => G.towerDefect (n + 1) (n + 2)) = fun _ => 0 from
-      funext fun n => h (n + 1) (n + 2)] at hlim
-    have h0 := tendsto_nhds_unique hlim tendsto_const_nhds
-    linarith
+    have habs : ∀ q q' : ℕ, q ≠ 0 → q' ≠ 0 →
+        G.toPartitionTower.defect q q' = 0 := by
+      intro q q' hq hq'
+      haveI : NeZero q := ⟨hq⟩
+      haveI : NeZero q' := ⟨hq'⟩
+      rw [← G.towerDefect_eq_partitionTower_defect]
+      exact h q q'
+    have htriv := (G.toPartitionTower.defect_forall_eq_zero_iff).mp habs
+    exact ⟨fun a b => (htriv a).trans (htriv b).symm⟩
   · intro hsub q q' _ _
-    haveI := hsub
-    rw [G.crossRatio_law q q',
-      G.classScaledPartFn_eq_one_of_subsingleton,
-      G.classScaledPartFn_eq_one_of_subsingleton,
-      G.classScaledPartFn_eq_one_of_subsingleton,
-      G.classScaledPartFn_eq_one_of_subsingleton]
-    simp
+    rw [G.towerDefect_eq_partitionTower_defect]
+    exact (G.toPartitionTower.defect_forall_eq_zero_iff).mpr
+      (fun κ => @Subsingleton.elim _ hsub κ _) q q' (NeZero.ne q) (NeZero.ne q')
 
 end IncidenceGraph
 

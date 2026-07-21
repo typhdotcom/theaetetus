@@ -63,13 +63,24 @@ negative.
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
   Q1's frontier is orthogonal indecomposability, not rank.
-- **The classification.** The Euler-factorizable carriers are
-  exactly those with trivial cycle lattice
-  (`towerDefect_forall_eq_zero_iff`): at large resolution only the
-  modal class survives (`tendsto_classScaledPartFn_atTop`), so on
-  any carrier with a cycle the defect converges along the staircase
-  `(n+1, n+2)` to `−log Z(1) < 0` and is eventually strictly
-  negative (`tendsto_towerDefect_succ`, `eventually_towerDefect_neg`).
+- **The classification, through the partition tower.** The
+  argument consumes only three fields — a modal sector, strictly
+  positive energy off it, a summable Boltzmann weight — isolated as
+  the abstract **partition tower** (`PartitionTower`), whose defect
+  is the cross-ratio of scaled partition functions and whose
+  classification is proved once at that level
+  (`defect_forall_eq_zero_iff`): the defect vanishes identically
+  iff only the modal sector exists. At saturation only the modal
+  sector survives (`tendsto_Z_atTop`), so on any nontrivial tower
+  the defect converges along the staircase `(n+1, n+2)` to
+  `−log Z(1) < 0` and is eventually strictly negative
+  (`tendsto_defect_succ`, `eventually_defect_neg`). Instances:
+  rank-one theta (`defect_eq_thetaTower_defect`), every graph
+  carrier — where the cross-ratio law identifies the
+  residue-complexity defect with the tower's
+  (`towerDefect_eq_partitionTower_defect`,
+  `towerDefect_forall_eq_zero_iff`) — and **every positive-definite
+  lattice action** (`QuadLatticeAction.toPartitionTower`).
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
@@ -107,12 +118,16 @@ large resolution, no duality.
   indefinite.) Until such a theorem exists it is a symmetric
   association statistic, not a linking form. Two-sided bounds and
   the saturation limit: done.
-- **Q3 — Euler-factorizable carriers.** **Classified**, for every
-  carrier in the formalized class: `D ≡ 0` iff the cycle lattice is
-  trivial (`b₁ = 0`). The classification does not settle the
-  per-pair kernel on a nontrivial carrier — Q1 would force it to be
-  exactly the chain relation, as it is on `C₃`. The general
-  positive-definite lattice awaits its carrier object.
+- **Q3 — Euler-factorizable carriers.** **Classified.** Abstractly:
+  a partition tower's defect vanishes identically iff only its
+  modal sector exists. Instantiated: for every positive-definite
+  lattice action, and for every graph carrier (`D ≡ 0` iff
+  `b₁ = 0`). The classification does not settle the per-pair kernel
+  on a nontrivial carrier — Q1 would force it to be exactly the
+  chain relation, as it is on `C₃`. Remaining for general lattices:
+  the residue-complexity reading — deriving the cross-ratio law
+  from honest residue actions on `L ⧸ qL`, as the graph carriers
+  do, rather than defining the defect by it.
 - **Q4 — the inverse problem.** The scalar defect factors through
   the theta function, so theta-equivalent lattices have identical
   defect matrices — the ceiling is theta-equivalence, and no scalar
@@ -161,11 +176,14 @@ counterexample becomes a theorem. Version control is jujutsu.
 
 ## History
 
-Built in seven milestones, `M0`–`M6` (labels that still appear in
+Built in eight milestones, `M0`–`M7` (labels that still appear in
 docstrings): scaffold; the scalar core and chain-vanishing; the
 witness `θ(4/3)·θ(3) < θ(1/3)·θ(12)`; the sign at `(2,3)` for all
 scales; the carrier — graph homology, the residue tower, the
 cross-ratio law, the rank-two witness; outward — Q1 closed at rank
 one, the pairing, the rank function, the kernel on `C₃`; the
 reconciliation — the defect as conditional association, the sign
-for diagonal forms in every rank, Q3 classified for every carrier.
+for diagonal forms in every rank, Q3 classified for every carrier;
+the interface — the partition tower, the classification proved once
+abstractly, with rank one, every graph carrier, and every
+positive-definite lattice action as instances.

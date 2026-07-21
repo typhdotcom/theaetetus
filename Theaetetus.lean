@@ -52,7 +52,10 @@ import Theaetetus.Tower
 -- The defect on the tower: the cross-ratio law, CRT, the C₃ bridge
 import Theaetetus.CrossRatio
 
--- Q3 classified: Euler-factorizable carriers are exactly b₁ = 0
+-- The abstract partition tower: the saturation interface behind Q3
+import Theaetetus.PartitionTower
+
+-- Q3 classified by instantiation: lattices, carriers, and C₃'s kernel
 import Theaetetus.Classification
 
 -- Scalar bounds and the rank-two witness on the theta graph
