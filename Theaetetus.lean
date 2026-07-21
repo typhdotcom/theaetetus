@@ -36,3 +36,7 @@ import Theaetetus.Tower
 
 -- The defect on the tower: the cross-ratio law, CRT, the C₃ bridge
 import Theaetetus.CrossRatio
+
+-- Scalar bounds and the rank-two witness on the theta graph
+import Theaetetus.ThetaBounds
+import Theaetetus.RankTwo

@@ -245,9 +245,16 @@ New program-native terms: *defect matrix*, *Euler-factorizable*,
   `q·q′ = gcd·lcm` — plus geometric tails for `s ≥ 1/2`.)
   Then arbitrary incomparable pairs at rank one (Q1, rank one) —
   **open**; the same two-branch scheme is expected to generalize.
-- **M4 — the carrier.** Port the graph layer; restate and re-prove
+- **M4 — the carrier.** ✅ Port the graph layer; restate and re-prove
   the general cross-ratio law and the CRT coupling reading; first
   rank-two witnesses on the theta graph.
+  (Ten files, ~5,000 lines: the substrate/homology/carrier/tower
+  ports, `crossRatio_law` + `h1ReductionCRT` in `CrossRatio.lean`,
+  the C₃ bridge `cycle3_towerDefect_eq_defect` reducing the carrier
+  defect to the rank-one program, and `RankTwo.lean`: the theta
+  graph's hexagonal form `(a² − ab + b²)/3`, the factorization
+  `hexTheta s ≤ θ(s/3)·θ(s/4)` via the periodization bound, and
+  `thetaGraph_towerDefect_neg` — the first rank-two witness.)
 - **M5 — outward.** The prime pairing's asymptotics (Q2), the
   classification (Q3), and the structural shape (Q5).
 
