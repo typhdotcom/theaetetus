@@ -72,8 +72,8 @@ negative.
   defects, so every positive diagonal form inherits the rank-one
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
-  Q1's frontier is failure of orthogonal diagonalization into
-  rank-one summands, not rank.
+  The *formalized* frontier is failure of orthogonal
+  diagonalization into rank-one summands, not rank.
 - **The classification, through the partition tower.** The
   argument consumes only three fields — a distinguished zero-energy
   sector, strictly positive energy at every other sector, a
@@ -107,72 +107,89 @@ negative.
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here
 lives in the Poisson-summation corrections the continuum forgets —
-which is why the all-scale sign proofs pass through the Jacobi
-duality `θ(π²/α) = √(α/π)·θ(α)` before closing on rational
-arithmetic. The classification needs less: modal concentration at
-large resolution, no duality.
+which is why the formalized rank-one all-scale proofs pass through
+the Jacobi duality `θ(π²/α) = √(α/π)·θ(α)` before closing on
+rational arithmetic. The classification needs less: modal
+concentration at large resolution, no duality.
 
 ## The questions
 
-- **Q1 — the sign.** `D_L < 0` at every incomparable pair, for
-  every **positive-rank** positive-definite `L` (rank zero is
-  Euler-factorizable, by Q3). Rank one: **done**. Diagonal forms,
-  every rank ≥ 1: **done**. On every nontrivial partition tower the
-  sign eventually holds along the staircase; at every pair it is
-  open beyond one rank-two witness — the frontier is forms with no
-  orthogonal splitting into rank-one summands.
-- **Q2 — the pairing on primes.** Closed forms and asymptotics
-  beyond saturation; and what geometric structure the pairing
-  carries — whether it is conditionally negative definite, hence a
-  squared Hilbert distance between primes, or whether its
-  saturation deficit `log θ(s) − ⟨p,q⟩` is a positive-semidefinite
-  similarity kernel. (The pairing itself is not one: `⟨p,p⟩ = 0`
-  (`defect_self`) with positive off-diagonal makes every `2×2`
-  principal block indefinite.) Until such a theorem exists it is a symmetric
-  association statistic, not a linking form. Two-sided bounds and
-  the saturation limit: done.
-- **Q3 — Euler-factorizable carriers.** **Classified.** Abstractly:
-  a partition tower's defect vanishes identically iff its modal
-  sector is the only sector. Instantiated: for every positive-definite
-  lattice action, and for every graph carrier (`D ≡ 0` iff
-  `b₁ = 0`). The classification does not settle the per-pair kernel
-  on a nontrivial carrier — Q1 would force it to be exactly the
-  chain relation, as it is on `C₃`. Remaining for general lattices:
-  the residue-complexity reading — deriving the cross-ratio law
-  from honest residue actions on `L ⧸ qL`, as the graph carriers
-  do, rather than defining the defect by it.
-- **Q4 — the inverse problem.** The scalar defect factors through
-  the theta function, so theta-equivalent lattices have identical
-  defect matrices — theta-equivalence is an unavoidable
-  identification, and no unrestricted scalar Torelli theorem is
-  possible. The honest questions: what theta
-  data does the defect matrix recover, and what residue-refined
-  enhancement — the coset masses over `L ⧸ qL`, or their finite
-  Fourier transform — sees beyond it? Untouched.
-- **Q5 — the structural shape.** (a) `K` is normalized, monotone
-  along divisibility, and submodular over `gcd`/`lcm` — strictly
-  off chains (`resComplexity_strictSubmodular`); restricted to squarefree
-  support this is the polymatroid shape, though that set-function
-  restriction is not itself formalized. `K` is a surprisal, not an
-  entropy, and
-  nothing yet places these restrictions in the entropic cone; the
-  honest questions are whether they are (almost) entropic, and
-  which inequalities beyond submodularity they satisfy. (b) The
-  higher interaction structure. An earlier version of this question
-  asked for `D` as a 2-cocycle on the order complex; that question
-  was badly posed and is retired — `D` is symmetric and vanishes on
-  chains (`defect_comm`, `defect_eq_zero_of_dvd`), the wrong shape
-  for an alternating cochain on a complex built from chains. The
-  right object is the symmetric discrete mixed Hessian of `K` on
-  the prime-exponent lattice, with higher mixed differences
-  `Δ_{p₁}⋯Δ_{p_k} K` measuring `k`-prime coupling. Its algebra —
-  rectangle identities from commuting differences, and the kernel
-  characterization (all cross-prime differences vanish iff `K` is a
-  constant plus one-prime terms) — is the next formalization layer,
-  not open mathematics. The open questions begin after it: signs
-  and total positivity of the higher differences, inequalities
-  beyond pairwise submodularity, and which Hessians lattice theta
-  functions can realize.
+- **Q1 — strictness and generic residue actions.** Regev and
+  Stephens-Davidowitz prove that two sublattices `M,N ⊆ L` are
+  positively correlated under normalized Gaussian mass:
+  `ρ(M)·ρ(N) ≤ ρ(L)·ρ(M ∩ N)`
+  ([*An Inequality for Gaussians on Lattices*](https://doi.org/10.1137/15M1052226),
+  Theorem 5.1). Apply this inside `gL`, with `g = gcd(q,q′)`, to
+  `qL` and `q′L`; their intersection is `lcm(q,q′)L`, and
+  quadratic scaling gives exactly `D_L(q,q′) ≤ 0`. This implication
+  is not yet formalized. A generic residue tower on `L ⧸ qL` would
+  make the correlation an intrinsic event statement and supply the
+  general-lattice cross-ratio law. The remaining sign question is the
+  equality case: on a positive-rank lattice, is `D_L(q,q′) = 0` iff
+  `q ∣ q′` or `q′ ∣ q`?
+
+- **Q2 — sparse spectral rigidity.** Put
+  `F(m) := log Z(m²)` for `m ≥ 1`. Saturation gives an inverse
+  formula using only coprime defect entries:
+
+      F(m) = lim_{k→∞} D(m, km+1) − lim_{n→∞} D(n+1, n+2).
+
+  This remains to be formalized at `PartitionTower` level. Joint
+  saturation of the prime pairing recovers `F(1)`, while for fixed
+  prime `p`, the limit along primes `q → ∞`, `q ≠ p`, recovers `F(p)`
+  through `lim ⟨p,q⟩ = F(1) − F(p)`. Do these prime samples determine
+  the locally finite energy spectrum by successively extracting its
+  least energy and multiplicity? Equivalently, does the full
+  prime-pairing matrix determine the theta series, making equality of
+  scalar defect matrices equivalent to theta-equivalence? Does one
+  infinite prime row already suffice, and what is the minimal
+  determining subset of defect entries?
+
+- **Q3 — the residue-refined inverse problem.** Scalar defect data
+  cannot distinguish theta-equivalent lattices; sparse spectral
+  rigidity would make theta-equivalence exactly its kernel. Which
+  refinement of the modal scalar — the complete coset-mass vector on
+  `L ⧸ qL`, its finite Fourier transform, or a smaller collection of
+  characters — determines the quadratic lattice up to isometry? For
+  graph carriers, does the corresponding invariant determine graph
+  isomorphism, cycle-matroid equivalence, or a coarser relation?
+
+- **Q4 — scale-dependent kernel geometry.** For which scales is the
+  prime pairing conditionally negative definite, and for which scales
+  is its saturation deficit positive semidefinite? Numerical evidence
+  indicates that neither property holds uniformly in the scale, already
+  on the rank-one prime set `{2,3,5}` at `s = 3/100`. Are the valid
+  scale sets intervals with a critical threshold? Is there a natural
+  centering or transform with negative type, or a different kernel
+  whose geometry is stable across all scales?
+
+- **Q5 — thermodynamic curvature.** A continuous strengthening of
+  the sign asks whether
+
+      u ↦ log Z_L(exp u)
+
+  is convex for every positive-definite lattice. Its second
+  derivative is the fluctuation inequality
+  `β² Var_β(E) − β ⟨E⟩_β ≥ 0`. Convexity would imply every
+  discrete defect inequality at once, for arbitrary real resolution
+  ratios, and would explain the sign as thermodynamic curvature rather
+  than a collection of arithmetic comparisons. The Gibbs
+  expectation/variance interface and multivariate Poisson summation
+  provide the analytic ingredients for this question.
+
+- **Q6 — higher association and realizability.** The correct
+  algebraic object is the symmetric mixed-difference hierarchy of
+  `K` on the prime-exponent lattice: `Δ_{p₁}⋯Δ_{p_k}K` measures
+  `k`-prime coupling. Rectangle identities and the characterization
+  of vanishing cross-prime differences are formalization work, not
+  open mathematics. Numerical evidence in rank one indicates that the
+  three-prime difference at `2,3,5` changes sign with the scale, so
+  the relevant structure is a system of sign chambers rather than a
+  uniform alternating-sign law. Which asymptotic regimes and
+  inequalities survive beyond pairwise correlation, and which mixed
+  Hessians are realizable by lattice theta functions? Because `K` is
+  an intersection surprisal rather than an entropy, entropic-cone
+  membership is a separate representation problem.
 
 ## The map
 
