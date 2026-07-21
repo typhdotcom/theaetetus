@@ -240,7 +240,11 @@ New program-native terms: *defect matrix*, *Euler-factorizable*,
   (`Witness.lean`: `theta_crossRatio_lt`, `defect_witness`.)
 - **M3 — the first native theorem.** `D_s(2,3) < 0` for **all**
   `s > 0` — the birth certificate: a statement Meno never proved.
-  Then arbitrary incomparable pairs at rank one (Q1, rank one).
+  ✅ (`Sign.lean`: `defect_two_three_neg`, via the duality
+  involution `s ↔ π²/36s` — the prefactors cancel because
+  `q·q′ = gcd·lcm` — plus geometric tails for `s ≥ 1/2`.)
+  Then arbitrary incomparable pairs at rank one (Q1, rank one) —
+  **open**; the same two-branch scheme is expected to generalize.
 - **M4 — the carrier.** Port the graph layer; restate and re-prove
   the general cross-ratio law and the CRT coupling reading; first
   rank-two witnesses on the theta graph.
