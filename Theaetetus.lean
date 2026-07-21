@@ -9,6 +9,9 @@ import Theaetetus.Witness
 -- The sign at (2, 3), all scales: the birth certificate
 import Theaetetus.Sign
 
+-- Q1 closed at rank one: strict submodularity at every incomparable pair
+import Theaetetus.Submodular
+
 -- The graph substrate, the theta instance, and the ℤ-homology spine
 import Theaetetus.IncidenceGraph
 import Theaetetus.ThetaGraph
