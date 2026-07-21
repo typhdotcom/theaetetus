@@ -12,6 +12,12 @@ import Theaetetus.Sign
 -- Q1 closed at rank one: strict submodularity at every incomparable pair
 import Theaetetus.Submodular
 
+-- Q1 for diagonal forms, every rank: orthogonal sums add defects
+import Theaetetus.Diagonal
+
+-- The defect as conditional association of divisibility events
+import Theaetetus.Factorization
+
 -- Q2: the prime pairing, its bounds, and saturation at the base
 import Theaetetus.Pairing
 
@@ -46,7 +52,7 @@ import Theaetetus.Tower
 -- The defect on the tower: the cross-ratio law, CRT, the C₃ bridge
 import Theaetetus.CrossRatio
 
--- Q3, first slice: the complete kernel of the defect matrix on C₃
+-- Q3 classified: Euler-factorizable carriers are exactly b₁ = 0
 import Theaetetus.Classification
 
 -- Scalar bounds and the rank-two witness on the theta graph

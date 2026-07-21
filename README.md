@@ -25,8 +25,11 @@ divisibility lattice,
 
 `D ≡ 0` would say `q ↦ K(q)` is a valuation — the algebraic shadow
 of an Euler product, the resolution tower localizing over the
-primes. It never is: the primes couple through the geometry, and the
-coupling has a sign.
+primes. It never is, unless there is nothing to couple: a carrier's
+defect matrix vanishes identically **iff** its cycle lattice is
+trivial (`towerDefect_forall_eq_zero_iff`). Wherever there is
+geometry, the primes couple through it — and wherever the sign is
+proved, it is negative.
 
 ## The theorems
 
@@ -37,13 +40,31 @@ coupling has a sign.
 - **The coupling reading.** Chinese remainder on the tower: the
   `lcm`-resolution *is* the fiber product of the two coarser ones
   over their shared base (`h1ReductionCRT`). The state space
-  factors; the defect measures that the Gibbs measure does not.
+  factors; the defect is exactly the log association ratio by which
+  the Gibbs measure declines to follow (`defect_eq_log_ratio`). The
+  divisibility events `q ∣ X` are honest Gibbs masses
+  (`resProb_eq_event_mass`), and conditioned on their shared
+  constraint an incomparable pair is strictly positively associated
+  (`condProb_mul_lt_of_incomparable`); coprime events correlate
+  unconditionally (`resProb_mul_lt_of_coprime`).
 - **The sign, rank one, closed.** `D_s(q,q′) < 0` at every
   incomparable pair and every scale, zero exactly on chains — the
   defect detects divisibility (`defect_neg_of_incomparable`,
   `defect_eq_zero_iff`), and residue complexity is a strictly
   submodular rank function on the divisibility lattice
   (`resComplexity_strictSubmodular`).
+- **The sign, diagonal forms, every rank.** Orthogonal sums add
+  defects, so every positive diagonal form inherits the rank-one
+  sign in every rank ≥ 1: strictly negative off chains, zero on
+  them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
+  Q1's frontier is indecomposability — cross terms — not rank.
+- **The classification.** The Euler-factorizable carriers are
+  exactly those with trivial cycle lattice
+  (`towerDefect_forall_eq_zero_iff`): at large resolution only the
+  modal class survives (`tendsto_classScaledPartFn_atTop`), so on
+  any carrier with a cycle the defect converges along the staircase
+  `(n+1, n+2)` to `−log Z(1) < 0` and is eventually strictly
+  negative (`tendsto_towerDefect_succ`, `eventually_towerDefect_neg`).
 - **The prime pairing.** `⟨p,q⟩ := −D` is strictly positive for
   distinct primes and saturates at the base complexity `log θ(s)`
   along coprime pairs at infinity (`pairing_pos`, `tendsto_pairing`).
@@ -61,14 +82,19 @@ which is why every proof passes through the Jacobi duality
 ## The questions
 
 - **Q1 — the sign.** `D_L < 0` at every incomparable pair for every
-  positive-definite `L`. Rank one: **done**. Rank ≥ 2: one witness.
+  positive-definite `L`. Rank one: **done**. Diagonal forms, every
+  rank: **done**. On every carrier the sign holds asymptotically
+  along the staircase; at every pair it is open beyond one rank-two
+  witness — the frontier is cross terms.
 - **Q2 — the pairing on primes.** Closed forms, asymptotics beyond
   saturation, and whether some normalization behaves like a linking
   invariant (primes as knots). Two-sided bounds and the saturation
   limit: done.
-- **Q3 — Euler-factorizable carriers.** Classify `L` with `D_L ≡ 0`;
-  conjecturally only rank zero. The kernel on `C₃` is computed
-  exactly.
+- **Q3 — Euler-factorizable carriers.** **Classified**, for every
+  carrier in the formalized class: `D ≡ 0` iff the cycle lattice is
+  trivial (`b₁ = 0`). The per-pair kernel on a nontrivial carrier is
+  Q1's question — on `C₃` it is the chain relation, exactly. The
+  general positive-definite lattice awaits its carrier object.
 - **Q4 — the inverse problem.** What does the defect matrix know
   about `L`? A torsion-level Torelli question. Untouched.
 - **Q5 — the structural shape.** (a) `K` as a polymatroid rank
@@ -95,9 +121,11 @@ counterexample becomes a theorem. Version control is jujutsu.
 
 ## History
 
-Built in six milestones, `M0`–`M5` (labels that still appear in
+Built in seven milestones, `M0`–`M6` (labels that still appear in
 docstrings): scaffold; the scalar core and chain-vanishing; the
 witness `θ(4/3)·θ(3) < θ(1/3)·θ(12)`; the sign at `(2,3)` for all
 scales; the carrier — graph homology, the residue tower, the
 cross-ratio law, the rank-two witness; outward — Q1 closed at rank
-one, the pairing, the rank function, the kernel on `C₃`.
+one, the pairing, the rank function, the kernel on `C₃`; the
+reconciliation — the defect as conditional association, the sign
+for diagonal forms in every rank, Q3 classified for every carrier.
