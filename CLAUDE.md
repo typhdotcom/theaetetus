@@ -12,8 +12,7 @@ Ground rules, restated for every session:
   order. New modules join that list; no markdown duplicates it —
   the compiled import list is the only index.
 - Vocabulary is arithmetic and information-theoretic — defect,
-  carrier, resolution, tower, pairing, complexity. No physics
-  vocabulary.
+  carrier, resolution, tower, pairing, complexity.
 - Where a desired statement fails, keep the counterexample as a
   theorem.
 - Version control is jujutsu: `jj status`, `jj diff --git`,
