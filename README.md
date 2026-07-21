@@ -72,7 +72,8 @@ negative.
   defects, so every positive diagonal form inherits the rank-one
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
-  Q1's frontier is orthogonal indecomposability, not rank.
+  Q1's frontier is failure of orthogonal diagonalization into
+  rank-one summands, not rank.
 - **The classification, through the partition tower.** The
   argument consumes only three fields — a distinguished zero-energy
   sector, strictly positive energy at every other sector, a
