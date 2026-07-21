@@ -223,8 +223,7 @@ theorem hexTheta_le {s : ℝ} (hs : 0 < s) :
       theta (s / 3) * Real.exp (-(s / 4 * (b : ℝ) ^ 2))) := by
     refine ((summable_theta (s / 4) hs4).mul_left (theta (s / 3))).congr
       fun b => ?_
-    congr 1
-    ring
+    rw [show -(s / 4) * (b : ℝ) ^ 2 = -(s / 4 * (b : ℝ) ^ 2) from by ring]
   have hleft : Summable (fun b : ℤ =>
       ∑' a : ℤ, Real.exp (-(s / 3 * ((a : ℝ) + -((b : ℝ)) / 2) ^ 2))
         * Real.exp (-(s / 4 * (b : ℝ) ^ 2))) := by

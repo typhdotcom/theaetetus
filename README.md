@@ -25,18 +25,22 @@ divisibility lattice,
 
 `D ≡ 0` would say `q ↦ K(q)` is a valuation — the algebraic shadow
 of an Euler product, the resolution tower localizing over the
-primes. It never is, unless there is nothing to couple: a carrier's
-defect matrix vanishes identically **iff** its cycle lattice is
-trivial (`towerDefect_forall_eq_zero_iff`). Wherever there is
-geometry, the primes couple through it — and wherever the sign is
-proved, it is negative.
+primes. For the carrier class formalized here it never is, unless
+there is nothing to couple: a carrier's defect matrix vanishes
+identically **iff** its cycle lattice is trivial
+(`towerDefect_forall_eq_zero_iff`). Wherever there is geometry, the
+primes couple through it — and wherever the sign is proved, it is
+negative.
 
 ## The theorems
 
-- **The cross-ratio law.** On the cycle lattice `H¹(G;ℤ)` of any
-  finite multigraph with its harmonic energy,
+- **The cross-ratio law.** On the cohomology lattice `H¹(G;ℤ)` of
+  any finite multigraph with its harmonic energy,
   `D(q,q′) = log [Z(q²)·Z(q′²) / (Z(gcd²)·Z(lcm²))]` — squares of
-  resolutions forced by quadratic energy (`crossRatio_law`).
+  resolutions forced by quadratic energy (`crossRatio_law`). Here
+  and below `Z(β)` abbreviates the carrier's class Boltzmann sum at
+  inverse temperature `β`, base scale normalized to `1`; `θ(s)` is
+  its rank-one case.
 - **The coupling reading.** Chinese remainder on the tower: the
   `lcm`-resolution *is* the fiber product of the two coarser ones
   over their shared base (`h1ReductionCRT`) — arithmetic descent is
@@ -58,7 +62,7 @@ proved, it is negative.
   defects, so every positive diagonal form inherits the rank-one
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
-  Q1's frontier is indecomposability — cross terms — not rank.
+  Q1's frontier is orthogonal indecomposability, not rank.
 - **The classification.** The Euler-factorizable carriers are
   exactly those with trivial cycle lattice
   (`towerDefect_forall_eq_zero_iff`): at large resolution only the
@@ -69,8 +73,9 @@ proved, it is negative.
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
-  `tendsto_pairing`); the carrier-level analogue is the staircase
-  limit `−log Z(1)` in the classification.
+  `tendsto_pairing`); at carrier level the same saturation appears
+  as `−D(n+1, n+2) → log Z(1)` along the coprime staircase —
+  equivalently `D → −log Z(1)` (`tendsto_towerDefect_succ`).
 - **Rank two.** On the theta graph the cycle Gram inverts to the
   hexagonal form `(a² − ab + b²)/3`, and the defect is strictly
   negative at `(2,3)` (`thetaGraph_towerDefect_neg`), through the
@@ -90,21 +95,31 @@ large resolution, no duality.
   positive-definite `L`. Rank one: **done**. Diagonal forms, every
   rank: **done**. On every carrier the sign holds asymptotically
   along the staircase; at every pair it is open beyond one rank-two
-  witness — the frontier is cross terms.
+  witness — the frontier is forms with no orthogonal splitting into
+  rank-one summands.
 - **Q2 — the pairing on primes.** Closed forms and asymptotics
-  beyond saturation; and what would earn the pairing a geometric
-  name — conditional negative definiteness of the centered pairing
-  matrix, or a Hilbert-space embedding of the primes. Until such a
-  theorem exists it is a correlation kernel, not a linking form.
-  Two-sided bounds and the saturation limit: done.
+  beyond saturation; and what geometric structure the pairing
+  carries — whether it is conditionally negative definite, hence a
+  squared Hilbert distance between primes, or whether its
+  saturation deficit `log θ(s) − ⟨p,q⟩` is a positive-semidefinite
+  similarity kernel. (The pairing itself is not one: `⟨p,p⟩ = 0`
+  with positive off-diagonal makes every `2×2` principal block
+  indefinite.) Until such a theorem exists it is a symmetric
+  association statistic, not a linking form. Two-sided bounds and
+  the saturation limit: done.
 - **Q3 — Euler-factorizable carriers.** **Classified**, for every
   carrier in the formalized class: `D ≡ 0` iff the cycle lattice is
   trivial (`b₁ = 0`). The classification does not settle the
   per-pair kernel on a nontrivial carrier — Q1 would force it to be
   exactly the chain relation, as it is on `C₃`. The general
   positive-definite lattice awaits its carrier object.
-- **Q4 — the inverse problem.** What does the defect matrix know
-  about `L`? A torsion-level Torelli question. Untouched.
+- **Q4 — the inverse problem.** The scalar defect factors through
+  the theta function, so theta-equivalent lattices have identical
+  defect matrices — the ceiling is theta-equivalence, and no scalar
+  Torelli theorem is possible. The honest questions: what theta
+  data does the defect matrix recover, and what residue-refined
+  enhancement — the coset masses over `L ⧸ qL`, or their finite
+  Fourier transform — sees beyond it? Untouched.
 - **Q5 — the structural shape.** (a) On squarefree support `K`
   restricts to a strictly submodular set function — the polymatroid
   axioms are proved. But `K` is a surprisal, not an entropy, and
@@ -117,10 +132,15 @@ large resolution, no duality.
   chains (`defect_comm`, `defect_eq_zero_of_dvd`), the wrong shape
   for an alternating cochain on a complex built from chains. The
   right object is the symmetric discrete mixed Hessian of `K` on
-  the prime-exponent lattice, with its higher mixed differences
-  `Δ_{p₁}⋯Δ_{p_k} K` measuring `k`-prime coupling: rectangle
-  identities, sign structure, and the kernel modulo one-prime
-  effects are open.
+  the prime-exponent lattice, with higher mixed differences
+  `Δ_{p₁}⋯Δ_{p_k} K` measuring `k`-prime coupling. Its algebra —
+  rectangle identities from commuting differences, and the kernel
+  characterization (all cross-prime differences vanish iff `K` is a
+  constant plus one-prime terms) — is the next formalization layer,
+  not open mathematics. The open questions begin after it: signs
+  and total positivity of the higher differences, inequalities
+  beyond pairwise submodularity, and which Hessians lattice theta
+  functions can realize.
 
 ## The map
 
