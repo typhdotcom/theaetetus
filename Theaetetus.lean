@@ -21,3 +21,12 @@ import Theaetetus.Periodization
 -- Fiber products and Boltzmann coarse-graining
 import Theaetetus.Pullback
 import Theaetetus.CoarseGrain
+
+-- The priced carrier: Gram data, lattice actions, periods, the class action
+import Theaetetus.GramData
+import Theaetetus.LatticeAction
+import Theaetetus.Periods
+import Theaetetus.Carrier
+
+-- Concrete carriers: the cycle and theta lattice bases
+import Theaetetus.GraphInstances
