@@ -8,12 +8,14 @@ has mass `resProb s q = θ(q²s)/θ(s)` — a theorem about the
 sublattice `qℤ`, not a definition (`resProb_eq_event_mass`, through
 the reindexing `theta_sq_eq_tsum_dvd`).
 
-The defect is then exactly the log association ratio of the two
-divisibility events over the interval `[gcd, lcm]`
-(`exp_defect_eq`, `defect_eq_log_ratio`): CRT factors the state
-space, and the defect **is** the failure of the Gibbs measure to
-follow — the conditional pointwise mutual information of the two
-events at their shared constraint. The sign theorem becomes a
+Minus the defect is then exactly the log of the conditional
+association ratio of the two divisibility events — joint over
+product of marginals, conditioned on the shared constraint
+(`exp_defect_eq`, `defect_eq_log_ratio`, `neg_defect_eq_log_assoc`):
+CRT factors the state space, and the defect prices the failure of
+the Gibbs measure to follow — the conditional pointwise mutual
+information of the two events at their shared constraint, with the
+sign convention that positive association means negative defect. The sign theorem becomes a
 correlation statement: conditioned on the common resolution, the
 events are strictly positively associated
 (`condProb_mul_lt_of_incomparable`); unconditionally, coprime
@@ -115,6 +117,27 @@ theorem defect_eq_log_ratio {s : ℝ} (hs : 0 < s) {q q' : ℕ}
       = Real.log ((resProb s q * resProb s q')
           / (resProb s (Nat.gcd q q') * resProb s (Nat.lcm q q'))) := by
   rw [← exp_defect_eq hs hq hq', Real.log_exp]
+
+/-- **The conditional association identity**: minus the defect is
+the log of the standard conditional association ratio — the joint
+event against the product of the marginals, all conditioned on the
+shared constraint `gcd ∣ X`. Positive association (ratio `> 1`) is
+exactly the negative sign of the defect. -/
+theorem neg_defect_eq_log_assoc {s : ℝ} (hs : 0 < s) {q q' : ℕ}
+    (hq : q ≠ 0) (hq' : q' ≠ 0) :
+    -defect s q q'
+      = Real.log ((resProb s (Nat.lcm q q') / resProb s (Nat.gcd q q'))
+          / ((resProb s q / resProb s (Nat.gcd q q'))
+            * (resProb s q' / resProb s (Nat.gcd q q')))) := by
+  have hg : Nat.gcd q q' ≠ 0 := fun h0 => hq (Nat.eq_zero_of_gcd_eq_zero_left h0)
+  have hl : Nat.lcm q q' ≠ 0 := Nat.lcm_ne_zero hq hq'
+  have hPq : (0 : ℝ) < resProb s q := resProb_pos hs hq
+  have hPq' : (0 : ℝ) < resProb s q' := resProb_pos hs hq'
+  have hPg : (0 : ℝ) < resProb s (Nat.gcd q q') := resProb_pos hs hg
+  have hPl : (0 : ℝ) < resProb s (Nat.lcm q q') := resProb_pos hs hl
+  rw [defect_eq_log_ratio hs hq hq', ← Real.log_inv]
+  congr 1
+  field_simp
 
 /-- **Conditional positive association** (the sign theorem, read as
 correlation): conditioned on the shared constraint `gcd ∣ X`, the

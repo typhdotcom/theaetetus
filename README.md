@@ -8,8 +8,8 @@
 > — Plato, *Theaetetus* 147e–148b (adapted)
 
 A Lean 4 study of **the defect**: an invariant of a positive-definite
-integral quadratic form that measures the failure of its spectrum to
-factor over the primes.
+quadratic form on a finite-rank lattice that measures the failure of
+its spectrum to factor over the primes.
 
 ## The object
 
@@ -39,14 +39,15 @@ proved, it is negative.
   resolutions forced by quadratic energy (`crossRatio_law`).
 - **The coupling reading.** Chinese remainder on the tower: the
   `lcm`-resolution *is* the fiber product of the two coarser ones
-  over their shared base (`h1ReductionCRT`). The state space
-  factors; the defect is exactly the log association ratio by which
-  the Gibbs measure declines to follow (`defect_eq_log_ratio`). The
-  divisibility events `q ∣ X` are honest Gibbs masses
-  (`resProb_eq_event_mass`), and conditioned on their shared
-  constraint an incomparable pair is strictly positively associated
-  (`condProb_mul_lt_of_incomparable`); coprime events correlate
-  unconditionally (`resProb_mul_lt_of_coprime`).
+  over their shared base (`h1ReductionCRT`) — arithmetic descent is
+  exact, on every carrier. At rank one the failure of the measure
+  to follow is priced exactly: divisibility events `q ∣ X` are
+  honest Gibbs masses (`resProb_eq_event_mass`), minus the defect
+  is the log of their conditional association ratio
+  (`neg_defect_eq_log_assoc`), and the sign theorem says an
+  incomparable pair is strictly positively associated given its
+  shared constraint (`condProb_mul_lt_of_incomparable`; coprime
+  unconditional form `resProb_mul_lt_of_coprime`).
 - **The sign, rank one, closed.** `D_s(q,q′) < 0` at every
   incomparable pair and every scale, zero exactly on chains — the
   defect detects divisibility (`defect_neg_of_incomparable`,
@@ -65,9 +66,11 @@ proved, it is negative.
   any carrier with a cycle the defect converges along the staircase
   `(n+1, n+2)` to `−log Z(1) < 0` and is eventually strictly
   negative (`tendsto_towerDefect_succ`, `eventually_towerDefect_neg`).
-- **The prime pairing.** `⟨p,q⟩ := −D` is strictly positive for
-  distinct primes and saturates at the base complexity `log θ(s)`
-  along coprime pairs at infinity (`pairing_pos`, `tendsto_pairing`).
+- **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
+  positive for distinct primes and saturates at the base complexity
+  `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
+  `tendsto_pairing`); the carrier-level analogue is the staircase
+  limit `−log Z(1)` in the classification.
 - **Rank two.** On the theta graph the cycle Gram inverts to the
   hexagonal form `(a² − ab + b²)/3`, and the defect is strictly
   negative at `(2,3)` (`thetaGraph_towerDefect_neg`), through the
@@ -76,8 +79,10 @@ proved, it is negative.
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here
 lives in the Poisson-summation corrections the continuum forgets —
-which is why every proof passes through the Jacobi duality
-`θ(π²/α) = √(α/π)·θ(α)` before closing on rational arithmetic.
+which is why the all-scale sign proofs pass through the Jacobi
+duality `θ(π²/α) = √(α/π)·θ(α)` before closing on rational
+arithmetic. The classification needs less: modal concentration at
+large resolution, no duality.
 
 ## The questions
 
@@ -86,21 +91,36 @@ which is why every proof passes through the Jacobi duality
   rank: **done**. On every carrier the sign holds asymptotically
   along the staircase; at every pair it is open beyond one rank-two
   witness — the frontier is cross terms.
-- **Q2 — the pairing on primes.** Closed forms, asymptotics beyond
-  saturation, and whether some normalization behaves like a linking
-  invariant (primes as knots). Two-sided bounds and the saturation
-  limit: done.
+- **Q2 — the pairing on primes.** Closed forms and asymptotics
+  beyond saturation; and what would earn the pairing a geometric
+  name — conditional negative definiteness of the centered pairing
+  matrix, or a Hilbert-space embedding of the primes. Until such a
+  theorem exists it is a correlation kernel, not a linking form.
+  Two-sided bounds and the saturation limit: done.
 - **Q3 — Euler-factorizable carriers.** **Classified**, for every
   carrier in the formalized class: `D ≡ 0` iff the cycle lattice is
-  trivial (`b₁ = 0`). The per-pair kernel on a nontrivial carrier is
-  Q1's question — on `C₃` it is the chain relation, exactly. The
-  general positive-definite lattice awaits its carrier object.
+  trivial (`b₁ = 0`). The classification does not settle the
+  per-pair kernel on a nontrivial carrier — Q1 would force it to be
+  exactly the chain relation, as it is on `C₃`. The general
+  positive-definite lattice awaits its carrier object.
 - **Q4 — the inverse problem.** What does the defect matrix know
   about `L`? A torsion-level Torelli question. Untouched.
-- **Q5 — the structural shape.** (a) `K` as a polymatroid rank
-  function — the axioms are proved; non-Shannon defect inequalities
-  open. (b) `D` as a 2-cocycle on the order complex of the
-  divisibility lattice — open.
+- **Q5 — the structural shape.** (a) On squarefree support `K`
+  restricts to a strictly submodular set function — the polymatroid
+  axioms are proved. But `K` is a surprisal, not an entropy, and
+  nothing yet places these restrictions in the entropic cone; the
+  honest questions are whether they are (almost) entropic, and
+  which inequalities beyond submodularity they satisfy. (b) The
+  higher interaction structure. An earlier version of this question
+  asked for `D` as a 2-cocycle on the order complex; that question
+  was badly posed and is retired — `D` is symmetric and vanishes on
+  chains (`defect_comm`, `defect_eq_zero_of_dvd`), the wrong shape
+  for an alternating cochain on a complex built from chains. The
+  right object is the symmetric discrete mixed Hessian of `K` on
+  the prime-exponent lattice, with its higher mixed differences
+  `Δ_{p₁}⋯Δ_{p_k} K` measuring `k`-prime coupling: rectangle
+  identities, sign structure, and the kernel modulo one-prime
+  effects are open.
 
 ## The map
 
