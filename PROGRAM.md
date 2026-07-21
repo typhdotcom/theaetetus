@@ -228,14 +228,16 @@ New program-native terms: *defect matrix*, *Euler-factorizable*,
 
 ## Milestones
 
-- **M0 — scaffold.** Lake package `Theaetetus` building green
+- **M0 — scaffold.** ✅ Lake package `Theaetetus` building green
   against the pinned Mathlib.
-- **M1 — scalar core.** Port the analytic primitive and `θ`.
+- **M1 — scalar core.** ✅ Port the analytic primitive and `θ`.
   Define the rank-one defect
   `D_s(q, q′) := log θ(q²s) + log θ(q′²s) − log θ(gcd²s) − log θ(lcm²s)`
-  and prove chain-vanishing.
-- **M2 — the witness, at home.** Re-prove
+  and prove chain-vanishing. (`SectorAction.lean`, `Theta.lean`,
+  `Defect.lean`; Meno's `scalarPartFn` is `theta` here.)
+- **M2 — the witness, at home.** ✅ Re-prove
   `θ(4/3)·θ(3) < θ(1/3)·θ(12)` and hence `D_{1/3}(2,3) < 0`.
+  (`Witness.lean`: `theta_crossRatio_lt`, `defect_witness`.)
 - **M3 — the first native theorem.** `D_s(2,3) < 0` for **all**
   `s > 0` — the birth certificate: a statement Meno never proved.
   Then arbitrary incomparable pairs at rank one (Q1, rank one).
