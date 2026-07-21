@@ -12,6 +12,12 @@ import Theaetetus.Sign
 -- Q1 closed at rank one: strict submodularity at every incomparable pair
 import Theaetetus.Submodular
 
+-- Q2: the prime pairing, its bounds, and saturation at the base
+import Theaetetus.Pairing
+
+-- Q5(a): residue complexity as a polymatroid-like rank function
+import Theaetetus.RankFunction
+
 -- The graph substrate, the theta instance, and the ℤ-homology spine
 import Theaetetus.IncidenceGraph
 import Theaetetus.ThetaGraph
@@ -39,6 +45,9 @@ import Theaetetus.Tower
 
 -- The defect on the tower: the cross-ratio law, CRT, the C₃ bridge
 import Theaetetus.CrossRatio
+
+-- Q3, first slice: the complete kernel of the defect matrix on C₃
+import Theaetetus.Classification
 
 -- Scalar bounds and the rank-two witness on the theta graph
 import Theaetetus.ThetaBounds
