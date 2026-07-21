@@ -30,3 +30,6 @@ import Theaetetus.Carrier
 
 -- Concrete carriers: the cycle and theta lattice bases
 import Theaetetus.GraphInstances
+
+-- The residue tower: reductions, residue actions, tower maps
+import Theaetetus.Tower
