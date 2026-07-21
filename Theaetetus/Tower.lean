@@ -1,4 +1,3 @@
--- ported from Meno/ResolutionCount.lean
 import Theaetetus.GraphHomology
 import Theaetetus.CoarseGrain
 import Theaetetus.Periodization

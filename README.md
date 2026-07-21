@@ -1,0 +1,103 @@
+# Theaetetus
+
+*The arithmetic of coupled resolutions*
+
+> The lines which form the sides of the oblong numbers we called
+> *powers*, as not commensurable with the others in length, but only
+> in the plane areas they have the power to form.
+> — Plato, *Theaetetus* 147e–148b (adapted)
+
+A Lean 4 study of **the defect**: an invariant of a positive-definite
+integral quadratic form that measures the failure of its spectrum to
+factor over the primes.
+
+## The object
+
+Let `Z_L(β)` be the Boltzmann sum of a positive-definite quadratic
+form on a finite-rank lattice `L` — at rank one, the theta function
+`θ(α) = ∑_{k∈ℤ} e^{−αk²}`. For a resolution `q ≥ 1` the **residue
+action** is the Gibbs structure induced on `L ⧸ qL`, and `K(q)` its
+complexity (log partition function). **The seed**: the defect of a
+pair of resolutions is the four-term inclusion–exclusion over the
+divisibility lattice,
+
+    D(q, q′) := [K(lcm) + K(gcd)] − [K(q) + K(q′)].
+
+`D ≡ 0` would say `q ↦ K(q)` is a valuation — the algebraic shadow
+of an Euler product, the resolution tower localizing over the
+primes. It never is: the primes couple through the geometry, and the
+coupling has a sign.
+
+## The theorems
+
+- **The cross-ratio law.** On the cycle lattice `H¹(G;ℤ)` of any
+  finite multigraph with its harmonic energy,
+  `D(q,q′) = log [Z(q²)·Z(q′²) / (Z(gcd²)·Z(lcm²))]` — squares of
+  resolutions forced by quadratic energy (`crossRatio_law`).
+- **The coupling reading.** Chinese remainder on the tower: the
+  `lcm`-resolution *is* the fiber product of the two coarser ones
+  over their shared base (`h1ReductionCRT`). The state space
+  factors; the defect measures that the Gibbs measure does not.
+- **The sign, rank one, closed.** `D_s(q,q′) < 0` at every
+  incomparable pair and every scale, zero exactly on chains — the
+  defect detects divisibility (`defect_neg_of_incomparable`,
+  `defect_eq_zero_iff`), and residue complexity is a strictly
+  submodular rank function on the divisibility lattice
+  (`resComplexity_strictSubmodular`).
+- **The prime pairing.** `⟨p,q⟩ := −D` is strictly positive for
+  distinct primes and saturates at the base complexity `log θ(s)`
+  along coprime pairs at infinity (`pairing_pos`, `tendsto_pairing`).
+- **Rank two.** On the theta graph the cycle Gram inverts to the
+  hexagonal form `(a² − ab + b²)/3`, and the defect is strictly
+  negative at `(2,3)` (`thetaGraph_towerDefect_neg`), through the
+  factorization `hexTheta s ≤ θ(s/3)·θ(s/4)`.
+
+Why there is a sign at all: in the continuum limit the Gaussian
+factors exactly and the defect vanishes with it. Everything here
+lives in the Poisson-summation corrections the continuum forgets —
+which is why every proof passes through the Jacobi duality
+`θ(π²/α) = √(α/π)·θ(α)` before closing on rational arithmetic.
+
+## The questions
+
+- **Q1 — the sign.** `D_L < 0` at every incomparable pair for every
+  positive-definite `L`. Rank one: **done**. Rank ≥ 2: one witness.
+- **Q2 — the pairing on primes.** Closed forms, asymptotics beyond
+  saturation, and whether some normalization behaves like a linking
+  invariant (primes as knots). Two-sided bounds and the saturation
+  limit: done.
+- **Q3 — Euler-factorizable carriers.** Classify `L` with `D_L ≡ 0`;
+  conjecturally only rank zero. The kernel on `C₃` is computed
+  exactly.
+- **Q4 — the inverse problem.** What does the defect matrix know
+  about `L`? A torsion-level Torelli question. Untouched.
+- **Q5 — the structural shape.** (a) `K` as a polymatroid rank
+  function — the axioms are proved; non-Shannon defect inequalities
+  open. (b) `D` as a 2-cocycle on the order complex of the
+  divisibility lattice — open.
+
+## The map
+
+The root module [`Theaetetus.lean`](Theaetetus.lean) imports every
+module under a one-line section comment, in logical order from the
+analytic primitive to the rank-two witness. That import list is the
+table of contents: it compiles, so it cannot drift. Each module's
+docstring carries its local story.
+
+## Building
+
+    nix develop -c lake build        # or: nu tasks.nu check
+
+Toolchain `leanprover/lean4:v4.26.0`, Mathlib pinned at `v4.26.0`.
+Zero `sorry`, zero `axiom` declarations; `lake build` green is the
+only definition of done. Where a desired statement fails, the
+counterexample becomes a theorem. Version control is jujutsu.
+
+## History
+
+Built in six milestones, `M0`–`M5` (labels that still appear in
+docstrings): scaffold; the scalar core and chain-vanishing; the
+witness `θ(4/3)·θ(3) < θ(1/3)·θ(12)`; the sign at `(2,3)` for all
+scales; the carrier — graph homology, the residue tower, the
+cross-ratio law, the rank-two witness; outward — Q1 closed at rank
+one, the pairing, the rank function, the kernel on `C₃`.

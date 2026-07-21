@@ -1,4 +1,3 @@
--- ported from Meno/HarmonicForm.lean
 import Theaetetus.QuadraticAction
 
 /-! # Harmonic Gram Data: variational origin of a quadratic action

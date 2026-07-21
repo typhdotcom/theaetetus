@@ -1,6 +1,3 @@
--- ported from Meno/SiegelPoisson.lean (the Poisson section:
--- Gaussian periodization, the torus bridge, the Gaussian Fourier
--- engine, Poisson summation, and the strict modal bound)
 import Theaetetus.QuadraticAction
 import Mathlib.Analysis.Fourier.AddCircleMulti
 import Mathlib.Analysis.Matrix.PosDef

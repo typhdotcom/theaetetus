@@ -1,4 +1,3 @@
--- ported from Meno/GraphHomology.lean
 import Theaetetus.IncidenceGraph
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Mathlib.LinearAlgebra.Matrix.DotProduct
@@ -8,11 +7,10 @@ import Mathlib.LinearAlgebra.Dual.Basis
 /-! # Graph Homology: the pure topology layer
 
 Everything a finite graph's first homology provides — lattice, basis,
-exactness, quotient, rank, and Euler results — in one file importing
-only the substrate (no
-Gram object, no positive-definiteness, no matrix inversion — the
-unit-edge Gram and every priced consequence live in the
-variational layer, `Meno/PeriodHarmonic.lean`):
+exactness, quotient, and rank — in one file importing only the
+substrate (no Gram object, no positive-definiteness, no matrix
+inversion — the unit-edge Gram and every priced consequence live in
+the priced layer, `Periods.lean`):
 
 * freeness of `ℤ^E ⧸ H₁`, the splitting, and the retraction of `ℤ^E`
   onto the cycle lattice;
@@ -57,7 +55,7 @@ variable (G : IncidenceGraph.{u, v})
 /-! ## Freeness of the cochain quotient, the splitting, the retraction
 
 `H₁(G;ℤ) = ker ∂ℤ` is saturated (`mem_of_smul_mem`,
-`Meno/IncidenceGraph.lean`), so `ℤ^E ⧸ H₁` is torsion-free, hence free,
+`IncidenceGraph.lean`), so `ℤ^E ⧸ H₁` is torsion-free, hence free,
 hence projective — the quotient map splits and `ℤ^E` retracts onto the
 cycle lattice. -/
 

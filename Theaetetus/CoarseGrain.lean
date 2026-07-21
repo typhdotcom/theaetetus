@@ -1,4 +1,3 @@
--- ported from Meno/InfoRatchet.lean
 import Theaetetus.SectorAction
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

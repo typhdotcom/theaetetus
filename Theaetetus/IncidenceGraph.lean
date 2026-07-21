@@ -1,4 +1,3 @@
--- ported from Meno/IncidenceGraph.lean
 import Mathlib.Tactic
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
@@ -497,10 +496,9 @@ theorem grad_integrate (ω : G.E → R)
 
 Pure topology: the lattice `H₁(G;ℤ) = ker ∂ℤ` and its rank `b₁` are
 intrinsic to the graph — defined here, in the substrate. The
-fundamental-basis theorem (`Meno/GraphHomology.lean`) **consumes**
-this invariant: it constructs a basis of this lattice, proves the
-construction has exactly `b₁` elements (`cycleBasisSigma_fst`), and
-proves Euler's formula `b1_eq` about it. -/
+fundamental-basis theorem (`GraphHomology.lean`) **consumes** this
+invariant: it constructs a basis of this lattice and proves the
+construction has exactly `b₁` elements (`cycleBasisSigma_fst`). -/
 
 section CycleLattice
 
@@ -567,7 +565,7 @@ theorem mem_of_smul_mem {c : ℤ} (hc : c ≠ 0) {x : G.E → ℤ}
 /-- **The first Betti number, intrinsically**: the rank of the
 integral cycle lattice. No presentation, no chosen basis — this is
 the invariant every lattice basis meets (`card_eq_b1`,
-`Meno/GraphHomology.lean`). -/
+`GraphHomology.lean`). -/
 noncomputable def b1 : ℕ := Module.finrank ℤ G.cycleLattice
 
 end CycleLattice

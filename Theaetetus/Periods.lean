@@ -1,4 +1,3 @@
--- ported from Meno/PeriodHarmonic.lean
 import Theaetetus.GramData
 import Theaetetus.GraphHomology
 import Theaetetus.Periodization

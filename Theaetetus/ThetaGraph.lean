@@ -1,4 +1,3 @@
--- ported from Meno/ThetaGraph.lean
 import Theaetetus.IncidenceGraph
 
 /-! # The Theta Graph: incidence data (topology layer)
@@ -9,13 +8,13 @@ the graph, the two integral basis cycles sharing a path, and the raw
 topological facts about them (lattice membership, real spanning,
 integral spanning, independence of the casts), all stated through the
 substrate's `IncidenceGraph.boundary` — no specialized boundary
-operator, no basis structure (the lattice basis `thetaLatticeBasis` is assembled from
-these facts in `Meno/GraphInstances.lean` via
+operator, no basis structure (the lattice basis `thetaLatticeBasis`
+is assembled from these facts in `GraphInstances.lean` via
 `IncidenceGraph.basisOfCycles`).
 
 Everything priced lives downstream: the chain Gram `!![4, 2; 2, 4]`,
-its positive-definiteness and inverse, and the priced Gram data are
-**harmonic** content and live in `Meno/ThetaHarmonic.lean`. -/
+its positive-definiteness and inverse, and the hexagonal energy are
+**harmonic** content and live in `RankTwo.lean`. -/
 
 namespace Theaetetus
 
@@ -110,7 +109,7 @@ theorem theta_cast_independent (x : Fin 2 → ℝ)
 /-- **Integral spanning**: an integral cycle is an *integer*
 combination of the basis — the period lattice is the full integral
 cycle lattice, not a finite-index sublattice. Feeds
-`IncidenceGraph.basisOfCycles` in `Meno/GraphInstances.lean`. -/
+`IncidenceGraph.basisOfCycles` in `GraphInstances.lean`. -/
 theorem theta_integral_spanning (x : Fin 6 → ℤ)
     (hx : x ∈ thetaGraph.cycleLattice) :
     ∃ a : Fin 2 → ℤ, x = fun e => ∑ i, a i * thetaCyclesZ i e := by

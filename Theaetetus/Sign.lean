@@ -5,9 +5,8 @@ import Mathlib.Analysis.Real.Pi.Bounds
 /-! # The sign at (2, 3): the birth certificate
 
 **`D_s(2,3) < 0` for every `s > 0`** (`defect_two_three_neg`) — the
-first native theorem, a statement the quarry never proved: at the
-smallest incomparable pair the defect is strictly negative at every
-scale. Q1's first infinite family.
+first native theorem: at the smallest incomparable pair the defect
+is strictly negative at every scale. Q1's first infinite family.
 
 In theta values: `θ(4s)·θ(9s) < θ(s)·θ(36s)`. Expanded over ℤ² this
 compares the forms `4m²+9n²` and `m²+36n²`, which are **not**
@@ -197,8 +196,7 @@ theorem theta_prod_lt {s : ℝ} (hs : 0 < s) :
 incomparable pair is strictly negative at **every** scale —
 `D_s(2, 3) < 0` for all `s > 0`. The defect vanishes on chains
 (`defect_eq_zero_of_dvd`); off them, at `(2, 3)`, it carries a
-strict sign uniformly in the scale. A statement the quarry never
-proved. -/
+strict sign uniformly in the scale. -/
 theorem defect_two_three_neg {s : ℝ} (hs : 0 < s) :
     defect s 2 3 < 0 := by
   unfold defect

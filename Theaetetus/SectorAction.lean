@@ -1,4 +1,3 @@
--- ported from Meno/SectorAction.lean
 import Mathlib.Analysis.Normed.Ring.InfiniteSum
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Topology.Algebra.InfiniteSum.Ring
@@ -16,9 +15,9 @@ density `μ = exp(-E) / Z` (a probability on `Λ`), the expectation
 `⟨f⟩`, the variance `Var(f) = ⟨f²⟩ - ⟨f⟩²`, and the cumulant
 functional `cgf`.
 
-Ported minimally per the copy-map (PROGRAM.md): the primitive and
-its foundational positivity lemmas. Combinators and fluctuation
-theory stay in the quarry until needed. -/
+Kept minimal: the primitive and its foundational positivity
+lemmas; combinators and fluctuation theory can join when a theorem
+needs them. -/
 
 namespace Theaetetus
 

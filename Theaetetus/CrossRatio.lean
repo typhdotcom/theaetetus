@@ -1,5 +1,3 @@
--- ported from Meno/TowerGravity.lean (the seed theorems, renamed
--- per PROGRAM.md's vocabulary: towerDefect, crossRatio_law)
 import Theaetetus.Tower
 import Theaetetus.Pullback
 import Theaetetus.GraphInstances

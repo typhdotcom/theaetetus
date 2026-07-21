@@ -1,6 +1,3 @@
--- ported from Meno/QuadraticAction.lean (the matrix layer; the scalar
--- layer lives in Theaetetus/Theta.lean, where Meno's `scalarPartFn`
--- takes the name `theta`)
 import Theaetetus.SectorAction
 import Theaetetus.Theta
 import Mathlib.LinearAlgebra.Matrix.PosDef

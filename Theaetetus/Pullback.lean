@@ -1,4 +1,3 @@
--- ported from Meno/Basic.lean
 import Mathlib.Logic.Equiv.Basic
 
 /-! # The Pullback Substrate

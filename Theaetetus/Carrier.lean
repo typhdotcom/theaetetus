@@ -1,5 +1,3 @@
--- ported from Meno/HarmonicClass.lean
--- and from Meno/BasisIndependence.lean (the carrier slice)
 import Theaetetus.Periods
 import Theaetetus.LatticeAction
 

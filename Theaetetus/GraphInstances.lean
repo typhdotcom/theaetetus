@@ -1,5 +1,3 @@
--- ported from Meno/GraphInstances.lean
--- (cyclesR_cycleLatticeBasis ported from Meno/Systole.lean)
 import Theaetetus.GraphHomology
 import Theaetetus.ThetaGraph
 import Theaetetus.Periods

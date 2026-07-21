@@ -1,4 +1,3 @@
--- ported from Meno/LatticeAction.lean
 import Theaetetus.QuadraticAction
 import Theaetetus.Periodization
 import Mathlib.RingTheory.TensorProduct.Basic

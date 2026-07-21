@@ -1,5 +1,3 @@
--- ported from Meno/QuadraticAction.lean (the scalar layer;
--- Meno's `scalarPartFn` takes this project's name `theta`)
 import Mathlib.NumberTheory.ModularForms.JacobiTheta.OneVariable
 import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
 import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
@@ -7,9 +5,9 @@ import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 /-! # θ: the scalar theta function
 
 `theta α = ∑' k : ℤ, exp(-α k²)` — the rank-one Boltzmann sum, the
-analytic carrier of the whole rank-one program (PROGRAM.md, Q1–Q2).
+analytic carrier of the whole rank-one program (README: Q1–Q2).
 
-Contents, all ported from the quarry:
+Contents:
 
 * summability (`summable_theta`);
 * the theta identification `theta_eq_jacobiTheta` — `theta` *is*

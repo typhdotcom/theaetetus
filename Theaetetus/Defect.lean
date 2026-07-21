@@ -4,7 +4,7 @@ import Theaetetus.Theta
 
 For a scale `s > 0` and resolutions `q, q′`, **the defect** is the
 four-term inclusion–exclusion of description costs over the
-divisibility lattice (PROGRAM.md, the seed):
+divisibility lattice (README: the seed):
 
     D_s(q, q′) = [log θ(q²s) + log θ(q′²s)]
                    − [log θ(gcd²s) + log θ(lcm²s)].
