@@ -15,19 +15,27 @@ its spectrum to factor over the primes.
 
 Let `Z_L(β)` be the Boltzmann sum of a positive-definite quadratic
 form on a finite-rank lattice `L` — at rank one, the theta function
-`θ(α) = ∑_{k∈ℤ} e^{−αk²}`. For a resolution `q ≥ 1` the **residue
-action** is the Gibbs structure induced on `L ⧸ qL`, and `K(q)` its
-complexity (log partition function). **The seed**: the defect of a
-pair of resolutions is the four-term inclusion–exclusion over the
+`θ(α) = ∑_{k∈ℤ} e^{−αk²}`. **The seed**: the defect of a pair of
+resolutions `q, q′ ≥ 1` is the four-term cross-ratio over the
 divisibility lattice,
 
-    D(q, q′) := [K(lcm) + K(gcd)] − [K(q) + K(q′)].
+    D(q, q′) := [log Z(q²) + log Z(q′²)] − [log Z(gcd²) + log Z(lcm²)].
 
-`D ≡ 0` would say `q ↦ K(q)` is a valuation — the algebraic shadow
-of an Euler product, the resolution tower localizing over the
-primes. For the carrier class formalized here it never is, unless
-there is nothing to couple: a carrier's defect matrix vanishes
-identically **iff** its cycle lattice is trivial
+On a graph carrier the analytic formula carries its intended reading
+as a theorem: a resolution `q` induces a **residue action** on
+`H¹(G;ℤ) ⧸ qH¹(G;ℤ)` with complexity `K(q)`, and the cross-ratio
+law proves `D(q,q′) = [K(lcm) + K(gcd)] − [K(q) + K(q′)]`
+(`crossRatio_law`). Deriving that reading from residue actions on
+`L ⧸ qL` for an arbitrary lattice is part of Q3; until then the
+general defect **is** the cross-ratio.
+
+`D ≡ 0` would say `q ↦ log Z(q²)` is a valuation — the algebraic
+shadow of an Euler product, the resolution tower localizing over
+the primes. For the towers formalized here it never is, unless
+there is nothing to couple: the defect matrix vanishes identically
+**iff** the modal sector is the only sector
+(`defect_forall_eq_zero_iff`) — for a graph carrier, iff its
+cohomology lattice `H¹(G;ℤ)` is trivial
 (`towerDefect_forall_eq_zero_iff`). Wherever there is geometry, the
 primes couple through it — and wherever the sign is proved, it is
 negative.
@@ -35,9 +43,11 @@ negative.
 ## The theorems
 
 - **The cross-ratio law.** On the cohomology lattice `H¹(G;ℤ)` of
-  any finite multigraph with its harmonic energy,
-  `D(q,q′) = log [Z(q²)·Z(q′²) / (Z(gcd²)·Z(lcm²))]` — squares of
-  resolutions forced by quadratic energy (`crossRatio_law`). Here
+  any finite multigraph with its harmonic energy, the
+  residue-complexity defect equals the analytic cross-ratio
+  `[log Z(q²) + log Z(q′²)] − [log Z(gcd²) + log Z(lcm²)]` —
+  squares of resolutions forced by quadratic energy
+  (`crossRatio_law`). Here
   and below `Z(β)` abbreviates the carrier's class Boltzmann sum at
   inverse temperature `β`, base scale normalized to `1`; `θ(s)` is
   its rank-one case.
@@ -55,8 +65,8 @@ negative.
 - **The sign, rank one, closed.** `D_s(q,q′) < 0` at every
   incomparable pair and every scale, zero exactly on chains — the
   defect detects divisibility (`defect_neg_of_incomparable`,
-  `defect_eq_zero_iff`), and residue complexity is a strictly
-  submodular rank function on the divisibility lattice
+  `defect_eq_zero_iff`), and residue complexity is a submodular
+  rank function on the divisibility lattice, strictly off chains
   (`resComplexity_strictSubmodular`).
 - **The sign, diagonal forms, every rank.** Orthogonal sums add
   defects, so every positive diagonal form inherits the rank-one
@@ -64,14 +74,15 @@ negative.
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
   Q1's frontier is orthogonal indecomposability, not rank.
 - **The classification, through the partition tower.** The
-  argument consumes only three fields — a modal sector, strictly
-  positive energy off it, a summable Boltzmann weight — isolated as
-  the abstract **partition tower** (`PartitionTower`), whose defect
-  is the cross-ratio of scaled partition functions and whose
-  classification is proved once at that level
-  (`defect_forall_eq_zero_iff`): the defect vanishes identically
-  iff only the modal sector exists. At saturation only the modal
-  sector survives (`tendsto_Z_atTop`), so on any nontrivial tower
+  argument consumes only three fields — a distinguished zero-energy
+  sector, strictly positive energy at every other sector, a
+  summable Boltzmann weight — isolated as the abstract **partition
+  tower** (`PartitionTower`), whose defect is the cross-ratio of
+  scaled partition functions and whose classification is proved
+  once at that level (`defect_forall_eq_zero_iff`): the defect
+  vanishes identically iff the modal sector is the only sector. At
+  saturation only the modal sector survives (`tendsto_Z_atTop`),
+  so on any nontrivial tower
   the defect converges along the staircase `(n+1, n+2)` to
   `−log Z(1) < 0` and is eventually strictly negative
   (`tendsto_defect_succ`, `eventually_defect_neg`). Instances:
@@ -84,9 +95,9 @@ negative.
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
-  `tendsto_pairing`); at carrier level the same saturation appears
-  as `−D(n+1, n+2) → log Z(1)` along the coprime staircase —
-  equivalently `D → −log Z(1)` (`tendsto_towerDefect_succ`).
+  `tendsto_pairing`); the tower-level coprime analogue is the
+  staircase saturation `−D(n+1, n+2) → log Z(1)`
+  (`tendsto_defect_succ`).
 - **Rank two.** On the theta graph the cycle Gram inverts to the
   hexagonal form `(a² − ab + b²)/3`, and the defect is strictly
   negative at `(2,3)` (`thetaGraph_towerDefect_neg`), through the
@@ -102,25 +113,26 @@ large resolution, no duality.
 
 ## The questions
 
-- **Q1 — the sign.** `D_L < 0` at every incomparable pair for every
-  positive-definite `L`. Rank one: **done**. Diagonal forms, every
-  rank: **done**. On every carrier the sign holds asymptotically
-  along the staircase; at every pair it is open beyond one rank-two
-  witness — the frontier is forms with no orthogonal splitting into
-  rank-one summands.
+- **Q1 — the sign.** `D_L < 0` at every incomparable pair, for
+  every **positive-rank** positive-definite `L` (rank zero is
+  Euler-factorizable, by Q3). Rank one: **done**. Diagonal forms,
+  every rank ≥ 1: **done**. On every nontrivial partition tower the
+  sign eventually holds along the staircase; at every pair it is
+  open beyond one rank-two witness — the frontier is forms with no
+  orthogonal splitting into rank-one summands.
 - **Q2 — the pairing on primes.** Closed forms and asymptotics
   beyond saturation; and what geometric structure the pairing
   carries — whether it is conditionally negative definite, hence a
   squared Hilbert distance between primes, or whether its
   saturation deficit `log θ(s) − ⟨p,q⟩` is a positive-semidefinite
   similarity kernel. (The pairing itself is not one: `⟨p,p⟩ = 0`
-  with positive off-diagonal makes every `2×2` principal block
-  indefinite.) Until such a theorem exists it is a symmetric
+  (`defect_self`) with positive off-diagonal makes every `2×2`
+  principal block indefinite.) Until such a theorem exists it is a symmetric
   association statistic, not a linking form. Two-sided bounds and
   the saturation limit: done.
 - **Q3 — Euler-factorizable carriers.** **Classified.** Abstractly:
-  a partition tower's defect vanishes identically iff only its
-  modal sector exists. Instantiated: for every positive-definite
+  a partition tower's defect vanishes identically iff its modal
+  sector is the only sector. Instantiated: for every positive-definite
   lattice action, and for every graph carrier (`D ≡ 0` iff
   `b₁ = 0`). The classification does not settle the per-pair kernel
   on a nontrivial carrier — Q1 would force it to be exactly the
@@ -130,14 +142,18 @@ large resolution, no duality.
   do, rather than defining the defect by it.
 - **Q4 — the inverse problem.** The scalar defect factors through
   the theta function, so theta-equivalent lattices have identical
-  defect matrices — the ceiling is theta-equivalence, and no scalar
-  Torelli theorem is possible. The honest questions: what theta
+  defect matrices — theta-equivalence is an unavoidable
+  identification, and no unrestricted scalar Torelli theorem is
+  possible. The honest questions: what theta
   data does the defect matrix recover, and what residue-refined
   enhancement — the coset masses over `L ⧸ qL`, or their finite
   Fourier transform — sees beyond it? Untouched.
-- **Q5 — the structural shape.** (a) On squarefree support `K`
-  restricts to a strictly submodular set function — the polymatroid
-  axioms are proved. But `K` is a surprisal, not an entropy, and
+- **Q5 — the structural shape.** (a) `K` is normalized, monotone
+  along divisibility, and submodular over `gcd`/`lcm` — strictly
+  off chains (`resComplexity_strictSubmodular`); restricted to squarefree
+  support this is the polymatroid shape, though that set-function
+  restriction is not itself formalized. `K` is a surprisal, not an
+  entropy, and
   nothing yet places these restrictions in the entropic cone; the
   honest questions are whether they are (almost) entropic, and
   which inequalities beyond submodularity they satisfy. (b) The
