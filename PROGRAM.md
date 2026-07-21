@@ -137,6 +137,10 @@ The witness is the case `s = 1/3, (q,q′) = (2,3)`. Prove it for all
 (Meno's theta graph is the natural first non-diagonal carrier).
 Tools: the cumulant form, Jacobi transformation for small `s`,
 first-mode domination for large `s`.
+*Status*: **rank one closed** (M5, `Submodular.lean`:
+`defect_neg_of_incomparable`, kernel characterization
+`defect_eq_zero_iff`); rank two witnessed at `(2,3)` on the theta
+graph (M4, `RankTwo.lean`). Open: rank `≥ 2` at all pairs.
 
 **Q2 — The pairing on primes.** For primes `p ≠ p′`,
 `⟨p, p′⟩_L := −D_L(p, p′)` is a two-point function on primes
@@ -244,7 +248,9 @@ New program-native terms: *defect matrix*, *Euler-factorizable*,
   involution `s ↔ π²/36s` — the prefactors cancel because
   `q·q′ = gcd·lcm` — plus geometric tails for `s ≥ 1/2`.)
   Then arbitrary incomparable pairs at rank one (Q1, rank one) —
-  **open**; the same two-branch scheme is expected to generalize.
+  ✅ closed in M5 (`Submodular.lean`); the two-branch scheme
+  generalized, at the price of a third regime (the one-sided
+  duality flip against `θ(3)² < 2`) that `(2,3)` never exposed.
 - **M4 — the carrier.** ✅ Port the graph layer; restate and re-prove
   the general cross-ratio law and the CRT coupling reading; first
   rank-two witnesses on the theta graph.
@@ -257,6 +263,27 @@ New program-native terms: *defect matrix*, *Euler-factorizable*,
   `thetaGraph_towerDefect_neg` — the first rank-two witness.)
 - **M5 — outward.** The prime pairing's asymptotics (Q2), the
   classification (Q3), and the structural shape (Q5).
+  ✅ First tranche (`Submodular.lean`, `Pairing.lean`,
+  `RankFunction.lean`, `Classification.lean`):
+  * **Q1 rank one closed** — `defect_neg_of_incomparable`
+    (`D_s(q,q′) < 0` at every incomparable pair, every scale, via
+    geometric tails / one-sided duality flip / reflection through
+    `t ↦ π²/((ab)²t)`), and `defect_eq_zero_iff` — the kernel of
+    the defect matrix is exactly the chain relation.
+  * **Q2 first theorems** — `pairing_pos` (distinct primes couple
+    strictly), the squeeze
+    `log θ(s) − ε(p) − ε(q) < ⟨p,q⟩ < log θ(s)` with geometric
+    `ε`, and `tendsto_pairing`: the pairing saturates at the base
+    complexity along coprime pairs at infinity.
+  * **Q5(a) first content** — `resComplexity` is a normalized,
+    divisibility-monotone, (strictly) submodular rank function.
+  * **Q3 first slice** — `cycle3_towerDefect_eq_zero_iff`: the
+    complete kernel of a carrier-level defect matrix; `C₃` is not
+    Euler-factorizable.
+  Open: closed forms and a linking-style normalization for
+  `⟨p,p′⟩` (Q2); the classification beyond `C₃` (Q3, needs the
+  rank-`≥ 2` sign); the inverse problem (Q4); non-Shannon defect
+  inequalities and the cohomological reading (Q5).
 
 ---
 
