@@ -33,6 +33,9 @@ import Theaetetus.Kernel
 -- The deep-scale limit: the normalized pairing asymptotic
 import Theaetetus.LargeScale
 
+-- Q4, rung 5: the large-scale chamber — saturation flattens the kernel
+import Theaetetus.Flattening
+
 -- Q4, rung 6: the small-scale chamber — no three primes stay CND
 import Theaetetus.SmallScale
 

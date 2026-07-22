@@ -218,15 +218,18 @@ reflected scales. The higher-rank statement remains unformalized.
   is CND while its deficit is not PSD. The clauses are coupled but
   distinct, and enlarging the prime set only shrinks the
   valid-scale sets (`IsCNDOn.subset`, `IsPSDOn.subset`). Both
-  asymptotic regimes have identified
-  mechanisms, stated as targets. Large `s`: on zero-sum vectors
-  the row and column terms of `M` cancel identically and the lcm
-  term is controlled through `(pq)² ≥ p² + q²`, suggesting a route
-  to an absolute threshold — the existing bounds are entrywise,
-  and the missing step is the dimension-free quadratic-form
-  estimate; the binding inequality `log θ(s) ≥ 2·log θ(4s)`
-  crosses near `s = 0.196`, and the first hundred primes are CND
-  at `s = (log 2)/3`. Small `s`: the reflection law evaluates each
+  asymptotic regimes are now theorems. Large `s`: on zero-sum
+  vectors the base and row/column terms cancel identically
+  (`quadFormOn_pairing_eq`), and the product-kernel term is
+  controlled through `(pq)² ≥ p² + q²`, Cauchy–Schwarz, and a
+  dimension-free geometric tail: for every `s ≥ 1` the pairing is
+  CND on every finite prime set at once (`pairing_cnd_large`) —
+  so `sup_P s_c(P) ≤ 1`. Among the tested finite truncations the
+  last crossing sits in
+  `(1/10, 3/10)`, and the binding inequality
+  `log θ(s) ≥ 2·log θ(4s)` crosses near `s = 0.196`; the first
+  hundred primes are CND at `s = (log 2)/3`.
+  Small `s`: the reflection law evaluates each
   entry at its own dual scale, `⟨p,q⟩ = 2e^{−σ}(1 + o(1))`
   with `σ = π²/(s·p²q²)` (`tendsto_exp_mul_pairing` is the
   normalized form; the quantitative `O(e^{−σ})` rate is numerical,
@@ -236,9 +239,10 @@ reflected scales. The higher-rank statement remains unformalized.
   primes and `−2` on its smallest is positive — no set of three or
   more primes stays CND as `s → 0` (`pairing_not_cnd_small`,
   through the dominance threshold `pairing_dominates_small`).
-  Open: whether each valid-scale set is an interval; whether
-  `sup_P s_c(P)` is finite; how the deficit transition scales with
-  the prime set.
+  Open: whether each valid-scale set is an interval; the exact
+  uniform threshold — the theorem gives `1`, the tested
+  truncations place the last crossing in `(1/10, 3/10)`; how the
+  deficit transition scales with the prime set.
 
   The transform question has a sharpened target. Saturated rows
   obstruct any Gram representation of `B/2` by Dirichlet monomials
@@ -275,13 +279,22 @@ reflected scales. The higher-rank statement remains unformalized.
   convexity of `H` at every location at leg spacing `≥ 2 log 2`,
   which in particular makes every Q4 diagonal correction
   `d_s(x_p)` nonnegative, since `x_p ≥ log 2`. The hypothesis
-  `2 ≤ a` originates in integer incomparability and may be
-  analytically unnecessary; Q5 at rank one is the conjecture that
-  the inequality never needed the integers. It is equivalent to
-  the non-strict equal-leg case `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for
-  `1 < a < 2`; the strict two-leg extension of
-  `theta_prod_lt_general` to `1 < a` is a stronger sufficient
-  target. The reflection makes
+  `2 ≤ a` originates in integer incomparability and is
+  analytically unnecessary: Q5 at rank one is known — Faulhuber
+  and Steinerberger prove the strict geometric-mean inequality
+  `θ₃(rs)·θ₃(r/s) > θ₃(r)²` for `s ≠ 1`, equivalently that
+  `x·θ₃′(x)/θ₃(x)` is strictly increasing
+  ([*Optimal Gabor frame bounds for separable lattices and
+  estimates for Jacobi theta
+  functions*](https://arxiv.org/abs/1601.02972), Theorems
+  2.2–2.3; also [Faulhuber
+  2020](https://arxiv.org/abs/1709.06006), Proposition 3.13) —
+  known analytically but not yet formalized here. Under the
+  identification `θ(β) = θ₃(β/π)` this is exactly convexity of
+  `u ↦ log θ(eᵘ)`, and the strict two-leg extension of
+  `theta_prod_lt_general` to `1 < a` follows (rung 7). The
+  genuinely open part of Q5 is the higher-rank lattice
+  statement. The reflection makes
   the curvature invariant under `β ↦ π²/β` at rank one and pairs
   it with the dual lattice at higher rank,
   `H_L″(u) = H_{L*}″(2·log π − u)`: convexity for every lattice on
@@ -314,13 +327,14 @@ reflected scales. The higher-rank statement remains unformalized.
 ## The ladder
 
 The formalization order for the symmetry and its consequences.
-Rungs 1–4 and 6 are complete — the reflection law in
+Rungs 1–6 are complete — the reflection law in
 `Theaetetus.Duality` (with the corollary `theta_rect_lt_iff`,
 which both sign proofs' reflection branches now consume), coarse
-Q5 in `Theaetetus.Midpoint`, and the small-scale chamber in
-`Theaetetus.SmallScale`, through the kernel interface
-(`Theaetetus.Kernel`) and the normalized asymptotics
-(`Theaetetus.LargeScale`). Rung 7 subsumes rung 4:
+Q5 in `Theaetetus.Midpoint`, and both Q4 chambers
+(`Theaetetus.SmallScale`, `Theaetetus.Flattening`), through the
+kernel interface (`Theaetetus.Kernel`) and the normalized
+asymptotics (`Theaetetus.LargeScale`). Only rung 7 remains; it
+subsumes rung 4:
 
 1. `theta_rect_dual` — the real-variable reflection engine: for
    `t, a, b > 0` the cross-ratio
@@ -333,15 +347,17 @@ Q5 in `Theaetetus.Midpoint`, and the small-scale chamber in
 4. Coarse Q5 — `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for real `a ≥ 2`, the
    `b → a` limit of `theta_prod_lt_general`; nonnegativity of
    every Q4 diagonal correction.
-5. The large-scale chamber — target: an absolute `s₀` beyond
-   which the prime pairing is CND on every finite prime set. The
-   zero-sum cancellation and `(pq)² ≥ p² + q²` mark the route;
-   the dimension-free quadratic estimate is the work.
+5. The large-scale chamber — for every `s ≥ 1` the prime pairing
+   is CND on every finite prime set at once
+   (`pairing_cnd_large`), dimension-free through the exact
+   identity `quadFormOn_pairing_eq`.
 6. The small-scale chamber — every set of three or more primes
    fails CND for all sufficiently small `s`
    (`pairing_not_cnd_small`).
-7. `theta_prod_lt_general` with `1 < a` — the open core; with
-   continuity it closes Q5 at rank one.
+7. `theta_prod_lt_general` with `1 < a` — formalize the
+   Faulhuber–Steinerberger refined log-convexity of `θ₃`; known
+   analytically, closing Q5 at rank one. The genuinely open core
+   is higher rank.
 
 ## The map
 
