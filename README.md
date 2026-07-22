@@ -227,11 +227,15 @@ reflected scales. The higher-rank statement remains unformalized.
   estimate; the binding inequality `log θ(s) ≥ 2·log θ(4s)`
   crosses near `s = 0.196`, and the first hundred primes are CND
   at `s = (log 2)/3`. Small `s`: the reflection law evaluates each
-  entry at its own dual scale, `⟨p,q⟩ = 2e^{−σ}(1 + O(e^{−σ}))`
-  with `σ = π²/(s·p²q²)`; entries are hierarchically separated,
-  the largest product dominates, and the zero-sum weight putting
-  `(1, 1)` on the two largest primes and `−2` on a third is
-  positive — no set of three or more primes stays CND as `s → 0`.
+  entry at its own dual scale, `⟨p,q⟩ = 2e^{−σ}(1 + o(1))`
+  with `σ = π²/(s·p²q²)` (`tendsto_exp_mul_pairing` is the
+  normalized form; the quantitative `O(e^{−σ})` rate is numerical,
+  not yet a theorem); entries are hierarchically separated: within
+  a chosen ordered triple the largest-product pair dominates, and
+  the zero-sum weight putting `(1, 1)` on that triple's two larger
+  primes and `−2` on its smallest is positive — no set of three or
+  more primes stays CND as `s → 0` (`pairing_not_cnd_small`,
+  through the dominance threshold `pairing_dominates_small`).
   Open: whether each valid-scale set is an interval; whether
   `sup_P s_c(P)` is finite; how the deficit transition scales with
   the prime set.
@@ -310,11 +314,13 @@ reflected scales. The higher-rank statement remains unformalized.
 ## The ladder
 
 The formalization order for the symmetry and its consequences.
-Rungs 1–4 are complete — the reflection law in
+Rungs 1–4 and 6 are complete — the reflection law in
 `Theaetetus.Duality` (with the corollary `theta_rect_lt_iff`,
-which both sign proofs' reflection branches now consume) and
-coarse Q5 in `Theaetetus.Midpoint`. Rung 6 consumes rung 2, rung 7
-subsumes rung 4:
+which both sign proofs' reflection branches now consume), coarse
+Q5 in `Theaetetus.Midpoint`, and the small-scale chamber in
+`Theaetetus.SmallScale`, through the kernel interface
+(`Theaetetus.Kernel`) and the normalized asymptotics
+(`Theaetetus.LargeScale`). Rung 7 subsumes rung 4:
 
 1. `theta_rect_dual` — the real-variable reflection engine: for
    `t, a, b > 0` the cross-ratio
@@ -332,7 +338,8 @@ subsumes rung 4:
    zero-sum cancellation and `(pq)² ≥ p² + q²` mark the route;
    the dimension-free quadratic estimate is the work.
 6. The small-scale chamber — every set of three or more primes
-   fails CND for all sufficiently small `s`.
+   fails CND for all sufficiently small `s`
+   (`pairing_not_cnd_small`).
 7. `theta_prod_lt_general` with `1 < a` — the open core; with
    continuity it closes Q5 at rank one.
 

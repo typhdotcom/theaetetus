@@ -169,4 +169,35 @@ theorem tendsto_exp_mul_pairing {p q : ℕ} (hp : 2 ≤ p) (hq : 2 ≤ q)
     rw [defect_coprime hco]
     ring
 
+/-- **Shifted normalization**: at coupling ratio `c > 1` the
+normalized pairing dies — `e^t·⟨p,q⟩_{ct} → 0`. Factoring
+`e^t·⟨p,q⟩_{ct} = e^{(1−c)t}·(e^{ct}·⟨p,q⟩_{ct})` sends the
+second factor to `2` and the first to `0`: exponential separation
+between entries evaluated at ratio-shifted scales. -/
+theorem tendsto_exp_mul_pairing_shift {c : ℝ} (hc : 1 < c) {p q : ℕ}
+    (hp : 2 ≤ p) (hq : 2 ≤ q) (hco : Nat.Coprime p q) :
+    Tendsto (fun t : ℝ => Real.exp t * pairing (c * t) p q)
+      atTop (𝓝 0) := by
+  have hc0 : (0 : ℝ) < c := by linarith
+  have hinner : Tendsto
+      (fun t : ℝ => Real.exp (c * t) * pairing (c * t) p q)
+      atTop (𝓝 2) :=
+    (tendsto_exp_mul_pairing hp hq hco).comp
+      (Filter.Tendsto.const_mul_atTop hc0 tendsto_id)
+  have hnum : Tendsto (fun t : ℝ => Real.exp ((1 - c) * t))
+      atTop (𝓝 0) := by
+    have hpos : Tendsto (fun t : ℝ => (c - 1) * t) atTop atTop :=
+      Filter.Tendsto.const_mul_atTop (by linarith) tendsto_id
+    have hmul : Tendsto (fun t : ℝ => (1 - c) * t) atTop atBot :=
+      (tendsto_neg_atTop_atBot.comp hpos).congr fun t => by
+        simp only [Function.comp_apply]
+        ring
+    exact Real.tendsto_exp_atBot.comp hmul
+  have h := hnum.mul hinner
+  norm_num at h
+  exact h.congr fun t => by
+    have hexp : Real.exp ((1 - c) * t) * Real.exp (c * t) = Real.exp t := by
+      rw [← Real.exp_add]; congr 1; ring
+    linear_combination pairing (c * t) p q * hexp
+
 end Theaetetus

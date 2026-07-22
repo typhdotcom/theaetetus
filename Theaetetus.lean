@@ -33,6 +33,9 @@ import Theaetetus.Kernel
 -- The deep-scale limit: the normalized pairing asymptotic
 import Theaetetus.LargeScale
 
+-- Q4, rung 6: the small-scale chamber — no three primes stay CND
+import Theaetetus.SmallScale
+
 -- Q5(a): residue complexity as a polymatroid-like rank function
 import Theaetetus.RankFunction
 
