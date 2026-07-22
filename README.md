@@ -112,6 +112,38 @@ the Jacobi duality `θ(π²/α) = √(α/π)·θ(α)` before closing on
 rational arithmetic. The classification needs less: modal
 concentration at large resolution, no duality.
 
+## The symmetry
+
+The defect is a weight-zero combination. Each factor `log Z(q²s)`
+carries modular weight — the duality multiplies `θ` by a
+prefactor — but the cross-ratio weights its four terms
+`½ + ½ − ½ − ½`, and the prefactors cancel exactly because
+`gcd·lcm = q·q′`. What survives is an exact reflection law,
+
+    D_s(q, q′) = D_{π²/(s·lcm²)}(q/g, q′/g),    g := gcd(q, q′).
+
+Every pair reflects onto its coprime reduction at a dual scale. On
+a coprime pair the involution fixes the pair and moves only the
+scale, so each coprime entry is an even function of `log s` about
+its own center `s* = π/(qq′)` — centers additively separable in
+the log-primes. Both all-scale sign proofs already use the
+reflection inline (`Sign`, branch two; `Submodular`, reflection
+branch), each re-deriving the cancellation for its own pair; the
+law itself is stated nowhere. It is numerically exact to machine
+precision and is the first rung of the ladder below.
+
+The compact form: write `H(u) := log θ(eᵘ)`. Then
+`H(u) + (u − log π)/4` is even about `u = log π`, and everything
+here is a second difference of `H` — the defect its mixed second
+difference on the log-divisibility lattice, Q4's diagonal
+correction its equal-leg difference, Q5 its infinitesimal one, the
+duality its reflection symmetry. At higher rank multivariate
+Poisson summation gives the same cancellation with the dual
+lattice (inverse Gram) appearing:
+`D_{L,s}(q,q′) = D_{L*,π²/(s·lcm²)}(q/g, q′/g)` — the defect
+field of `L` at scale `s` is the defect field of `L*` at
+reflected scales. Neither statement is yet formalized.
+
 ## The questions
 
 - **Q1 — strictness and generic residue actions.** Regev and
@@ -143,7 +175,11 @@ concentration at large resolution, no duality.
   prime-pairing matrix determine the theta series, making equality of
   scalar defect matrices equivalent to theta-equivalence? Does one
   infinite prime row already suffice, and what is the minimal
-  determining subset of defect entries?
+  determining subset of defect entries? The reflection law acts on
+  the all-scale defect field, not on a fixed-`s` matrix: reflected
+  scales vary with the pair, so a single matrix is untouched by
+  duality while the field determines its own reflection. Rigidity
+  statements should say which datum they consume.
 
 - **Q3 — the residue-refined inverse problem.** Scalar defect data
   cannot distinguish theta-equivalent lattices; sparse spectral
@@ -154,14 +190,59 @@ concentration at large resolution, no duality.
   graph carriers, does the corresponding invariant determine graph
   isomorphism, cycle-matroid equivalence, or a coarser relation?
 
-- **Q4 — scale-dependent kernel geometry.** For which scales is the
-  prime pairing conditionally negative definite, and for which scales
-  is its saturation deficit positive semidefinite? Numerical evidence
-  indicates that neither property holds uniformly in the scale, already
-  on the rank-one prime set `{2,3,5}` at `s = 3/100`. Are the valid
-  scale sets intervals with a critical threshold? Is there a natural
-  centering or transform with negative type, or a different kernel
-  whose geometry is stable across all scales?
+- **Q4 — scale-dependent kernel geometry.** For which scales is
+  the prime pairing conditionally negative definite (CND), and for
+  which scales is its saturation deficit positive semidefinite?
+  The two clauses share one structure. Write `F(m) := log θ(m²s)`,
+  `h_s(x) := log θ(s·e^{2x})`, `x_p := log p`. On distinct primes
+  the pairing is the Hankel-cocycle second difference
+  `⟨p,q⟩ = h_s(0) + h_s(x_p+x_q) − h_s(x_p) − h_s(x_q)` with true
+  diagonal zero; writing `M̃` for that formula extended to all
+  pairs — the Hankel-cocycle extension —
+  `M = M̃ − diag(d_s(x_p))`,
+  where `d_s(x) = h_s(0) − 2h_s(x) + h_s(2x)` is a Q5 curvature —
+  the coupling between this question and Q5. The saturation
+  deficit `B := log θ(s)·J − M` has exact entries
+  `B_pq = F(p) + F(q) − F(pq)` off the diagonal and `F(1)` on it;
+  it is entrywise positive (`pairing_lt_base`), and
+  `cᵀBc = −cᵀMc` on zero-sum vectors, so deficit-PSD implies CND
+  outright — and only that: the converse fails numerically.
+
+  The chambers, numerically. Define
+  `s_c(P) := inf { s₀ : the kernel on P is CND for all s ≥ s₀ }`,
+  and likewise for the deficit. On `{2,3,5}` the transitions sit
+  near `0.080` (CND) and `0.085` (deficit-PSD); on `{2,3,5,7,11}`
+  near `0.108` and `0.169` — at `s = 0.12` the five-prime pairing
+  is CND while its deficit is not PSD. The clauses are coupled but
+  distinct, and enlarging the prime set only shrinks the
+  valid-scale sets. Both asymptotic regimes have identified
+  mechanisms, stated as targets. Large `s`: on zero-sum vectors
+  the row and column terms of `M` cancel identically and the lcm
+  term is controlled through `(pq)² ≥ p² + q²`, suggesting a route
+  to an absolute threshold — the existing bounds are entrywise,
+  and the missing step is the dimension-free quadratic-form
+  estimate; the binding inequality `log θ(s) ≥ 2·log θ(4s)`
+  crosses near `s = 0.196`, and the first hundred primes are CND
+  at `s = (log 2)/3`. Small `s`: the reflection law evaluates each
+  entry at its own dual scale, `⟨p,q⟩ = 2e^{−σ}(1 + O(e^{−σ}))`
+  with `σ = π²/(s·p²q²)`; entries are hierarchically separated,
+  the largest product dominates, and the zero-sum weight putting
+  `(1, 1)` on the two largest primes and `−2` on a third is
+  positive — no set of three or more primes stays CND as `s → 0`.
+  Open: whether each valid-scale set is an interval; whether
+  `sup_P s_c(P)` is finite; how the deficit transition scales with
+  the prime set.
+
+  The transform question has a sharpened target. Saturated rows
+  obstruct any Gram representation of `B/2` by Dirichlet monomials
+  `p^{−λ}` against a shared measure: the row limit `B_pq → F(p)`
+  as `q → ∞` depends on `p`, while `∫ p^{−λ}q^{−λ} dν → ν({0})`
+  does not. Survival vectors `𝟙[t ≥ p]` in `L²(−dF)` split off a
+  canonical PSD component with Gram kernel `F(max(p,q))`, but the
+  remainder `F(min(p,q)) − F(pq)` (diagonal `F(1) − F(p)`) keeps
+  the same `p`-dependent row limit `F(p)`: the obstruction
+  survives the subtraction, and realizing the remainder is the
+  open problem.
 
 - **Q5 — thermodynamic curvature.** A continuous strengthening of
   the sign asks whether
@@ -177,10 +258,41 @@ concentration at large resolution, no duality.
   expectation/variance interface and multivariate Poisson summation
   provide the analytic ingredients for this question.
 
+  The question is exactly the sign of the Poisson correction: the
+  continuum Gaussian has `⟨E⟩ = n/(2β)` and `Var = n/(2β²)`, so
+  its curvature vanishes identically. Three consequences of the
+  symmetry sharpen the target. The coarse half is latent in the
+  formalized sign: the `b → a` limit of `theta_prod_lt_general`
+  gives `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for every real `a ≥ 2` — midpoint
+  convexity of `H` at every location at leg spacing `≥ 2 log 2`,
+  which in particular makes every Q4 diagonal correction
+  `d_s(x_p)` nonnegative, since `x_p ≥ log 2`. The hypothesis
+  `2 ≤ a` originates in integer incomparability and may be
+  analytically unnecessary; Q5 at rank one is the conjecture that
+  the inequality never needed the integers. It is equivalent to
+  the non-strict equal-leg case `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for
+  `1 < a < 2`; the strict two-leg extension of
+  `theta_prod_lt_general` to `1 < a` is a stronger sufficient
+  target. The reflection makes
+  the curvature invariant under `β ↦ π²/β` at rank one and pairs
+  it with the dual lattice at higher rank,
+  `H_L″(u) = H_{L*}″(2·log π − u)`: convexity for every lattice on
+  `β ≥ π` is convexity everywhere, the class being closed under
+  duality — an individual profile is self-symmetric only when the
+  lattice is isodual. And differentiating the duality at its fixed
+  point gives the anchor `θ′(π) = −θ(π)/(4π)` — mean Gibbs energy
+  exactly `1/(4π)` at the self-dual scale — cheap through
+  Mathlib's `differentiableAt_jacobiTheta`; only the Gibbs reading
+  needs the termwise bridge.
+
 - **Q6 — higher association and realizability.** The correct
   algebraic object is the symmetric mixed-difference hierarchy of
   `K` on the prime-exponent lattice: `Δ_{p₁}⋯Δ_{p_k}K` measures
-  `k`-prime coupling. Rectangle identities and the characterization
+  `k`-prime coupling. The pairing matrix is this hierarchy's
+  `k = 2` layer, and Q4's saturation deficit is its union form
+  `F(p) + F(q) − F(pq)` off the diagonal: Q4's kernel geometry is
+  the definiteness theory of the first nontrivial level. Rectangle identities and
+  the characterization
   of vanishing cross-prime differences are formalization work, not
   open mathematics. Numerical evidence in rank one indicates that the
   three-prime difference at `2,3,5` changes sign with the scale, so
@@ -190,6 +302,32 @@ concentration at large resolution, no duality.
   Hessians are realizable by lattice theta functions? Because `K` is
   an intersection surprisal rather than an entropy, entropic-cone
   membership is a separate representation problem.
+
+## The ladder
+
+The formalization order for the symmetry and its consequences.
+Rungs 4–5 are independent of the engine, rung 6 consumes rung 2,
+rung 7 subsumes rung 4:
+
+1. `theta_rect_dual` — the real-variable reflection engine: for
+   `t, a, b > 0` the cross-ratio
+   `θ(a²t)·θ(b²t) / (θ(t)·θ((ab)²t))` is invariant under
+   `t ↦ π²/((ab)²t)`. Replaces both inline reflections.
+2. `defect_dual` — the arithmetic corollary:
+   `D_s(q,q′) = D_{π²/(s·lcm²)}(q/g, q′/g)`.
+3. `defect_scale_even` — coprime entries even in `log s` about
+   `s* = π/(qq′)`.
+4. Coarse Q5 — `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for real `a ≥ 2`, the
+   `b → a` limit of `theta_prod_lt_general`; nonnegativity of
+   every Q4 diagonal correction.
+5. The large-scale chamber — target: an absolute `s₀` beyond
+   which the prime pairing is CND on every finite prime set. The
+   zero-sum cancellation and `(pq)² ≥ p² + q²` mark the route;
+   the dimension-free quadratic estimate is the work.
+6. The small-scale chamber — every set of three or more primes
+   fails CND for all sufficiently small `s`.
+7. `theta_prod_lt_general` with `1 < a` — the open core; with
+   continuity it closes Q5 at rank one.
 
 ## The map
 
