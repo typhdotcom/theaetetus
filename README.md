@@ -126,13 +126,13 @@ Every pair reflects onto its coprime reduction at a dual scale. On
 a coprime pair the involution fixes the pair and moves only the
 scale, so each coprime entry is an even function of `log s` about
 its own center `s* = π/(qq′)` — centers additively separable in
-the log-primes. Both all-scale sign proofs already used the
-reflection inline (`Sign`, branch two; `Submodular`, reflection
-branch), each re-deriving the cancellation for its own pair; the
-law is now stated once — the rectangle engine and the arithmetic
-law (`theta_rect_dual`, `defect_dual`), the coprime evenness
-(`defect_scale_even`), and the inequality equivalence the
-reflection branches consume (`theta_rect_lt_iff`).
+the log-primes. Both all-scale sign proofs originally re-derived
+the reflection inline (`Sign`, branch two; `Submodular`,
+reflection branch); the law is now stated once — the rectangle
+engine and the arithmetic law (`theta_rect_dual`, `defect_dual`),
+the coprime evenness (`defect_scale_even`) — and both branches
+consume it through the inequality equivalence
+(`theta_rect_lt_iff`).
 
 The compact form: write `H(u) := log θ(eᵘ)`. Then
 `H(u) + (u − log π)/4` is even about `u = log π`, and everything
@@ -263,8 +263,9 @@ reflected scales. The higher-rank statement remains unformalized.
   The question is exactly the sign of the Poisson correction: the
   continuum Gaussian has `⟨E⟩ = n/(2β)` and `Var = n/(2β²)`, so
   its curvature vanishes identically. Three consequences of the
-  symmetry sharpen the target. The coarse half is latent in the
-  formalized sign: the `b → a` limit of `theta_prod_lt_general`
+  symmetry sharpen the target. The coarse half is proved
+  (`theta_sq_le`, `log_theta_midpoint_le`): the `b → a` limit of
+  `theta_prod_lt_general`
   gives `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for every real `a ≥ 2` — midpoint
   convexity of `H` at every location at leg spacing `≥ 2 log 2`,
   which in particular makes every Q4 diagonal correction
@@ -308,9 +309,11 @@ reflected scales. The higher-rank statement remains unformalized.
 ## The ladder
 
 The formalization order for the symmetry and its consequences.
-Rungs 1–3 are complete (`Theaetetus.Duality`, with the corollary
-`theta_rect_lt_iff`). Rungs 4–5 are independent of the engine,
-rung 6 consumes rung 2, rung 7 subsumes rung 4:
+Rungs 1–4 are complete — the reflection law in
+`Theaetetus.Duality` (with the corollary `theta_rect_lt_iff`,
+which both sign proofs' reflection branches now consume) and
+coarse Q5 in `Theaetetus.Midpoint`. Rung 6 consumes rung 2, rung 7
+subsumes rung 4:
 
 1. `theta_rect_dual` — the real-variable reflection engine: for
    `t, a, b > 0` the cross-ratio

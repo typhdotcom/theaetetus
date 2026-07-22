@@ -118,6 +118,21 @@ theorem theta_duality_real (α : ℝ) (hα : 0 < α) :
   convert h using 2
   push_cast; ring
 
+/-- **Continuity at positive coupling**, through the
+identification: the Jacobi theta function is holomorphic on the
+upper half-plane, and `α ↦ iα/π` lands there for `α > 0`. -/
+theorem theta_continuousAt {α : ℝ} (hα : 0 < α) : ContinuousAt theta α := by
+  have hid : theta = fun β : ℝ => (jacobiTheta (quadTau β)).re := by
+    funext β
+    rw [← theta_eq_jacobiTheta]
+    exact (Complex.ofReal_re _).symm
+  rw [hid]
+  have hq : Continuous quadTau := by
+    unfold quadTau
+    exact (continuous_const.mul Complex.continuous_ofReal).div_const _
+  exact Complex.continuous_re.continuousAt.comp
+    ((continuousAt_jacobiTheta (quad_tau_im_pos α hα)).comp hq.continuousAt)
+
 /-! ## The estimate kit -/
 
 /-- The theta function strictly exceeds 1: the vacuum sector

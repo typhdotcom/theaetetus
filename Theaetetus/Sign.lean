@@ -1,4 +1,5 @@
 import Theaetetus.Defect
+import Theaetetus.Duality
 import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.Real.Pi.Bounds
 
@@ -16,12 +17,10 @@ second) — the inequality is irreducibly aggregate.
 The proof:
 
 * **Duality is an involution on the problem**
-  (`theta_prod_lt` branch two): applying
-  `θ(π²/α) = √(α/π)·θ(α)` to all four factors multiplies both
-  sides by the same prefactor, because `4·9 = 1·36` — the
-  gcd·lcm = q·q′ identity makes the √-factors cancel. So the
-  statement at `s` is equivalent to the statement at
-  `s′ = π²/(36s)`.
+  (`theta_prod_lt` branch two): the `gcd·lcm = q·q′` identity
+  `4·9 = 1·36` makes the four Jacobi prefactors cancel between the
+  sides, so the statement at `s` is equivalent to the statement at
+  `s′ = π²/(36s)` — consumed as `theta_rect_lt_iff` at `(2, 3)`.
 * **Large scales close geometrically**
   (`theta_prod_lt_of_half_le`): for `s ≥ 1/2`, with
   `q := e^(−s) ≤ 61/100`, geometric tails give
@@ -140,57 +139,10 @@ theorem theta_prod_lt {s : ℝ} (hs : 0 < s) :
     have hs' : (1 / 2 : ℝ) ≤ Real.pi ^ 2 / (36 * s) := by
       rw [le_div_iff₀ (by positivity)]
       linarith [sq_nonneg (Real.pi - 3), Real.pi_gt_three]
-    have hA' := theta_prod_lt_of_half_le hs'
-    -- the four dual couplings
-    have h36ne : (36 : ℝ) * s ≠ 0 := by positivity
-    have h9ne : (9 : ℝ) * s ≠ 0 := by positivity
-    have h4ne : (4 : ℝ) * s ≠ 0 := by positivity
-    have hsne : s ≠ 0 := ne_of_gt hs
-    have harg4 : 4 * (Real.pi ^ 2 / (36 * s)) = Real.pi ^ 2 / (9 * s) := by
-      rw [← mul_div_assoc, div_eq_div_iff h36ne h9ne]; ring
-    have harg9 : 9 * (Real.pi ^ 2 / (36 * s)) = Real.pi ^ 2 / (4 * s) := by
-      rw [← mul_div_assoc, div_eq_div_iff h36ne h4ne]; ring
-    have harg36 : 36 * (Real.pi ^ 2 / (36 * s)) = Real.pi ^ 2 / s := by
-      rw [← mul_div_assoc, div_eq_div_iff h36ne hsne]; ring
-    have hd4 : theta (4 * (Real.pi ^ 2 / (36 * s)))
-        = (9 * s / Real.pi) ^ ((1 : ℝ) / 2) * theta (9 * s) := by
-      rw [harg4]; exact theta_duality_real (9 * s) (by positivity)
-    have hd9 : theta (9 * (Real.pi ^ 2 / (36 * s)))
-        = (4 * s / Real.pi) ^ ((1 : ℝ) / 2) * theta (4 * s) := by
-      rw [harg9]; exact theta_duality_real (4 * s) (by positivity)
-    have hds : theta (Real.pi ^ 2 / (36 * s))
-        = (36 * s / Real.pi) ^ ((1 : ℝ) / 2) * theta (36 * s) :=
-      theta_duality_real (36 * s) (by positivity)
-    have hd36 : theta (36 * (Real.pi ^ 2 / (36 * s)))
-        = (s / Real.pi) ^ ((1 : ℝ) / 2) * theta s := by
-      rw [harg36]; exact theta_duality_real s hs
-    rw [hd4, hd9, hds, hd36] at hA'
-    -- the prefactors agree: `(9s/π)·(4s/π) = (36s/π)·(s/π)`
-    have hpre : (9 * s / Real.pi) ^ ((1 : ℝ) / 2)
-          * (4 * s / Real.pi) ^ ((1 : ℝ) / 2)
-        = (36 * s / Real.pi) ^ ((1 : ℝ) / 2)
-          * (s / Real.pi) ^ ((1 : ℝ) / 2) := by
-      rw [← Real.mul_rpow (by positivity) (by positivity),
-        ← Real.mul_rpow (by positivity) (by positivity),
-        show (9 * s / Real.pi) * (4 * s / Real.pi)
-          = (36 * s / Real.pi) * (s / Real.pi) from by ring]
-    have hCpos : (0 : ℝ) < (36 * s / Real.pi) ^ ((1 : ℝ) / 2)
-        * (s / Real.pi) ^ ((1 : ℝ) / 2) := by positivity
-    have key : ((36 * s / Real.pi) ^ ((1 : ℝ) / 2)
-          * (s / Real.pi) ^ ((1 : ℝ) / 2)) * (theta (4 * s) * theta (9 * s))
-        < ((36 * s / Real.pi) ^ ((1 : ℝ) / 2)
-          * (s / Real.pi) ^ ((1 : ℝ) / 2)) * (theta s * theta (36 * s)) := by
-      calc ((36 * s / Real.pi) ^ ((1 : ℝ) / 2)
-            * (s / Real.pi) ^ ((1 : ℝ) / 2)) * (theta (4 * s) * theta (9 * s))
-          = (9 * s / Real.pi) ^ ((1 : ℝ) / 2) * theta (9 * s)
-            * ((4 * s / Real.pi) ^ ((1 : ℝ) / 2) * theta (4 * s)) := by
-            rw [← hpre]; ring
-        _ < (36 * s / Real.pi) ^ ((1 : ℝ) / 2) * theta (36 * s)
-            * ((s / Real.pi) ^ ((1 : ℝ) / 2) * theta s) := hA'
-        _ = ((36 * s / Real.pi) ^ ((1 : ℝ) / 2)
-            * (s / Real.pi) ^ ((1 : ℝ) / 2)) * (theta s * theta (36 * s)) := by
-            ring
-    exact lt_of_mul_lt_mul_left key hCpos.le
+    have hiff := theta_rect_lt_iff (t := s) (t' := Real.pi ^ 2 / (36 * s))
+      (a := 2) (b := 3) hs (by norm_num) (by norm_num) (by norm_num)
+    norm_num at hiff
+    exact hiff.mpr (theta_prod_lt_of_half_le hs')
 
 /-- **THE BIRTH CERTIFICATE** (M3): the defect at the smallest
 incomparable pair is strictly negative at **every** scale —

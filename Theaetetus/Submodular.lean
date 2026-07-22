@@ -1,4 +1,5 @@
 import Theaetetus.Defect
+import Theaetetus.Duality
 import Theaetetus.ThetaBounds
 import Theaetetus.Witness
 import Mathlib.Analysis.Real.Pi.Bounds
@@ -39,7 +40,8 @@ for real `2 ≤ a < b`, `t > 0` — incomparability enters only as
 * **Reflection** (`abt < π`): the involution `t ↦ π²/((ab)²t)` maps
   the configuration to one with `abt′ > π` and swaps the roles of
   the two sides; the four Jacobi prefactors cancel between the sides
-  because `1·(ab)² = a²·b²` — the `gcd·lcm = q·q′` identity again.
+  because `1·(ab)² = a²·b²` — the `gcd·lcm = q·q′` identity again,
+  consumed as `theta_rect_lt_iff`.
 
 The pair `(2,3)` never had a duality-comparison regime — its two
 branches met at `π > 3`. The general pair needs the third regime
@@ -263,70 +265,22 @@ theorem theta_prod_lt_general {t a b : ℝ} (ht : 0 < t) (ha : 2 ≤ a) (hab : a
   · rcases le_or_gt (a ^ 2 * t) Real.pi with hlow | hhigh
     · exact theta_prod_lt_of_dual ht ha hab hmid hlow
     · exact theta_prod_lt_of_geo ht ha hab hhigh.le
-  · have hπ0 : (0 : ℝ) < Real.pi := Real.pi_pos
-    set t' := Real.pi ^ 2 / ((a * b) ^ 2 * t) with ht'def
-    have hlt0 : (0 : ℝ) < (a * b) ^ 2 * t := by positivity
-    have ht'0 : (0 : ℝ) < t' := by rw [ht'def]; positivity
-    have habt' : Real.pi ≤ a * b * t' := by
-      rw [ht'def, show a * b * (Real.pi ^ 2 / ((a * b) ^ 2 * t))
+  · -- reflect through `theta_rect_lt_iff`: `t′ = π²/((ab)²t)` has
+    -- `abt′ ≥ π`, where the two direct branches cover everything
+    have hπ0 : (0 : ℝ) < Real.pi := Real.pi_pos
+    have ht'0 : (0 : ℝ) < Real.pi ^ 2 / ((a * b) ^ 2 * t) := by positivity
+    have habt' : Real.pi ≤ a * b * (Real.pi ^ 2 / ((a * b) ^ 2 * t)) := by
+      rw [show a * b * (Real.pi ^ 2 / ((a * b) ^ 2 * t))
             = Real.pi ^ 2 / (a * b * t) from by
           rw [← mul_div_assoc, div_eq_div_iff (by positivity) (by positivity)]
           ring,
         le_div_iff₀ (by positivity)]
       nlinarith [mul_lt_mul_of_pos_left hmid hπ0]
-    have hkey : theta (a ^ 2 * t') * theta (b ^ 2 * t')
-        < theta t' * theta ((a * b) ^ 2 * t') := by
-      rcases le_or_gt (a ^ 2 * t') Real.pi with hlow' | hhigh'
-      · exact theta_prod_lt_of_dual ht'0 ha hab habt' hlow'
-      · exact theta_prod_lt_of_geo ht'0 ha hab hhigh'.le
-    have htne : t ≠ 0 := ne_of_gt ht
-    have hlne : ((a * b) ^ 2 * t) ≠ 0 := ne_of_gt hlt0
-    have hane : (a ^ 2 * t) ≠ 0 := by positivity
-    have hbne : (b ^ 2 * t) ≠ 0 := by positivity
-    have hargA : a ^ 2 * t' = Real.pi ^ 2 / (b ^ 2 * t) := by
-      rw [ht'def, ← mul_div_assoc, div_eq_div_iff hlne hbne]; ring
-    have hargB : b ^ 2 * t' = Real.pi ^ 2 / (a ^ 2 * t) := by
-      rw [ht'def, ← mul_div_assoc, div_eq_div_iff hlne hane]; ring
-    have hargL : (a * b) ^ 2 * t' = Real.pi ^ 2 / t := by
-      rw [ht'def, ← mul_div_assoc, div_eq_div_iff hlne htne]; ring
-    have hdA : theta (a ^ 2 * t')
-        = (b ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2) * theta (b ^ 2 * t) := by
-      rw [hargA]; exact theta_duality_real (b ^ 2 * t) (by positivity)
-    have hdB : theta (b ^ 2 * t')
-        = (a ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2) * theta (a ^ 2 * t) := by
-      rw [hargB]; exact theta_duality_real (a ^ 2 * t) (by positivity)
-    have hdT : theta t'
-        = ((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2) * theta ((a * b) ^ 2 * t) := by
-      rw [ht'def]; exact theta_duality_real ((a * b) ^ 2 * t) (by positivity)
-    have hdL : theta ((a * b) ^ 2 * t')
-        = (t / Real.pi) ^ ((1 : ℝ) / 2) * theta t := by
-      rw [hargL]; exact theta_duality_real t ht
-    rw [hdA, hdB, hdT, hdL] at hkey
-    have hpre : (b ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-          * (a ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-        = ((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-          * (t / Real.pi) ^ ((1 : ℝ) / 2) := by
-      rw [← Real.mul_rpow (by positivity) (by positivity),
-        ← Real.mul_rpow (by positivity) (by positivity),
-        show b ^ 2 * t / Real.pi * (a ^ 2 * t / Real.pi)
-          = (a * b) ^ 2 * t / Real.pi * (t / Real.pi) from by ring]
-    have hCpos : (0 : ℝ) < ((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-        * (t / Real.pi) ^ ((1 : ℝ) / 2) := by positivity
-    have key2 : (((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-          * (t / Real.pi) ^ ((1 : ℝ) / 2)) * (theta (a ^ 2 * t) * theta (b ^ 2 * t))
-        < (((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-          * (t / Real.pi) ^ ((1 : ℝ) / 2)) * (theta t * theta ((a * b) ^ 2 * t)) := by
-      calc (((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-            * (t / Real.pi) ^ ((1 : ℝ) / 2)) * (theta (a ^ 2 * t) * theta (b ^ 2 * t))
-          = (b ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2) * theta (b ^ 2 * t)
-            * ((a ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2) * theta (a ^ 2 * t)) := by
-            rw [← hpre]; ring
-        _ < ((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2) * theta ((a * b) ^ 2 * t)
-            * ((t / Real.pi) ^ ((1 : ℝ) / 2) * theta t) := hkey
-        _ = (((a * b) ^ 2 * t / Real.pi) ^ ((1 : ℝ) / 2)
-            * (t / Real.pi) ^ ((1 : ℝ) / 2)) * (theta t * theta ((a * b) ^ 2 * t)) := by
-            ring
-    exact lt_of_mul_lt_mul_left key2 hCpos.le
+    rw [theta_rect_lt_iff ht ha0 hb0 rfl]
+    rcases le_or_gt (a ^ 2 * (Real.pi ^ 2 / ((a * b) ^ 2 * t))) Real.pi
+      with hlow' | hhigh'
+    · exact theta_prod_lt_of_dual ht'0 ha hab habt' hlow'
+    · exact theta_prod_lt_of_geo ht'0 ha hab hhigh'.le
 
 /-- The theta inequality, symmetric form: `a, b ≥ 2` and `a ≠ b`. -/
 theorem theta_prod_lt_general' {t a b : ℝ} (ht : 0 < t) (ha : 2 ≤ a) (hb : 2 ≤ b)

@@ -15,6 +15,9 @@ import Theaetetus.Sign
 -- Q1 closed at rank one: strict submodularity at every incomparable pair
 import Theaetetus.Submodular
 
+-- Coarse Q5: the equal-leg midpoint inequality, the sign's b → a limit
+import Theaetetus.Midpoint
+
 -- Q1 for diagonal forms, every rank: orthogonal sums add defects
 import Theaetetus.Diagonal
 

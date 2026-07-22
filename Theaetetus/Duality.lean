@@ -21,10 +21,10 @@ The engine is the real-variable rectangle reflection
 theta cross-ratio at couplings `{t, a²t, b²t, (ab)²t}` agree —
 their quotient is one — because `(a²t)·(b²t) = t·((ab)²t)`. Both
 all-scale sign proofs (`Sign`, branch two; `Submodular`,
-reflection branch) re-derive this cancellation inline for their
-own pair; this module states it once, and `theta_rect_lt_iff`
-packages it as the inequality equivalence the reflection branches
-actually consume. Ladder rungs 1–3. -/
+reflection branch) originally re-derived this cancellation inline
+for their own pair; this module states it once, and both branches
+now consume it through `theta_rect_lt_iff`, the
+inequality-equivalence form. Ladder rungs 1–3. -/
 
 namespace Theaetetus
 
