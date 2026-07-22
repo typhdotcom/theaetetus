@@ -6,6 +6,9 @@ import Theaetetus.Theta
 import Theaetetus.Defect
 import Theaetetus.Witness
 
+-- The reflection law: duality as a weight-zero symmetry of the defect
+import Theaetetus.Duality
+
 -- The sign at (2, 3), all scales: the birth certificate
 import Theaetetus.Sign
 

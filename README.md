@@ -126,11 +126,13 @@ Every pair reflects onto its coprime reduction at a dual scale. On
 a coprime pair the involution fixes the pair and moves only the
 scale, so each coprime entry is an even function of `log s` about
 its own center `s* = π/(qq′)` — centers additively separable in
-the log-primes. Both all-scale sign proofs already use the
+the log-primes. Both all-scale sign proofs already used the
 reflection inline (`Sign`, branch two; `Submodular`, reflection
 branch), each re-deriving the cancellation for its own pair; the
-law itself is stated nowhere. It is numerically exact to machine
-precision and is the first rung of the ladder below.
+law is now stated once — the rectangle engine and the arithmetic
+law (`theta_rect_dual`, `defect_dual`), the coprime evenness
+(`defect_scale_even`), and the inequality equivalence the
+reflection branches consume (`theta_rect_lt_iff`).
 
 The compact form: write `H(u) := log θ(eᵘ)`. Then
 `H(u) + (u − log π)/4` is even about `u = log π`, and everything
@@ -142,7 +144,7 @@ Poisson summation gives the same cancellation with the dual
 lattice (inverse Gram) appearing:
 `D_{L,s}(q,q′) = D_{L*,π²/(s·lcm²)}(q/g, q′/g)` — the defect
 field of `L` at scale `s` is the defect field of `L*` at
-reflected scales. Neither statement is yet formalized.
+reflected scales. The higher-rank statement remains unformalized.
 
 ## The questions
 
@@ -306,8 +308,9 @@ reflected scales. Neither statement is yet formalized.
 ## The ladder
 
 The formalization order for the symmetry and its consequences.
-Rungs 4–5 are independent of the engine, rung 6 consumes rung 2,
-rung 7 subsumes rung 4:
+Rungs 1–3 are complete (`Theaetetus.Duality`, with the corollary
+`theta_rect_lt_iff`). Rungs 4–5 are independent of the engine,
+rung 6 consumes rung 2, rung 7 subsumes rung 4:
 
 1. `theta_rect_dual` — the real-variable reflection engine: for
    `t, a, b > 0` the cross-ratio
