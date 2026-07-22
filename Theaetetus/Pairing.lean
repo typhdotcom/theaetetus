@@ -28,6 +28,23 @@ open Filter Topology
 of two resolutions, positive where the defect is negative. -/
 noncomputable def pairing (s : ℝ) (p q : ℕ) : ℝ := -defect s p q
 
+/-- The pairing vanishes on the diagonal: a resolution does not
+couple with itself. -/
+@[simp] theorem pairing_self (s : ℝ) (p : ℕ) : pairing s p p = 0 := by
+  unfold pairing
+  rw [defect_self]
+  exact neg_zero
+
+/-- **Coprime evenness for the pairing** (the negated-defect form
+of `defect_scale_even`): on a coprime pair the reflection fixes
+the pair and moves only the scale, `s ↦ π²/(s·(pq)²)`. -/
+theorem pairing_scale_even {s : ℝ} (hs : 0 < s) {p q : ℕ}
+    (hp : 0 < p) (hq : 0 < q) (hco : Nat.Coprime p q) :
+    pairing s p q
+      = pairing (Real.pi ^ 2 / (((p : ℝ) * (q : ℝ)) ^ 2 * s)) p q := by
+  unfold pairing
+  rw [defect_scale_even hs hp hq hco]
+
 /-- The pairing is symmetric. -/
 theorem pairing_comm (s : ℝ) (p q : ℕ) : pairing s p q = pairing s q p := by
   unfold pairing

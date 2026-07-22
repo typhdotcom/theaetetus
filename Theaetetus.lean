@@ -30,6 +30,9 @@ import Theaetetus.Pairing
 -- Q4: the kernel interface — quadratic forms on finite prime sets
 import Theaetetus.Kernel
 
+-- The deep-scale limit: the normalized pairing asymptotic
+import Theaetetus.LargeScale
+
 -- Q5(a): residue complexity as a polymatroid-like rank function
 import Theaetetus.RankFunction
 
