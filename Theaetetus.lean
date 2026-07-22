@@ -27,6 +27,9 @@ import Theaetetus.Factorization
 -- Q2: the prime pairing, its bounds, and saturation at the base
 import Theaetetus.Pairing
 
+-- Q4: the kernel interface — quadratic forms on finite prime sets
+import Theaetetus.Kernel
+
 -- Q5(a): residue complexity as a polymatroid-like rank function
 import Theaetetus.RankFunction
 

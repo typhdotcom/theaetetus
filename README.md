@@ -217,7 +217,8 @@ reflected scales. The higher-rank statement remains unformalized.
   near `0.108` and `0.169` — at `s = 0.12` the five-prime pairing
   is CND while its deficit is not PSD. The clauses are coupled but
   distinct, and enlarging the prime set only shrinks the
-  valid-scale sets. Both asymptotic regimes have identified
+  valid-scale sets (`IsCNDOn.subset`, `IsPSDOn.subset`). Both
+  asymptotic regimes have identified
   mechanisms, stated as targets. Large `s`: on zero-sum vectors
   the row and column terms of `M` cancel identically and the lcm
   term is controlled through `(pq)² ≥ p² + q²`, suggesting a route
