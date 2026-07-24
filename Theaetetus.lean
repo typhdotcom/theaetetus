@@ -8,6 +8,9 @@ import Theaetetus.Gibbs
 -- The functional equation: the reflection law differentiated
 import Theaetetus.FunctionalEquation
 
+-- The fluctuation inequality: Fact 1 at large coupling
+import Theaetetus.Fluctuation
+
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness
