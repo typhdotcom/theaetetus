@@ -280,8 +280,8 @@ reflected scales. The higher-rank statement remains unformalized.
   which in particular makes every Q4 diagonal correction
   `d_s(x_p)` nonnegative, since `x_p ≥ log 2`. The hypothesis
   `2 ≤ a` originates in integer incomparability and is
-  analytically unnecessary: Q5 at rank one is known — Faulhuber
-  and Steinerberger prove the strict geometric-mean inequality
+  analytically unnecessary: Q5 at rank one is the
+  Faulhuber–Steinerberger strict geometric-mean inequality
   `θ₃(rs)·θ₃(r/s) > θ₃(r)²` for `s ≠ 1`, equivalently that
   `x·θ₃′(x)/θ₃(x)` is strictly increasing
   ([*Optimal Gabor frame bounds for separable lattices and
@@ -289,22 +289,29 @@ reflected scales. The higher-rank statement remains unformalized.
   functions*](https://arxiv.org/abs/1601.02972), Theorems
   2.2–2.3; also [Faulhuber
   2020](https://arxiv.org/abs/1709.06006), Proposition 3.13) —
-  known analytically but not yet formalized here. Under the
-  identification `θ(β) = θ₃(β/π)` this is exactly convexity of
-  `u ↦ log θ(eᵘ)`, and the strict two-leg extension of
-  `theta_prod_lt_general` to `1 < a` follows (rung 7). The
-  genuinely open part of Q5 is the higher-rank lattice
-  statement. The reflection makes
+  now a theorem here (rung 7): `theta_logDeriv_strictMonoOn`
+  makes `α·θ′(α)/θ(α)` strictly increasing on all of `(0, ∞)`,
+  and `theta_rect_strict` / `theta_sq_lt` give the strict
+  rectangle and midpoint inequalities
+  `θ(a²t)·θ(b²t) < θ(t)·θ((ab)²t)` and `θ(a²t)² < θ(t)·θ(a⁴t)`
+  for every ratio above one — dropping both the `2 ≤ a` and the
+  `a < b` of `theta_prod_lt_general`. Under the identification
+  `θ(β) = θ₃(β/π)` this is exactly strict convexity of
+  `u ↦ log θ(eᵘ)`. The genuinely open part of Q5 is the
+  higher-rank lattice statement. The reflection makes
   the curvature invariant under `β ↦ π²/β` at rank one and pairs
   it with the dual lattice at higher rank,
   `H_L″(u) = H_{L*}″(2·log π − u)`: convexity for every lattice on
   `β ≥ π` is convexity everywhere, the class being closed under
   duality — an individual profile is self-symmetric only when the
   lattice is isodual. And differentiating the duality at its fixed
-  point gives the anchor `θ′(π) = −θ(π)/(4π)` — mean Gibbs energy
-  exactly `1/(4π)` at the self-dual scale — cheap through
-  Mathlib's `differentiableAt_jacobiTheta`; only the Gibbs reading
-  needs the termwise bridge.
+  point gives the anchor `θ′(π) = −θ(π)/(4π)` (`thetaDeriv_pi`) —
+  mean Gibbs energy exactly `1/(4π)` at the self-dual scale —
+  through the termwise bridge (`Theaetetus.Gibbs`) and the
+  functional equation
+  `α·θ′(α)/θ(α) + (π²/α)·θ′(π²/α)/θ(π²/α) = −1/2`
+  (`theta_logDeriv_dual`), the reflection law in infinitesimal
+  form.
 
 - **Q6 — higher association and realizability.** The correct
   algebraic object is the symmetric mixed-difference hierarchy of
@@ -327,14 +334,16 @@ reflected scales. The higher-rank statement remains unformalized.
 ## The ladder
 
 The formalization order for the symmetry and its consequences.
-Rungs 1–6 are complete — the reflection law in
+All seven rungs are complete — the reflection law in
 `Theaetetus.Duality` (with the corollary `theta_rect_lt_iff`,
 which both sign proofs' reflection branches now consume), coarse
-Q5 in `Theaetetus.Midpoint`, and both Q4 chambers
-(`Theaetetus.SmallScale`, `Theaetetus.Flattening`), through the
+Q5 in `Theaetetus.Midpoint`, both Q4 chambers
+(`Theaetetus.SmallScale`, `Theaetetus.Flattening`) through the
 kernel interface (`Theaetetus.Kernel`) and the normalized
-asymptotics (`Theaetetus.LargeScale`). Only rung 7 remains; it
-subsumes rung 4:
+asymptotics (`Theaetetus.LargeScale`), and the
+Faulhuber–Steinerberger port across `Theaetetus.Gibbs`,
+`Theaetetus.FunctionalEquation`, `Theaetetus.Fluctuation`, and
+`Theaetetus.LogConvexity`:
 
 1. `theta_rect_dual` — the real-variable reflection engine: for
    `t, a, b > 0` the cross-ratio
@@ -354,10 +363,21 @@ subsumes rung 4:
 6. The small-scale chamber — every set of three or more primes
    fails CND for all sufficiently small `s`
    (`pairing_not_cnd_small`).
-7. `theta_prod_lt_general` with `1 < a` — formalize the
-   Faulhuber–Steinerberger refined log-convexity of `θ₃`; known
-   analytically, closing Q5 at rank one. The genuinely open core
-   is higher rank.
+7. The refined log-convexity — the four-round
+   Faulhuber–Steinerberger port: the Gibbs bridge
+   `θ′(α) = −∑ k²·e^{−αk²}`, `θ″(α) = ∑ k⁴·e^{−αk²}`
+   (`hasDerivAt_theta`, `hasDerivAt_thetaDeriv`); Fact 2, the
+   functional equation
+   `α·θ′(α)/θ(α) + (π²/α)·θ′(π²/α)/θ(π²/α) = −1/2`
+   (`theta_logDeriv_dual`), with the fixed-point anchor
+   `thetaDeriv_pi`; Fact 1, the large-coupling fluctuation
+   inequality `α·Var(E) > ⟨E⟩` (`theta_fluctuation_large`,
+   `theta_logDeriv_numer_pos_large`); and the assembly — global
+   strict monotonicity by reflection
+   (`theta_logDeriv_strictMonoOn`), the strict rectangle
+   inequality `theta_rect_strict` for `1 < a, b`, and the strict
+   midpoint `theta_sq_lt`. Q5 closed at rank one; the genuinely
+   open core is higher rank.
 
 ## The map
 

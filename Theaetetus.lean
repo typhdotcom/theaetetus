@@ -11,6 +11,9 @@ import Theaetetus.FunctionalEquation
 -- The fluctuation inequality: Fact 1 at large coupling
 import Theaetetus.Fluctuation
 
+-- The refined log-convexity: rung 7 closed at rank one
+import Theaetetus.LogConvexity
+
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness

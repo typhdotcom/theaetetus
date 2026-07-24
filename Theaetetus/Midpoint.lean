@@ -16,11 +16,10 @@ boundary case
 correction `d_s(x_p) = log θ(s) − 2·log θ(p²s) + log θ(p⁴s)` is
 nonnegative, since every prime has `x_p = log p ≥ log 2`.
 
-Q5 at rank one is the conjecture that the hypothesis `2 ≤ a` —
-which originates in integer incomparability — can be relaxed to
-`1 < a`; the strict inequality degenerates at `a = b`, so the
-non-strict equal-leg case is exactly the boundary the limit
-reaches. -/
+This is the coarse precursor to `theta_sq_lt`
+(`Theaetetus.LogConvexity`, rung 7), which removes the hypothesis
+`2 ≤ a` — an artifact of integer incomparability — and
+strengthens the inequality to strictness for every `1 < a`. -/
 
 namespace Theaetetus
 
