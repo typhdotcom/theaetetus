@@ -2,6 +2,9 @@
 import Theaetetus.SectorAction
 import Theaetetus.Theta
 
+-- The Gibbs bridge: termwise derivatives of the primitive
+import Theaetetus.Gibbs
+
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness
