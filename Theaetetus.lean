@@ -5,6 +5,9 @@ import Theaetetus.Theta
 -- The Gibbs bridge: termwise derivatives of the primitive
 import Theaetetus.Gibbs
 
+-- The functional equation: the reflection law differentiated
+import Theaetetus.FunctionalEquation
+
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness
