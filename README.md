@@ -40,7 +40,7 @@ cohomology lattice `H¹(G;ℤ)` is trivial
 primes couple through it — and wherever the sign is proved, it is
 negative.
 
-## The theorems
+## What is established
 
 - **The cross-ratio law.** On the cohomology lattice `H¹(G;ℤ)` of
   any finite multigraph with its harmonic energy, the
@@ -103,6 +103,52 @@ negative.
   hexagonal form `(a² − ab + b²)/3`, and the defect is strictly
   negative at `(2,3)` (`thetaGraph_towerDefect_neg`), through the
   factorization `hexTheta s ≤ θ(s/3)·θ(s/4)`.
+- **The kernel chambers, rank one.** Write `F(m) := log θ(m²s)`,
+  `h_s(x) := log θ(s·e^{2x})`, `x_p := log p`. On distinct primes
+  the pairing is the Hankel-cocycle second difference
+  `⟨p,q⟩ = h_s(0) + h_s(x_p+x_q) − h_s(x_p) − h_s(x_q)` with true
+  diagonal zero — `M = M̃ − diag(d_s(x_p))`, the diagonal
+  corrections being the Q5 curvatures
+  `d_s(x) = h_s(0) − 2h_s(x) + h_s(2x)`. On zero-sum weights the
+  base and row/column terms cancel exactly
+  (`quadFormOn_pairing_eq`); for every `s ≥ 1` the pairing is CND
+  on every finite prime set at once (`pairing_cnd_large`,
+  dimension-free), and no set of three or more primes stays CND
+  as `s → 0` (`pairing_not_cnd_small`, through the dominance
+  threshold `pairing_dominates_small`; the normalized small-scale
+  asymptotic is `tendsto_exp_mul_pairing`). The saturation
+  deficit `B := log θ(s)·J − M` has exact entries
+  `F(p) + F(q) − F(pq)` off the diagonal and `F(1)` on it, is
+  entrywise positive (`pairing_lt_base`), and satisfies
+  `cᵀBc = −cᵀMc` on zero-sum weights — deficit-PSD implies CND,
+  and only that: the converse fails numerically. Both notions
+  restrict to subsets (`IsCNDOn.subset`, `IsPSDOn.subset`), so
+  enlarging the prime set only shrinks the valid-scale sets.
+- **The refined log-convexity, rank one — Q5's base case,
+  closed.** The Gibbs bridge `θ′(α) = −∑ k²·e^{−αk²}`,
+  `θ″(α) = ∑ k⁴·e^{−αk²}` (`hasDerivAt_theta`,
+  `hasDerivAt_thetaDeriv`); the functional equation
+  `α·θ′(α)/θ(α) + (π²/α)·θ′(π²/α)/θ(π²/α) = −1/2`
+  (`theta_logDeriv_dual`) with the fixed-point anchor
+  `θ′(π) = −θ(π)/(4π)` (`thetaDeriv_pi`) — mean Gibbs energy
+  exactly `1/(4π)` at the self-dual scale; the fluctuation
+  inequality `α·Var(E) > ⟨E⟩` at `α ≥ π`
+  (`theta_fluctuation_large`, `theta_logDeriv_numer_pos_large`);
+  global strict monotonicity of `α·θ′(α)/θ(α)` by reflection
+  through the functional equation
+  (`theta_logDeriv_strictMonoOn`); and the strict rectangle and
+  midpoint inequalities `θ(a²t)·θ(b²t) < θ(t)·θ((ab)²t)`,
+  `θ(a²t)² < θ(t)·θ(a⁴t)` for every ratio above one
+  (`theta_rect_strict`, `theta_sq_lt`) — dropping both the
+  `2 ≤ a` and the `a < b` of `theta_prod_lt_general`. Under
+  `θ(β) = θ₃(β/π)` this is the Faulhuber–Steinerberger refined
+  log-convexity
+  ([*Optimal Gabor frame bounds for separable lattices and
+  estimates for Jacobi theta
+  functions*](https://arxiv.org/abs/1601.02972), Theorems
+  2.2–2.3; also [Faulhuber
+  2020](https://arxiv.org/abs/1709.06006), Proposition 3.13):
+  `u ↦ log θ(eᵘ)` is strictly convex.
 
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here
@@ -144,197 +190,277 @@ Poisson summation gives the same cancellation with the dual
 lattice (inverse Gram) appearing:
 `D_{L,s}(q,q′) = D_{L*,π²/(s·lcm²)}(q/g, q′/g)` — the defect
 field of `L` at scale `s` is the defect field of `L*` at
-reflected scales. The higher-rank statement remains unformalized.
+reflected scales. The higher-rank statement is the roadmap's
+first formalization target.
 
 ## The questions
 
-- **Q1 — strictness and generic residue actions.** Regev and
-  Stephens-Davidowitz prove that two sublattices `M,N ⊆ L` are
-  positively correlated under normalized Gaussian mass:
-  `ρ(M)·ρ(N) ≤ ρ(L)·ρ(M ∩ N)`
+Second edition. The first edition mixed three strata — solved
+mathematics, known mathematics awaiting formalization, and open
+research — and completing the ladder separated them: closed
+results live in **What is established** (formal theorems alongside
+numerical counterexamples and explicit nonclaims),
+known-but-unformalized implications in **The roadmap**, and this
+section keeps only
+statements whose truth is unknown. Numbering is stable across
+editions — Q1–Q6 keep their subjects, Q7 splits off the tail of
+the old Q6 — and every inverse question names the datum it
+consumes. The organizing axes, learned by closing rank one: rank
+one versus higher rank, scalar versus residue-refined data,
+pairwise versus higher-order interaction.
+
+- **Q1 — higher-rank strictness and equality.** The non-strict
+  sign is known mathematics: Regev and Stephens-Davidowitz prove
+  that two sublattices `M,N ⊆ L` are positively correlated under
+  normalized Gaussian mass, `ρ(M)·ρ(N) ≤ ρ(L)·ρ(M ∩ N)`
   ([*An Inequality for Gaussians on Lattices*](https://doi.org/10.1137/15M1052226),
-  Theorem 5.1). Apply this inside `gL`, with `g = gcd(q,q′)`, to
-  `qL` and `q′L`; their intersection is `lcm(q,q′)L`, and
-  quadratic scaling gives exactly `D_L(q,q′) ≤ 0`. This implication
-  is not yet formalized. A generic residue tower on `L ⧸ qL` would
-  make the correlation an intrinsic event statement and supply the
-  general-lattice cross-ratio law. The remaining sign question is the
-  equality case: on a positive-rank lattice, is `D_L(q,q′) = 0` iff
-  `q ∣ q′` or `q′ ∣ q`?
+  Theorem 5.1), and applying this inside `gL` to `qL` and `q′L` —
+  intersection `lcm(q,q′)L` — gives `D_L(q,q′) ≤ 0` for every
+  lattice. Formalizing that implication is roadmap work, not a
+  question. Open is what the correlation inequality cannot see:
+  on a positive-rank lattice, is `D_L(q,q′) = 0` exactly when
+  `q ∣ q′` or `q′ ∣ q`? Strict Q5 would answer outright — the
+  defect is a rectangle of `H_L`, and strict convexity kills
+  every nondegenerate rectangle — so Q1 is now downstream of the
+  master conjecture. Independently: a generic residue tower on
+  `L ⧸ qL` would make the correlation an intrinsic event
+  statement and supply the general-lattice cross-ratio law.
 
-- **Q2 — sparse spectral rigidity.** Put
-  `F(m) := log Z(m²)` for `m ≥ 1`. Saturation gives an inverse
-  formula using only coprime defect entries:
+- **Q2 — sparse spectral rigidity, by datum.** Put
+  `F_s(m) := log Z(m²s)` for `m ≥ 1`. Four input regimes: the
+  all-scale defect field; one fixed-`s` defect matrix; a single
+  infinite prime row of that matrix; a finite entry set. The
+  recovery formula
 
-      F(m) = lim_{k→∞} D(m, km+1) − lim_{n→∞} D(n+1, n+2).
+      F_s(m) = lim_{k→∞} D_s(m, km+1) − lim_{n→∞} D_s(n+1, n+2)
 
-  This remains to be formalized at `PartitionTower` level. Joint
-  saturation of the prime pairing recovers `F(1)`, while for fixed
-  prime `p`, the limit along primes `q → ∞`, `q ≠ p`, recovers `F(p)`
-  through `lim ⟨p,q⟩ = F(1) − F(p)`. Do these prime samples determine
-  the locally finite energy spectrum by successively extracting its
-  least energy and multiplicity? Equivalently, does the full
-  prime-pairing matrix determine the theta series, making equality of
-  scalar defect matrices equivalent to theta-equivalence? Does one
-  infinite prime row already suffice, and what is the minimal
-  determining subset of defect entries? The reflection law acts on
-  the all-scale defect field, not on a fixed-`s` matrix: reflected
-  scales vary with the pair, so a single matrix is untouched by
-  duality while the field determines its own reflection. Rigidity
-  statements should say which datum they consume.
+  consumes coprime entries of one fixed-`s` matrix along
+  saturation and is known mathematics (roadmap: formalize at
+  `PartitionTower` level); joint saturation recovers `F_s(1)`,
+  and the row limit `lim ⟨p,q⟩_s = F_s(1) − F_s(p)` recovers
+  `F_s(p)`. Two regimes are thereby settled or reduced: one
+  fixed matrix recovers the discrete sample sequence
+  `(F_s(m))_{m≥1}`, and the all-scale field recovers `Z` at
+  every scale — its kernel is exactly theta-equivalence, no
+  longer a question. What remains open is sparse. Do one
+  matrix's discrete samples determine the locally finite energy
+  spectrum, successively extracting its least energy and
+  multiplicity? Does one infinite prime row already suffice? The
+  finite-entry regime is underspecified without a model class —
+  fix the rank and normalization before asking for minimal
+  determining sets. The reflection law acts on the field, not on
+  a fixed-`s` matrix — reflected scales vary with the pair, so a
+  single matrix is untouched by duality while the field
+  determines its own reflection. Field rigidity and matrix
+  rigidity are different theorems; every statement names its
+  datum.
 
-- **Q3 — the residue-refined inverse problem.** Scalar defect data
-  cannot distinguish theta-equivalent lattices; sparse spectral
-  rigidity would make theta-equivalence exactly its kernel. Which
-  refinement of the modal scalar — the complete coset-mass vector on
-  `L ⧸ qL`, its finite Fourier transform, or a smaller collection of
-  characters — determines the quadratic lattice up to isometry? For
-  graph carriers, does the corresponding invariant determine graph
-  isomorphism, cycle-matroid equivalence, or a coarser relation?
+- **Q3 — the residue-refined inverse problem.** Downstream of Q2
+  in exposition, parallel in experiment. The datum: the
+  coset-mass vectors on `L ⧸ qL` — the all-scale family or the
+  family at one fixed scale `s`, each refining the corresponding
+  Q2 scalar regime. Scalar data cannot see below
+  theta-equivalence — the all-scale scalar field has exactly
+  theta-equivalence as its kernel (Q2) — so the question is
+  which refinement does, and at which datum: does the complete
+  coset-mass family, its finite Fourier transform, or a smaller
+  collection of characters determine the quadratic lattice up to
+  isometry? For graph carriers, does the corresponding invariant
+  determine graph isomorphism, cycle-matroid equivalence, or a
+  coarser relation? The tower side is computable today —
+  `h1ReductionCRT` and the residue actions are formalized — so
+  small cospectral pairs can be tested before the scalar theory
+  settles.
 
-- **Q4 — scale-dependent kernel geometry.** For which scales is
-  the prime pairing conditionally negative definite (CND), and for
-  which scales is its saturation deficit positive semidefinite?
-  The two clauses share one structure. Write `F(m) := log θ(m²s)`,
-  `h_s(x) := log θ(s·e^{2x})`, `x_p := log p`. On distinct primes
-  the pairing is the Hankel-cocycle second difference
-  `⟨p,q⟩ = h_s(0) + h_s(x_p+x_q) − h_s(x_p) − h_s(x_q)` with true
-  diagonal zero; writing `M̃` for that formula extended to all
-  pairs — the Hankel-cocycle extension —
-  `M = M̃ − diag(d_s(x_p))`,
-  where `d_s(x) = h_s(0) − 2h_s(x) + h_s(2x)` is a Q5 curvature —
-  the coupling between this question and Q5. The saturation
-  deficit `B := log θ(s)·J − M` has exact entries
-  `B_pq = F(p) + F(q) − F(pq)` off the diagonal and `F(1)` on it;
-  it is entrywise positive (`pairing_lt_base`), and
-  `cᵀBc = −cᵀMc` on zero-sum vectors, so deficit-PSD implies CND
-  outright — and only that: the converse fails numerically.
+- **Q4 — phase geometry: Q4-CND and Q4-PSD.** Both asymptotic
+  regimes of Q4-CND are theorems (established, the kernel
+  chambers); the implication deficit-PSD ⟹ CND is proved
+  (`cᵀBc = −cᵀMc` on zero-sum weights), and the converse fails
+  numerically at `s = 0.12` on five primes. Open is the geometry
+  of the middle, one clause per matrix. **Q4-CND**: for a finite prime set `P`, is the
+  valid-scale set `{ s : pairing CND on P }` an upper interval?
+  The controlling statistic is the largest eigenvalue of the
+  pairing matrix restricted to the zero-sum subspace — CND holds
+  iff it is `≤ 0` — and no symmetry forces a single crossing:
+  the reflection evaluates each entry at its own pair-dependent
+  dual scale and does not act on fixed-set chambers. With
+  `s_c(P) := inf { s₀ : the pairing on P is CND for all s ≥ s₀ }`,
+  the theorem gives `sup_P s_c(P) ≤ 1` (`pairing_cnd_large`); tested
+  truncations place the last crossing in `(1/10, 3/10)`, the
+  binding inequality `log θ(s) ≥ 2·log θ(4s)` crosses near
+  `s = 0.196`, the first hundred primes are CND at
+  `s = (log 2)/3`, and the observed transitions sit near `0.080`
+  on `{2,3,5}` and `0.108` on `{2,3,5,7,11}`. The small-`s`
+  theorem is the normalized limit `⟨p,q⟩ = 2e^{−σ}(1 + o(1))`
+  with `σ = π²/(s·p²q²)` (`tendsto_exp_mul_pairing`); the
+  quantitative `O(e^{−σ})` relative rate remains numerical,
+  unformalized. **Q4-PSD**: the same questions for
+  the saturation deficit, controlled by its ordinary smallest
+  eigenvalue, with observed transitions near `0.085` and `0.169`
+  on the same sets — and how does the deficit transition scale
+  with the prime set? Falsification precedes proof: the
+  reconnaissance hunts for multiple crossings before anyone
+  attempts intervality. The transform-realization question that
+  used to close this entry now seeds Q7.
 
-  The chambers, numerically. Define
-  `s_c(P) := inf { s₀ : the kernel on P is CND for all s ≥ s₀ }`,
-  and likewise for the deficit. On `{2,3,5}` the transitions sit
-  near `0.080` (CND) and `0.085` (deficit-PSD); on `{2,3,5,7,11}`
-  near `0.108` and `0.169` — at `s = 0.12` the five-prime pairing
-  is CND while its deficit is not PSD. The clauses are coupled but
-  distinct, and enlarging the prime set only shrinks the
-  valid-scale sets (`IsCNDOn.subset`, `IsPSDOn.subset`). Both
-  asymptotic regimes are now theorems. Large `s`: on zero-sum
-  vectors the base and row/column terms cancel identically
-  (`quadFormOn_pairing_eq`), and the product-kernel term is
-  controlled through `(pq)² ≥ p² + q²`, Cauchy–Schwarz, and a
-  dimension-free geometric tail: for every `s ≥ 1` the pairing is
-  CND on every finite prime set at once (`pairing_cnd_large`) —
-  so `sup_P s_c(P) ≤ 1`. Among the tested finite truncations the
-  last crossing sits in
-  `(1/10, 3/10)`, and the binding inequality
-  `log θ(s) ≥ 2·log θ(4s)` crosses near `s = 0.196`; the first
-  hundred primes are CND at `s = (log 2)/3`.
-  Small `s`: the reflection law evaluates each
-  entry at its own dual scale, `⟨p,q⟩ = 2e^{−σ}(1 + o(1))`
-  with `σ = π²/(s·p²q²)` (`tendsto_exp_mul_pairing` is the
-  normalized form; the quantitative `O(e^{−σ})` rate is numerical,
-  not yet a theorem); entries are hierarchically separated: within
-  a chosen ordered triple the largest-product pair dominates, and
-  the zero-sum weight putting `(1, 1)` on that triple's two larger
-  primes and `−2` on its smallest is positive — no set of three or
-  more primes stays CND as `s → 0` (`pairing_not_cnd_small`,
-  through the dominance threshold `pairing_dominates_small`).
-  Open: whether each valid-scale set is an interval; the exact
-  uniform threshold — the theorem gives `1`, the tested
-  truncations place the last crossing in `(1/10, 3/10)`; how the
-  deficit transition scales with the prime set.
+- **Q5 — higher-rank thermodynamic curvature: the master
+  conjecture.** Rank one is closed (established, the refined
+  log-convexity); the whole goal is now: for every
+  positive-definite lattice `L` of positive rank — rank zero has
+  constant `H`, convex but never strictly — is
 
-  The transform question has a sharpened target. Saturated rows
-  obstruct any Gram representation of `B/2` by Dirichlet monomials
-  `p^{−λ}` against a shared measure: the row limit `B_pq → F(p)`
-  as `q → ∞` depends on `p`, while `∫ p^{−λ}q^{−λ} dν → ν({0})`
-  does not. Survival vectors `𝟙[t ≥ p]` in `L²(−dF)` split off a
-  canonical PSD component with Gram kernel `F(max(p,q))`, but the
-  remainder `F(min(p,q)) − F(pq)` (diagonal `F(1) − F(p)`) keeps
-  the same `p`-dependent row limit `F(p)`: the obstruction
-  survives the subtraction, and realizing the remainder is the
-  open problem.
+      u ↦ H_L(u) := log Z_L(exp u)
 
-- **Q5 — thermodynamic curvature.** A continuous strengthening of
-  the sign asks whether
+  strictly convex — equivalently, does the coupling-weighted
+  fluctuation beat the mean, `β²·Var_β(E) > β·⟨E⟩_β`? The
+  continuum Gaussian has `⟨E⟩ = n/(2β)`, `Var = n/(2β²)`, so its
+  curvature vanishes identically: the conjecture lives entirely
+  in the Poisson corrections. The stakes are exact. Resolutions
+  scale the form uniformly, so with `u = log s + 2·log g`,
+  `x = 2·log(q/g)`, `y = 2·log(q′/g)`,
 
-      u ↦ log Z_L(exp u)
+      D_L(q,q′) = [H_L(u+x) + H_L(u+y)] − [H_L(u) + H_L(u+x+y)],
 
-  is convex for every positive-definite lattice. Its second
-  derivative is the fluctuation inequality
-  `β² Var_β(E) − β ⟨E⟩_β ≥ 0`. Convexity would imply every
-  discrete defect inequality at once, for arbitrary real resolution
-  ratios, and would explain the sign as thermodynamic curvature rather
-  than a collection of arithmetic comparisons. The Gibbs
-  expectation/variance interface and multivariate Poisson summation
-  provide the analytic ingredients for this question.
+  a rectangle of the single-variable `H_L` with far corner at
+  `lcm` because `gcd·lcm = q·q′`: strict convexity gives
+  `D_L < 0` off chains and `= 0` on them — **strict Q5 implies
+  Q1 completely**, inequality and equality case at once, for
+  arbitrary real ratios. It is strictly stronger than the known
+  correlation theorem, so it is stress-tested before any formal
+  campaign. The shape of a possible failure is already
+  constrained: at large coupling the shortest shell dominates and
+  `β²Var − β⟨E⟩ ≈ βλ₁N₁e^{−βλ₁}(βλ₁ − 1) > 0` — the rank-one
+  Fact-1 mechanism, universal; the duality
+  `H_L″(u) = H_{L*}″(2·log π − u)` transports it to small
+  coupling for `L*` — convexity for every lattice on `β ≥ π` is
+  convexity everywhere, the class closed under duality, an
+  individual profile self-symmetric when `L` and `L*` are
+  theta-equivalent (isoduality sufficient, not necessary); and
+  orthogonal sums inherit convexity from their summands, so any
+  counterexample yields an orthogonally indecomposable one. What
+  survives is an intermediate window near the duality center
+  `β = π` of the determinant-normalized paired profiles, its
+  width heuristically controlled by `λ₁(L)·λ₁(L*)` — a heuristic
+  until quantitative tails prove it. If strictness fails, the
+  failure mode matters: curvature merely touching zero refutes
+  strict universality without creating chambers; only a
+  sign-changing counterexample makes Q5 the curvature analogue
+  of Q4.
 
-  The question is exactly the sign of the Poisson correction: the
-  continuum Gaussian has `⟨E⟩ = n/(2β)` and `Var = n/(2β²)`, so
-  its curvature vanishes identically. Three consequences of the
-  symmetry sharpen the target. The coarse half is proved
-  (`theta_sq_le`, `log_theta_midpoint_le`): the `b → a` limit of
-  `theta_prod_lt_general`
-  gives `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for every real `a ≥ 2` — midpoint
-  convexity of `H` at every location at leg spacing `≥ 2 log 2`,
-  which in particular makes every Q4 diagonal correction
-  `d_s(x_p)` nonnegative, since `x_p ≥ log 2`. The hypothesis
-  `2 ≤ a` originates in integer incomparability and is
-  analytically unnecessary: Q5 at rank one is the
-  Faulhuber–Steinerberger strict geometric-mean inequality
-  `θ₃(rs)·θ₃(r/s) > θ₃(r)²` for `s ≠ 1`, equivalently that
-  `x·θ₃′(x)/θ₃(x)` is strictly increasing
-  ([*Optimal Gabor frame bounds for separable lattices and
-  estimates for Jacobi theta
-  functions*](https://arxiv.org/abs/1601.02972), Theorems
-  2.2–2.3; also [Faulhuber
-  2020](https://arxiv.org/abs/1709.06006), Proposition 3.13) —
-  now a theorem here (rung 7): `theta_logDeriv_strictMonoOn`
-  makes `α·θ′(α)/θ(α)` strictly increasing on all of `(0, ∞)`,
-  and `theta_rect_strict` / `theta_sq_lt` give the strict
-  rectangle and midpoint inequalities
-  `θ(a²t)·θ(b²t) < θ(t)·θ((ab)²t)` and `θ(a²t)² < θ(t)·θ(a⁴t)`
-  for every ratio above one — dropping both the `2 ≤ a` and the
-  `a < b` of `theta_prod_lt_general`. Under the identification
-  `θ(β) = θ₃(β/π)` this is exactly strict convexity of
-  `u ↦ log θ(eᵘ)`. The genuinely open part of Q5 is the
-  higher-rank lattice statement. The reflection makes
-  the curvature invariant under `β ↦ π²/β` at rank one and pairs
-  it with the dual lattice at higher rank,
-  `H_L″(u) = H_{L*}″(2·log π − u)`: convexity for every lattice on
-  `β ≥ π` is convexity everywhere, the class being closed under
-  duality — an individual profile is self-symmetric only when the
-  lattice is isodual. And differentiating the duality at its fixed
-  point gives the anchor `θ′(π) = −θ(π)/(4π)` (`thetaDeriv_pi`) —
-  mean Gibbs energy exactly `1/(4π)` at the self-dual scale —
-  through the termwise bridge (`Theaetetus.Gibbs`) and the
-  functional equation
-  `α·θ′(α)/θ(α) + (π²/α)·θ′(π²/α)/θ(π²/α) = −1/2`
-  (`theta_logDeriv_dual`), the reflection law in infinitesimal
-  form.
-
-- **Q6 — higher association and realizability.** The correct
+- **Q6 — higher mixed-difference chambers.** The correct
   algebraic object is the symmetric mixed-difference hierarchy of
   `K` on the prime-exponent lattice: `Δ_{p₁}⋯Δ_{p_k}K` measures
   `k`-prime coupling. The pairing matrix is this hierarchy's
   `k = 2` layer, and Q4's saturation deficit is its union form
   `F(p) + F(q) − F(pq)` off the diagonal: Q4's kernel geometry is
-  the definiteness theory of the first nontrivial level. Rectangle identities and
-  the characterization
-  of vanishing cross-prime differences are formalization work, not
-  open mathematics. Numerical evidence in rank one indicates that the
-  three-prime difference at `2,3,5` changes sign with the scale, so
-  the relevant structure is a system of sign chambers rather than a
-  uniform alternating-sign law. Which asymptotic regimes and
-  inequalities survive beyond pairwise correlation, and which mixed
-  Hessians are realizable by lattice theta functions? Because `K` is
-  an intersection surprisal rather than an entropy, entropic-cone
-  membership is a separate representation problem.
+  the definiteness theory of the first nontrivial level (its
+  identity layer is roadmap work, target 7).
+  Numerical evidence in rank one indicates that the
+  three-prime difference at `2,3,5` changes sign with the scale,
+  so the expected structure is a system of sign chambers rather
+  than a uniform alternating-sign law. Which asymptotic regimes
+  and inequalities survive beyond pairwise correlation — what are
+  the `k ≥ 3` analogues of the two proved Q4 regimes?
+
+- **Q7 — realizability.** Split from the old Q6; either half is
+  a program. Which abstract hierarchies actually come from
+  lattices: which mixed Hessians, which kernels, which deficit
+  remainders are realizable by lattice theta functions? Because
+  `K` is an intersection surprisal rather than an entropy,
+  entropic-cone membership is a separate representation problem.
+  The concrete seed is the transform question inherited from Q4
+  (with `F(m) := log θ(m²s)` as in the kernel chambers):
+  saturated rows obstruct any Gram representation of `B/2` by
+  Dirichlet monomials `p^{−λ}` against a shared measure — the
+  row limit `B_pq → F(p)` as `q → ∞` depends on `p`, while
+  `∫ p^{−λ}q^{−λ} dν → ν({0})` does not. Survival vectors
+  `𝟙[t ≥ p]` in `L²(−dF)` split off a canonical PSD component
+  with Gram kernel `F(max(p,q))`, but the remainder
+  `F(min(p,q)) − F(pq)` (diagonal `F(1) − F(p)`) keeps the same
+  `p`-dependent row limit: the obstruction survives the
+  subtraction, and realizing the remainder is Q7's first
+  target.
+
+## The roadmap
+
+Known mathematics awaiting formalization, and the reconnaissance
+that decides where the frontier actually is. Every target names
+its landing; these results stay useful whatever the experiments
+say.
+
+Formalization targets:
+
+1. **Higher-rank defect duality.** Multivariate Poisson summation
+   gives `D_{L,s}(q,q′) = D_{L*,π²/(s·lcm²)}(q/g, q′/g)` — the
+   weight-zero cancellation of The symmetry with the dual lattice
+   appearing. `theta_rect_dual` is the rank-one case and the
+   template.
+2. **Strict Q5 for orthogonal sums.** `log Z` adds over
+   orthogonal summands and convexity adds with it: every positive
+   diagonal form inherits strict Q5 from `theta_rect_strict`, in
+   every rank, and any Q5 counterexample yields an orthogonally
+   indecomposable one. `Theaetetus.Diagonal` is the Q1 template
+   for the same lift.
+3. **The Regev–Stephens-Davidowitz implication.** Sublattice
+   correlation applied inside `gL` gives the non-strict
+   `D_L(q,q′) ≤ 0` for every lattice — Q1's inequality half.
+4. **The Q2 recovery formula** at `PartitionTower` level, datum
+   stated: coprime entries of one fixed-scale defect matrix along
+   saturation,
+   `F_s(m) = lim_k D_s(m, km+1) − lim_n D_s(n+1, n+2)`.
+5. **The certification chain** for higher-rank numerics: a lower
+   bound `Q(x) ≥ μ‖x‖²` from the least Gram eigenvalue, shell
+   counts, moment tails with the dimension-dependent polynomial
+   factor, and interval linear algebra for extremal eigenvalues.
+   `Theaetetus.Fluctuation`'s geometric-domination bounds are the
+   rank-one shapes. Certified this way, a reconnaissance sign is
+   a certificate — and a counterexample arrives pre-packaged for
+   its own formalization.
+6. **`Theaetetus/Status.lean`** — a statement-level manifest:
+   every claim this document makes of the tree, restated as an
+   `example` discharged by the theorem it cites, so statement
+   drift fails `lake build`. Any status table is generated from
+   the manifest — a view, never a second source of truth.
+7. **Q6's identity layer.** Rectangle identities and the
+   characterization of vanishing cross-prime differences for the
+   mixed-difference hierarchy `Δ_{p₁}⋯Δ_{p_k}K`.
+
+Reconnaissance, falsify-first:
+
+1. **Higher-rank Q5.** Normalize every Gram matrix to determinant
+   one before profiling: the repo's hexagonal form
+   `(a² − ab + b²)/3` has determinant `1/12` with `M⁻¹ ≅ 12M`, so
+   it is self-similar under duality with reflection center
+   `β* = π·√12`, not `π` — the `√12`-rescaling is the genuinely
+   isodual normalization. Test dual pairs together on the
+   half-profile `u ≥ log π` only: the reflection makes
+   `[π, ∞) × {L, L*}` a complete search domain. Sweep whole
+   half-profiles, never the center alone — an isodual profile
+   constrains a failure window to be symmetric, not absent. Start
+   at the normalized hexagonal form, then the binary shear family
+   toward degeneracy; record `λ₁(L)·λ₁(L*)` per form as the
+   heuristic window control.
+2. **Q4 phase geometry.** Track the largest zero-sum-restricted
+   eigenvalue of the pairing (Q4-CND) and the smallest eigenvalue
+   of the deficit (Q4-PSD) as functions of `s` on expanding prime
+   sets, at high precision with certified entry intervals — the
+   scalar theta estimates bound each entry after reflection; the
+   matrix step needs target 5's interval linear algebra. The
+   object is the crossing count: falsify intervality hard before
+   anyone tries to prove it.
+
+The sequence: this restructuring; strict Q5 for orthogonal sums;
+the determinant-normalized, dual-aware harness with its
+certification chain; the hexagonal and shear sweeps; Q4 with the
+correct extremal eigenvalues; then the results decide whether Q5
+stays a universal conjecture or becomes the first chamber problem
+of the second edition.
 
 ## The ladder
 
-The formalization order for the symmetry and its consequences.
-All seven rungs are complete — the reflection law in
+The first edition's program — the formalization order for the
+symmetry and its consequences, kept as the record of how rank one
+closed. All seven rungs are complete — the reflection law in
 `Theaetetus.Duality` (with the corollary `theta_rect_lt_iff`,
 which both sign proofs' reflection branches now consume), coarse
 Q5 in `Theaetetus.Midpoint`, both Q4 chambers
@@ -405,7 +531,8 @@ scales; the carrier — graph homology, the residue tower, the
 cross-ratio law, the rank-two witness; outward — Q1 closed at rank
 one, the pairing, the rank function, the kernel on `C₃`; the
 reconciliation — the defect as conditional association, the sign
-for diagonal forms in every rank, Q3 classified for every carrier;
+for diagonal forms in every rank, the zero-defect classification
+for every carrier;
 the interface — the partition tower, the classification proved once
 abstractly, with rank one, every graph carrier, and every
 positive-definite lattice action as instances.

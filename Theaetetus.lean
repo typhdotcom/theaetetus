@@ -51,7 +51,7 @@ import Theaetetus.Flattening
 -- Q4, rung 6: the small-scale chamber — no three primes stay CND
 import Theaetetus.SmallScale
 
--- Q5(a): residue complexity as a polymatroid-like rank function
+-- Residue complexity as a polymatroid-like rank function
 import Theaetetus.RankFunction
 
 -- The graph substrate, the theta instance, and the ℤ-homology spine
@@ -82,10 +82,10 @@ import Theaetetus.Tower
 -- The defect on the tower: the cross-ratio law, CRT, the C₃ bridge
 import Theaetetus.CrossRatio
 
--- The abstract partition tower: the saturation interface behind Q3
+-- The abstract partition tower: the interface behind the classification
 import Theaetetus.PartitionTower
 
--- Q3 classified by instantiation: lattices, carriers, and C₃'s kernel
+-- The zero-defect classification: lattices, carriers, and C₃'s kernel
 import Theaetetus.Classification
 
 -- Scalar bounds and the rank-two witness on the theta graph

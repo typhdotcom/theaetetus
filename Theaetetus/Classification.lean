@@ -4,7 +4,8 @@ import Theaetetus.PartitionTower
 
 /-! # The classification: Euler-factorizable towers
 
-**Q3.** Call a tower **Euler-factorizable** when its defect matrix
+**The zero-defect classification.** Call a tower
+**Euler-factorizable** when its defect matrix
 vanishes identically — equivalently, when its complexity is a
 valuation on the divisibility lattice, the algebraic shadow of an
 Euler product. This module settles the question at every level the
@@ -35,7 +36,8 @@ theorem cycle3_towerDefect_neg_of_incomparable (q q' : ℕ) [NeZero q] [NeZero q
   rw [cycle3_towerDefect_eq_defect]
   exact defect_neg_of_incomparable (by norm_num) hqq' hq'q
 
-/-- **The kernel on `C₃`** (Q3 at the first carrier): the tower
+/-- **The kernel on `C₃`** (the classification at the first
+carrier): the tower
 defect vanishes exactly on chains — `C₃` is not Euler-factorizable,
 and its defect matrix detects divisibility. -/
 theorem cycle3_towerDefect_eq_zero_iff (q q' : ℕ) [NeZero q] [NeZero q'] :
@@ -49,7 +51,8 @@ The abstract classification instantiates at the full generality of
 the bundled lattice actions: sectors are the lattice points, energy
 the quadratic form, the modal sector the origin — positivity off the
 origin is the bundle's integral positivity, summability is the
-bundle's. **Q3 holds for every positive-definite lattice**: the
+bundle's. **The zero-defect classification holds for every
+positive-definite lattice**: the
 intrinsic tower defect vanishes identically iff the lattice is
 trivial. What a graph carrier adds on top is the residue-complexity
 reading: its cross-ratio law *derives* this defect from the
@@ -70,7 +73,8 @@ noncomputable def toPartitionTower : PartitionTower.{u} where
   E_modal := Q.form_zero_left 0
   E_pos := fun a ha => Q.form_posDef a ha
 
-/-- **Q3 FOR EVERY POSITIVE-DEFINITE LATTICE**: the intrinsic tower
+/-- **THE ZERO-DEFECT CLASSIFICATION, EVERY POSITIVE-DEFINITE
+LATTICE**: the intrinsic tower
 defect vanishes at every pair of resolutions iff the lattice is
 trivial. -/
 theorem defect_forall_eq_zero_iff :
@@ -192,7 +196,8 @@ theorem eventually_towerDefect_neg
   filter_upwards [G.toPartitionTower.eventually_defect_neg ⟨κ₀, hκ₀⟩] with n hn
   rwa [G.towerDefect_eq_partitionTower_defect]
 
-/-- **Q3, CLASSIFIED FOR EVERY CARRIER**: the defect matrix of a
+/-- **THE ZERO-DEFECT CLASSIFICATION, EVERY CARRIER**: the
+defect matrix of a
 carrier vanishes identically iff its cycle lattice is trivial — the
 Euler-factorizable carriers are exactly those with `b₁ = 0`. The
 abstract classification, read through the cross-ratio bridge. -/

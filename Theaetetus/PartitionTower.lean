@@ -4,7 +4,7 @@ import Mathlib.Analysis.Normed.Group.Tannery
 
 /-! # The partition tower: the abstract saturation interface
 
-The classification of Euler-factorizable carriers (Q3) consumes
+The classification of Euler-factorizable carriers consumes
 remarkably little structure. This module isolates it: a **partition
 tower** is a sector action with a distinguished modal sector, strictly
 positive energy away from it, and a summable Boltzmann weight. From

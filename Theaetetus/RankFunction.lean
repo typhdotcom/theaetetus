@@ -2,7 +2,8 @@ import Theaetetus.Submodular
 
 /-! # Residue complexity as a rank function
 
-**Q5(a), first formal content.** The rank-one residue complexity
+**A precursor to the higher mixed-difference hierarchy (Q6).**
+The rank-one residue complexity
 
     K_s(q) := log θ(s) − log θ(q²s)
 
