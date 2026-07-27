@@ -149,6 +149,13 @@ negative.
   2.2–2.3; also [Faulhuber
   2020](https://arxiv.org/abs/1709.06006), Proposition 3.13):
   `u ↦ log θ(eᵘ)` is strictly convex.
+- **Strict Q5 for diagonal forms, every rank.** The factored
+  Boltzmann sum of a positive diagonal form satisfies the strict
+  rectangle and midpoint inequalities for `r ≥ 1`, `t > 0` and
+  every ratio above one (`diagTheta_rect_strict`,
+  `diagTheta_sq_lt`) — rank-one Q5 lifted axis-by-axis, the same
+  orthogonal-sum lift that carries Q1 (`diagDefect_eq_sum`). No
+  positive diagonal form is a Q5 counterexample.
 
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here
@@ -336,7 +343,8 @@ pairwise versus higher-order interaction.
   convexity everywhere, the class closed under duality, an
   individual profile self-symmetric when `L` and `L*` are
   theta-equivalent (isoduality sufficient, not necessary); and
-  orthogonal sums inherit convexity from their summands, so any
+  orthogonal sums inherit convexity from their summands — the
+  diagonal case is a theorem (`diagTheta_rect_strict`) — so any
   counterexample yields an orthogonally indecomposable one. What
   survives is an intermediate window near the duality center
   `β = π` of the determinant-normalized paired profiles, its
@@ -395,12 +403,13 @@ Formalization targets:
    weight-zero cancellation of The symmetry with the dual lattice
    appearing. `theta_rect_dual` is the rank-one case and the
    template.
-2. **Strict Q5 for orthogonal sums.** `log Z` adds over
-   orthogonal summands and convexity adds with it: every positive
-   diagonal form inherits strict Q5 from `theta_rect_strict`, in
-   every rank, and any Q5 counterexample yields an orthogonally
-   indecomposable one. `Theaetetus.Diagonal` is the Q1 template
-   for the same lift.
+2. **Strict Q5 for positive diagonal forms** — done
+   (`diagTheta_rect_strict`, `diagTheta_sq_lt`, lifted from
+   `theta_rect_strict` by the `Theaetetus.Diagonal` pattern).
+   What remains under this heading is the general orthogonal-sum
+   reduction — any Q5 counterexample yields an orthogonally
+   indecomposable one — which awaits a formal orthogonal sum of
+   lattice actions.
 3. **The Regev–Stephens-Davidowitz implication.** Sublattice
    correlation applied inside `gL` gives the non-strict
    `D_L(q,q′) ≤ 0` for every lattice — Q1's inequality half.

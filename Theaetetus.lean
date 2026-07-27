@@ -33,6 +33,9 @@ import Theaetetus.Midpoint
 -- Q1 for diagonal forms, every rank: orthogonal sums add defects
 import Theaetetus.Diagonal
 
+-- Strict Q5 for positive diagonal forms: orthogonal sums inherit curvature
+import Theaetetus.DiagonalCurvature
+
 -- The defect as conditional association of divisibility events
 import Theaetetus.Factorization
 
