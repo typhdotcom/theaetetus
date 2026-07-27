@@ -42,7 +42,7 @@ structure IncidenceGraph where
   /-- Vertices. -/
   V : Type u
   /-- Edges. -/
-  E : Type v
+  E : Type u
   [fintypeV : Fintype V]
   [fintypeE : Fintype E]
   [decEqV : DecidableEq V]
@@ -65,7 +65,7 @@ def flowBoundary {V : Type u} {ι : Type v} [Fintype ι] [DecidableEq V]
 
 namespace IncidenceGraph
 
-variable (G : IncidenceGraph.{u, v})
+variable (G : IncidenceGraph.{u})
 variable {R : Type*} [CommRing R]
 
 /-! ## Boundary and gradient, once -/
@@ -206,7 +206,7 @@ theorem grad_dotProduct_eq (f : G.V → R) (ω : G.E → R) :
 
 /-- A walk from `u` to `v`: a sequence of edges, each traversed
 forward (`consF`) or backward (`consB`). -/
-inductive Walk : G.V → G.V → Type (max u v)
+inductive Walk : G.V → G.V → Type u
   | nil (v : G.V) : Walk v v
   | consF (e : G.E) {v : G.V} (p : Walk (G.tgt e) v) : Walk (G.src e) v
   | consB (e : G.E) {v : G.V} (p : Walk (G.src e) v) : Walk (G.tgt e) v
@@ -502,7 +502,7 @@ construction has exactly `b₁` elements (`cycleBasisSigma_fst`). -/
 
 section CycleLattice
 
-variable (G : IncidenceGraph.{u, v})
+variable (G : IncidenceGraph.{u})
 
 /-- Casting an integer cochain commutes with the boundary. -/
 theorem boundary_castR (ω : G.E → ℤ) (v : G.V) :

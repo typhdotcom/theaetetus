@@ -58,7 +58,7 @@ trivial. What a graph carrier adds on top is the residue-complexity
 reading: its cross-ratio law *derives* this defect from the
 complexities of honest residue actions, rather than defining it. -/
 
-universe u v
+universe u
 
 namespace QuadLatticeAction
 
@@ -99,11 +99,11 @@ namespace IncidenceGraph
 
 open Filter Topology
 
-variable (G : IncidenceGraph.{u, v})
+variable (G : IncidenceGraph.{u})
 
 /-- **The carrier as a partition tower** — the lattice-action
 instance, specialized to the intrinsic bundle. -/
-noncomputable def toPartitionTower : PartitionTower.{v} :=
+noncomputable def toPartitionTower : PartitionTower.{u} :=
   G.classQuadAction.toPartitionTower
 
 /-- The tower's scaled partition function is the carrier's. -/

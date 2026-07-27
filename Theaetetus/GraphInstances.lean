@@ -20,7 +20,7 @@ namespace Theaetetus
 
 open scoped BigOperators
 
-universe u v
+universe u
 
 /-! ## The cycle graph -/
 

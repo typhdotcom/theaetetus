@@ -187,9 +187,9 @@ end PeriodMinimization
 
 section LatticeBasisGram
 
-universe u' v'
+universe u'
 
-variable (G : IncidenceGraph.{u', v'}) {n : ℕ}
+variable (G : IncidenceGraph.{u'}) {n : ℕ}
   (B : Module.Basis (Fin n) ℤ G.cycleLattice)
 
 /-- **The unit-edge Gram of a lattice basis is positive definite** —

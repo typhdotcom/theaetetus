@@ -36,7 +36,7 @@ namespace Theaetetus
 open scoped BigOperators
 open Matrix
 
-universe u v
+universe u
 
 /-! ## `gcd`/`lcm` positivity instances -/
 
@@ -70,7 +70,7 @@ theorem HarmonicGramData.energy_zsmul {V : Type u} (H : HarmonicGramData V)
 
 namespace IncidenceGraph
 
-variable (G : IncidenceGraph.{u, v})
+variable (G : IncidenceGraph.{u})
 
 /-- **The harmonic energy is quadratic**:
 `E(c • κ) = c² · E(κ)`. -/

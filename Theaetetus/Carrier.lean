@@ -46,11 +46,11 @@ namespace Theaetetus
 open scoped BigOperators
 open Matrix
 
-universe u v
+universe u
 
 namespace IncidenceGraph
 
-variable (G : IncidenceGraph.{u, v})
+variable (G : IncidenceGraph.{u})
 
 section HarmonicEnergy
 
@@ -328,7 +328,7 @@ extension**: the field is discharged from the Gram chart
 of the fundamental basis (`bilinBaseChange_posDef_of_gram`), and
 integral positivity and summability are theorems of the bundle. Every
 basis chart preserves the form (`classForm_chart`). -/
-noncomputable def classQuadAction : QuadLatticeAction.{v} where
+noncomputable def classQuadAction : QuadLatticeAction.{u} where
   Λ := (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ)
   form := G.classForm
   form_comm := G.classForm_comm
@@ -348,7 +348,7 @@ noncomputable def classQuadAction : QuadLatticeAction.{v} where
 projection of the intrinsic quadratic-lattice action —
 the sector lattice `H¹(G;ℤ)` with the harmonic energy
 `E κ = classForm κ κ`, as a `SectorAction`. -/
-noncomputable def classSectorAction : SectorAction.{v} :=
+noncomputable def classSectorAction : SectorAction.{u} :=
   (G.classQuadAction).toSectorAction
 
 /-- The intrinsic carrier's partition function is the graph's. -/
@@ -371,12 +371,12 @@ positivity and the cumulant reading
 **direct specialization** of the bundle
 operation `QuadLatticeAction.scale`. -/
 noncomputable def classQuadActionβ (β : ℝ) (hβ : 0 < β) :
-    QuadLatticeAction.{v} :=
+    QuadLatticeAction.{u} :=
   (G.classQuadAction).scale β hβ
 
 /-- The β-scaled carrier as a sector action: `E = β·harmonicEnergy`. -/
 noncomputable def classSectorActionβ (β : ℝ) (hβ : 0 < β) :
-    SectorAction.{v} :=
+    SectorAction.{u} :=
   (G.classQuadActionβ β hβ).toSectorAction
 
 /-- The carrier's β-scaled partition function — the bundle's,

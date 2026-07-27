@@ -43,7 +43,7 @@ namespace Theaetetus
 open scoped BigOperators
 open Matrix
 
-universe u v
+universe u
 
 /-- Applying an integer multiple of the identity endomorphism.
 
@@ -56,7 +56,7 @@ theorem zsmul_id_apply {M : Type*} [AddCommGroup M] [Module ℤ M]
 
 namespace IncidenceGraph
 
-variable (G : IncidenceGraph.{u, v})
+variable (G : IncidenceGraph.{u})
 variable {n : ℕ} (B : Module.Basis (Fin n) ℤ G.cycleLattice)
 variable (q : ℕ) [NeZero q]
 
@@ -370,7 +370,7 @@ noncomputable instance h1ReductionFintype :
 
 /-- **The finite reduction of the intrinsic carrier, named**:
 `H¹(G;ℤ) ⧸ q·H¹(G;ℤ)`. -/
-abbrev H1Reduction (q : ℕ) [NeZero q] : Type v :=
+abbrev H1Reduction (q : ℕ) [NeZero q] : Type u :=
   ((G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ))
     ⧸ LinearMap.range ((q : ℤ) •
       (LinearMap.id :
@@ -660,7 +660,7 @@ the generic `SectorAction.coarseGrain`, with the zero class as the
 modal ground state. Its energy is the coset free-energy difference,
 its partition function divides the harmonic one, and its Gibbs mass
 is the residue distribution. -/
-noncomputable def residueAction : SectorAction.{v} :=
+noncomputable def residueAction : SectorAction.{u} :=
   (G.classSectorAction).coarseGrain
     (fun κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ) =>
       (Submodule.Quotient.mk κ : H1Reduction G q)) 0
