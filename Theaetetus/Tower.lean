@@ -45,6 +45,15 @@ open Matrix
 
 universe u v
 
+/-- Applying an integer multiple of the identity endomorphism.
+
+`(a • id) x = a • x` — stated directly because on `M →ₗ[ℤ] M` the
+integer action is the `AddGroup` `zsmul`, not `LinearMap.instSMul`,
+so `LinearMap.smul_apply` does not match. -/
+theorem zsmul_id_apply {M : Type*} [AddCommGroup M] [Module ℤ M]
+    (a : ℤ) (x : M) : (a • (LinearMap.id : M →ₗ[ℤ] M)) x = a • x := by
+  simp
+
 namespace IncidenceGraph
 
 variable (G : IncidenceGraph.{u, v})
@@ -457,7 +466,7 @@ private lemma residueMass_mk_eq_periodization {n : ℕ}
     intro c
     rw [Submodule.Quotient.eq]
     refine LinearMap.mem_range.mpr ⟨(G.latticeQuotEquiv B).symm c, ?_⟩
-    rw [LinearMap.smul_apply, LinearMap.id_apply, map_add, map_smul]
+    rw [zsmul_id_apply, map_add, map_smul]
     abel
   -- the coset reindex `c ↦ k₀ + q·c` is a bijection onto the fiber
   have hbij : Function.Bijective (fun c : Fin n → ℤ =>
@@ -474,7 +483,7 @@ private lemma residueMass_mk_eq_periodization {n : ℕ}
     · rintro ⟨k, hk⟩
       rw [Submodule.Quotient.eq] at hk
       obtain ⟨y, hy⟩ := LinearMap.mem_range.mp hk
-      rw [LinearMap.smul_apply, LinearMap.id_apply] at hy
+      rw [zsmul_id_apply] at hy
       refine ⟨G.latticeQuotEquiv B y, ?_⟩
       apply Subtype.ext
       show k₀ + (q : ℤ) • (G.latticeQuotEquiv B) y = k
@@ -537,7 +546,7 @@ theorem residueMass_lt_residueMass_zero {ξ : H1Reduction G q}
   -- a nonzero class has a representative coordinate `q` does not divide
   have hcoord : ∃ i, ¬ ((q : ℤ) ∣ k₀ i) := by
     by_contra hall
-    push_neg at hall
+    push Not at hall
     apply hξ
     choose f hf using fun i => hall i
     have hk : k₀ = (q : ℤ) • f := funext fun i => by
@@ -545,7 +554,7 @@ theorem residueMass_lt_residueMass_zero {ξ : H1Reduction G q}
     rw [← hmkξ, hk, map_smul, Submodule.Quotient.mk_eq_zero]
     exact LinearMap.mem_range.mpr
       ⟨(G.latticeQuotEquiv G.cycleBasis).symm f, by
-        rw [LinearMap.smul_apply, LinearMap.id_apply]⟩
+        rw [zsmul_id_apply]⟩
   obtain ⟨i₀, hi₀⟩ := hcoord
   have hq0 : (0 : ℝ) < ((q : ℕ) : ℝ) :=
     Nat.cast_pos.mpr (Nat.pos_of_ne_zero (NeZero.ne q))
@@ -696,7 +705,7 @@ private lemma range_qsmul_le (hdvd : q ∣ q') :
   rintro x ⟨y, rfl⟩
   obtain ⟨c, hc⟩ := hdvd
   refine ⟨(c : ℤ) • y, ?_⟩
-  simp only [LinearMap.smul_apply, LinearMap.id_apply]
+  simp only [zsmul_id_apply]
   rw [smul_smul, show ((q : ℤ)) * (c : ℤ) = ((q' : ℤ)) from by
     exact_mod_cast hc.symm]
 

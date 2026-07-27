@@ -126,7 +126,6 @@ private theorem sq_shift_le_geo {α : ℝ} (hα : 0 < α) (k : ℕ) :
     | zero => norm_num
     | succ n ih =>
       push_cast
-      push_cast at ih
       nlinarith [ih, (Nat.cast_nonneg n : (0 : ℝ) ≤ (n : ℝ)),
         sq_nonneg ((n : ℝ)), pow_succ (4 : ℝ) n]
   have hkk : (k : ℝ) ≤ ((k : ℝ)) ^ 2 := by

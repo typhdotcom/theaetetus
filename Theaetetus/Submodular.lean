@@ -391,7 +391,7 @@ theorem defect_eq_zero_iff {s : ℝ} (hs : 0 < s) {q q' : ℕ} :
   constructor
   · intro h
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     exact absurd h (defect_neg_of_incomparable hs hcon.1 hcon.2).ne
   · rintro (h | h)
     · exact defect_eq_zero_of_dvd s h

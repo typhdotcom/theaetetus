@@ -209,7 +209,7 @@ theorem defect_forall_eq_zero_iff :
   constructor
   · intro h
     by_contra hne
-    push_neg at hne
+    push Not at hne
     have hpos : 0 < Real.log (T.Z 1) :=
       Real.log_pos (T.one_lt_Z le_rfl hne)
     have hlim := T.tendsto_defect_succ

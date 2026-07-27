@@ -272,6 +272,17 @@ theorem classForm_chart {n : ℕ} (B : Module.Basis (Fin n) ℤ G.cycleLattice)
   show _ = (G.basisGramData G.cycleBasis).interaction
     (G.h1QuotEquiv κ) (G.h1QuotEquiv κ')
   rw [hpol, hpol]
+  -- `rw [hpol]` instantiates the addends at `Fin H.r`, leaving the
+  -- projection unreduced in the `Pi.instAdd` instance; the energy
+  -- lemmas below live at `Fin n`. Restate so the two agree.
+  show ((G.basisGramData B).energy
+        (G.latticeQuotEquiv B κ + G.latticeQuotEquiv B κ')
+      - (G.basisGramData B).energy (G.latticeQuotEquiv B κ)
+      - (G.basisGramData B).energy (G.latticeQuotEquiv B κ')) / 2
+    = ((G.basisGramData G.cycleBasis).energy
+        (G.h1QuotEquiv κ + G.h1QuotEquiv κ')
+      - (G.basisGramData G.cycleBasis).energy (G.h1QuotEquiv κ)
+      - (G.basisGramData G.cycleBasis).energy (G.h1QuotEquiv κ')) / 2
   have h1 : (G.basisGramData B).energy
       (G.latticeQuotEquiv B κ + G.latticeQuotEquiv B κ')
       = (G.basisGramData G.cycleBasis).energy

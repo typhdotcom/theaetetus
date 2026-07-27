@@ -184,7 +184,7 @@ theorem tendsto_towerDefect_succ :
   have heq : ∀ n : ℕ, G.toPartitionTower.defect (n + 1) (n + 2)
       = G.towerDefect (n + 1) (n + 2) := fun n =>
     (G.towerDefect_eq_partitionTower_defect (n + 1) (n + 2)).symm
-  simpa only [heq] using h
+  simpa only [heq, G.toPartitionTower_Z] using h
 
 /-- **The sign appears asymptotically in every rank**: on a carrier
 with a cycle, the tower defect is eventually strictly negative along

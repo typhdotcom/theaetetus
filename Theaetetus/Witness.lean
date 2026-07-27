@@ -30,14 +30,14 @@ private lemma exp_third_bounds :
   have hpos : (0 : ℝ) < Real.exp (1 / 3) := Real.exp_pos _
   constructor
   · by_contra hle
-    push_neg at hle
+    push Not at hle
     have h3 : Real.exp (1 / 3) ^ 3 ≤ (1.39 : ℝ) ^ 3 := by
       exact pow_le_pow_left₀ hpos.le hle 3
     rw [hcube] at h3
     norm_num at h3
     linarith
   · by_contra hge
-    push_neg at hge
+    push Not at hge
     have h3 : (10 / 7 : ℝ) ^ 3 ≤ Real.exp (1 / 3) ^ 3 := by
       exact pow_le_pow_left₀ (by norm_num) hge 3
     rw [hcube] at h3

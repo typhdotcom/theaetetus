@@ -184,8 +184,6 @@ section Torus
 
 open UnitAddTorus Topology
 
-attribute [local instance] Real.fact_zero_lt_one
-
 /-- The coordinatewise quotient map from `ℝ^d` to the unit torus. -/
 def torusMk (x : Fin d → ℝ) : UnitAddTorus (Fin d) :=
   fun i => (x i : UnitAddCircle)
@@ -691,7 +689,7 @@ theorem integral_charGauss_eq (hM : M.PosDef) (m : Fin d → ℤ) :
   have hcontU : Continuous (fun y : Fin d → ℝ => U.mulVec y) := by
     refine continuous_pi (fun i => ?_)
     show Continuous fun y : Fin d → ℝ => ∑ j, U i j * y j
-    exact continuous_finset_sum _ (fun j _ => continuous_const.mul (continuous_apply j))
+    exact continuous_finsetSum _ (fun j _ => continuous_const.mul (continuous_apply j))
   have hmapU : Measure.map (fun y : Fin d → ℝ => U.mulVec y)
       (volume : Measure (Fin d → ℝ)) = volume := by
     have h := Real.map_matrix_volume_pi_eq_smul_volume_pi (M := U) hdetU_ne

@@ -48,7 +48,7 @@ theorem theta_prod_lt_of_half_le {s : ℝ} (hs : 1 / 2 ≤ s) :
       rw [← Real.exp_nat_mul]; norm_num
     have hgt : (100 / 61 : ℝ) < Real.exp (1 / 2) := by
       by_contra hle
-      push_neg at hle
+      push Not at hle
       have h2 : Real.exp (1 / 2) ^ 2 ≤ (100 / 61 : ℝ) ^ 2 :=
         pow_le_pow_left₀ (Real.exp_pos _).le hle 2
       rw [hsq] at h2

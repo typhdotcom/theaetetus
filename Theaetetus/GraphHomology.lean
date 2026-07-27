@@ -65,9 +65,10 @@ instance : NoZeroSMulDivisors ℤ ((G.E → ℤ) ⧸ G.cycleLattice) := by
   · exact Or.inl rfl
   · refine Or.inr ?_
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
+    have h' : Submodule.Quotient.mk (p := G.cycleLattice) (c • y) = 0 := h
+    rw [Submodule.Quotient.mk_eq_zero] at h'
     rw [Submodule.Quotient.mk_eq_zero]
-    exact G.mem_of_smul_mem hc h
+    exact G.mem_of_smul_mem hc h'
 
 instance : Module.Finite ℤ ((G.E → ℤ) ⧸ G.cycleLattice) :=
   Module.Finite.of_surjective G.cycleLattice.mkQ
@@ -76,16 +77,21 @@ instance : Module.Finite ℤ ((G.E → ℤ) ⧸ G.cycleLattice) :=
 instance : Module.Free ℤ ((G.E → ℤ) ⧸ G.cycleLattice) :=
   Module.free_of_finite_type_torsion_free'
 
+instance : Module.Projective ℤ ((G.E → ℤ) ⧸ G.cycleLattice) :=
+  Module.Projective.of_free
+
 /-- A `ℤ`-linear section of the quotient map, from projectivity of
 the free quotient. -/
 noncomputable def quotSection :
     ((G.E → ℤ) ⧸ G.cycleLattice) →ₗ[ℤ] (G.E → ℤ) :=
-  (Module.projective_lifting_property G.cycleLattice.mkQ LinearMap.id
+  (Module.projective_lifting_property G.cycleLattice.mkQ
+    (LinearMap.id (R := ℤ) (M := (G.E → ℤ) ⧸ G.cycleLattice))
     (Submodule.Quotient.mk_surjective _)).choose
 
 theorem mkQ_comp_quotSection :
     G.cycleLattice.mkQ ∘ₗ G.quotSection = LinearMap.id :=
-  (Module.projective_lifting_property G.cycleLattice.mkQ LinearMap.id
+  (Module.projective_lifting_property G.cycleLattice.mkQ
+    (LinearMap.id (R := ℤ) (M := (G.E → ℤ) ⧸ G.cycleLattice))
     (Submodule.Quotient.mk_surjective _)).choose_spec
 
 /-- The retraction of `ℤ^E` onto the cycle lattice along the chosen
@@ -254,7 +260,7 @@ theorem closedWalkSum_eq_zero {R : Type*} [CommRing R] (ω : G.E → R)
   have hcoe : ∑ i, B.repr ⟨c.chain ℤ, hmem⟩ i • G.cyclesZ B i
       = c.chain ℤ := by
     have hval := congrArg Subtype.val hexp
-    rw [AddSubmonoidClass.coe_finset_sum] at hval
+    rw [AddSubmonoidClass.coe_finsetSum] at hval
     exact hval
   have hcast : ∀ e, c.chain R e
       = ∑ i, ((B.repr ⟨c.chain ℤ, hmem⟩ i : ℤ) : R)
@@ -495,7 +501,7 @@ noncomputable def basisOfCycles {r : ℕ} (c : Fin r → G.E → ℤ)
     rw [Fintype.linearIndependent_iff]
     intro g hg
     have hval := congrArg Subtype.val hg
-    rw [AddSubmonoidClass.coe_finset_sum] at hval
+    rw [AddSubmonoidClass.coe_finsetSum] at hval
     have hcast : (fun e => ∑ i, ((g i : ℝ)) * ((c i e : ℤ) : ℝ)) = 0 := by
       funext e
       have he := congrFun hval e
@@ -516,7 +522,7 @@ noncomputable def basisOfCycles {r : ℕ} (c : Fin r → G.E → ℤ)
     rw [Submodule.mem_span_range_iff_exists_fun]
     refine ⟨a, ?_⟩
     apply Subtype.ext
-    rw [AddSubmonoidClass.coe_finset_sum]
+    rw [AddSubmonoidClass.coe_finsetSum]
     funext e
     rw [Finset.sum_apply]
     exact (congrFun ha e).symm

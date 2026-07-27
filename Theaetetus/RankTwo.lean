@@ -44,7 +44,7 @@ theorem periodization_le_periodization_zero {d : ℕ}
   by_cases hx : ∃ i₀ : Fin d, ∀ k : ℤ, x i₀ ≠ (k : ℝ)
   · obtain ⟨i₀, hi⟩ := hx
     exact (periodization_lt_periodization_zero hM hi).le
-  · push_neg at hx
+  · push Not at hx
     choose m hm using hx
     have hxm : x = (0 : Fin d → ℝ) + fun i => ((m i : ℤ) : ℝ) := by
       funext i
@@ -114,7 +114,6 @@ theorem summable_hexTheta {s : ℝ} (hs : 0 < s) :
         * Real.exp (-(s / 6) * (p.2 : ℝ) ^ 2)) :=
     summable_mul_of_summable_norm hF hF
   refine hmaj.of_nonneg_of_le (fun p => (Real.exp_pos _).le) fun p => ?_
-  dsimp only
   rw [← Real.exp_add]
   refine Real.exp_le_exp.mpr ?_
   linarith [mul_nonneg hs.le (sq_nonneg ((p.1 : ℝ) - (p.2 : ℝ)))]

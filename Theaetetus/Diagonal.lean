@@ -123,7 +123,7 @@ theorem diagDefect_eq_zero_iff (hr : r ≠ 0) (hc : ∀ i, 0 < c i)
   constructor
   · intro h0
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     exact absurd h0 (diagDefect_neg_of_incomparable hr hc hs hcon.1 hcon.2).ne
   · rintro (hdvd | hdvd)
     · exact diagDefect_eq_zero_of_dvd c s hdvd
