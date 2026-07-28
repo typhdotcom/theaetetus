@@ -22,6 +22,11 @@ Conventions (summary):
     H_L''(u) = H_{L*}''(2 log pi - u): sweeping u >= log pi on both L
     and L* covers the whole line. Lean witness at rank one:
     theta_duality_real; higher rank is roadmap target 1.
+    Rank-two caveat: with J = [[0,-1],[1,0]] in GL_2(Z), every
+    det-1 symmetric 2x2 matrix satisfies J^T M J = M^{-1} -- every
+    binary form here is integrally isodual, so L/L* agreement in
+    rank two checks matrix inversion and basis invariance only.
+    Genuinely distinct dual pairs first appear at rank 3.
   * Cutoff policy: box |x_i| <= R, checked empirically by a
     radius-stability comparison (R vs R+3) plus an ad hoc decay
     proxy. Neither is a tail bound; certified tails are roadmap
@@ -156,6 +161,58 @@ def stats(qs, u):
     return {"beta": beta, "H1": H1, "H2": H2, "ratio": ratio}
 
 
+# ----------------------------------------------------------- families
+
+
+def gram_of_tau(x, y):
+    """Det-1 Gram of the binary form with modular parameter tau = x+iy:
+    Q(m,n) = |m + n*tau|^2 / y. Covers every det-1 positive binary
+    form up to equivalence."""
+    m = mp.matrix(2, 2)
+    m[0, 0] = 1 / y
+    m[0, 1] = x / y
+    m[1, 0] = x / y
+    m[1, 1] = (x * x + y * y) / y
+    return m
+
+
+def build_family(name):
+    """Members as (label, x, y). Endpoint members coincide with the
+    committed baselines (built-in cross-checks): the arc's ends are
+    hexagonal (60 deg) and square (90 deg); the shear ray starts at
+    the hexagonal point tau = 1/2 + i*sqrt(3)/2. (The unit-circle
+    arc is distinguished in tau-space, not by isoduality: in det-1
+    rank two every form is integrally isodual, see the module
+    docstring.)"""
+    if name == "unit_circle_arc":
+        out = []
+        for deg in (60, 65, 70, 75, 80, 85, 90):
+            phi = mpf(deg) * pi / 180
+            out.append((f"phi{deg}", mp.cos(phi), mp.sin(phi)))
+        return out
+    if name == "shear_half":
+        ys = ["0.86602540378443864676", "0.6", "0.45", "0.35",
+              "0.25", "0.18", "0.12", "0.08", "0.05"]
+        return [(f"y{v}", mpf("0.5"), mpf(v)) for v in ys]
+    raise ValueError(f"unknown family {name}")
+
+
+def find_radius(m, md, u0, dps):
+    """Smallest radius from an escalating schedule passing both the
+    decay proxy and moment-sensitive radius stability, for the form
+    and its dual."""
+    for radius in (14, 20, 28, 40, 56):
+        try:
+            check_cutoff(m, radius, exp(u0), dps)
+            check_cutoff(md, radius, exp(u0), dps)
+            radius_stability(m, radius, u0, dps)
+            radius_stability(md, radius, u0, dps)
+            return radius
+        except AssertionError:
+            continue
+    raise AssertionError("no radius in schedule is stable; form too degenerate")
+
+
 # ------------------------------------------------------------ sweeps
 
 
@@ -243,6 +300,103 @@ def run_sweep(name, radius, u_span, du, dps, outdir):
     return result
 
 
+def run_family(name, u_span, du, dps, outdir):
+    mp.dps = dps
+    u0 = log(pi)
+    npts = int(u_span / du) + 1
+    rows = []
+    print(f"[family {name}] dps={dps}, grid step {du}, span {u_span}")
+    for label, x, y in build_family(name):
+        m = det_normalize(gram_of_tau(x, y))
+        md = dual(m)
+        radius = find_radius(m, md, u0, dps)
+        qs = box_qvalues(m, radius)
+        qsd = box_qvalues(md, radius)
+        l1 = lambda1_sq(qs)
+        l1d = lambda1_sq(qsd)
+        prof = sweep_profile(qs, u0, mpf(du), npts)
+        profd = sweep_profile(qsd, u0, mpf(du), npts)
+        if prof["min_ratio_on_grid"] <= profd["min_ratio_on_grid"]:
+            side, best = "L", prof
+        else:
+            side, best = "L*", profd
+        rows.append({
+            "label": label,
+            "tau": {"x": s(x), "y": s(y)},
+            "lambda1_product": s(sqrt(l1 * l1d)),
+            "radius": radius,
+            "H2_positive_on_grid_both": bool(
+                prof["H2_positive_on_grid"] and profd["H2_positive_on_grid"]),
+            "sampled_min_ratio": s(best["min_ratio_on_grid"]),
+            "min_side": side,
+            "min_at_u_minus_logpi": s(best["min_ratio_at_u_minus_logpi"]),
+        })
+        print(f"  {label:>10}: l1*l1d = {s(sqrt(l1 * l1d), 8):>10}, R = {radius:2d}, "
+              f"min r = {s(best['min_ratio_on_grid'], 8):>10} "
+              f"({side} at u-logpi = {s(best['min_ratio_at_u_minus_logpi'], 4)}), "
+              f"H''>0 on grid: {rows[-1]['H2_positive_on_grid_both']}")
+    result = {
+        "family": name,
+        "grid": {"u0": "log(pi)", "span": u_span, "step": du, "points": npts},
+        "precision_dps": dps,
+        "mpmath_version": mpmath.__version__,
+        "members": rows,
+    }
+    outdir.mkdir(parents=True, exist_ok=True)
+    out = outdir / f"family_{name}.json"
+    out.write_text(json.dumps(result, indent=2) + "\n")
+    print(f"  -> {out}")
+
+
+def run_finescan(family, member, window, step, radius, dps, outdir):
+    """Fine grid around the duality center for one family member,
+    committed as its own dataset. Same checks as every sweep."""
+    mp.dps = dps
+    u0 = log(pi)
+    members = {label: (x, y) for label, x, y in build_family(family)}
+    x, y = members[member]
+    m = det_normalize(gram_of_tau(x, y))
+    md = dual(m)
+    check_cutoff(m, radius, exp(u0), dps)
+    check_cutoff(md, radius, exp(u0), dps)
+    radius_stability(m, radius, u0, dps)
+    radius_stability(md, radius, u0, dps)
+    w = mpf(window)
+    du = mpf(step)
+    npts = int(w / du) + 1
+    print(f"[finescan {family}/{member}] window {window}, step {step}, "
+          f"radius {radius}, dps {dps}")
+    sides = {}
+    for tag, mm in (("L", m), ("L_dual", md)):
+        qs = box_qvalues(mm, radius)
+        best_v = None
+        best_u = None
+        for k in range(npts):
+            u = u0 + k * du
+            st = stats(qs, u)
+            if best_v is None or st["ratio"] < best_v:
+                best_v, best_u = st["ratio"], u - u0
+        sides[tag] = {"sampled_min_ratio": s(best_v),
+                      "at_u_minus_logpi": s(best_u)}
+        print(f"  {tag}: sampled min ratio {s(best_v, 12)} "
+              f"at u - log pi = {s(best_u, 6)}")
+    result = {
+        "family": family,
+        "member": member,
+        "tau": {"x": s(x), "y": s(y)},
+        "window": window,
+        "step": step,
+        "radius": radius,
+        "precision_dps": dps,
+        "mpmath_version": mpmath.__version__,
+        **sides,
+    }
+    outdir.mkdir(parents=True, exist_ok=True)
+    out = outdir / f"finescan_{family}_{member}.json"
+    out.write_text(json.dumps(result, indent=2) + "\n")
+    print(f"  -> {out}")
+
+
 # ---------------------------------------------------------- selftest
 
 
@@ -304,8 +458,13 @@ def selftest(dps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("command", choices=["selftest", "sweep", "all"])
+    ap.add_argument("command", choices=["selftest", "sweep", "family", "finescan", "all"])
     ap.add_argument("--form", choices=sorted(RAW_FORMS), default=None)
+    ap.add_argument("--family", choices=["unit_circle_arc", "shear_half"],
+                    default=None)
+    ap.add_argument("--member", default=None)
+    ap.add_argument("--window", default="0.3")
+    ap.add_argument("--finestep", default="0.0005")
     ap.add_argument("--dps", type=int, default=50)
     ap.add_argument("--radius", type=int, default=14)
     ap.add_argument("--span", type=float, default=4.0)
@@ -319,9 +478,20 @@ def main():
         forms = [args.form] if args.form else sorted(RAW_FORMS)
         for f in forms:
             run_sweep(f, args.radius, args.span, args.step, args.dps, outdir)
+    if args.command == "family":
+        fams = [args.family] if args.family else ["unit_circle_arc", "shear_half"]
+        for f in fams:
+            run_family(f, args.span, 0.02, 30, outdir)
+    if args.command == "finescan":
+        assert args.family and args.member, "finescan needs --family and --member"
+        run_finescan(args.family, args.member, args.window, args.finestep,
+                     args.radius, args.dps, outdir)
     if args.command == "all":
         for f in sorted(RAW_FORMS):
             run_sweep(f, args.radius, args.span, args.step, args.dps, outdir)
+        for f in ("unit_circle_arc", "shear_half"):
+            run_family(f, args.span, 0.02, 30, outdir)
+        run_finescan("shear_half", "y0.05", "0.3", "0.0005", 32, 30, outdir)
 
 
 if __name__ == "__main__":

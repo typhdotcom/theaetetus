@@ -333,8 +333,9 @@ pairwise versus higher-order interaction.
   `D_L < 0` off chains and `= 0` on them — **strict Q5 implies
   Q1 completely**, inequality and equality case at once, for
   arbitrary real ratios. It is strictly stronger than the known
-  correlation theorem, so it is stress-tested before any formal
-  campaign. The shape of a possible failure is already
+  correlation theorem, so it is stress-tested numerically before
+  any attempt at a formal proof. The shape of a possible failure
+  is already
   constrained: at large coupling the shortest shell dominates and
   `β²Var − β⟨E⟩ ≈ βλ₁N₁e^{−βλ₁}(βλ₁ − 1) > 0` — the rank-one
   Fact-1 mechanism, universal; the duality

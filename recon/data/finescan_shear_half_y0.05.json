@@ -1,0 +1,21 @@
+{
+  "family": "shear_half",
+  "member": "y0.05",
+  "tau": {
+    "x": "0.5",
+    "y": "0.05"
+  },
+  "window": "0.3",
+  "step": "0.0005",
+  "radius": 32,
+  "precision_dps": 30,
+  "mpmath_version": "1.4.1",
+  "L": {
+    "sampled_min_ratio": "1.00027853538687422509794291181",
+    "at_u_minus_logpi": "0.0"
+  },
+  "L_dual": {
+    "sampled_min_ratio": "1.00027853538687422509794291181",
+    "at_u_minus_logpi": "0.0"
+  }
+}
