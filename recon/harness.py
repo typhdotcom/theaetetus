@@ -26,11 +26,14 @@ Conventions (summary):
     det-1 symmetric 2x2 matrix satisfies J^T M J = M^{-1} -- every
     binary form here is integrally isodual, so L/L* agreement in
     rank two checks matrix inversion and basis invariance only.
-    Genuinely distinct dual pairs first appear at rank 3.
-  * Cutoff policy: box |x_i| <= R, checked empirically by a
-    radius-stability comparison (R vs R+3) plus an ad hoc decay
-    proxy. Neither is a tail bound; certified tails are roadmap
-    target 5.
+    Genuinely distinct dual pairs first appear at rank 3 (FCC/BCC).
+  * Cutoff policy: lattice points are enumerated over the axis-aligned
+    bounding box of the energy ellipsoid Q <= E -- the "box energy" E
+    is set by the working precision and the smallest coupling in use,
+    and |x_i| <= sqrt(E * (M^{-1})_ii). The box adapts per direction,
+    so degenerating forms stay cheap. Checked empirically by an
+    energy-stability comparison (E vs 1.5E). Not a tail bound;
+    certified tails are roadmap target 5.
 
 Self-test anchors, two classes:
   Lean-backed (rank one):
@@ -39,8 +42,9 @@ Self-test anchors, two classes:
     * hasDerivAt_thetaDeriv:  H'' is the derivative of H'.
   Higher-rank consistency checks (numerical only; no Lean witness yet,
   higher-rank duality being roadmap target 1):
-    * hexagonal Poisson duality at beta = 2.
-    * isodual center value H'(log pi) = -n/4.
+    * hexagonal Poisson duality at beta = 2 (rank 2).
+    * FCC/BCC Poisson duality at beta = 2 (rank 3).
+    * self-dual center value H'(log pi) = -n/4 (hexagonal, cubic).
 """
 
 import argparse
@@ -60,6 +64,10 @@ RAW_FORMS = {
     # (a^2 - a b + b^2)/3 -- the repo's hexagonal form (RankTwo.lean).
     # Raw determinant 1/12; its own reflection center is pi*sqrt(12).
     "hexagonal": [["1/3", "-1/6"], ["-1/6", "1/3"]],
+    # Rank 3: cubic Z^3 (self-dual) and FCC, whose dual is BCC --
+    # the first genuinely distinct dual pair in the program.
+    "cubic3": [["1", "0", "0"], ["0", "1", "0"], ["0", "0", "1"]],
+    "fcc": [["2", "1", "1"], ["1", "2", "1"], ["1", "1", "2"]],
 }
 
 
@@ -74,6 +82,21 @@ def parse_gram(rows):
                 m[i, j] = mpf(p) / mpf(q)
             else:
                 m[i, j] = mpf(num)
+    return m
+
+
+def mat_eye(n):
+    m = mp.matrix(n, n)
+    for i in range(n):
+        m[i, i] = mpf(1)
+    return m
+
+
+def mat_diag(vals):
+    n = len(vals)
+    m = mp.matrix(n, n)
+    for i in range(n):
+        m[i, i] = vals[i]
     return m
 
 
@@ -93,11 +116,26 @@ def dual(m):
 # ------------------------------------------------------- lattice sums
 
 
-def box_qvalues(m, radius):
-    """Q(x) = x^T M x for all x in the box |x_i| <= radius (0 included)."""
+def box_energy(dps, beta_min):
+    """Energy cutoff E: dropped points have Boltzmann weight below
+    exp(-beta_min * E), far under working precision."""
+    return (mpf(dps) + 15) * mp.log(10) / beta_min
+
+
+def box_radii(m, energy):
+    """Axis-aligned bounding box of the ellipsoid Q <= energy:
+    |x_i| <= sqrt(energy * (M^{-1})_ii). Adapts per direction, so
+    degenerating forms stay cheap."""
+    minv = m**-1
+    return [int(mp.ceil(sqrt(energy * minv[i, i]))) for i in range(m.rows)]
+
+
+def box_qvalues(m, radii):
+    """Q(x) = x^T M x for all x in the box |x_i| <= radii[i]."""
     n = m.rows
     qs = []
-    for x in itertools.product(range(-radius, radius + 1), repeat=n):
+    ranges = [range(-r, r + 1) for r in radii]
+    for x in itertools.product(*ranges):
         q = mpf(0)
         for i in range(n):
             for j in range(n):
@@ -106,40 +144,14 @@ def box_qvalues(m, radius):
     return qs
 
 
+def qvalues_at(m, dps, beta_min):
+    """Q-values over the ellipsoid bounding box sized for beta_min."""
+    return box_qvalues(m, box_radii(m, box_energy(dps, beta_min)))
+
+
 def lambda1_sq(qs):
     """Shortest nonzero vector norm^2 = min of Q over the box minus 0."""
     return min(q for q in qs if q > 0)
-
-
-def check_cutoff(m, radius, beta_min, dps):
-    """Ad hoc decay proxy, NOT a tail bound (certified tails: target 5).
-
-    Every dropped point has sup-norm > radius, hence
-    Q >= mu * radius^2 with mu the least eigenvalue of M; this
-    multiplies one such exponential by a crude polynomial allowance.
-    The empirical check is `radius_stability` below.
-    """
-    n = m.rows
-    mu = min(mp.eigsy(mp.matrix(m))[0])
-    qmin = mu * radius**2
-    allowance = (qmin**2 + 1) * (2 * radius + 3) ** n
-    bound = allowance * exp(-beta_min * qmin)
-    assert bound < mpf(10) ** (-(dps + 5)), (
-        f"cutoff radius {radius} too small: dropped-term bound {nstr(bound, 5)}"
-    )
-
-
-def radius_stability(m, radius, u, dps):
-    """Empirical cutoff check at the fattest tails swept (the duality
-    center): H', H'', and the ratio must be radius-stable — the
-    moments are more tail-sensitive than Z alone."""
-    a = stats(box_qvalues(m, radius), u)
-    b = stats(box_qvalues(m, radius + 3), u)
-    for key in ("H1", "H2", "ratio"):
-        rel = abs(a[key] - b[key]) / abs(b[key])
-        assert rel < mpf(10) ** (-(dps - 8)), (
-            f"radius {radius} not stable in {key}: shift {nstr(rel, 5)}"
-        )
 
 
 def stats(qs, u):
@@ -161,7 +173,24 @@ def stats(qs, u):
     return {"beta": beta, "H1": H1, "H2": H2, "ratio": ratio}
 
 
+def energy_stability(m, u, dps, beta_min):
+    """Empirical cutoff check at the smallest coupling in use: H',
+    H'', and the ratio must agree between boxes for E and 1.5E --
+    the moments are more tail-sensitive than Z alone."""
+    e0 = box_energy(dps, beta_min)
+    a = stats(box_qvalues(m, box_radii(m, e0)), u)
+    b = stats(box_qvalues(m, box_radii(m, mpf("1.5") * e0)), u)
+    for key in ("H1", "H2", "ratio"):
+        rel = abs(a[key] - b[key]) / abs(b[key])
+        assert rel < mpf(10) ** (-(dps - 8)), (
+            f"box energy not stable in {key}: shift {nstr(rel, 5)}"
+        )
+
+
 # ----------------------------------------------------------- families
+
+FAMILY_NAMES = ["unit_circle_arc", "shear_half", "rank3_baselines",
+                "cubic_to_fcc", "fcc_squash"]
 
 
 def gram_of_tau(x, y):
@@ -177,40 +206,40 @@ def gram_of_tau(x, y):
 
 
 def build_family(name):
-    """Members as (label, x, y). Endpoint members coincide with the
-    committed baselines (built-in cross-checks): the arc's ends are
-    hexagonal (60 deg) and square (90 deg); the shear ray starts at
-    the hexagonal point tau = 1/2 + i*sqrt(3)/2. (The unit-circle
-    arc is distinguished in tau-space, not by isoduality: in det-1
-    rank two every form is integrally isodual, see the module
-    docstring.)"""
+    """Members as (label, raw Gram). Endpoint members coincide with
+    committed baselines (built-in cross-checks). The unit-circle arc
+    is distinguished in tau-space, not by isoduality: in det-1 rank
+    two every form is integrally isodual (module docstring)."""
     if name == "unit_circle_arc":
         out = []
         for deg in (60, 65, 70, 75, 80, 85, 90):
             phi = mpf(deg) * pi / 180
-            out.append((f"phi{deg}", mp.cos(phi), mp.sin(phi)))
+            out.append((f"phi{deg}", gram_of_tau(mp.cos(phi), mp.sin(phi))))
         return out
     if name == "shear_half":
         ys = ["0.86602540378443864676", "0.6", "0.45", "0.35",
               "0.25", "0.18", "0.12", "0.08", "0.05"]
-        return [(f"y{v}", mpf("0.5"), mpf(v)) for v in ys]
+        return [(f"y{v}", gram_of_tau(mpf("0.5"), mpf(v))) for v in ys]
+    if name == "rank3_baselines":
+        return [("cubic3", parse_gram(RAW_FORMS["cubic3"])),
+                ("fcc", parse_gram(RAW_FORMS["fcc"]))]
+    if name == "cubic_to_fcc":
+        fcc = det_normalize(parse_gram(RAW_FORMS["fcc"]))
+        eye = mat_eye(3)
+        out = []
+        for k in range(7):
+            t = mpf(k) / 6
+            out.append((f"t{k}of6", eye * (1 - t) + fcc * t))
+        return out
+    if name == "fcc_squash":
+        fcc = parse_gram(RAW_FORMS["fcc"])
+        out = []
+        for v in ("1", "0.7", "0.5", "0.35", "0.25", "0.15", "0.10", "0.07"):
+            y = mpf(v)
+            d = mat_diag([mpf(1), mpf(1), y])
+            out.append((f"y{v}", d * fcc * d))
+        return out
     raise ValueError(f"unknown family {name}")
-
-
-def find_radius(m, md, u0, dps):
-    """Smallest radius from an escalating schedule passing both the
-    decay proxy and moment-sensitive radius stability, for the form
-    and its dual."""
-    for radius in (14, 20, 28, 40, 56):
-        try:
-            check_cutoff(m, radius, exp(u0), dps)
-            check_cutoff(md, radius, exp(u0), dps)
-            radius_stability(m, radius, u0, dps)
-            radius_stability(md, radius, u0, dps)
-            return radius
-        except AssertionError:
-            continue
-    raise AssertionError("no radius in schedule is stable; form too degenerate")
 
 
 # ------------------------------------------------------------ sweeps
@@ -247,30 +276,44 @@ def s(x, digits=30):
     return nstr(x, digits)
 
 
-def run_sweep(name, radius, u_span, du, dps, outdir):
+def gram_strings(m):
+    return [[s(m[i, j]) for j in range(m.rows)] for i in range(m.rows)]
+
+
+def profile_pair(m, dps, u0, du, npts):
+    """Q-values and profiles for a normalized form and its dual,
+    with the stability checks run for both."""
+    md = dual(m)
+    beta_min = exp(u0)
+    energy_stability(m, u0, dps, beta_min)
+    energy_stability(md, u0, dps, beta_min)
+    qs = qvalues_at(m, dps, beta_min)
+    qsd = qvalues_at(md, dps, beta_min)
+    return (qs, qsd,
+            sweep_profile(qs, u0, du, npts),
+            sweep_profile(qsd, u0, du, npts))
+
+
+def wrap_profile(p):
+    return {k: (s(v) if isinstance(v, mpf) else
+                ({kk: s(vv) for kk, vv in v.items()}
+                 if isinstance(v, dict) else v))
+            for k, v in p.items()}
+
+
+def run_sweep(name, u_span, du, dps, outdir):
     mp.dps = dps
     m = det_normalize(parse_gram(RAW_FORMS[name]))
     n = m.rows
-    md = dual(m)
     u0 = log(pi)
     npts = int(u_span / du) + 1
-    check_cutoff(m, radius, exp(u0), dps)
-    check_cutoff(md, radius, exp(u0), dps)
-    radius_stability(m, radius, u0, dps)
-    radius_stability(md, radius, u0, dps)
-
-    qs = box_qvalues(m, radius)
-    qsd = box_qvalues(md, radius)
+    qs, qsd, prof, profd = profile_pair(m, dps, u0, mpf(du), npts)
     l1 = lambda1_sq(qs)
     l1d = lambda1_sq(qsd)
-
-    prof = sweep_profile(qs, u0, mpf(du), npts)
-    profd = sweep_profile(qsd, u0, mpf(du), npts)
-
     result = {
         "form": name,
         "rank": n,
-        "gram_normalized": [[s(m[i, j]) for j in range(n)] for i in range(n)],
+        "gram_normalized": gram_strings(m),
         "det_check": s(mp.det(m)),
         "lambda1_sq": s(l1),
         "dual_lambda1_sq": s(l1d),
@@ -278,13 +321,11 @@ def run_sweep(name, radius, u_span, du, dps, outdir):
         "grid": {"u0": "log(pi)", "span": u_span, "step": du, "points": npts},
         "precision_dps": dps,
         "mpmath_version": mpmath.__version__,
-        "cutoff_radius": radius,
-        "L": {k: (s(v) if isinstance(v, mpf) else
-                  ({kk: s(vv) for kk, vv in v.items()} if isinstance(v, dict) else v))
-              for k, v in prof.items()},
-        "L_dual": {k: (s(v) if isinstance(v, mpf) else
-                       ({kk: s(vv) for kk, vv in v.items()} if isinstance(v, dict) else v))
-                   for k, v in profd.items()},
+        "box_energy": s(box_energy(dps, exp(u0))),
+        "box_radii": {"L": box_radii(m, box_energy(dps, exp(u0))),
+                      "L_dual": box_radii(dual(m), box_energy(dps, exp(u0)))},
+        "L": wrap_profile(prof),
+        "L_dual": wrap_profile(profd),
     }
     outdir.mkdir(parents=True, exist_ok=True)
     out = outdir / f"{name}.json"
@@ -297,7 +338,6 @@ def run_sweep(name, radius, u_span, du, dps, outdir):
               f"sampled min ratio = {s(p['min_ratio_on_grid'], 10)} "
               f"at u - log pi = {s(p['min_ratio_at_u_minus_logpi'], 6)}")
     print(f"  -> {out}")
-    return result
 
 
 def run_family(name, u_span, du, dps, outdir):
@@ -306,32 +346,29 @@ def run_family(name, u_span, du, dps, outdir):
     npts = int(u_span / du) + 1
     rows = []
     print(f"[family {name}] dps={dps}, grid step {du}, span {u_span}")
-    for label, x, y in build_family(name):
-        m = det_normalize(gram_of_tau(x, y))
-        md = dual(m)
-        radius = find_radius(m, md, u0, dps)
-        qs = box_qvalues(m, radius)
-        qsd = box_qvalues(md, radius)
+    for label, mraw in build_family(name):
+        m = det_normalize(mraw)
+        qs, qsd, prof, profd = profile_pair(m, dps, u0, mpf(du), npts)
         l1 = lambda1_sq(qs)
         l1d = lambda1_sq(qsd)
-        prof = sweep_profile(qs, u0, mpf(du), npts)
-        profd = sweep_profile(qsd, u0, mpf(du), npts)
         if prof["min_ratio_on_grid"] <= profd["min_ratio_on_grid"]:
             side, best = "L", prof
         else:
             side, best = "L*", profd
         rows.append({
             "label": label,
-            "tau": {"x": s(x), "y": s(y)},
+            "gram_normalized": gram_strings(m),
             "lambda1_product": s(sqrt(l1 * l1d)),
-            "radius": radius,
+            "box_radii": {
+                "L": box_radii(m, box_energy(dps, exp(u0))),
+                "L_dual": box_radii(dual(m), box_energy(dps, exp(u0)))},
             "H2_positive_on_grid_both": bool(
                 prof["H2_positive_on_grid"] and profd["H2_positive_on_grid"]),
             "sampled_min_ratio": s(best["min_ratio_on_grid"]),
             "min_side": side,
             "min_at_u_minus_logpi": s(best["min_ratio_at_u_minus_logpi"]),
         })
-        print(f"  {label:>10}: l1*l1d = {s(sqrt(l1 * l1d), 8):>10}, R = {radius:2d}, "
+        print(f"  {label:>10}: l1*l1d = {s(sqrt(l1 * l1d), 8):>10}, "
               f"min r = {s(best['min_ratio_on_grid'], 8):>10} "
               f"({side} at u-logpi = {s(best['min_ratio_at_u_minus_logpi'], 4)}), "
               f"H''>0 on grid: {rows[-1]['H2_positive_on_grid_both']}")
@@ -348,27 +385,25 @@ def run_family(name, u_span, du, dps, outdir):
     print(f"  -> {out}")
 
 
-def run_finescan(family, member, window, step, radius, dps, outdir):
+def run_finescan(family, member, window, step, dps, outdir):
     """Fine grid around the duality center for one family member,
     committed as its own dataset. Same checks as every sweep."""
     mp.dps = dps
     u0 = log(pi)
-    members = {label: (x, y) for label, x, y in build_family(family)}
-    x, y = members[member]
-    m = det_normalize(gram_of_tau(x, y))
+    members = dict(build_family(family))
+    m = det_normalize(members[member])
     md = dual(m)
-    check_cutoff(m, radius, exp(u0), dps)
-    check_cutoff(md, radius, exp(u0), dps)
-    radius_stability(m, radius, u0, dps)
-    radius_stability(md, radius, u0, dps)
+    beta_min = exp(u0)
+    energy_stability(m, u0, dps, beta_min)
+    energy_stability(md, u0, dps, beta_min)
     w = mpf(window)
     du = mpf(step)
     npts = int(w / du) + 1
     print(f"[finescan {family}/{member}] window {window}, step {step}, "
-          f"radius {radius}, dps {dps}")
+          f"dps {dps}")
     sides = {}
     for tag, mm in (("L", m), ("L_dual", md)):
-        qs = box_qvalues(mm, radius)
+        qs = qvalues_at(mm, dps, beta_min)
         best_v = None
         best_u = None
         for k in range(npts):
@@ -383,12 +418,14 @@ def run_finescan(family, member, window, step, radius, dps, outdir):
     result = {
         "family": family,
         "member": member,
-        "tau": {"x": s(x), "y": s(y)},
+        "gram_normalized": gram_strings(m),
         "window": window,
         "step": step,
-        "radius": radius,
         "precision_dps": dps,
         "mpmath_version": mpmath.__version__,
+        "box_energy": s(box_energy(dps, beta_min)),
+        "box_radii": {"L": box_radii(m, box_energy(dps, beta_min)),
+                      "L_dual": box_radii(md, box_energy(dps, beta_min))},
         **sides,
     }
     outdir.mkdir(parents=True, exist_ok=True)
@@ -411,19 +448,22 @@ def selftest(dps):
         if not ok:
             failures.append(label)
 
-    print("selftest: [lean] = Lean-backed anchor, [num] = numerical consistency check")
-    one = det_normalize(parse_gram([["1"]]))
-    qs1 = box_qvalues(one, 60)
+    print("selftest: [lean] = Lean-backed anchor, "
+          "[num] = numerical consistency check")
     u0 = log(pi)
+    one = det_normalize(parse_gram([["1"]]))
 
     # thetaDeriv_pi: H'(log pi) = -1/4 at rank one.
+    qs1 = qvalues_at(one, dps, exp(u0))
     check("[lean] thetaDeriv_pi (rank one, H'(log pi) = -1/4)",
           stats(qs1, u0)["H1"] + mpf(1) / 4, tol)
 
     # theta_logDeriv_dual: H'(u) + H'(2 log pi - u) = -1/2 at rank one.
     u = u0 + mpf("0.7")
+    qs1w = qvalues_at(one, dps, exp(2 * u0 - u))
     check("[lean] theta_logDeriv_dual (H'(u) + H'(2 log pi - u) = -1/2)",
-          stats(qs1, u)["H1"] + stats(qs1, 2 * u0 - u)["H1"] + mpf(1) / 2, tol)
+          stats(qs1w, u)["H1"] + stats(qs1w, 2 * u0 - u)["H1"] + mpf(1) / 2,
+          tol)
 
     # Finite-difference consistency of H'' against H'.
     h = mpf(10) ** (-10)
@@ -432,20 +472,32 @@ def selftest(dps):
     check("[lean] hasDerivAt_thetaDeriv (H'' = d/du H', finite diff)",
           stats(qs1, ufd)["H2"] - fd, mpf(10) ** (-(dps - 35)))
 
-    # Hexagonal, determinant-normalized: Poisson duality at beta = 2.
-    hexm = det_normalize(parse_gram(RAW_FORMS["hexagonal"]))
-    hexd = dual(hexm)
-    qsh = box_qvalues(hexm, 25)
-    qshd = box_qvalues(hexd, 25)
-    beta = mpf(2)
-    zl = sum(exp(-beta * q) for q in qsh)
-    zr = (pi / beta) * sum(exp(-(pi**2 / beta) * q) for q in qshd)
-    check("[num]  Poisson duality, hexagonal (Z_L(2) = (pi/2) Z_{L*}(pi^2/2))",
-          zl - zr, tol)
+    # Poisson duality checks at beta = 2 (each coupling boxed for itself).
+    def poisson_residual(mn):
+        md = dual(mn)
+        beta = mpf(2)
+        n = mn.rows
+        zl = sum(exp(-beta * q) for q in qvalues_at(mn, dps, beta))
+        zr = (pi / beta) ** (mpf(n) / 2) * sum(
+            exp(-(pi**2 / beta) * q)
+            for q in qvalues_at(md, dps, pi**2 / beta))
+        return zl - zr
 
-    # Isodual center anchor: hexagonal H'(log pi) = -2/4.
-    check("[num]  isodual center (hexagonal, H'(log pi) = -1/2)",
+    hexm = det_normalize(parse_gram(RAW_FORMS["hexagonal"]))
+    check("[num]  Poisson duality, hexagonal (rank 2, beta = 2)",
+          poisson_residual(hexm), tol)
+    fccm = det_normalize(parse_gram(RAW_FORMS["fcc"]))
+    check("[num]  Poisson duality, FCC/BCC (rank 3, beta = 2)",
+          poisson_residual(fccm), tol)
+
+    # Self-dual center values H'(log pi) = -n/4.
+    qsh = qvalues_at(hexm, dps, exp(u0))
+    check("[num]  self-dual center (hexagonal, H'(log pi) = -1/2)",
           stats(qsh, u0)["H1"] + mpf(1) / 2, tol)
+    cub = det_normalize(parse_gram(RAW_FORMS["cubic3"]))
+    qsc = qvalues_at(cub, dps, exp(u0))
+    check("[num]  self-dual center (cubic, H'(log pi) = -3/4)",
+          stats(qsc, u0)["H1"] + mpf(3) / 4, tol)
 
     if failures:
         print(f"selftest: {len(failures)} FAILURE(S)")
@@ -458,15 +510,14 @@ def selftest(dps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("command", choices=["selftest", "sweep", "family", "finescan", "all"])
+    ap.add_argument("command",
+                    choices=["selftest", "sweep", "family", "finescan", "all"])
     ap.add_argument("--form", choices=sorted(RAW_FORMS), default=None)
-    ap.add_argument("--family", choices=["unit_circle_arc", "shear_half"],
-                    default=None)
+    ap.add_argument("--family", choices=FAMILY_NAMES, default=None)
     ap.add_argument("--member", default=None)
     ap.add_argument("--window", default="0.3")
     ap.add_argument("--finestep", default="0.0005")
     ap.add_argument("--dps", type=int, default=50)
-    ap.add_argument("--radius", type=int, default=14)
     ap.add_argument("--span", type=float, default=4.0)
     ap.add_argument("--step", type=float, default=0.01)
     args = ap.parse_args()
@@ -475,23 +526,25 @@ def main():
     if args.command in ("selftest", "all"):
         selftest(args.dps)
     if args.command == "sweep":
-        forms = [args.form] if args.form else sorted(RAW_FORMS)
+        forms = [args.form] if args.form else ["hexagonal", "square2"]
         for f in forms:
-            run_sweep(f, args.radius, args.span, args.step, args.dps, outdir)
+            run_sweep(f, args.span, args.step, args.dps, outdir)
     if args.command == "family":
-        fams = [args.family] if args.family else ["unit_circle_arc", "shear_half"]
+        fams = [args.family] if args.family else FAMILY_NAMES
         for f in fams:
             run_family(f, args.span, 0.02, 30, outdir)
     if args.command == "finescan":
         assert args.family and args.member, "finescan needs --family and --member"
         run_finescan(args.family, args.member, args.window, args.finestep,
-                     args.radius, args.dps, outdir)
+                     args.dps, outdir)
     if args.command == "all":
-        for f in sorted(RAW_FORMS):
-            run_sweep(f, args.radius, args.span, args.step, args.dps, outdir)
-        for f in ("unit_circle_arc", "shear_half"):
+        for f in ("hexagonal", "square2"):
+            run_sweep(f, args.span, args.step, args.dps, outdir)
+        for f in FAMILY_NAMES:
             run_family(f, args.span, 0.02, 30, outdir)
-        run_finescan("shear_half", "y0.05", "0.3", "0.0005", 32, 30, outdir)
+        run_finescan("shear_half", "y0.05", "0.3", "0.0005", 30, outdir)
+        run_finescan("fcc_squash", "y0.10", "1.4", "0.002", 30, outdir)
+        run_finescan("fcc_squash", "y0.07", "1.4", "0.002", 30, outdir)
 
 
 if __name__ == "__main__":

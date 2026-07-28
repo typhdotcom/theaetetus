@@ -66,8 +66,9 @@ shadow is `theta_duality_real`):
 
 | Check | Status |
 |---|---|
-| hexagonal Poisson duality at `β = 2` | numerical |
-| isodual center `H′(log π) = −n/4` | numerical |
+| hexagonal Poisson duality at `β = 2` (rank 2) | numerical |
+| FCC/BCC Poisson duality at `β = 2` (rank 3) | numerical |
+| self-dual center `H′(log π) = −n/4` (hexagonal, cubic) | numerical |
 
 ## Data policy
 
@@ -84,17 +85,21 @@ precision.
     uv run recon/harness.py selftest
     uv run recon/harness.py sweep --form hexagonal
     uv run recon/harness.py family --family shear_half
-    uv run recon/harness.py finescan --family shear_half --member y0.05 \
-        --window 0.3 --finestep 0.0005 --radius 32 --dps 30
+    uv run recon/harness.py finescan --family fcc_squash --member y0.10 \
+        --window 1.4 --finestep 0.002 --dps 30
 
 Dependencies are pinned in the script's inline metadata (PEP 723:
 `mpmath==1.4.1`, recorded in every data file), so `uv run` needs
-no flags. Defaults: 50-digit precision, cutoff radius 14 —
-checked empirically at
-every run by a radius-stability comparison (`R` vs `R+3` at the
-duality center) plus an ad hoc decay proxy; neither is a tail
-bound, and certified tails are roadmap target 5. Grid
-`u − log π ∈ [0, 4]` in steps of `0.01`.
+no flags. Lattice points are enumerated over the axis-aligned
+bounding box of the energy ellipsoid `Q ≤ E` —
+`|xᵢ| ≤ √(E·(M⁻¹)ᵢᵢ)` with the box energy `E` set by the working
+precision and the smallest coupling in use — so the box adapts
+per direction and degenerating forms stay cheap. Checked
+empirically at every run by an energy-stability comparison (`E`
+vs `1.5E` on `H′`, `H″`, and the ratio); not a tail bound, and
+certified tails are roadmap target 5. Baseline sweeps: 50-digit
+precision, grid `u − log π ∈ [0, 4]` step `0.01`; families:
+30 digits, step `0.02`.
 
 ## First findings (hexagonal and square, det-1, rank 2)
 
@@ -117,8 +122,7 @@ at every `u` (for identical orthogonal factors, `Var` and `⟨E⟩`
 both double, so `r` is invariant — the numerical shadow of
 `diagTheta_rect_strict`), and the hexagonal form's sampled
 minimum is larger than the square's on this grid. Both sit far
-from the Q5 boundary `r = 1`. The shear family interpolating away
-from these baseline points is the next sweep.
+from the Q5 boundary `r = 1`.
 
 ## Family findings (binary det-1 moduli; dps 30, step 0.02)
 
@@ -154,7 +158,7 @@ committed baselines):
   subray, no more. At the deepest member the sampled margin
   above `r = 1` is `2.8·10⁻⁴`; the committed fine scan
   (`finescan_shear_half_y0.05.json`: window `0.3` above the
-  center, step `0.0005`, radius 32, both `L` and `L*`) found no
+  center, step `0.0005`, both `L` and `L*`) found no
   lower sampled value away from the center. No sign change
   occurs at any sampled point of any member.
 
@@ -172,3 +176,58 @@ thin-tail data suggests asymptotic sharpness of Q5 — no uniform
 margin is available to any proof — and is consistent with the
 margin vanishing toward this degenerate boundary. No
 counterexample appears at any sampled point.
+
+## Rank-3 findings (first genuinely distinct dual pairs)
+
+In rank 3 `L` and `L*` genuinely differ, and the paired-profile
+protocol carries real information for the first time. Committed
+data: `family_rank3_baselines.json`, `family_cubic_to_fcc.json`,
+`family_fcc_squash.json`, and two fine scans. The three family
+datasets use dps 30, step 0.02, span 4; each fine scan lists its
+own window and step. `H″ > 0` at every sampled point of every
+member and every scan.
+
+- **Baselines.** Cubic `ℤ³` reproduces the rank-one ratio
+  `2.894634` exactly (the orthogonal-sum invariance again). The
+  FCC/BCC pair — dual to each other, distinct — has the largest
+  sampled margin in the program so far: min `r = 3.2972` at the
+  center, `λ₁(L)·λ₁(L*) = 1.2247`.
+- **Cubic → FCC path** (convex combination of normalized Grams):
+  sampled min `r` increases monotonically through the seven
+  members, `2.8946 → 3.2972`, every minimum at the center.
+- **FCC squash** (`diag(1,1,y)·M_fcc·diag(1,1,y)`,
+  det-normalized): the margin collapses much faster than the
+  rank-two shear, and the sampled minimum *leaves the duality
+  center*, drifting outward as the form degenerates:
+
+  | `y` | `λ₁λ₁*` | sampled min `r − 1` | at `u − log π` | side |
+  |---|---|---|---|---|
+  | `0.35` | `0.429` | `2.5·10⁻¹` | `0.34` | `L` |
+  | `0.25` | `0.306` | `2.3·10⁻²` | `0.42` | `L` |
+  | `0.15` | `0.184` | `4.7·10⁻⁵` | `0.56` | `L` |
+  | `0.10` | `0.122` | `1.2·10⁻⁸` | `0.70` | `L` |
+  | `0.07` | `0.086` | `2.3·10⁻¹³` | `0.80` | `L` |
+
+  The committed fine scans (`y0.10`, `y0.07`: window `1.4`, step
+  `0.002`) confirm the sampled minima and expose the first
+  genuinely asymmetric dual pair: at `y = 0.10`, `L`'s sampled
+  minimum is `1 + 1.2·10⁻⁸` at `u − log π ≈ 0.694` while `L*`'s
+  is `1 + 7.4·10⁻⁴` at the center — different profiles, as only
+  rank ≥ 3 allows. Margins remain above the energy-stability
+  tolerance (`10⁻²²`), so the reported values are resolved, and
+  no sign change occurs at any sampled point.
+
+Reading (numerical, finite-sample). Squashing one direction of a
+rank-3 form leaves a *rank-two* transverse lattice rather than
+rank one; after determinant normalization the transverse block's
+effective scale moves with `y`, which is consistent with the
+observed drift of the minimum (`≈ 0.3·log(1/y)` on these
+samples), and the residual margin decays roughly exponentially
+in the drifted effective coupling — far faster than the
+rank-two shear's collapse. The data remains consistent with
+strict positivity everywhere and with margins vanishing toward
+degenerate boundaries; nothing sampled contradicts Q5. The
+sampled minimum sitting on one side (`L`) at an off-center
+location is the concrete, measurable sense in which the
+conjecture's hard regime is *not* centered at the self-dual
+point once genuine dual asymmetry exists.

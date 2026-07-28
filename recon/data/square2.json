@@ -23,7 +23,17 @@
   },
   "precision_dps": 50,
   "mpmath_version": "1.4.1",
-  "cutoff_radius": 14,
+  "box_energy": "47.6408139271628031567311828031",
+  "box_radii": {
+    "L": [
+      7,
+      7
+    ],
+    "L_dual": [
+      7,
+      7
+    ]
+  },
   "L": {
     "H2_positive_on_grid": true,
     "center": {
