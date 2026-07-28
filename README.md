@@ -334,8 +334,21 @@ pairwise versus higher-order interaction.
   Q1 completely**, inequality and equality case at once, for
   arbitrary real ratios. It is strictly stronger than the known
   correlation theorem, so it is stress-tested numerically before
-  any attempt at a formal proof. The shape of a possible failure
-  is already
+  any attempt at a formal proof. The first sweeps are on the
+  record (`recon/`, rank two, det-1 binary moduli): no
+  counterexample at any sampled point; along the shear ray
+  toward degeneracy the sampled ratio falls
+  `2.43 → 1.42 → 1.04 → 1.0003`, leaving a margin `r − 1` of
+  only `2.8·10⁻⁴` at the deepest member — consistent with
+  asymptotic sharpness; if that limiting picture is correct, no
+  proof can rely on a uniform positive margin. The observed
+  thin-tail behavior is consistent with the surviving correction
+  being the rank-one fluctuation at large reflected coupling
+  (`theta_fluctuation_large`'s regime). In rank two every det-1
+  form is integrally isodual (`JᵀMJ = M⁻¹`), so genuinely
+  distinct dual pairs — and the first real test of the
+  paired-profile protocol — begin at rank 3. The shape of a
+  possible failure is already
   constrained: at large coupling the shortest shell dominates and
   `β²Var − β⟨E⟩ ≈ βλ₁N₁e^{−βλ₁}(βλ₁ − 1) > 0` — the rank-one
   Fact-1 mechanism, universal; the duality
@@ -348,9 +361,14 @@ pairwise versus higher-order interaction.
   diagonal case is a theorem (`diagTheta_rect_strict`) — so any
   counterexample yields an orthogonally indecomposable one. What
   survives is an intermediate window near the duality center
-  `β = π` of the determinant-normalized paired profiles, its
-  width heuristically controlled by `λ₁(L)·λ₁(L*)` — a heuristic
-  until quantitative tails prove it. If strictness fails, the
+  `β = π` of the determinant-normalized paired profiles. The
+  product `λ₁(L)·λ₁(L*)` remains a candidate coordinate for
+  organizing this intermediate regime; the rank-two data
+  establishes only a narrower numerical pattern — along the
+  sampled thin subray the minimum sampled ratio falls
+  monotonically with the product, while the product is not a
+  single-valued predictor across the moduli space
+  (`recon/README.md`). If strictness fails, the
   failure mode matters: curvature merely touching zero refutes
   strict universality without creating chambers; only a
   sign-changing counterexample makes Q5 the curvature analogue
@@ -448,8 +466,13 @@ Reconnaissance, falsify-first:
    half-profiles, never the center alone — an isodual profile
    constrains a failure window to be symmetric, not absent. Start
    at the normalized hexagonal form, then the binary shear family
-   toward degeneracy; record `λ₁(L)·λ₁(L*)` per form as the
-   heuristic window control.
+   toward degeneracy; record `λ₁(L)·λ₁(L*)` per form as a
+   candidate degeneration coordinate. First runs committed (`recon/data`:
+   baselines, the unit-circle arc, the shear ray with its fine
+   scan; findings in `recon/README.md`). Next: ternary forms —
+   in rank two `JᵀMJ = M⁻¹` makes every det-1 form integrally
+   isodual, so distinct dual pairs first exist at rank 3,
+   starting with the FCC/BCC pair.
 2. **Q4 phase geometry.** Track the largest zero-sum-restricted
    eigenvalue of the pairing (Q4-CND) and the smallest eigenvalue
    of the deficit (Q4-PSD) as functions of `s` on expanding prime
