@@ -17,4 +17,5 @@ def "main check" [] {
 # Run reconnaissance self-tests and committed sweeps (evidence, not proof)
 def "main recon" [] {
     uv run recon/harness.py all
+    uv run recon/q4.py all
 }

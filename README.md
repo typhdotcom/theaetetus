@@ -292,22 +292,34 @@ pairwise versus higher-order interaction.
   the reflection evaluates each entry at its own pair-dependent
   dual scale and does not act on fixed-set chambers. With
   `s_c(P) := inf { s₀ : the pairing on P is CND for all s ≥ s₀ }`,
-  the theorem gives `sup_P s_c(P) ≤ 1` (`pairing_cnd_large`); tested
-  truncations place the last crossing in `(1/10, 3/10)`, the
+  the theorem gives `sup_P s_c(P) ≤ 1` (`pairing_cnd_large`);
+  committed sweeps (`recon/data/q4_sweep_*.json`) place the
+  crossings at `0.080 → 0.108 → 0.127 → 0.145 → 0.161` on the
+  first 3–15 primes, decelerating well below the bound; the
   binding inequality `log θ(s) ≥ 2·log θ(4s)` crosses near
-  `s = 0.196`, the first hundred primes are CND at
-  `s = (log 2)/3`, and the observed transitions sit near `0.080`
-  on `{2,3,5}` and `0.108` on `{2,3,5,7,11}`. The small-`s`
+  `s = 0.196`, and the first hundred primes are CND at
+  `s = (log 2)/3`. The small-`s`
   theorem is the normalized limit `⟨p,q⟩ = 2e^{−σ}(1 + o(1))`
   with `σ = π²/(s·p²q²)` (`tendsto_exp_mul_pairing`); the
   quantitative `O(e^{−σ})` relative rate remains numerical,
-  unformalized. **Q4-PSD**: the same questions for
-  the saturation deficit, controlled by its ordinary smallest
-  eigenvalue, with observed transitions near `0.085` and `0.169`
-  on the same sets — and how does the deficit transition scale
-  with the prime set? Falsification precedes proof: the
-  reconnaissance hunts for multiple crossings before anyone
-  attempts intervality. The transform-realization question that
+  unformalized. **Q4-PSD**: the saturation
+  deficit, controlled by its ordinary smallest eigenvalue, with
+  committed crossings `0.085 → 0.169 → 0.280 → 0.385 → 0.484` on
+  the same sampled sets. That growth cannot saturate: for fixed
+  `s` the deficit of `{2, q₁, …, qₙ}` with large satellites
+  tends to a star matrix with smallest eigenvalue
+  `F(1) − √n·F(2)`, negative once `n > (F(1)/F(2))²`. With
+  `s_PSD(P)` defined like `s_c(P)` for the deficit,
+  `sup_P s_PSD(P) = ∞`: no uniform bound can hold, though each
+  fixed finite set may still have a finite eventual-PSD bound
+  (the star obstruction, roadmap target 8). With
+  `pairing_cnd_large` the converse CND ⇒ deficit-PSD fails at
+  every scale `s ≥ 1`, not merely at the `s = 0.12` witness.
+  Open here: the star-obstruction rate — the leading asymptotic
+  predicts `s_PSD ~ (1/6)·log n` — and intervality. The first falsification
+  hunt found one detected sign change per statistic on each
+  sampled grid, brackets bisected (`recon/README.md`) —
+  consistent with intervality, still unproven. The transform-realization question that
   used to close this entry now seeds Q7.
 
 - **Q5 — higher-rank thermodynamic curvature: the master
@@ -461,6 +473,14 @@ Formalization targets:
 7. **Q6's identity layer.** Rectangle identities and the
    characterization of vanishing cross-prime differences for the
    mixed-difference hierarchy `Δ_{p₁}⋯Δ_{p_k}K`.
+8. **The star obstruction.** For every fixed `s > 0` the deficit
+   of `{2, q₁, …, qₙ}` tends entrywise, as the satellites grow,
+   to the star matrix with diagonal `F(1)` and spokes `F(2)`,
+   whose smallest eigenvalue is `F(1) − √n·F(2)`: for
+   `n > (F(1)/F(2))²` some finite prime set has non-PSD deficit
+   at that scale, so `sup_P s_PSD(P) = ∞`. Needs the saturation
+   of `F` (the `tendsto_pairing` machinery), the star
+   eigenvalue, and entrywise-limit control of `λ_min`.
 
 Reconnaissance, falsify-first:
 
@@ -483,23 +503,27 @@ Reconnaissance, falsify-first:
    squash family with two fine scans; under genuine dual
    asymmetry the sampled minimum leaves the duality center.
    Next: certified tails (target 5) to harden the
-   deep-degeneration margins, and the Q4 phase-geometry program
-   (harness v2's reserved conventions).
-2. **Q4 phase geometry.** Track the largest zero-sum-restricted
-   eigenvalue of the pairing (Q4-CND) and the smallest eigenvalue
-   of the deficit (Q4-PSD) as functions of `s` on expanding prime
-   sets, at high precision with certified entry intervals — the
-   scalar theta estimates bound each entry after reflection; the
-   matrix step needs target 5's interval linear algebra. The
-   object is the crossing count: falsify intervality hard before
-   anyone tries to prove it.
+   deep-degeneration margins.
+2. **Q4 phase geometry** — first uncertified sweep complete
+   (`recon/q4.py`; `q4_sweep_*.json`, `q4_witness.json`;
+   findings in `recon/README.md`): correctly-oriented extremal
+   eigenvalues, one detected sign change per statistic per
+   sampled grid with brackets bisected, and the historically
+   cited transitions and `s = 0.12` witness reproduced from
+   committed code. Next: certified entry intervals and interval
+   linear algebra for the crossings (target 5), harder
+   intervality falsification, and the star-obstruction rate
+   against its `s_PSD ~ (1/6)·log n` benchmark.
 
-The sequence: this restructuring; strict Q5 for orthogonal sums;
-the determinant-normalized, dual-aware harness with its
-certification chain; the hexagonal and shear sweeps; Q4 with the
-correct extremal eigenvalues; then the results decide whether Q5
-stays a universal conjecture or becomes the first chamber problem
-of the second edition.
+The sequence so far: the restructuring, strict Q5 for diagonal
+forms, the dual-aware harness, the rank-two and rank-three
+sweeps, and the first Q4 sweep are complete; the certification
+chain (target 5) is the open engineering. The verdicts to date:
+Q5 stays a universal conjecture, with margins vanishing toward
+every degenerate boundary probed and its binding point leaving
+the duality center under dual asymmetry; Q4's uniform-PSD
+question is resolved negatively by the star obstruction, leaving
+the rate and intervality open.
 
 ## The ladder
 

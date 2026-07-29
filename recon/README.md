@@ -41,10 +41,10 @@ now encoded once and enforced by executable self-tests.
   `L` and `L*` covers the whole line. Lean witness at rank one:
   `theta_duality_real`; the higher-rank identity is roadmap
   target 1 and is *checked numerically* here (self-test).
-- **Q4 orientation** (reserved for the phase-geometry sweep,
-  harness v2): CND is controlled by the **largest** eigenvalue of
-  the pairing restricted to the zero-sum subspace; deficit-PSD by
-  the ordinary **smallest** eigenvalue of the deficit.
+- **Q4 orientation** (implemented in `q4.py`): CND is controlled
+  by the **largest** eigenvalue of the pairing restricted to the
+  zero-sum subspace (CND iff `≤ 0`); deficit-PSD by the ordinary
+  **smallest** eigenvalue of the deficit (PSD iff `≥ 0`).
 
 ## Anchors
 
@@ -231,3 +231,59 @@ sampled minimum sitting on one side (`L`) at an off-center
 location is the concrete, measurable sense in which the
 conjecture's hard regime is *not* centered at the self-dual
 point once genuine dual asymmetry exists.
+
+## Q4 phase geometry (first runs)
+
+`recon/q4.py` implements the Q4 orientation conventions with its
+own anchors — Lean-backed `pairing_pos`, `pairing_lt_base`,
+`pairing_cnd_large` (the `s ≥ 1` theorem, checked as an
+inequality on sampled scales), and the exact zero-sum identity
+`quadFormOn_pairing_eq` (zero residual); numerical: the
+`tendsto_exp_mul_pairing` limit, loosely. Committed sweeps on
+the first `k` primes, log grid `s ∈ [0.02, 1.5]`, 160 points,
+dps 30, crossings bisected (`q4_sweep_*.json`):
+
+| `k` | CND crossing | PSD crossing | sign changes (CND / PSD) |
+|---|---|---|---|
+| 3 | `0.0803` | `0.0846` | 1 / 1 |
+| 5 | `0.1079` | `0.1692` | 1 / 1 |
+| 7 | `0.1268` | `0.2797` | 1 / 1 |
+| 10 | `0.1448` | `0.3850` | 1 / 1 |
+| 15 | `0.1608` | `0.4845` | 1 / 1 |
+
+Findings, finite-sample. Every sampled set shows one detected
+sign change per statistic on its grid, each bracket bisected —
+two crossings inside one grid cell, or tangential zeros, would
+go undetected. On these samples the valid-scale sets look like
+upper intervals; intervality survives its first falsification
+attempt and remains unproven. The historically cited
+transitions (`0.080`/`0.085` on `{2,3,5}`, `0.108`/`0.169` on
+five primes) and the `s = 0.12` five-prime witness (CND stat
+`−0.0374`, PSD stat `−0.1284`: CND holds, PSD fails) now
+reproduce from committed code (`q4_witness.json`) — the
+provenance gap on the main README's oldest numerics is closed.
+The two clauses separate further with set size: CND crossings
+decelerate (`0.080 → 0.161`, consistent with the proven
+`sup_P s_c(P) ≤ 1`), while deficit-PSD crossings grow steadily
+(`0.085 → 0.484`) — and no uniform bound can hold, though each
+fixed finite set may still have a finite eventual-PSD bound.
+Define, analogously to `s_c(P)`,
+`s_PSD(P) := inf { s₀ : the deficit on P is PSD for all s ≥ s₀ }`.
+**The star obstruction** (analytic, not yet formalized —
+roadmap target 8): fix `s`, put `a = F(1)`, `b = F(2)`; the
+deficit of `{2, q₁, …, qₙ}` with large satellites tends
+entrywise to the star matrix (diagonal `a`, spokes `b`), whose
+smallest eigenvalue is `a − √n·b` — negative once
+`n > (F(1)/F(2))²`. So at every fixed scale some finite prime
+set has non-PSD deficit: `sup_P s_PSD(P) = ∞`, and there is no
+uniform PSD threshold. Combined with `pairing_cnd_large`, the
+converse CND ⇒ deficit-PSD fails at every scale `s ≥ 1`, not
+merely at the `s = 0.12` witness. At `s = 1`,
+`(F(1)/F(2))² ≈ 253` — far beyond these sweeps, which see only
+the star mechanism's finite-size shadow. The same mechanism
+predicts the leading rate: at large `s`, `F(1) ~ 2e^{−s}` and
+`F(2) ~ 2e^{−4s}`, so the critical satellite count scales as
+`e^{6s}` and `s_PSD ~ (1/6)·log n` — consistent with the
+15-prime crossing already near `0.484` (`(1/6)·log 14 ≈ 0.44`).
+The open questions are the star-obstruction rate beyond leading
+order and intervality.

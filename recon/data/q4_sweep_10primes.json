@@ -1,0 +1,40 @@
+{
+  "primes": [
+    2,
+    3,
+    5,
+    7,
+    11,
+    13,
+    17,
+    19,
+    23,
+    29
+  ],
+  "grid": {
+    "lo": "0.02",
+    "hi": "1.5",
+    "points": 160,
+    "spacing": "log"
+  },
+  "precision_dps": 30,
+  "mpmath_version": "1.4.1",
+  "cnd_statistic": "largest zero-sum-restricted eigenvalue of M (CND iff <= 0)",
+  "psd_statistic": "smallest eigenvalue of B (PSD iff >= 0)",
+  "cnd": {
+    "sign_changes": 1,
+    "crossings": [
+      "0.144754734467"
+    ],
+    "valid_at_grid_top": true,
+    "stat_at_grid_top": "-0.363503449837"
+  },
+  "psd": {
+    "sign_changes": 1,
+    "crossings": [
+      "0.384979901381"
+    ],
+    "valid_at_grid_top": true,
+    "stat_at_grid_top": "0.357570725727"
+  }
+}
