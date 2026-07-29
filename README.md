@@ -346,9 +346,15 @@ pairwise versus higher-order interaction.
   being the rank-one fluctuation at large reflected coupling
   (`theta_fluctuation_large`'s regime). In rank two every det-1
   form is integrally isodual (`JᵀMJ = M⁻¹`), so genuinely
-  distinct dual pairs — and the first real test of the
-  paired-profile protocol — begin at rank 3. The shape of a
-  possible failure is already
+  distinct dual pairs first exist at rank 3 — and rank three is
+  now on the record too (`recon/README.md`): cubic `ℤ³`
+  reproduces the rank-one ratio exactly, the FCC/BCC pair — the
+  first genuinely distinct dual pair — carries the program's
+  largest sampled margin, and squashing FCC collapses the margin
+  to `2.3·10⁻¹³` with the sampled minimum *leaving the duality
+  center* and the two sides of the dual pair binding at
+  different locations and magnitudes. No sampled point
+  contradicts Q5. The shape of a possible failure is already
   constrained: at large coupling the shortest shell dominates and
   `β²Var − β⟨E⟩ ≈ βλ₁N₁e^{−βλ₁}(βλ₁ − 1) > 0` — the rank-one
   Fact-1 mechanism, universal; the duality
@@ -360,8 +366,11 @@ pairwise versus higher-order interaction.
   orthogonal sums inherit convexity from their summands — the
   diagonal case is a theorem (`diagTheta_rect_strict`) — so any
   counterexample yields an orthogonally indecomposable one. What
-  survives is an intermediate window near the duality center
-  `β = π` of the determinant-normalized paired profiles. The
+  survives is an intermediate window between the two proven
+  tails — at the duality center `β = π` for the symmetric
+  rank-two samples, but drifting off-center on one side of the
+  pair once genuine dual asymmetry exists (the rank-3 squash
+  record). The
   product `λ₁(L)·λ₁(L*)` remains a candidate coordinate for
   organizing this intermediate regime; the rank-two data
   establishes only a narrower numerical pattern — along the
@@ -469,10 +478,13 @@ Reconnaissance, falsify-first:
    toward degeneracy; record `λ₁(L)·λ₁(L*)` per form as a
    candidate degeneration coordinate. First runs committed (`recon/data`:
    baselines, the unit-circle arc, the shear ray with its fine
-   scan; findings in `recon/README.md`). Next: ternary forms —
-   in rank two `JᵀMJ = M⁻¹` makes every det-1 form integrally
-   isodual, so distinct dual pairs first exist at rank 3,
-   starting with the FCC/BCC pair.
+   scan; findings in `recon/README.md`). Ternary runs committed
+   as well — rank-3 baselines, the cubic→FCC path, the FCC
+   squash family with two fine scans; under genuine dual
+   asymmetry the sampled minimum leaves the duality center.
+   Next: certified tails (target 5) to harden the
+   deep-degeneration margins, and the Q4 phase-geometry program
+   (harness v2's reserved conventions).
 2. **Q4 phase geometry.** Track the largest zero-sum-restricted
    eigenvalue of the pairing (Q4-CND) and the smallest eigenvalue
    of the deficit (Q4-PSD) as functions of `s` on expanding prime
