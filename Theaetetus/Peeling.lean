@@ -15,8 +15,11 @@ are then read off the partition function asymptotically:
 no squeeze required. Sampled along `β = m²` these consume exactly
 the data the recovery formula produces
 (`tendsto_defect_row_sub_succ`): one fixed defect matrix
-determines `λ₁` and `N₁`. Subtracting the recovered layer and
-recursing is the remaining step of the peeling program. -/
+determines `λ₁` and `N₁`. The extracted layer subtracts: the
+residual subtower (`residual`, `residual_Z`) deletes the `λ₁`
+level with strictly larger least energy when nontrivial
+(`leastEnergy_lt_residual`); only the iterated enumeration
+capstone remains. -/
 
 namespace Theaetetus
 
@@ -258,6 +261,75 @@ theorem tendsto_leastEnergyMult_sample (hnt : ∃ k : T.Λ, k ≠ T.modal) :
       atTop (𝓝 (T.leastEnergyMult : ℝ)) :=
   (T.tendsto_exp_mul_Z_sub_one hnt).comp
     ((tendsto_pow_atTop two_ne_zero).comp tendsto_natCast_atTop_atTop)
+
+/-! ## The residual subtower -/
+
+/-- **The residual subtower**: delete the least-energy level, keep
+everything else. The modal sector survives because it fails the
+level predicate in its first conjunct; summability and positivity
+are inherited by restriction. -/
+noncomputable def residual : PartitionTower where
+  Λ := ↥({k : T.Λ | k ≠ T.modal ∧ T.E k = T.leastEnergy}ᶜ)
+  E := fun k => T.E k.1
+  E_zero := ⟨⟨T.modal, fun h => h.1 rfl⟩, T.E_modal⟩
+  E_nonneg := fun k => T.E_nonneg k.1
+  summable := T.summable.subtype _
+  modal := ⟨T.modal, fun h => h.1 rfl⟩
+  E_modal := T.E_modal
+  E_pos := fun k hk => T.E_pos k.1 fun hm => hk (Subtype.ext hm)
+
+/-- **The bridge**: the residual partition function is the
+original minus the extracted layer,
+`Z_res(β) = Z(β) − N₁·e^{−β·λ₁}`. -/
+theorem residual_Z {β : ℝ} (hβ : 1 ≤ β) :
+    T.residual.Z β
+      = T.Z β
+        - (T.leastEnergyMult : ℝ) * Real.exp (-(β * T.leastEnergy)) := by
+  classical
+  have hsum := T.summable_Z hβ
+  have hsplit := hsum.tsum_subtype_add_tsum_subtype_compl
+    {k : T.Λ | k ≠ T.modal ∧ T.E k = T.leastEnergy}
+  have hlevel : (∑' x : {k : T.Λ | k ≠ T.modal ∧ T.E k = T.leastEnergy},
+        Real.exp (-(β * T.E ↑x)))
+      = (T.leastEnergyMult : ℝ) * Real.exp (-(β * T.leastEnergy)) := by
+    rw [tsum_subtype (f := fun k : T.Λ => Real.exp (-(β * T.E k)))]
+    have h0 : ∀ k ∉ T.finite_level.toFinset,
+        Set.indicator
+          {k : T.Λ | k ≠ T.modal ∧ T.E k = T.leastEnergy}
+          (fun k => Real.exp (-(β * T.E k))) k = 0 := by
+      intro k hk
+      exact Set.indicator_of_notMem
+        (fun hpred => hk (T.finite_level.mem_toFinset.mpr hpred)) _
+    have hterm : ∀ k ∈ T.finite_level.toFinset,
+        Set.indicator
+          {k : T.Λ | k ≠ T.modal ∧ T.E k = T.leastEnergy}
+          (fun k => Real.exp (-(β * T.E k))) k
+          = Real.exp (-(β * T.leastEnergy)) := by
+      intro k hk
+      have hmem := T.finite_level.mem_toFinset.mp hk
+      rw [Set.indicator_of_mem hmem]
+      rw [hmem.2]
+    rw [tsum_eq_sum h0, Finset.sum_congr rfl hterm, Finset.sum_const,
+      nsmul_eq_mul, leastEnergyMult]
+  have hres : T.residual.Z β
+      = ∑' x : ↥({k : T.Λ | k ≠ T.modal ∧ T.E k = T.leastEnergy}ᶜ),
+          Real.exp (-(β * T.E ↑x)) := rfl
+  have hZ : T.Z β = ∑' k : T.Λ, Real.exp (-(β * T.E k)) := rfl
+  rw [hres]
+  linarith [hsplit, hlevel, hZ]
+
+/-- **Strict spectral progress**: the residual tower's least
+energy sits strictly above the extracted one — each peel moves
+up the spectrum. -/
+theorem leastEnergy_lt_residual (hnt : ∃ k : T.Λ, k ≠ T.modal)
+    (hres : ∃ k : T.residual.Λ, k ≠ T.residual.modal) :
+    T.leastEnergy < T.residual.leastEnergy := by
+  obtain ⟨k, hkne, hEk⟩ := (T.residual.leastEnergy_isLeast hres).1
+  have h1 : k.1 ≠ T.modal := fun hm => hkne (Subtype.ext hm)
+  have h2 : T.E k.1 ≠ T.leastEnergy := fun hE => k.2 ⟨h1, hE⟩
+  have h3 : T.leastEnergy ≤ T.E k.1 := T.leastEnergy_le hnt h1
+  rw [← hEk]
+  exact lt_of_le_of_ne h3 (Ne.symm h2)
 
 end PartitionTower
 

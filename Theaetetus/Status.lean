@@ -203,6 +203,21 @@ example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
       atTop (𝓝 (T.leastEnergyMult : ℝ)) :=
   T.tendsto_leastEnergyMult_sample hnt
 
+noncomputable example (T : PartitionTower) : PartitionTower :=
+  T.residual
+
+example (T : PartitionTower) {β : ℝ} (hβ : 1 ≤ β) :
+    T.residual.Z β
+      = T.Z β
+        - (T.leastEnergyMult : ℝ)
+          * Real.exp (-(β * T.leastEnergy)) :=
+  T.residual_Z hβ
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal)
+    (hres : ∃ k : T.residual.Λ, k ≠ T.residual.modal) :
+    T.leastEnergy < T.residual.leastEnergy :=
+  T.leastEnergy_lt_residual hnt hres
+
 example (G : IncidenceGraph) (q q' : ℕ) [NeZero q] [NeZero q'] :
     G.towerDefect q q' = G.toPartitionTower.defect q q' :=
   G.towerDefect_eq_partitionTower_defect q q'

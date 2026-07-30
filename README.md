@@ -108,7 +108,15 @@ negative.
   (`tendsto_neg_log_Z_sub_one_div`, `tendsto_exp_mul_Z_sub_one`;
   sampled along `β = m²` as `tendsto_leastEnergy_sample`,
   `tendsto_leastEnergyMult_sample`) — consuming exactly the data
-  the recovery formula produces.
+  the recovery formula produces. The extracted layer subtracts:
+  the **residual subtower** (`residual`) deletes the `λ₁` level,
+  keeps the modal sector, inherits all three fields, and
+  satisfies `Z_res(β) = Z(β) − N₁·e^{−β·λ₁}` for `β ≥ 1`
+  (`residual_Z`); when the residual is itself nontrivial its
+  least energy is strictly larger (`leastEnergy_lt_residual`) —
+  each peel moves up the spectrum — and when it is trivial,
+  peeling terminates. The extraction theorems apply verbatim to
+  the residual.
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
@@ -548,12 +556,16 @@ Formalization targets:
    (`leastEnergy_isLeast`), and both limits
    (`tendsto_neg_log_Z_sub_one_div`,
    `tendsto_exp_mul_Z_sub_one`, with `β = m²` sampled forms) are
-   theorems. Remaining: the residual subtower — restrict the
-   carrier by deleting the `λ₁` level while keeping the modal
-   sector, so summability and positivity are inherited and
-   `Z_res(β) = Z(β) − N₁·e^{−β·λ₁}` — and recursion: one fixed
-   defect matrix determines the full spectrum with
-   multiplicities.
+   theorems, as are the residual subtower (`residual`: the `λ₁`
+   level deleted, the modal sector kept, all fields inherited),
+   its bridge `Z_res(β) = Z(β) − N₁·e^{−β·λ₁}` for `β ≥ 1`
+   (`residual_Z`), and strict spectral progress on a nontrivial
+   residual (`leastEnergy_lt_residual`; a trivial residual is
+   the natural stopping condition). Remaining: the iterated
+   capstone — `residual` is an endomorphism of `PartitionTower`,
+   so the peel sequence is `Function.iterate`, extracting layers
+   while the iterate is nontrivial and enumerating the full
+   spectrum with multiplicities from one fixed defect matrix.
 
 Reconnaissance, falsify-first:
 
@@ -593,7 +605,7 @@ forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, and the recovery formula are
 complete; the certification chain (target 5) and the peeling
-recursion (the remainder of target 9) are the open targets. The verdicts to date:
+iteration (the capstone of target 9) are the open targets. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
