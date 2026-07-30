@@ -18,12 +18,14 @@ the data the recovery formula produces
 determines `λ₁` and `N₁`. The extracted layer subtracts: the
 residual subtower (`residual`, `residual_Z`) deletes the `λ₁`
 level with strictly larger least energy when nontrivial
-(`leastEnergy_lt_residual`), and the peel sequence
-`peel n := residual^[n]` telescopes (`peel_Z`) with every layer
-a limit of the original data alone. Finite-stage peeling is
-complete; **exhaustion remains** — that the residual tail
-vanishes, `Z_{peel n}(β) → 1`, so that no spectral layer escapes
-the enumeration. -/
+(`leastEnergy_lt_residual`), and the peel sequence telescopes
+(`peel_Z`) with every layer a limit of the original data alone.
+The capstone is **exhaustion**: every nonmodal sector is
+eventually peeled (`exists_notMem_range_peelEmbed`), so the peels
+empty the spectrum, `Z_{peel n}(β) → 1` (`tendsto_peel_Z`), and
+the extracted layers sum to the whole excess,
+`Σₙ Nₙ·e^{−β·λₙ} = Z(β) − 1` (`hasSum_peel_layers`) — no
+unenumerated tail survives. -/
 
 namespace Theaetetus
 
@@ -338,14 +340,17 @@ theorem leastEnergy_lt_residual (hnt : ∃ k : T.Λ, k ≠ T.modal)
 /-! ## The peel sequence: the capstone -/
 
 /-- **The peel sequence**: iterate the residual. `peel 0 = T`, and
-`peel (n+1)` deletes the `(n+1)`-st spectral layer. -/
-noncomputable def peel (n : ℕ) : PartitionTower :=
-  PartitionTower.residual^[n] T
+`peel (n+1)` deletes the `(n+1)`-st spectral layer. The recursion
+is structural, so each stage's carrier is definitionally a subtype
+of its parent's. -/
+noncomputable def peel : ℕ → PartitionTower
+  | 0 => T
+  | n + 1 => (peel n).residual
 
 @[simp] theorem peel_zero : T.peel 0 = T := rfl
 
 theorem peel_succ (n : ℕ) : T.peel (n + 1) = (T.peel n).residual :=
-  Function.iterate_succ_apply' _ _ _
+  rfl
 
 /-- **The telescope**: the `n`-th peel's partition function is the
 original minus the `n` extracted layers — unconditional, since a
@@ -356,7 +361,7 @@ theorem peel_Z (n : ℕ) {β : ℝ} (hβ : 1 ≤ β) :
           ((T.peel i).leastEnergyMult : ℝ)
             * Real.exp (-(β * (T.peel i).leastEnergy)) := by
   induction n with
-  | zero => simp [peel]
+  | zero => simp
   | succ m ih =>
     rw [T.peel_succ m, (T.peel m).residual_Z hβ, ih,
       Finset.sum_range_succ]
@@ -422,6 +427,187 @@ theorem peel_leastEnergy_strictMono (n : ℕ)
     (T.peel n).leastEnergy < (T.peel (n + 1)).leastEnergy := by
   rw [T.peel_succ n] at hn1 ⊢
   exact (T.peel n).leastEnergy_lt_residual hn hn1
+
+/-! ## Exhaustion: no layer escapes the enumeration -/
+
+/-- The composite carrier embedding of the `n`-th peel stage into
+the original tower — each stage is definitionally a subtype of its
+parent, and the embeddings compose. -/
+noncomputable def peelEmbed : (n : ℕ) → (T.peel n).Λ → T.Λ
+  | 0, k => k
+  | n + 1, k => peelEmbed n k.1
+
+@[simp] theorem peelEmbed_zero (k : (T.peel 0).Λ) :
+    T.peelEmbed 0 k = k := rfl
+
+theorem peelEmbed_succ (n : ℕ) (k : (T.peel (n + 1)).Λ) :
+    T.peelEmbed (n + 1) k = T.peelEmbed n k.1 := rfl
+
+theorem peelEmbed_injective :
+    ∀ n : ℕ, Function.Injective (T.peelEmbed n)
+  | 0 => fun _ _ h => h
+  | n + 1 => fun _ _ h => Subtype.ext (peelEmbed_injective n h)
+
+/-- The embedding preserves the energy. -/
+theorem E_peelEmbed : ∀ (n : ℕ) (k : (T.peel n).Λ),
+    T.E (T.peelEmbed n k) = (T.peel n).E k
+  | 0, _ => rfl
+  | n + 1, k => E_peelEmbed n k.1
+
+/-- The embedding preserves the modal sector. -/
+theorem peelEmbed_modal : ∀ n : ℕ,
+    T.peelEmbed n (T.peel n).modal = T.modal
+  | 0 => rfl
+  | n + 1 => peelEmbed_modal n
+
+theorem peelEmbed_ne_modal (n : ℕ) {k : (T.peel n).Λ}
+    (hk : k ≠ (T.peel n).modal) : T.peelEmbed n k ≠ T.modal :=
+  fun h => hk (T.peelEmbed_injective n (h.trans (T.peelEmbed_modal n).symm))
+
+/-- Later stages carve out smaller carriers. -/
+theorem range_peelEmbed_antitone :
+    Antitone fun n : ℕ => Set.range (T.peelEmbed n) :=
+  antitone_nat_of_succ_le fun n => by
+    rintro x ⟨k, rfl⟩
+    exact ⟨k.1, (T.peelEmbed_succ n k).symm⟩
+
+/-- **Every nonmodal sector is eventually peeled.** Only finitely
+many sectors sit at or below its energy, and while it survives a
+stage, that stage's attained least-energy level removes at least
+one of them — a strict descent on a finite set cannot run
+forever. -/
+theorem exists_notMem_range_peelEmbed {j : T.Λ} (hj : j ≠ T.modal) :
+    ∃ n : ℕ, j ∉ Set.range (T.peelEmbed n) := by
+  by_contra hall
+  push Not at hall
+  set S : ℕ → Set T.Λ := fun n =>
+    {i | (i ≠ T.modal ∧ T.E i ≤ T.E j) ∧ i ∈ Set.range (T.peelEmbed n)}
+  have hfin : ∀ n, (S n).Finite := fun n =>
+    (T.finite_energy_le (T.E j)).subset fun _ hi => hi.1
+  have hstrict : ∀ n, S (n + 1) ⊂ S n := by
+    intro n
+    obtain ⟨kj, hkj⟩ := hall n
+    have hkjne : kj ≠ (T.peel n).modal := fun h =>
+      hj (by rw [← hkj, h, T.peelEmbed_modal n])
+    obtain ⟨⟨kstar, hkstarne, hEstar⟩, -⟩ :=
+      (T.peel n).leastEnergy_isLeast ⟨kj, hkjne⟩
+    have hEle : T.E (T.peelEmbed n kstar) ≤ T.E j := by
+      rw [T.E_peelEmbed n kstar, hEstar, ← hkj, T.E_peelEmbed n kj]
+      exact (T.peel n).leastEnergy_le ⟨kj, hkjne⟩ hkjne
+    have hmemn : T.peelEmbed n kstar ∈ S n :=
+      ⟨⟨T.peelEmbed_ne_modal n hkstarne, hEle⟩, kstar, rfl⟩
+    have hnotsucc :
+        T.peelEmbed n kstar ∉ Set.range (T.peelEmbed (n + 1)) := by
+      rintro ⟨m, hm⟩
+      rw [T.peelEmbed_succ n m] at hm
+      have hval : m.1 = kstar := T.peelEmbed_injective n hm
+      rw [← hval] at hkstarne hEstar
+      exact m.2 ⟨hkstarne, hEstar⟩
+    have hsub : S (n + 1) ⊆ S n := fun i hi =>
+      ⟨hi.1, T.range_peelEmbed_antitone (Nat.le_succ n) hi.2⟩
+    exact (Set.ssubset_iff_of_subset hsub).mpr
+      ⟨T.peelEmbed n kstar, hmemn, fun hmem => hnotsucc hmem.2⟩
+  have hdesc : ∀ n, (S (n + 1)).ncard < (S n).ncard := fun n =>
+    Set.ncard_lt_ncard (hstrict n) (hfin n)
+  have hbound : ∀ n, (S n).ncard + n ≤ (S 0).ncard := by
+    intro n
+    induction n with
+    | zero => omega
+    | succ m ih =>
+      have := hdesc m
+      omega
+  have := hbound ((S 0).ncard + 1)
+  omega
+
+/-- **The geometric summary of exhaustion**: only the modal
+sector survives every peel. -/
+theorem iInter_range_peelEmbed :
+    (⋂ n : ℕ, Set.range (T.peelEmbed n)) = {T.modal} := by
+  ext j
+  simp only [Set.mem_iInter, Set.mem_singleton_iff]
+  constructor
+  · intro hall
+    by_contra hj
+    obtain ⟨n, hn⟩ := T.exists_notMem_range_peelEmbed hj
+    exact hn (hall n)
+  · rintro rfl n
+    exact ⟨(T.peel n).modal, T.peelEmbed_modal n⟩
+
+/-- **Exhaustion**: the peel sequence empties the spectrum — the
+`n`-th residual partition function tends to the modal contribution
+alone. Given a tolerance, all but a finite set of sectors carry a
+Boltzmann tail below it, and each nonmodal member of that finite
+set is eventually peeled. -/
+theorem tendsto_peel_Z {β : ℝ} (hβ : 1 ≤ β) :
+    Tendsto (fun n : ℕ => (T.peel n).Z β) atTop (𝓝 1) := by
+  rw [Metric.tendsto_atTop]
+  intro ε hε
+  obtain ⟨F, hF⟩ := ((tendsto_tsum_compl_atTop_zero
+    (fun k : T.Λ => Real.exp (-(β * T.E k)))).eventually_lt_const hε).exists
+  have hchoice : ∀ i : T.Λ, ∃ n : ℕ,
+      i ≠ T.modal → i ∉ Set.range (T.peelEmbed n) := by
+    intro i
+    by_cases hi : i = T.modal
+    · exact ⟨0, fun h => absurd hi h⟩
+    · obtain ⟨n, hn⟩ := T.exists_notMem_range_peelEmbed hi
+      exact ⟨n, fun _ => hn⟩
+  choose g hg using hchoice
+  refine ⟨F.sup g, fun n hn => ?_⟩
+  have hone := (T.peel n).one_le_Z hβ
+  rw [Real.dist_eq, abs_of_nonneg (by linarith)]
+  have hnotF : ∀ k : {k : (T.peel n).Λ // k ≠ (T.peel n).modal},
+      T.peelEmbed n k.1 ∉ F := by
+    intro k hkF
+    have hne := T.peelEmbed_ne_modal n k.2
+    have hgle : g (T.peelEmbed n k.1) ≤ n :=
+      le_trans (Finset.le_sup hkF) hn
+    exact hg _ hne (T.range_peelEmbed_antitone hgle ⟨k.1, rfl⟩)
+  have hle : (T.peel n).Z β - 1
+      ≤ ∑' x : {x : T.Λ // x ∉ F}, Real.exp (-(β * T.E x.1)) := by
+    rw [(T.peel n).Z_sub_one hβ]
+    have hinj : Function.Injective
+        (fun k : {k : (T.peel n).Λ // k ≠ (T.peel n).modal} =>
+          (⟨T.peelEmbed n k.1, hnotF k⟩ : {x : T.Λ // x ∉ F})) :=
+      fun k k' h =>
+        Subtype.ext (T.peelEmbed_injective n (congrArg Subtype.val h))
+    calc (∑' k : {k : (T.peel n).Λ // k ≠ (T.peel n).modal},
+            Real.exp (-(β * (T.peel n).E k.1)))
+        = ∑' k : {k : (T.peel n).Λ // k ≠ (T.peel n).modal},
+            Real.exp (-(β * T.E (T.peelEmbed n k.1))) :=
+          tsum_congr fun k => by rw [T.E_peelEmbed n]
+      _ ≤ ∑' x : {x : T.Λ // x ∉ F}, Real.exp (-(β * T.E x.1)) :=
+          tsum_comp_le_tsum_of_inj
+            (f := fun x : {x : T.Λ // x ∉ F} =>
+              Real.exp (-(β * T.E x.1)))
+            ((T.summable_Z hβ).subtype _)
+            (fun _ => (Real.exp_pos _).le) hinj
+  exact lt_of_le_of_lt hle hF
+
+/-- **The spectral expansion**: the extracted layers sum to the
+whole excess — the telescope's remainder vanishes, so no
+unenumerated tail survives the peeling. -/
+theorem hasSum_peel_layers {β : ℝ} (hβ : 1 ≤ β) :
+    HasSum (fun n : ℕ => ((T.peel n).leastEnergyMult : ℝ)
+        * Real.exp (-(β * (T.peel n).leastEnergy)))
+      (T.Z β - 1) := by
+  refine (hasSum_iff_tendsto_nat_of_nonneg
+    (fun i => by positivity) _).mpr ?_
+  have h : ∀ n : ℕ, (∑ i ∈ Finset.range n,
+      ((T.peel i).leastEnergyMult : ℝ)
+        * Real.exp (-(β * (T.peel i).leastEnergy)))
+      = T.Z β - (T.peel n).Z β := fun n => by
+    have hpz := T.peel_Z n hβ
+    linarith
+  exact (tendsto_const_nhds.sub (T.tendsto_peel_Z hβ)).congr
+    fun n => (h n).symm
+
+/-- The summed form of the spectral expansion,
+`Σₙ Nₙ·e^{−β·λₙ} = Z(β) − 1`. -/
+theorem tsum_peel_layers {β : ℝ} (hβ : 1 ≤ β) :
+    (∑' n : ℕ, ((T.peel n).leastEnergyMult : ℝ)
+        * Real.exp (-(β * (T.peel n).leastEnergy)))
+      = T.Z β - 1 :=
+  (T.hasSum_peel_layers hβ).tsum_eq
 
 end PartitionTower
 

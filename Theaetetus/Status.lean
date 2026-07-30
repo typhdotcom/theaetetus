@@ -271,6 +271,55 @@ example (T : PartitionTower) (n : ℕ)
       atTop (𝓝 ((T.peel n).leastEnergyMult : ℝ)) :=
   T.tendsto_peel_leastEnergyMult_sample n hnt
 
+example (T : PartitionTower) {β : ℝ} (hβ : 1 ≤ β) :
+    T.Z β - 1
+      = ∑' k : {k : T.Λ // k ≠ T.modal}, Real.exp (-(β * T.E k.1)) :=
+  T.Z_sub_one hβ
+
+example (T : PartitionTower) (n : ℕ) :
+    Function.Injective (T.peelEmbed n) :=
+  T.peelEmbed_injective n
+
+example (T : PartitionTower) (n : ℕ) (k : (T.peel n).Λ) :
+    T.E (T.peelEmbed n k) = (T.peel n).E k :=
+  T.E_peelEmbed n k
+
+example (T : PartitionTower) (n : ℕ) :
+    T.peelEmbed n (T.peel n).modal = T.modal :=
+  T.peelEmbed_modal n
+
+example (T : PartitionTower) (n : ℕ) {k : (T.peel n).Λ}
+    (hk : k ≠ (T.peel n).modal) : T.peelEmbed n k ≠ T.modal :=
+  T.peelEmbed_ne_modal n hk
+
+example (T : PartitionTower) :
+    Antitone fun n : ℕ => Set.range (T.peelEmbed n) :=
+  T.range_peelEmbed_antitone
+
+example (T : PartitionTower) {j : T.Λ} (hj : j ≠ T.modal) :
+    ∃ n : ℕ, j ∉ Set.range (T.peelEmbed n) :=
+  T.exists_notMem_range_peelEmbed hj
+
+example (T : PartitionTower) :
+    (⋂ n : ℕ, Set.range (T.peelEmbed n)) = {T.modal} :=
+  T.iInter_range_peelEmbed
+
+example (T : PartitionTower) {β : ℝ} (hβ : 1 ≤ β) :
+    Tendsto (fun n : ℕ => (T.peel n).Z β) atTop (𝓝 1) :=
+  T.tendsto_peel_Z hβ
+
+example (T : PartitionTower) {β : ℝ} (hβ : 1 ≤ β) :
+    HasSum (fun n : ℕ => ((T.peel n).leastEnergyMult : ℝ)
+        * Real.exp (-(β * (T.peel n).leastEnergy)))
+      (T.Z β - 1) :=
+  T.hasSum_peel_layers hβ
+
+example (T : PartitionTower) {β : ℝ} (hβ : 1 ≤ β) :
+    (∑' n : ℕ, ((T.peel n).leastEnergyMult : ℝ)
+        * Real.exp (-(β * (T.peel n).leastEnergy)))
+      = T.Z β - 1 :=
+  T.tsum_peel_layers hβ
+
 example (G : IncidenceGraph) (q q' : ℕ) [NeZero q] [NeZero q'] :
     G.towerDefect q q' = G.toPartitionTower.defect q q' :=
   G.towerDefect_eq_partitionTower_defect q q'

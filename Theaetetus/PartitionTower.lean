@@ -96,6 +96,22 @@ theorem one_lt_Z {β : ℝ} (hβ : 1 ≤ β) (hnt : ∃ k : T.Λ, k ≠ T.modal)
         Summable.tsum_lt_tsum hle hstrict
           ⟨1, hasSum_ite_eq T.modal (1 : ℝ)⟩ (T.summable_Z hβ)
 
+/-- The excess over `1` is the Boltzmann sum off the modal
+sector. -/
+theorem Z_sub_one {β : ℝ} (hβ : 1 ≤ β) :
+    T.Z β - 1
+      = ∑' k : {k : T.Λ // k ≠ T.modal}, Real.exp (-(β * T.E k.1)) := by
+  have hsplit := (T.summable_Z hβ).tsum_subtype_add_tsum_subtype_compl
+    {T.modal}
+  rw [tsum_singleton T.modal (fun k => Real.exp (-(β * T.E k))),
+    T.E_modal, mul_zero, neg_zero, Real.exp_zero] at hsplit
+  have hcompl : (∑' k : ↥(({T.modal} : Set T.Λ)ᶜ),
+        Real.exp (-(β * T.E k.1)))
+      = ∑' k : {k : T.Λ // k ≠ T.modal}, Real.exp (-(β * T.E k.1)) := rfl
+  rw [← hcompl]
+  unfold Z
+  linarith [hsplit]
+
 /-- **Saturation**: at infinite inverse temperature only the modal
 sector survives — dominated convergence against the base weight. -/
 theorem tendsto_Z_atTop : Tendsto T.Z atTop (𝓝 1) := by
