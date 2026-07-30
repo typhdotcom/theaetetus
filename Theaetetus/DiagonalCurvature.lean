@@ -1,9 +1,9 @@
 import Theaetetus.Diagonal
 import Theaetetus.LogConvexity
 
-/-! # Strict Q5 for diagonal forms: orthogonal sums inherit curvature
+/-! # The strict rectangle inequality for diagonal forms
 
-**Roadmap, formalization target 2** (README). The Boltzmann sum of
+The Boltzmann sum of
 a positive diagonal form factors over its axes (`diagTheta`), so
 log-partition functions add and strict convexity adds with them:
 every positive diagonal form of rank `r ≥ 1` satisfies the strict
@@ -12,9 +12,10 @@ rectangle inequality
     Z(a²t)·Z(b²t) < Z(t)·Z((ab)²t)    (t > 0, a > 1, b > 1)
 
 (`diagTheta_rect_strict`) and its midpoint case
-(`diagTheta_sq_lt`) — rank-one Q5 (`theta_rect_strict`) lifted
-axis-by-axis, exactly as `Theaetetus.Diagonal` lifts Q1. For the
-Q5 reconnaissance this pins the search space: no positive
+(`diagTheta_sq_lt`) — the rank-one strict rectangle
+(`theta_rect_strict`) lifted axis-by-axis, exactly as
+`Theaetetus.Diagonal` lifts the sign. For the curvature
+reconnaissance this pins the search space: no positive
 diagonal form can be a counterexample, so the sweep starts at
 non-orthogonal Gram matrices. The stronger reduction — any
 counterexample yields an orthogonally *indecomposable* one —
@@ -25,7 +26,8 @@ namespace Theaetetus
 
 variable {r : ℕ} {c : Fin r → ℝ}
 
-/-- **Strict Q5 for positive diagonal forms, every rank**: the
+/-- **The strict rectangle inequality for positive diagonal
+forms, every rank**: the
 strict rectangle inequality for the factored Boltzmann sum — each
 axis contributes a strict rank-one rectangle at scale `cᵢ·t`, and
 the product over a nonempty axis set keeps the strictness. -/

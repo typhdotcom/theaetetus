@@ -50,6 +50,45 @@ theorem deficit_coprime {s : ℝ} {p q : ℕ} (hco : Nat.Coprime p q) :
   rw [defect_coprime hco]
   ring
 
+/-- **The zero-sum identity for the deficit**: against zero-sum
+weights the deficit's quadratic form is the negated pairing form,
+`cᵀBc = −cᵀMc` — the base term dies against the constraint. -/
+theorem quadFormOn_deficit_eq_neg {s : ℝ} {P : Finset ℕ} {c : ℕ → ℝ}
+    (hc : (∑ p ∈ P, c p) = 0) :
+    quadFormOn (deficit s) P c = -quadFormOn (pairing s) P c := by
+  unfold quadFormOn
+  have hstep : ∀ p ∈ P, ∀ q ∈ P,
+      c p * c q * deficit s p q
+        = c p * (c q * Real.log (theta s))
+          - c p * c q * pairing s p q := by
+    intro p _ q _
+    unfold deficit
+    ring
+  rw [Finset.sum_congr rfl
+    (fun p hp => Finset.sum_congr rfl fun q hq => hstep p hp q hq)]
+  have hinner : ∀ p ∈ P,
+      (∑ q ∈ P, (c p * (c q * Real.log (theta s))
+        - c p * c q * pairing s p q))
+        = (∑ q ∈ P, c p * (c q * Real.log (theta s)))
+          - ∑ q ∈ P, c p * c q * pairing s p q :=
+    fun p _ => by rw [Finset.sum_sub_distrib]
+  have hB : ∀ p ∈ P,
+      (∑ q ∈ P, c p * (c q * Real.log (theta s))) = 0 := by
+    intro p _
+    rw [← Finset.mul_sum, ← Finset.sum_mul, hc, zero_mul, mul_zero]
+  rw [Finset.sum_congr rfl hinner, Finset.sum_sub_distrib,
+    Finset.sum_congr rfl hB, Finset.sum_const_zero, zero_sub]
+
+/-- **Deficit-PSD implies CND**, outright: one direction of the
+chamber coupling. The converse fails at every scale `s ≥ 1`
+(`cnd_not_psd`). -/
+theorem deficit_psd_implies_cnd {s : ℝ} {P : Finset ℕ}
+    (h : IsPSDOn (deficit s) P) : IsCNDOn (pairing s) P := by
+  intro c hc
+  have h1 := h c
+  rw [quadFormOn_deficit_eq_neg hc] at h1
+  linarith
+
 /-- **Saturation with an explicit threshold**: beyond some `M ≥ 3`
 every tail complexity `log θ(m²s)` is below `ε` — the log is at
 most `θ − 1`, the geometric tail bound crushes `θ − 1`, and the

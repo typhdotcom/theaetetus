@@ -3,8 +3,7 @@ import Mathlib.Analysis.Calculus.SmoothSeries
 
 /-! # The Gibbs bridge: termwise derivatives of the primitive
 
-**The derivative of `θ` is an energy moment** (README: Q5's
-analytic ingredients; the ladder, rung 7). Differentiating the
+**The derivative of `θ` is an energy moment.** Differentiating the
 Boltzmann sum under the series gives
 
     θ′(α) = −∑ k²·e^{−αk²},    θ″(α) = ∑ k⁴·e^{−αk²}
@@ -17,8 +16,9 @@ are dominated by the summable majorant at scale `α/2`
 (`summable_pow_mul_exp`).
 
 This is the bridge every derivative statement downstream crosses:
-the Faulhuber–Steinerberger monotonicity (rung 7) needs `θ′` and
-`θ″` as series to estimate, and the higher-rank Q5 fluctuation
+the Faulhuber–Steinerberger monotonicity
+(`theta_logDeriv_strictMonoOn`) needs `θ′` and
+`θ″` as series to estimate, and the higher-rank fluctuation
 inequality `β²Var(E) ≥ β⟨E⟩` is a statement about exactly these
 moments. -/
 

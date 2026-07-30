@@ -1,9 +1,8 @@
 import Theaetetus.Submodular
 
-/-! # Coarse Q5: the equal-leg midpoint inequality
+/-! # The coarse midpoint inequality, equal legs
 
-**The `b → a` limit of the sign** (README: Q5 and the ladder,
-rung 4). `theta_prod_lt_general` proves the strict cross-ratio
+**The `b → a` limit of the sign.** `theta_prod_lt_general` proves the strict cross-ratio
 inequality for real legs `2 ≤ a < b`; sending `b → a⁺` through the
 continuity of `θ` (`theta_continuousAt`) yields its equal-leg
 boundary case
@@ -12,12 +11,12 @@ boundary case
 
 (`theta_sq_le`) — in the log, midpoint convexity of
 `H(u) = log θ(eᵘ)` at every location, at leg spacing `≥ 2·log 2`
-(`log_theta_midpoint_le`). In particular every Q4 diagonal
+(`log_theta_midpoint_le`). In particular every diagonal kernel
 correction `d_s(x_p) = log θ(s) − 2·log θ(p²s) + log θ(p⁴s)` is
 nonnegative, since every prime has `x_p = log p ≥ log 2`.
 
 This is the coarse precursor to `theta_sq_lt`
-(`Theaetetus.LogConvexity`, rung 7), which removes the hypothesis
+(`Theaetetus.LogConvexity`), which removes the hypothesis
 `2 ≤ a` — an artifact of integer incomparability — and
 strengthens the inequality to strictness for every `1 < a`. -/
 
@@ -25,7 +24,7 @@ namespace Theaetetus
 
 open Filter Topology
 
-/-- **Coarse Q5** (rung 4): the equal-leg case of the theta
+/-- **The coarse midpoint inequality**: the equal-leg case of the theta
 inequality, `θ(a²t)² ≤ θ(t)·θ(a⁴t)` for real `a ≥ 2` — the
 `b → a⁺` limit of `theta_prod_lt_general`. -/
 theorem theta_sq_le {t a : ℝ} (ht : 0 < t) (ha : 2 ≤ a) :
@@ -64,7 +63,7 @@ theorem theta_sq_le {t a : ℝ} (ht : 0 < t) (ha : 2 ≤ a) :
   rw [pow_two]
   exact hlim
 
-/-- **The midpoint inequality in the log** (the Q4 diagonal):
+/-- **The midpoint inequality in the log** (the kernel diagonal):
 `2·log θ(a²t) ≤ log θ(t) + log θ(a⁴t)` for real `a ≥ 2` — every
 diagonal correction of the prime kernel is nonnegative. -/
 theorem log_theta_midpoint_le {t a : ℝ} (ht : 0 < t) (ha : 2 ≤ a) :

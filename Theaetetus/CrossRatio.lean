@@ -29,7 +29,7 @@ where `K(q)` is the complexity of the residue action on
   `cycleGraph 3` the carrier defect *is* the rank-one defect at
   scale `1/3` — so the strictness witness
   (`cycle3_towerDefect_neg`) is a corollary of the rank-one
-  program (M2/M3), not a re-derivation. -/
+  program, not a re-derivation. -/
 
 namespace Theaetetus
 
@@ -375,8 +375,8 @@ theorem cycle3_towerDefect_eq_defect (q q' : ℕ) [NeZero q] [NeZero q'] :
 
 /-- **The strictness, at home**: the carrier defect on `C₃` at the
 incomparable pair `(2, 3)` is strictly negative — now a corollary
-of the rank-one witness (M2), itself a point of the all-scales
-theorem (M3). At the witness, incomparable resolutions couple
+of the rank-one witness, itself a point of the all-scales sign
+theorem (`defect_neg_of_incomparable`). At the witness, incomparable resolutions couple
 supermodularly. -/
 theorem cycle3_towerDefect_neg :
     (cycleGraph 3 (by norm_num)).towerDefect 2 3 < 0 := by

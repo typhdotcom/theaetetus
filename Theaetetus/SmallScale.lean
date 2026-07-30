@@ -3,7 +3,7 @@ import Theaetetus.LargeScale
 
 /-! # The small-scale chamber: no three primes stay CND
 
-**Rung 6** (README: Q4 and the ladder). As `s → 0` the reflection
+**The degenerate chamber.** As `s → 0` the reflection
 law evaluates each coprime entry at its own dual scale
 `σ = π²/(s·p²q²)`, and the entries separate exponentially: the
 pair with the largest product dominates every other. For an
@@ -152,7 +152,7 @@ theorem exists_ordered_triple {P : Finset ℕ} (h : 3 ≤ P.card) :
       (Finset.ne_of_mem_erase hrE).symm
   exact ⟨_, hpP, _, hqP, _, hrP, hpq, hqr⟩
 
-/-- **THE SMALL-SCALE CHAMBER** (rung 6): every finite set of at
+/-- **THE SMALL-SCALE CHAMBER**: every finite set of at
 least three primes fails conditional negative definiteness at all
 sufficiently small scales. The dual scales separate the entries
 exponentially, the largest product dominates, and the `(−2, 1, 1)`

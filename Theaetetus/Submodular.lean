@@ -6,7 +6,7 @@ import Mathlib.Analysis.Real.Pi.Bounds
 
 /-! # Strict submodularity: the sign at every incomparable pair
 
-**Q1 at rank one, closed** (`defect_neg_of_incomparable`): for every
+**The sign at rank one, closed** (`defect_neg_of_incomparable`): for every
 scale `s > 0` and every incomparable pair `q, q′` of resolutions,
 
     D_s(q, q′) < 0.
@@ -16,8 +16,9 @@ the complete characterization (`defect_eq_zero_iff`): **the defect
 detects divisibility** — `D_s(q,q′) = 0` iff `q ∣ q′` or `q′ ∣ q`.
 Writing `h(q) = log θ(q²s)`, the function `h` is strictly
 supermodular off chains, equivalently residue complexity is a
-strictly submodular function on the divisibility lattice. M3 proved
-the pair `(2,3)`; this file proves the lattice.
+strictly submodular function on the divisibility lattice.
+`defect_two_three_neg` proved the pair `(2,3)`; this file proves
+the lattice.
 
 Reduction: dividing out the gcd (`t := gcd²·s`, `a := q/gcd`,
 `b := q′/gcd`) the claim is the theta-value inequality
@@ -251,8 +252,7 @@ private theorem theta_prod_lt_of_dual {t a b : ℝ} (ht : 0 < t) (ha : 2 ≤ a)
         le_mul_of_one_le_right (theta_pos t ht).le
           (theta_gt_one _ (by positivity)).le
 
-/-- **The theta inequality at every pair** (Q1, rank one, ordered
-form): for real `2 ≤ a < b` and every `t > 0`,
+/-- **The theta inequality at every pair** (ordered form): for real `2 ≤ a < b` and every `t > 0`,
 `θ(a²t)·θ(b²t) < θ(t)·θ((ab)²t)`. If `abt < π` the involution
 `t ↦ π²/((ab)²t)` reflects the configuration into `abt′ > π` —
 the four Jacobi prefactors cancel because `1·(ab)² = a²·b²` — and
@@ -333,13 +333,13 @@ private theorem defect_neg_aux {s : ℝ} (hs : 0 < s) {g a b : ℕ} (hg : 0 < g)
   rw [Real.log_mul hp1.ne' hp2.ne', Real.log_mul hp3.ne' hp4.ne'] at hlog
   linarith
 
-/-- **STRICT SUBMODULARITY** (Q1, rank one, closed): the defect is
+/-- **STRICT SUBMODULARITY** (rank one, closed): the defect is
 strictly negative at **every** incomparable pair and **every** scale
 — `D_s(q, q′) < 0` whenever neither of `q, q′` divides the other.
 Residue complexity is a strictly submodular function on the
 divisibility lattice: coupling two incomparable resolutions always
-saves strictly more than their shared base. M3 proved one pair; this
-is the lattice. -/
+saves strictly more than their shared base. `defect_two_three_neg`
+proved one pair; this is the lattice. -/
 theorem defect_neg_of_incomparable {s : ℝ} (hs : 0 < s) {q q' : ℕ}
     (hqq' : ¬q ∣ q') (hq'q : ¬q' ∣ q) : defect s q q' < 0 := by
   have hq0 : q ≠ 0 := by rintro rfl; exact hq'q (dvd_zero q')

@@ -2,10 +2,9 @@ import Theaetetus.Fluctuation
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
-/-! # The refined log-convexity: rung 7 closed at rank one
+/-! # The refined log-convexity at rank one
 
-**The assembly of the Faulhuber–Steinerberger port** (README: the
-ladder, rung 7; Q5). Fact 1 (`theta_logDeriv_numer_pos_large`)
+**The assembly of the Faulhuber–Steinerberger port.** Fact 1 (`theta_logDeriv_numer_pos_large`)
 makes `f(α) = α·θ′(α)/θ(α)` strictly increasing on `[π, ∞)` by
 the mean value theorem. Fact 2 (`theta_logDeriv_dual`) says
 `f(α) = −1/2 − f(π²/α)`, and `α ↦ π²/α` reverses order — so the
@@ -21,7 +20,7 @@ difference `s ↦ log θ(a²s) − log θ(s)` is strictly increasing for
 (`theta_rect_strict`) and, at `a = b`, the strict midpoint
 inequality `θ(a²t)² < θ(t)·θ(a⁴t)` (`theta_sq_lt`) — the refined
 log-convexity of the theta function, every scale, every ratio
-above one. Rank-one Q5 is closed. -/
+above one. The rank-one curvature question is closed. -/
 
 namespace Theaetetus
 
@@ -101,7 +100,7 @@ theorem theta_logDeriv_strictMonoOn :
       linarith
     · exact hhi (Set.mem_Ici.mpr hπa) (Set.mem_Ici.mpr (hπa.trans hab.le)) hab
 
-/-- **The strict rectangle inequality** (rank-one Q5, refined):
+/-- **The strict rectangle inequality**:
 at every scale, spreading the legs strictly loses to the corner
 pair — `θ(a²t)·θ(b²t) < θ(t)·θ((ab)²t)` for `a, b > 1`. The
 difference `s ↦ log θ(a²s) − log θ(s)` strictly increases because
@@ -181,7 +180,7 @@ theorem theta_rect_strict {t a b : ℝ} (ht : 0 < t) (ha : 1 < a)
   have h2 := Real.exp_lt_exp.mpr h1
   rwa [Real.exp_log hA, Real.exp_log hB] at h2
 
-/-- **The strict midpoint inequality** (rank-one Q5, closed): the
+/-- **The strict midpoint inequality**: the
 refined log-convexity `θ(a²t)² < θ(t)·θ(a⁴t)` at every scale and
 every ratio `a > 1` — the strict form of `theta_sq_le`, no longer
 confined to `a ≥ 2`. -/

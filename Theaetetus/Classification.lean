@@ -22,12 +22,12 @@ program formalizes, by instantiating the abstract classification of
   carrier classification (`towerDefect_forall_eq_zero_iff`) and the
   asymptotic sign (`eventually_towerDefect_neg`) follow;
 * on **`C₃`** the per-pair kernel is computed exactly through the
-  carrier bridge and Q1 at rank one: the kernel is the chain
+  carrier bridge and the rank-one sign: the kernel is the chain
   relation (`cycle3_towerDefect_eq_zero_iff`). -/
 
 namespace Theaetetus
 
-/-- **The sign on `C₃`, everywhere** (Q1 at the first carrier,
+/-- **The sign on `C₃`, everywhere** (the first carrier,
 closed): the tower defect of the smallest rank-one carrier is
 strictly negative at every incomparable pair of resolutions. -/
 theorem cycle3_towerDefect_neg_of_incomparable (q q' : ℕ) [NeZero q] [NeZero q']
@@ -188,7 +188,7 @@ theorem tendsto_towerDefect_succ :
 
 /-- **The sign appears asymptotically in every rank**: on a carrier
 with a cycle, the tower defect is eventually strictly negative along
-the staircase — Q1's sign, at the saturation end, for every carrier. -/
+the staircase — the sign, at the saturation end, for every carrier. -/
 theorem eventually_towerDefect_neg
     (hnt : ∃ κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ), κ ≠ 0) :
     ∀ᶠ n : ℕ in atTop, G.towerDefect (n + 1) (n + 2) < 0 := by

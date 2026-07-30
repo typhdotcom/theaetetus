@@ -2,7 +2,8 @@ import Theaetetus.Submodular
 
 /-! # Diagonal forms: the sign in every rank
 
-Q1 extends beyond rank one by pure arithmetic. The Boltzmann sum of
+The sign extends beyond rank one by pure arithmetic. The Boltzmann
+sum of
 an orthogonal sum of rank-one lattices is the product of its axis
 theta factors, so log partition functions add, and the defect of the
 positive diagonal form `Q(x) = c₁x₁² + ⋯ + c_r x_r²` is the **sum of
@@ -13,7 +14,7 @@ negative at every incomparable pair
 (`diagDefect_neg_of_incomparable`), zero exactly on chains
 (`diagDefect_eq_zero_iff`).
 
-The open frontier of Q1 is therefore not rank — it is
+The open frontier of the sign is therefore not rank — it is
 indecomposability: forms with genuine cross terms, where the
 partition function does not factor over the axes. -/
 
@@ -84,7 +85,7 @@ theorem diagDefect_comm (c : Fin r → ℝ) (s : ℝ) (q q' : ℕ) :
   rw [Nat.gcd_comm, Nat.lcm_comm]
   ring
 
-/-- **Q1 for diagonal forms, every rank**: the defect of a positive
+/-- **The sign for diagonal forms, every rank**: the defect of a positive
 diagonal form of any rank `r ≥ 1` is strictly negative at every
 incomparable pair and every scale — each axis contributes a strictly
 negative rank-one defect, and orthogonality adds them. -/

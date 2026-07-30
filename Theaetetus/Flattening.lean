@@ -2,15 +2,16 @@ import Theaetetus.Kernel
 
 /-! # The large-scale chamber: saturation flattens the kernel
 
-**Rung 5** (README: Q4 and the ladder). Beyond the absolute
+**The uniform chamber.** Beyond the absolute
 threshold `s ≥ 1` the prime pairing is conditionally negative
 definite on **every** finite prime set at once
-(`pairing_cnd_large`) — the uniform, dimension-free half of Q4's
+(`pairing_cnd_large`) — the uniform, dimension-free half of the
 chamber structure.
 
 The proof starts from the exact zero-sum identity
 (`quadFormOn_pairing_eq`): the quadratic form is the
-product-kernel form minus the diagonal of Q5 curvatures. Writing
+product-kernel form minus the diagonal of midpoint curvatures.
+Writing
 `z = e^{−s} ≤ 1/2`:
 
 * every product-kernel entry is submultiplicative —
@@ -101,7 +102,7 @@ theorem log_theta_sq_prod_le {s : ℝ} (hs : 1 ≤ s) {p q : ℕ}
     _ ≤ 32 / 15 * (Real.exp (-(s * (p : ℝ) ^ 2))
         * Real.exp (-(s * (q : ℝ) ^ 2))) := by nlinarith [hsub]
 
-/-- **The diagonal lower bound**: every Q5 curvature on the
+/-- **The diagonal lower bound**: every midpoint curvature on the
 diagonal is at least `e^{−s} − (64/15)e^{−4s}` — the base mode
 beats the resolved corrections. -/
 theorem q5_diag_lower {s : ℝ} (hs : 1 ≤ s) {p : ℕ} (hp : 2 ≤ p) :
@@ -223,7 +224,7 @@ theorem tail_sq_le {s : ℝ} (hs : 1 ≤ s) {P : Finset ℕ}
         mul_le_mul_of_nonneg_left hgeo (by positivity)
     _ = 4 / 3 * Real.exp (-s) ^ 4 := by ring
 
-/-- **THE LARGE-SCALE CHAMBER** (rung 5): beyond the absolute
+/-- **THE LARGE-SCALE CHAMBER**: beyond the absolute
 threshold `s ≥ 1` the prime pairing is conditionally negative
 definite on every finite prime set — saturation flattens the
 kernel, uniformly and dimension-free. The closure is `64z³ ≤ 9`

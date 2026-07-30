@@ -2,10 +2,10 @@ import Theaetetus.Submodular
 
 /-! # The prime pairing ⟨p, p′⟩
 
-**Q2, first theorems.** For resolutions `p, p′` the **pairing** is
+**First theorems of the pairing.** For resolutions `p, p′` the **pairing** is
 the negated defect `⟨p, p′⟩ := −D_s(p, p′)` — for distinct primes a
 strictly positive two-point function on the primes, mediated by the
-geometry of the carrier (`pairing_pos`, from Q1).
+geometry of the carrier (`pairing_pos`, from the sign).
 
 The asymptotics: for coprime `p, q ≥ 1` the pairing is squeezed by
 
@@ -50,7 +50,7 @@ theorem pairing_comm (s : ℝ) (p q : ℕ) : pairing s p q = pairing s q p := by
   unfold pairing
   rw [defect_comm]
 
-/-- **Positivity on the primes** (Q2 via Q1): distinct primes are
+/-- **Positivity on the primes** (via the sign): distinct primes are
 incomparable in the divisibility lattice, so their pairing is
 strictly positive at every scale. -/
 theorem pairing_pos {s : ℝ} (hs : 0 < s) {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
@@ -155,7 +155,7 @@ theorem theta_sub_one_le_geo {s : ℝ} (hs : 0 < s) {p : ℕ} (hp : 1 ≤ p) :
     linarith
   linarith
 
-/-- **SATURATION AT THE BASE** (Q2, the first asymptotic): along
+/-- **SATURATION AT THE BASE** (the first asymptotic): along
 coprime pairs going to infinity, the pairing converges to the
 complexity of the unresolved carrier —
 `⟨p, q⟩ → log θ(s)` as `min(p,q) → ∞`. -/

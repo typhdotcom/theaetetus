@@ -2,7 +2,7 @@ import Theaetetus.Defect
 
 /-! # The reflection law: duality as a symmetry of the defect
 
-**The defect is a weight-zero combination** (README: the symmetry).
+**The defect is a weight-zero combination.**
 Each factor `log θ(q²s)` carries modular weight — the Jacobi
 duality multiplies `θ` by a prefactor — but the cross-ratio weighs
 its four terms `½ + ½ − ½ − ½`, and the prefactors cancel exactly
@@ -24,11 +24,11 @@ all-scale sign proofs (`Sign`, branch two; `Submodular`,
 reflection branch) originally re-derived this cancellation inline
 for their own pair; this module states it once, and both branches
 now consume it through `theta_rect_lt_iff`, the
-inequality-equivalence form. Ladder rungs 1–3. -/
+inequality-equivalence form. -/
 
 namespace Theaetetus
 
-/-- **The rectangle reflection** (rung 1): the theta cross-ratio at
+/-- **The rectangle reflection**: the theta cross-ratio at
 couplings `{t, a²t, b²t, (ab)²t}` is invariant under the Jacobi
 involution `t ↦ t′ = π²/((ab)²t)`, stated multiplicatively. The
 four duality prefactors `(·/π)^(1/2)` cancel between the sides
@@ -96,7 +96,7 @@ theorem theta_rect_lt_iff {t t' a b : ℝ} (ht : 0 < t) (ha : 0 < a) (hb : 0 < b
         (theta t * theta ((a * b) ^ 2 * t))] at h2
     exact lt_of_mul_lt_mul_right h2 hR'.le
 
-/-- **The reflection law** (rung 2): the defect of any pair equals
+/-- **The reflection law**: the defect of any pair equals
 the defect of its coprime reduction at the reflected scale
 `π²/(s·lcm²)`. The scaling prefactors cancel through
 `gcd·lcm = q·q′` — the defect is weight-zero data. -/
@@ -190,7 +190,7 @@ theorem defect_dual {s : ℝ} (hs : 0 < s) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < 
   simp only [one_pow, one_mul]
   linarith [klog]
 
-/-- **Coprime evenness** (rung 3): on a coprime pair the reflection
+/-- **Coprime evenness**: on a coprime pair the reflection
 fixes the pair and moves only the scale, `s ↦ π²/(s·(pq)²)` — each
 coprime defect entry is an even function of `log s` about its own
 center `s* = π/(pq)`. -/

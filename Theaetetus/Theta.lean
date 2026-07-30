@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 /-! # θ: the scalar theta function
 
 `theta α = ∑' k : ℤ, exp(-α k²)` — the rank-one Boltzmann sum, the
-analytic carrier of the whole rank-one program (README: Q1–Q2).
+analytic carrier of the whole rank-one program.
 
 Contents:
 
@@ -13,11 +13,11 @@ Contents:
 * the theta identification `theta_eq_jacobiTheta` — `theta` *is*
   the Jacobi theta function at `τ = iα/π` — and through it the
   **duality** `theta (π²/α) = √(α/π) · theta α` (Jacobi
-  transformation, the small-`s` tool for Q1);
+  transformation, the small-`s` tool of the sign proofs);
 * the estimate kit: `theta_gt_one`, the symmetric split
   `theta_sub_one_eq`, the first-mode lower bound `theta_ge`, and
   the geometric tail upper bound `theta_le` — the large-`s` tools,
-  and the engine of the witness (M2). -/
+  and the engine of the witness. -/
 
 namespace Theaetetus
 

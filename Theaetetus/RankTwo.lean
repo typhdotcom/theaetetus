@@ -3,7 +3,7 @@ import Theaetetus.ThetaBounds
 
 /-! # Rank two: the defect on the theta graph
 
-The first rank-two witness (M4): on the theta graph `K₂,₃` — the
+The first rank-two witness: on the theta graph `K₂,₃` — the
 smallest carrier of rank two — the defect at the incomparable pair
 `(2, 3)` is strictly negative (`thetaGraph_towerDefect_neg`).
 
@@ -268,7 +268,7 @@ theorem one_le_hexTheta {s : ℝ} (hs : 0 < s) : 1 ≤ hexTheta s := by
 
 /-! ## The rank-two witness -/
 
-/-- **THE RANK-TWO WITNESS** (M4): on the theta graph — the smallest
+/-- **THE RANK-TWO WITNESS**: on the theta graph — the smallest
 carrier of rank two — the defect at the incomparable pair `(2, 3)`
 is strictly negative. The hexagonal comparison
 `hexTheta 4 · hexTheta 9 < hexTheta 1 · hexTheta 36` closes through

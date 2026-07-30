@@ -9,7 +9,7 @@ The defect is strictly negative at the smallest incomparable pair:
 
 The scale `s = 1/3` is the witness's birthplace: it is the harmonic
 energy `k²/3` of the cycle graph `C₃`, the smallest carrier of rank
-one (README: the seed). Here it is simply the first point of Q1.
+one. Here it is simply the first point of the sign.
 
 The proof computes nothing transcendental: each theta value is
 sandwiched by one explicit mode plus a geometric tail (`theta_ge`,

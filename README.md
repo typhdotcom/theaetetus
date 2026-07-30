@@ -120,8 +120,10 @@ negative.
   deficit `B := log θ(s)·J − M` has exact entries
   `F(p) + F(q) − F(pq)` off the diagonal and `F(1)` on it, is
   entrywise positive (`pairing_lt_base`), and satisfies
-  `cᵀBc = −cᵀMc` on zero-sum weights — deficit-PSD implies CND,
-  and only that: the converse fails numerically. Both notions
+  `cᵀBc = −cᵀMc` on zero-sum weights
+  (`quadFormOn_deficit_eq_neg`) — deficit-PSD implies CND
+  (`deficit_psd_implies_cnd`), and only that: the converse fails
+  at every scale `s ≥ 1` (`cnd_not_psd`). Both notions
   restrict to subsets (`IsCNDOn.subset`, `IsPSDOn.subset`), so
   enlarging the prime set only shrinks the valid-scale sets.
 - **The star obstruction: no uniform deficit-PSD threshold.**
@@ -294,8 +296,9 @@ pairwise versus higher-order interaction.
 - **Q4 — phase geometry: Q4-CND and Q4-PSD.** Both asymptotic
   regimes of Q4-CND are theorems (established, the kernel
   chambers); the implication deficit-PSD ⟹ CND is proved
-  (`cᵀBc = −cᵀMc` on zero-sum weights), and the converse fails
-  numerically at `s = 0.12` on five primes. Open is the geometry
+  (`deficit_psd_implies_cnd`), and the converse fails at every
+  scale `s ≥ 1` (`cnd_not_psd`; first seen numerically at
+  `s = 0.12` on five primes). Open is the geometry
   of the middle, one clause per matrix. **Q4-CND**: for a finite prime set `P`, is the
   valid-scale set `{ s : pairing CND on P }` an upper interval?
   The controlling statistic is the largest eigenvalue of the
@@ -478,11 +481,13 @@ Formalization targets:
    rank-one shapes. Certified this way, a reconnaissance sign is
    a certificate — and a counterexample arrives pre-packaged for
    its own formalization.
-6. **`Theaetetus/Status.lean`** — a statement-level manifest:
-   every claim this document makes of the tree, restated as an
-   `example` discharged by the theorem it cites, so statement
-   drift fails `lake build`. Any status table is generated from
-   the manifest — a view, never a second source of truth.
+6. **`Theaetetus/Status.lean`** — done: the statement-level
+   manifest exists — every claim this document makes of the
+   tree, restated as an `example` discharged by the theorem it
+   cites, so statement drift fails `lake build`. The companion
+   docstring sweep is also done: no Lean docstring or comment
+   references a prose coordinate (the one-way rule, now in
+   `CLAUDE.md`).
 7. **Q6's identity layer.** Rectangle identities and the
    characterization of vanishing cross-prime differences for the
    mixed-difference hierarchy `Δ_{p₁}⋯Δ_{p_k}K`.
@@ -527,9 +532,9 @@ Reconnaissance, falsify-first:
 
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
-sweeps, the first Q4 sweep, and the star-obstruction theorem
-are complete; the certification chain (target 5) is the open
-engineering. The verdicts to date:
+sweeps, the first Q4 sweep, the star-obstruction theorem, and
+the manifest with its docstring sweep are complete; the
+certification chain (target 5) is the open engineering. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
@@ -591,7 +596,11 @@ The root module [`Theaetetus.lean`](Theaetetus.lean) imports every
 module under a one-line section comment, in logical order from the
 analytic primitive to the rank-two witness. That import list is the
 table of contents: it compiles, so it cannot drift. Each module's
-docstring carries its local story.
+docstring carries its local story, in mathematics and Lean names
+only — and `Theaetetus/Status.lean` is the manifest: every claim
+this document makes of the tree, restated as an `example` and
+discharged by the theorem it cites, so a renamed theorem, a
+weakened statement, or an unwitnessed claim fails the build.
 
 ## Building
 
@@ -604,8 +613,7 @@ counterexample becomes a theorem. Version control is jujutsu.
 
 ## History
 
-Built in eight milestones, `M0`–`M7` (labels that still appear in
-docstrings): scaffold; the scalar core and chain-vanishing; the
+Built in eight milestones, `M0`–`M7`: scaffold; the scalar core and chain-vanishing; the
 witness `θ(4/3)·θ(3) < θ(1/3)·θ(12)`; the sign at `(2,3)` for all
 scales; the carrier — graph homology, the residue tower, the
 cross-ratio law, the rank-two witness; outward — Q1 closed at rank

@@ -7,7 +7,8 @@ import Mathlib.Analysis.Real.Pi.Bounds
 
 **`D_s(2,3) < 0` for every `s > 0`** (`defect_two_three_neg`) — the
 first native theorem: at the smallest incomparable pair the defect
-is strictly negative at every scale. Q1's first infinite family.
+is strictly negative at every scale. The sign's first infinite
+family.
 
 In theta values: `θ(4s)·θ(9s) < θ(s)·θ(36s)`. Expanded over ℤ² this
 compares the forms `4m²+9n²` and `m²+36n²`, which are **not**
@@ -144,7 +145,7 @@ theorem theta_prod_lt {s : ℝ} (hs : 0 < s) :
     norm_num at hiff
     exact hiff.mpr (theta_prod_lt_of_half_le hs')
 
-/-- **THE BIRTH CERTIFICATE** (M3): the defect at the smallest
+/-- **THE BIRTH CERTIFICATE**: the defect at the smallest
 incomparable pair is strictly negative at **every** scale —
 `D_s(2, 3) < 0` for all `s > 0`. The defect vanishes on chains
 (`defect_eq_zero_of_dvd`); off them, at `(2, 3)`, it carries a

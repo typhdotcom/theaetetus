@@ -2,8 +2,7 @@ import Theaetetus.Gibbs
 
 /-! # The functional equation: the reflection law differentiated
 
-**Fact 2 of the Faulhuber–Steinerberger port** (README: the
-ladder, rung 7). Squaring the duality `θ(π²/α) = √(α/π)·θ(α)`
+**Fact 2 of the Faulhuber–Steinerberger port.** Squaring the duality `θ(π²/α) = √(α/π)·θ(α)`
 removes the square root; differentiating the squared identity
 through the Gibbs bridge and cancelling common factors yields the
 functional equation of the logarithmic derivative
@@ -11,7 +10,7 @@ functional equation of the logarithmic derivative
     α·θ′(α)/θ(α) + (π²/α)·θ′(π²/α)/θ(π²/α) = −1/2
 
 (`theta_logDeriv_dual`) — the reflection law in infinitesimal
-form. This is the transport map of rung 7: monotonicity of
+form. This is the port's transport map: monotonicity of
 `α·θ′(α)/θ(α)` on a half-line `[c, ∞)` propagates through
 `α ↦ π²/α` to the interval `(0, π²/c]`, which is how Fact 1's
 large-coupling estimate will reach the origin. At the fixed point

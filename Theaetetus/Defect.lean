@@ -4,7 +4,7 @@ import Theaetetus.Theta
 
 For a scale `s > 0` and resolutions `q, q′`, **the defect** is the
 four-term inclusion–exclusion of description costs over the
-divisibility lattice (README: the seed):
+divisibility lattice:
 
     D_s(q, q′) = [log θ(q²s) + log θ(q′²s)]
                    − [log θ(gcd²s) + log θ(lcm²s)].
@@ -12,8 +12,9 @@ divisibility lattice (README: the seed):
 Writing `h(q) := log θ(q²s)`, the statement `D ≡ 0` says `h` is a
 valuation on the divisibility lattice — the algebraic shadow of an
 Euler product. This file proves the boundary: **the defect vanishes
-on chains** (`defect_eq_zero_of_dvd`). The witness that it is
-strictly negative off them is M2; its sign for all `s` is M3. -/
+on chains** (`defect_eq_zero_of_dvd`). That it is strictly
+negative off them, at every scale, is the sign theorem
+(`defect_neg_of_incomparable`). -/
 
 namespace Theaetetus
 

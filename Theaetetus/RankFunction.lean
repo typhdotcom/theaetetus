@@ -2,7 +2,7 @@ import Theaetetus.Submodular
 
 /-! # Residue complexity as a rank function
 
-**A precursor to the higher mixed-difference hierarchy (Q6).**
+**A precursor to the higher mixed-difference hierarchy.**
 The rank-one residue complexity
 
     K_s(q) := log θ(s) − log θ(q²s)
@@ -17,10 +17,10 @@ polymatroid rank axioms on the divisibility lattice:
   (`resComplexity_mono`);
 * **submodular** — `K(gcd) + K(lcm) ≤ K(q) + K(q′)`
   (`resComplexity_submodular`), **strictly** off chains
-  (`resComplexity_strictSubmodular`, = Q1).
+  (`resComplexity_strictSubmodular`).
 
 So `q ↦ K_s(q)` is a polymatroid-like rank function whose
-independence defect is exactly the defect matrix. Q5's remaining
+independence defect is exactly the defect matrix. The remaining
 question — non-Shannon inequalities among higher defects — starts
 from this object. -/
 
@@ -69,7 +69,7 @@ theorem resComplexity_mono {s : ℝ} (hs : 0 < s) {q q' : ℕ} (hdvd : q ∣ q')
   unfold resComplexity
   linarith
 
-/-- **Submodularity** (Q1 rearranged): residue complexity is a
+/-- **Submodularity** (the sign rearranged): residue complexity is a
 submodular function on the divisibility lattice —
 `K(gcd) + K(lcm) ≤ K(q) + K(q′)` for every pair. -/
 theorem resComplexity_submodular {s : ℝ} (hs : 0 < s) (q q' : ℕ) :

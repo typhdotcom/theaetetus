@@ -2,7 +2,7 @@ import Theaetetus.Pairing
 
 /-! # The kernel interface: quadratic forms on finite prime sets
 
-**Q4's vocabulary** (README: Q4 and the ladder, rungs 5–6). The
+**The chamber vocabulary.** The
 chamber theorems quantify over finite prime sets, so the
 definiteness notions live on a kernel `K : ι → ι → ℝ` restricted
 to a `Finset`: the quadratic form (`quadFormOn`), conditional
@@ -72,11 +72,11 @@ theorem IsPSDOn.subset [DecidableEq ι] {K : ι → ι → ℝ}
   have h := hQ (fun p => if p ∈ P then c p else 0)
   rwa [quadFormOn_extend K hPQ c] at h
 
-/-- **The exact zero-sum identity** (toward rung 5): on a set of
+/-- **The exact zero-sum identity**: on a set of
 primes, against a zero-sum weight, the pairing's quadratic form is
 the product-kernel's (Hankel-extension) quadratic form minus the
-diagonal of Q5 curvatures — the `M = M̃ − diag(d)` decomposition
-of README Q4 as an identity. On the diagonal the extension uses
+diagonal of midpoint curvatures — the `M = M̃ − diag(d)`
+decomposition as an exact identity. On the diagonal the extension uses
 `p²`, not `lcm(p,p) = p`. The base term `log θ(s)` and both
 row/column terms cancel exactly against the zero-sum constraint;
 no approximation enters. -/

@@ -2,7 +2,7 @@ import Theaetetus.Pairing
 
 /-! # The deep-scale limit of the pairing
 
-**The normalized asymptotic** (README: Q4, toward rungs 5–6): at
+**The normalized asymptotic**: at
 large scale the pairing of a coprime pair is carried entirely by
 the base mode,
 
@@ -19,9 +19,9 @@ pairing is the four-term combination, and only the base survives.
 Through the reflection `pairing_scale_even`, this large-scale law
 is also the small-scale law: as `s → 0` each coprime entry equals
 `2e^{−σ}(1 + o(1))` at its own dual scale `σ = π²/(s·p²q²)` — the
-hierarchical separation driving the small-scale chamber (rung 6)
-and the saturation flattening driving the large-scale chamber
-(rung 5). -/
+hierarchical separation driving the small-scale chamber
+(`pairing_not_cnd_small`) and the saturation flattening driving
+the large-scale chamber (`pairing_cnd_large`). -/
 
 namespace Theaetetus
 
