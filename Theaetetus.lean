@@ -54,6 +54,9 @@ import Theaetetus.Flattening
 -- Q4, rung 6: the small-scale chamber — no three primes stay CND
 import Theaetetus.SmallScale
 
+-- The star obstruction: no uniform deficit-PSD threshold
+import Theaetetus.StarObstruction
+
 -- Residue complexity as a polymatroid-like rank function
 import Theaetetus.RankFunction
 

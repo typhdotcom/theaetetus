@@ -15,5 +15,10 @@ Ground rules, restated for every session:
   carrier, resolution, tower, pairing, complexity.
 - Where a desired statement fails, keep the counterexample as a
   theorem.
+- References are one-way: prose may cite Lean names; Lean never
+  cites prose. No README sections, roadmap targets, rung or
+  Q-numbers in docstrings or comments — state the mathematics and
+  cite theorem names only. (Historical tags await a sweep; never
+  add new ones.)
 - Version control is jujutsu: `jj status`, `jj diff --git`,
   `jj commit -m "..."`.

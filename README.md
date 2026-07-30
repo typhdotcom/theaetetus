@@ -124,6 +124,18 @@ negative.
   and only that: the converse fails numerically. Both notions
   restrict to subsets (`IsCNDOn.subset`, `IsPSDOn.subset`), so
   enlarging the prime set only shrinks the valid-scale sets.
+- **The star obstruction: no uniform deficit-PSD threshold.**
+  At every scale `s > 0` some finite prime set has non-PSD
+  saturation deficit (`deficit_not_psd`; the kernel `deficit`
+  makes `B = log θ(s)·J − M` definitional): the deficit of
+  `{2, q₁, …, qₙ}` with large satellites approaches the star
+  matrix with diagonal `log θ(s)` and spokes `log θ(4s)`, and
+  the explicit star weight has negative energy once
+  `n > (log θ(s)/log θ(4s))²` — no eigenvalue machinery, only
+  the geometric saturation bounds. So `sup_P s_PSD(P) = ∞`, and
+  with `pairing_cnd_large` the converse CND ⇒ deficit-PSD fails
+  at every scale `s ≥ 1` (`cnd_not_psd`), not merely at the
+  numerical `s = 0.12` witness.
 - **The refined log-convexity, rank one — Q5's base case,
   closed.** The Gibbs bridge `θ′(α) = −∑ k²·e^{−αk²}`,
   `θ″(α) = ∑ k⁴·e^{−αk²}` (`hasDerivAt_theta`,
@@ -311,10 +323,11 @@ pairwise versus higher-order interaction.
   `F(1) − √n·F(2)`, negative once `n > (F(1)/F(2))²`. With
   `s_PSD(P)` defined like `s_c(P)` for the deficit,
   `sup_P s_PSD(P) = ∞`: no uniform bound can hold, though each
-  fixed finite set may still have a finite eventual-PSD bound
-  (the star obstruction, roadmap target 8). With
+  fixed finite set may still have a finite eventual-PSD bound —
+  the star obstruction, now a theorem (`deficit_not_psd`). With
   `pairing_cnd_large` the converse CND ⇒ deficit-PSD fails at
-  every scale `s ≥ 1`, not merely at the `s = 0.12` witness.
+  every scale `s ≥ 1` (`cnd_not_psd`), not merely at the
+  `s = 0.12` witness.
   Open here: the star-obstruction rate — the leading asymptotic
   predicts `s_PSD ~ (1/6)·log n` — and intervality. The first falsification
   hunt found one detected sign change per statistic on each
@@ -473,14 +486,11 @@ Formalization targets:
 7. **Q6's identity layer.** Rectangle identities and the
    characterization of vanishing cross-prime differences for the
    mixed-difference hierarchy `Δ_{p₁}⋯Δ_{p_k}K`.
-8. **The star obstruction.** For every fixed `s > 0` the deficit
-   of `{2, q₁, …, qₙ}` tends entrywise, as the satellites grow,
-   to the star matrix with diagonal `F(1)` and spokes `F(2)`,
-   whose smallest eigenvalue is `F(1) − √n·F(2)`: for
-   `n > (F(1)/F(2))²` some finite prime set has non-PSD deficit
-   at that scale, so `sup_P s_PSD(P) = ∞`. Needs the saturation
-   of `F` (the `tendsto_pairing` machinery), the star
-   eigenvalue, and entrywise-limit control of `λ_min`.
+8. **The star obstruction** — done (`deficit_not_psd`,
+   `cnd_not_psd` in `Theaetetus.StarObstruction`): the explicit
+   star-weight witness closed it without eigenvalue machinery.
+   What remains under this heading is the rate, which stays on
+   the frontier (Q4-PSD).
 
 Reconnaissance, falsify-first:
 
@@ -517,8 +527,9 @@ Reconnaissance, falsify-first:
 
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
-sweeps, and the first Q4 sweep are complete; the certification
-chain (target 5) is the open engineering. The verdicts to date:
+sweeps, the first Q4 sweep, and the star-obstruction theorem
+are complete; the certification chain (target 5) is the open
+engineering. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD

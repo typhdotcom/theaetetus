@@ -269,8 +269,8 @@ decelerate (`0.080 → 0.161`, consistent with the proven
 fixed finite set may still have a finite eventual-PSD bound.
 Define, analogously to `s_c(P)`,
 `s_PSD(P) := inf { s₀ : the deficit on P is PSD for all s ≥ s₀ }`.
-**The star obstruction** (analytic, not yet formalized —
-roadmap target 8): fix `s`, put `a = F(1)`, `b = F(2)`; the
+**The star obstruction** (now a theorem: `deficit_not_psd`,
+`cnd_not_psd`): fix `s`, put `a = F(1)`, `b = F(2)`; the
 deficit of `{2, q₁, …, qₙ}` with large satellites tends
 entrywise to the star matrix (diagonal `a`, spokes `b`), whose
 smallest eigenvalue is `a − √n·b` — negative once
