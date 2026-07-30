@@ -86,7 +86,12 @@ negative.
   so on any nontrivial tower
   the defect converges along the staircase `(n+1, n+2)` to
   `−log Z(1) < 0` and is eventually strictly negative
-  (`tendsto_defect_succ`, `eventually_defect_neg`). Instances:
+  (`tendsto_defect_succ`, `eventually_defect_neg`); and the
+  sampled complexity is recovered from coprime entries of a
+  single defect matrix,
+  `D(m, km+1) − D(k+1, k+2) → log Z(m²)`
+  (`tendsto_defect_row_sub_succ`; rank one:
+  `tendsto_defect_recovery`). Instances:
   rank-one theta (`defect_eq_thetaTower_defect`), every graph
   carrier — where the cross-ratio law identifies the
   residue-complexity defect with the tower's
@@ -253,23 +258,31 @@ pairwise versus higher-order interaction.
   infinite prime row of that matrix; a finite entry set. The
   recovery formula
 
-      F_s(m) = lim_{k→∞} D_s(m, km+1) − lim_{n→∞} D_s(n+1, n+2)
+      F_s(m) = lim_{k→∞} ( D_s(m, km+1) − D_s(k+1, k+2) )
 
   consumes coprime entries of one fixed-`s` matrix along
-  saturation and is known mathematics (roadmap: formalize at
-  `PartitionTower` level); joint saturation recovers `F_s(1)`,
+  saturation and is a theorem in exactly this single-limit form
+  (`tendsto_defect_row_sub_succ` at `PartitionTower` level,
+  `tendsto_defect_recovery` at rank one); joint saturation
+  recovers `F_s(1)`,
   and the row limit `lim ⟨p,q⟩_s = F_s(1) − F_s(p)` recovers
-  `F_s(p)`. Two regimes are thereby settled or reduced: one
-  fixed matrix recovers the discrete sample sequence
-  `(F_s(m))_{m≥1}`, and the all-scale field recovers `Z` at
-  every scale — its kernel is exactly theta-equivalence, no
-  longer a question. What remains open is sparse. Do one
-  matrix's discrete samples determine the locally finite energy
-  spectrum, successively extracting its least energy and
-  multiplicity? Does one infinite prime row already suffice? The
-  finite-entry regime is underspecified without a model class —
-  fix the rank and normalization before asking for minimal
-  determining sets. The reflection law acts on the field, not on
+  `F_s(p)`. Three regimes are thereby settled or reduced: the
+  all-scale field recovers `Z` at every scale — its kernel is
+  exactly theta-equivalence, no longer a question; one fixed
+  matrix recovers the sample sequence `(F_s(m))_{m≥1}`; and the
+  samples determine the full spectrum by peeling, which is
+  roadmap mathematics rather than an open problem (target 9):
+  the all-one sample sequence identifies the modal-only tower,
+  and on a nontrivial tower summability forces a locally finite
+  positive spectrum, so
+  `λ₁ = lim_m −log(Z(m²) − 1)/m²` and
+  `N₁ = lim_m e^{λ₁m²}(Z(m²) − 1)` extract the least energy and
+  its multiplicity, and the tower peels by subtraction and
+  recursion. The genuinely open regimes are the sparse ones:
+  does one infinite prime row already suffice? The finite-entry
+  regime is underspecified without a model class — fix the rank
+  and normalization before asking for minimal determining
+  sets. The reflection law acts on the field, not on
   a fixed-`s` matrix — reflected scales vary with the pair, so a
   single matrix is untouched by duality while the field
   determines its own reflection. Field rigidity and matrix
@@ -485,10 +498,12 @@ Formalization targets:
 3. **The Regev–Stephens-Davidowitz implication.** Sublattice
    correlation applied inside `gL` gives the non-strict
    `D_L(q,q′) ≤ 0` for every lattice — Q1's inequality half.
-4. **The Q2 recovery formula** at `PartitionTower` level, datum
-   stated: coprime entries of one fixed-scale defect matrix along
-   saturation,
-   `F_s(m) = lim_k D_s(m, km+1) − lim_n D_s(n+1, n+2)`.
+4. **The Q2 recovery formula** — done
+   (`tendsto_defect_row_sub_succ` at `PartitionTower` level,
+   instantiated at rank one as `tendsto_defect_recovery`), in the
+   datum-honest form: a single limit of differences of entries of
+   one fixed-scale defect matrix,
+   `D_s(m, km+1) − D_s(k+1, k+2) → F_s(m)`.
 5. **The certification chain** for higher-rank numerics: a lower
    bound `Q(x) ≥ μ‖x‖²` from the least Gram eigenvalue, shell
    counts, moment tails with the dimension-dependent polynomial
@@ -512,6 +527,16 @@ Formalization targets:
    star-weight witness closed it without eigenvalue machinery.
    What remains under this heading is the rate, which stays on
    the frontier (Q4-PSD).
+9. **Spectral peeling.** From the recovered samples `(Z(m²))`
+   (`tendsto_defect_row_sub_succ`): the all-one sample sequence
+   identifies the modal-only tower, and on a nontrivial tower
+   summability forces a locally finite positive spectrum, so the
+   least energy and its multiplicity are extracted
+   asymptotically,
+   `λ₁ = lim_m −log(Z(m²) − 1)/m²`,
+   `N₁ = lim_m e^{λ₁m²}(Z(m²) − 1)`, and the tower peels by
+   subtraction and recursion: one fixed defect matrix determines
+   the full spectrum with multiplicities.
 
 Reconnaissance, falsify-first:
 
@@ -548,9 +573,10 @@ Reconnaissance, falsify-first:
 
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
-sweeps, the first Q4 sweep, the star-obstruction theorem, and
-the manifest with its docstring sweep are complete; the
-certification chain (target 5) is the open engineering. The verdicts to date:
+sweeps, the first Q4 sweep, the star-obstruction theorem, the
+manifest with its docstring sweep, and the recovery formula are
+complete; the certification chain (target 5) and spectral
+peeling (target 9) are the open targets. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD

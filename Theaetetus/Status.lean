@@ -146,6 +146,23 @@ example {s : ℝ} (hs : 0 < s) (q q' : ℕ) :
     defect s q q' = (thetaTower s hs).defect q q' :=
   defect_eq_thetaTower_defect hs q q'
 
+example (T : PartitionTower) (m : ℕ) (hm : m ≠ 0) :
+    Tendsto (fun k : ℕ => T.defect m (k * m + 1)) atTop
+      (𝓝 (Real.log (T.Z ((m : ℝ) ^ 2)) - Real.log (T.Z 1))) :=
+  T.tendsto_defect_row m hm
+
+example (T : PartitionTower) (m : ℕ) (hm : m ≠ 0) :
+    Tendsto (fun k : ℕ => T.defect m (k * m + 1)
+        - T.defect (k + 1) (k + 2)) atTop
+      (𝓝 (Real.log (T.Z ((m : ℝ) ^ 2)))) :=
+  T.tendsto_defect_row_sub_succ m hm
+
+example {s : ℝ} (hs : 0 < s) (m : ℕ) (hm : m ≠ 0) :
+    Tendsto (fun k : ℕ => defect s m (k * m + 1)
+        - defect s (k + 1) (k + 2)) atTop
+      (𝓝 (Real.log (theta ((m : ℝ) ^ 2 * s)))) :=
+  tendsto_defect_recovery hs m hm
+
 example (G : IncidenceGraph) (q q' : ℕ) [NeZero q] [NeZero q'] :
     G.towerDefect q q' = G.toPartitionTower.defect q q' :=
   G.towerDefect_eq_partitionTower_defect q q'

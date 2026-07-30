@@ -12,9 +12,12 @@ those three fields alone follow the saturation of the scaled
 partition function at infinite inverse temperature
 (`tendsto_Z_atTop`), the strict excess of the base sum on a
 nontrivial tower (`one_lt_Z`), the staircase limit of the defect
-(`tendsto_defect_succ`), and **the classification**
-(`defect_forall_eq_zero_iff`): the defect vanishes identically iff
-the tower has only its modal sector.
+(`tendsto_defect_succ`), **the recovery formula**
+(`tendsto_defect_row_sub_succ`): the sampled complexity
+`log Z(m²)` is a single limit of differences of defect entries,
+`D(m, km+1) − D(k+1, k+2) → log Z(m²)` — and **the
+classification** (`defect_forall_eq_zero_iff`): the defect
+vanishes identically iff the tower has only its modal sector.
 
 The tower's defect is *defined* by the cross-ratio of scaled
 partition functions — the shape that the carrier's cross-ratio law
@@ -154,26 +157,28 @@ theorem defect_eq_zero_of_dvd {q q' : ℕ} (hdvd : q ∣ q') :
 private lemma coprime_succ_succ (n : ℕ) : Nat.Coprime (n + 1) (n + 2) :=
   Nat.coprime_self_add_right.mpr (Nat.coprime_one_right _)
 
+/-- **Saturation along any escaping resolution sequence**: the
+tail complexity `log Z(a(n)²)` vanishes in the limit. -/
+theorem tendsto_log_Z_sq {a : ℕ → ℕ} (ha : Tendsto a atTop atTop) :
+    Tendsto (fun n => Real.log (T.Z ((a n : ℝ) ^ 2))) atTop (𝓝 0) := by
+  have hcast : Tendsto (fun n => ((a n : ℝ))) atTop atTop :=
+    tendsto_natCast_atTop_atTop.comp ha
+  have hsq : Tendsto (fun n => ((a n : ℝ)) ^ 2) atTop atTop :=
+    (tendsto_pow_atTop two_ne_zero).comp hcast
+  have hZ : Tendsto (fun n => T.Z ((a n : ℝ) ^ 2)) atTop (𝓝 1) :=
+    T.tendsto_Z_atTop.comp hsq
+  have hlog := (Real.continuousAt_log one_ne_zero).tendsto.comp hZ
+  simpa only [Function.comp_def, Real.log_one] using hlog
+
 /-- **The staircase limit**: along the coprime pairs `(n+1, n+2)`
 the tower defect converges to minus the base complexity — three
 cross-ratio terms saturate, the shared trivial constraint remains. -/
 theorem tendsto_defect_succ :
     Tendsto (fun n : ℕ => T.defect (n + 1) (n + 2)) atTop
       (𝓝 (-Real.log (T.Z 1))) := by
-  have hzero : ∀ a : ℕ → ℕ, Tendsto a atTop atTop →
-      Tendsto (fun n => Real.log (T.Z ((a n : ℝ) ^ 2))) atTop (𝓝 0) := by
-    intro a ha
-    have hcast : Tendsto (fun n => ((a n : ℝ))) atTop atTop :=
-      tendsto_natCast_atTop_atTop.comp ha
-    have hsq : Tendsto (fun n => ((a n : ℝ)) ^ 2) atTop atTop :=
-      (tendsto_pow_atTop two_ne_zero).comp hcast
-    have hZ : Tendsto (fun n => T.Z ((a n : ℝ) ^ 2)) atTop (𝓝 1) :=
-      T.tendsto_Z_atTop.comp hsq
-    have hlog := (Real.continuousAt_log one_ne_zero).tendsto.comp hZ
-    simpa only [Function.comp_def, Real.log_one] using hlog
-  have hA := hzero (fun n => n + 1) (tendsto_add_atTop_nat 1)
-  have hB := hzero (fun n => n + 2) (tendsto_add_atTop_nat 2)
-  have hL := hzero (fun n => (n + 1) * (n + 2))
+  have hA := T.tendsto_log_Z_sq (tendsto_add_atTop_nat 1)
+  have hB := T.tendsto_log_Z_sq (tendsto_add_atTop_nat 2)
+  have hL := T.tendsto_log_Z_sq (a := fun n => (n + 1) * (n + 2))
     (tendsto_atTop_mono (fun n => by nlinarith) (tendsto_add_atTop_nat 1))
   have hlaw : ∀ n : ℕ, T.defect (n + 1) (n + 2)
       = (Real.log (T.Z (((n + 1 : ℕ) : ℝ) ^ 2))
@@ -189,6 +194,59 @@ theorem tendsto_defect_succ :
   have hlim := (hA.add hB).sub
     ((tendsto_const_nhds (x := Real.log (T.Z 1))).add hL)
   simpa using hlim
+
+/-- **The recovery row**: along the coprime escape `(m, km+1)` the
+tower defect converges to `log Z(m²) − log Z(1)` — the two growing
+entries saturate, leaving the sampled complexity against the
+trivial shared constraint. -/
+theorem tendsto_defect_row (m : ℕ) (hm : m ≠ 0) :
+    Tendsto (fun k : ℕ => T.defect m (k * m + 1)) atTop
+      (𝓝 (Real.log (T.Z ((m : ℝ) ^ 2)) - Real.log (T.Z 1))) := by
+  have hm1 : 1 ≤ m := Nat.one_le_iff_ne_zero.mpr hm
+  have hco : ∀ k : ℕ, Nat.Coprime m (k * m + 1) := by
+    intro k
+    have h := (Nat.coprime_add_mul_right_right m 1 k).mpr
+      (Nat.coprime_one_right m)
+    rwa [show 1 + k * m = k * m + 1 from Nat.add_comm 1 (k * m)] at h
+  have hkle : ∀ k : ℕ, k ≤ k * m + 1 := fun k =>
+    le_trans (le_trans (Nat.mul_one k).symm.le
+      (Nat.mul_le_mul_left k hm1)) (Nat.le_succ _)
+  have hB := T.tendsto_log_Z_sq (a := fun k => k * m + 1)
+    (tendsto_atTop_mono hkle tendsto_id)
+  have hL := T.tendsto_log_Z_sq (a := fun k => m * (k * m + 1))
+    (tendsto_atTop_mono (fun k => le_trans (hkle k)
+      (le_trans (Nat.one_mul (k * m + 1)).symm.le
+        (Nat.mul_le_mul_right (k * m + 1) hm1))) tendsto_id)
+  have hlaw : ∀ k : ℕ, T.defect m (k * m + 1)
+      = (Real.log (T.Z ((m : ℝ) ^ 2))
+          + Real.log (T.Z (((k * m + 1 : ℕ) : ℝ) ^ 2)))
+        - (Real.log (T.Z 1)
+          + Real.log (T.Z (((m * (k * m + 1) : ℕ) : ℝ) ^ 2))) := by
+    intro k
+    unfold defect
+    rw [show Nat.gcd m (k * m + 1) = 1 from hco k,
+      Nat.Coprime.lcm_eq_mul (hco k)]
+    norm_num
+  simp only [hlaw]
+  have hlim := ((tendsto_const_nhds
+      (x := Real.log (T.Z ((m : ℝ) ^ 2)))).add hB).sub
+    ((tendsto_const_nhds (x := Real.log (T.Z 1))).add hL)
+  simpa using hlim
+
+/-- **THE RECOVERY FORMULA**: the sampled complexity `log Z(m²)`
+is recovered from coprime defect entries alone — the escaping row
+against the staircase, differences of entries of a single defect
+matrix. -/
+theorem tendsto_defect_row_sub_succ (m : ℕ) (hm : m ≠ 0) :
+    Tendsto (fun k : ℕ => T.defect m (k * m + 1)
+        - T.defect (k + 1) (k + 2)) atTop
+      (𝓝 (Real.log (T.Z ((m : ℝ) ^ 2)))) := by
+  have h := (T.tendsto_defect_row m hm).sub T.tendsto_defect_succ
+  have hval : Real.log (T.Z ((m : ℝ) ^ 2))
+      = (Real.log (T.Z ((m : ℝ) ^ 2)) - Real.log (T.Z 1))
+        - -Real.log (T.Z 1) := by ring
+  rw [hval]
+  exact h
 
 /-- **The sign at the saturation end**: on a nontrivial tower the
 defect is eventually strictly negative along the staircase. -/
@@ -258,5 +316,18 @@ theorem defect_eq_thetaTower_defect {s : ℝ} (hs : 0 < s) (q q' : ℕ) :
     defect s q q' = (thetaTower s hs).defect q q' := by
   unfold defect PartitionTower.defect
   rw [thetaTower_Z, thetaTower_Z, thetaTower_Z, thetaTower_Z]
+
+/-- **The recovery formula at rank one**: `log θ(m²s)` from
+coprime defect entries of the fixed-scale matrix alone — the
+instantiated form of `tendsto_defect_row_sub_succ`. -/
+theorem tendsto_defect_recovery {s : ℝ} (hs : 0 < s) (m : ℕ)
+    (hm : m ≠ 0) :
+    Tendsto (fun k : ℕ => defect s m (k * m + 1)
+        - defect s (k + 1) (k + 2)) atTop
+      (𝓝 (Real.log (theta ((m : ℝ) ^ 2 * s)))) := by
+  have h := (thetaTower s hs).tendsto_defect_row_sub_succ m hm
+  rw [thetaTower_Z] at h
+  refine h.congr fun k => ?_
+  rw [← defect_eq_thetaTower_defect hs, ← defect_eq_thetaTower_defect hs]
 
 end Theaetetus
