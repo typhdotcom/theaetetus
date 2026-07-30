@@ -213,6 +213,101 @@ def witness(dps, outdir):
     print(f"  -> {out}")
 
 
+def next_prime(m):
+    """Smallest prime > m (trial division; values here are small)."""
+    k = m + 1
+    while True:
+        if k >= 2 and all(k % d for d in range(2, int(k**0.5) + 1)):
+            return k
+        k += 1
+
+
+def primes_ge(base, count):
+    out = []
+    k = base - 1
+    while len(out) < count:
+        k = next_prime(k)
+        out.append(k)
+    return out
+
+
+def min_eig_vec(mat):
+    """Smallest eigenvalue of a symmetric matrix and its eigenvector."""
+    E, V = mp.eigsy(mat)
+    i = min(range(mat.rows), key=lambda j: E[j])
+    return E[i], [V[j, i] for j in range(mat.rows)]
+
+
+def mean_component(vec):
+    """|<v, 1>| / (|v| sqrt(dim)): 1 = pure mean direction, 0 = zero-sum."""
+    tot = sum(vec)
+    norm = mp.sqrt(sum(v * v for v in vec))
+    return abs(tot) / (norm * mp.sqrt(len(vec)))
+
+
+def star_prediction(n, dps):
+    """Crossing of the exact star model: log theta(s) = sqrt(n) log theta(4s)."""
+    def f(_, s_, d):
+        return mp.sqrt(n) * bigF(2, s_, d) - bigF(1, s_, d)
+    return bisect_crossing(f, None, mpf("0.02"), mpf("3"), dps, iters=45)
+
+
+def star_rate(dps, outdir):
+    mp.dps = dps
+    rows = []
+    print(f"[q4 star rate] dps={dps}")
+    for n in (4, 8, 16, 32, 64, 96):
+        ps = [2] + primes_ge(100, n)
+        cross = bisect_crossing(psd_stat, ps, mpf("0.05"), mpf("3"), dps,
+                                iters=30)
+        pred = star_prediction(n, dps)
+        bench = mp.log(n) / 6
+        _, vec = min_eig_vec(deficit_matrix(ps, cross, dps))
+        mc = mean_component(vec)
+        mc_star = (n - mp.sqrt(n)) / mp.sqrt(mpf(2) * n * (n + 1))
+        rows.append({"n": n, "satellite_base": 100,
+                     "psd_crossing": s(cross, 10),
+                     "exact_star_prediction": s(pred, 10),
+                     "asymptotic_benchmark_log_n_over_6": s(bench, 10),
+                     "mean_component_of_min_eigvec": s(mc, 10),
+                     "mean_component_star_closed_form": s(mc_star, 10),
+                     "mean_component_residual": s(abs(mc - mc_star), 6)})
+        print(f"  n={n:3d}: crossing {s(cross, 8)}, star model {s(pred, 8)}, "
+              f"(1/6)log n {s(bench, 6)}, mean comp {s(mc, 6)}")
+    base_rows = []
+    for base in (3, 30, 300):
+        ps = [2] + primes_ge(base, 16)
+        cross = bisect_crossing(psd_stat, ps, mpf("0.05"), mpf("3"), dps,
+                                iters=30)
+        base_rows.append({"n": 16, "satellite_base": base,
+                          "psd_crossing": s(cross, 10)})
+        print(f"  n=16 base={base:4d}: crossing {s(cross, 8)}")
+    firstk_rows = []
+    for k in (3, 5, 7, 10, 15):
+        ps = PRIMES[:k]
+        cross = bisect_crossing(psd_stat, ps, mpf("0.02"), mpf("1.5"), dps,
+                                iters=30)
+        _, vec = min_eig_vec(deficit_matrix(ps, cross, dps))
+        firstk_rows.append({"k_first_primes": k,
+                            "psd_crossing": s(cross, 10),
+                            "mean_component_of_min_eigvec":
+                                s(mean_component(vec), 10)})
+        print(f"  first {k:2d} primes: crossing {s(cross, 8)}, "
+              f"mean comp {s(mean_component(vec), 6)}")
+    result = {
+        "precision_dps": dps,
+        "mpmath_version": mpmath.__version__,
+        "exact_star_model": "log theta(s) = sqrt(n) log theta(4s)",
+        "star_sets": rows,
+        "satellite_base_dependence": base_rows,
+        "first_k_mean_components": firstk_rows,
+    }
+    outdir.mkdir(parents=True, exist_ok=True)
+    out = outdir / "q4_star_rate.json"
+    out.write_text(json.dumps(result, indent=2) + "\n")
+    print(f"  -> {out}")
+
+
 def selftest(dps):
     mp.dps = dps
     tol = mpf(10) ** (-(dps - 12))
@@ -278,12 +373,14 @@ def selftest(dps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("command", choices=["selftest", "sweep", "witness", "all"])
+    ap.add_argument("command",
+                    choices=["selftest", "sweep", "witness", "star", "all"])
     ap.add_argument("--kprimes", type=int, default=None)
     ap.add_argument("--lo", default="0.02")
     ap.add_argument("--hi", default="1.5")
     ap.add_argument("--points", type=int, default=160)
     ap.add_argument("--dps", type=int, default=30)
+    ap.add_argument("--star-dps", type=int, default=15)
     args = ap.parse_args()
 
     outdir = pathlib.Path(__file__).parent / "data"
@@ -300,6 +397,8 @@ def main():
             sweep_set(k, args.lo, args.hi, args.points, args.dps, outdir)
     if args.command in ("witness", "all"):
         witness(args.dps, outdir)
+    if args.command in ("star", "all"):
+        star_rate(args.star_dps, outdir)
 
 
 if __name__ == "__main__":

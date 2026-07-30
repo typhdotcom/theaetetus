@@ -286,4 +286,65 @@ predicts the leading rate: at large `s`, `F(1) ~ 2e^{−s}` and
 `e^{6s}` and `s_PSD ~ (1/6)·log n` — consistent with the
 15-prime crossing already near `0.484` (`(1/6)·log 14 ≈ 0.44`).
 The open questions are the star-obstruction rate beyond leading
-order and intervality.
+order and intervality. A new instrument for both: by the exact
+identity (`quadFormOn_deficit_eq_neg`) the CND and deficit-PSD
+statistics agree on the zero-sum subspace, giving a dichotomy —
+a CND failure is itself a zero-sum deficit-PSD failure, while if
+CND holds and deficit-PSD fails, every negative direction has
+nonzero mean. Sweeps therefore record the mean component of the
+minimal deficit eigenvector, to see which mechanism binds.
+
+## Star-rate findings (dps 15, `q4_star_rate.json`)
+
+Purpose-built star sets `{2} ∪ (n primes ≥ 100)`, PSD crossings
+bisected, minimal deficit eigenvectors inspected:
+
+| `n` | PSD crossing | exact star model | `(1/6)·log n` | mean comp |
+|---|---|---|---|---|
+| 4 | `0.19636` | `0.19636` | `0.23105` | `0.31623` |
+| 8 | `0.37092` | `0.37092` | `0.34657` | `0.43096` |
+| 16 | `0.51752` | `0.51752` | `0.46210` | `0.51450` |
+| 32 | `0.64816` | `0.64816` | `0.57762` | `0.57322` |
+| 64 | `0.77025` | `0.77025` | `0.69315` | `0.61394` |
+| 96 | `0.83925` | `0.83925` | `0.76073` | `0.63166` |
+
+Findings, finite-sample:
+
+1. The two-parameter star model `log θ(s) = √n·log θ(4s)`
+   reproduces the measured crossing to all printed digits at
+   every sampled `n`, and satellite-base dependence dies by
+   base 30 (`0.51227` from base 3, `0.51752` from base 30 and
+   300 alike): above saturation the measured crossings agree
+   with the limiting star model to displayed precision — the
+   finite matrices themselves are not exactly star. On these
+   samples the crossing is described by the one-dimensional
+   scalar equation.
+2. The last sampled inter-point slope is
+   `Δs/Δ(log n) = 0.170 ≈ 1/6`; the sampled offsets above the
+   `(log n)/6` benchmark rise through `+0.078` at `n = 96` —
+   these `n` are pre-asymptotic. Expanding the scalar equation
+   gives `s = (log n)/6 + n^{−1/6}/3 + O(n^{−1/3})`: the
+   correction is algebraic, and not yet small at these `n`.
+3. The minimal eigenvector is the star eigenvector to printed
+   digits: its mean component matches the closed form
+   `(n − √n)/√(2n(n+1))` (`0.316228` measured vs theory at
+   `n = 4`; `0.631657` vs `0.6317` at `n = 96`), the squared
+   mean projection tending to `1/2` (the closed form and its
+   residual are recorded per row). Neither pure component is
+   negative on its own at the ideal crossing: the zero-sum part
+   has nonnegative energy under CND
+   (`quadFormOn_deficit_eq_neg`) and so does the pure mean
+   direction — the zero mode is created by their negative
+   cross-coupling.
+4. On first-`k` prime sets the failing direction *transitions*:
+   at `k = 3` the minimal eigenvector is nearly zero-sum (mean
+   component `0.053`, with the PSD crossing `0.0846` just above
+   the CND crossing `0.0803` — the CND mechanism leaking
+   through), by `k = 15` it is star-like (`0.49`). On these
+   samples the eigenvector geometry crosses over from
+   near-zero-sum to star-like as the set grows; whether that is
+   a sharp two-regime structure is not established.
+5. An identification: the long-cited binding inequality
+   `log θ(s) ≥ 2·log θ(4s)`, crossing near `s = 0.196`, is
+   exactly the `n = 4` star model (`√4 = 2`):
+   `star_prediction(4) = 0.19636`.

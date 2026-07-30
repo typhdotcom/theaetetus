@@ -298,7 +298,13 @@ pairwise versus higher-order interaction.
   chambers); the implication deficit-PSD ⟹ CND is proved
   (`deficit_psd_implies_cnd`), and the converse fails at every
   scale `s ≥ 1` (`cnd_not_psd`; first seen numerically at
-  `s = 0.12` on five primes). Open is the geometry
+  `s = 0.12` on five primes). The identity behind the
+  implication localizes the difference
+  (`quadFormOn_deficit_eq_neg`), as a dichotomy: a CND failure
+  is itself a zero-sum deficit-PSD failure, while if CND holds
+  and deficit-PSD fails, every negative direction has nonzero
+  mean — the star obstruction's witness is such a direction.
+  Open is the geometry
   of the middle, one clause per matrix. **Q4-CND**: for a finite prime set `P`, is the
   valid-scale set `{ s : pairing CND on P }` an upper interval?
   The controlling statistic is the largest eigenvalue of the
@@ -312,7 +318,8 @@ pairwise versus higher-order interaction.
   crossings at `0.080 → 0.108 → 0.127 → 0.145 → 0.161` on the
   first 3–15 primes, decelerating well below the bound; the
   binding inequality `log θ(s) ≥ 2·log θ(4s)` crosses near
-  `s = 0.196`, and the first hundred primes are CND at
+  `s = 0.196` — now identified as the `n = 4` star model,
+  `√4 = 2` — and the first hundred primes are CND at
   `s = (log 2)/3`. The small-`s`
   theorem is the normalized limit `⟨p,q⟩ = 2e^{−σ}(1 + o(1))`
   with `σ = π²/(s·p²q²)` (`tendsto_exp_mul_pairing`); the
@@ -331,8 +338,17 @@ pairwise versus higher-order interaction.
   `pairing_cnd_large` the converse CND ⇒ deficit-PSD fails at
   every scale `s ≥ 1` (`cnd_not_psd`), not merely at the
   `s = 0.12` witness.
-  Open here: the star-obstruction rate — the leading asymptotic
-  predicts `s_PSD ~ (1/6)·log n` — and intervality. The first falsification
+  The rate is now measured (`recon/README.md`,
+  `q4_star_rate.json`): star-set crossings agree with the
+  limiting model `log θ(s) = √n·log θ(4s)` to displayed
+  precision; the last sampled slope is `0.170 ≈ 1/6`, with the
+  sampled offsets pre-asymptotic — the expansion predicts
+  `s = (log n)/6 + n^{−1/6}/3 + O(n^{−1/3})`, an algebraic
+  correction not yet small at these `n`; and the minimal
+  eigenvector's geometry crosses over from near-zero-sum on
+  small sets to star-like (squared mean projection `→ 1/2`) on
+  large ones. Open here: intervality, and promoting the model
+  agreement to explicit bounds. The first falsification
   hunt found one detected sign change per statistic on each
   sampled grid, brackets bisected (`recon/README.md`) —
   consistent with intervality, still unproven. The transform-realization question that

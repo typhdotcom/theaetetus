@@ -1,0 +1,111 @@
+{
+  "precision_dps": 15,
+  "mpmath_version": "1.4.1",
+  "exact_star_model": "log theta(s) = sqrt(n) log theta(4s)",
+  "star_sets": [
+    {
+      "n": 4,
+      "satellite_base": 100,
+      "psd_crossing": "0.1963550208",
+      "exact_star_prediction": "0.1963550207",
+      "asymptotic_benchmark_log_n_over_6": "0.2310490602",
+      "mean_component_of_min_eigvec": "0.316227766",
+      "mean_component_star_closed_form": "0.316227766",
+      "mean_component_residual": "1.11022e-16"
+    },
+    {
+      "n": 8,
+      "satellite_base": 100,
+      "psd_crossing": "0.3709178983",
+      "exact_star_prediction": "0.3709178983",
+      "asymptotic_benchmark_log_n_over_6": "0.3465735903",
+      "mean_component_of_min_eigvec": "0.4309644063",
+      "mean_component_star_closed_form": "0.4309644063",
+      "mean_component_residual": "0.0"
+    },
+    {
+      "n": 16,
+      "satellite_base": 100,
+      "psd_crossing": "0.5175164183",
+      "exact_star_prediction": "0.5175164188",
+      "asymptotic_benchmark_log_n_over_6": "0.4620981204",
+      "mean_component_of_min_eigvec": "0.5144957554",
+      "mean_component_star_closed_form": "0.5144957554",
+      "mean_component_residual": "1.11022e-16"
+    },
+    {
+      "n": 32,
+      "satellite_base": 100,
+      "psd_crossing": "0.6481591248",
+      "exact_star_prediction": "0.6481591248",
+      "asymptotic_benchmark_log_n_over_6": "0.5776226505",
+      "mean_component_of_min_eigvec": "0.5732191328",
+      "mean_component_star_closed_form": "0.5732191328",
+      "mean_component_residual": "2.22045e-16"
+    },
+    {
+      "n": 64,
+      "satellite_base": 100,
+      "psd_crossing": "0.7702458613",
+      "exact_star_prediction": "0.7702458626",
+      "asymptotic_benchmark_log_n_over_6": "0.6931471806",
+      "mean_component_of_min_eigvec": "0.6139406135",
+      "mean_component_star_closed_form": "0.6139406135",
+      "mean_component_residual": "7.77156e-16"
+    },
+    {
+      "n": 96,
+      "satellite_base": 100,
+      "psd_crossing": "0.8392511031",
+      "exact_star_prediction": "0.8392511021",
+      "asymptotic_benchmark_log_n_over_6": "0.7607246986",
+      "mean_component_of_min_eigvec": "0.6316566423",
+      "mean_component_star_closed_form": "0.6316566423",
+      "mean_component_residual": "1.88738e-15"
+    }
+  ],
+  "satellite_base_dependence": [
+    {
+      "n": 16,
+      "satellite_base": 3,
+      "psd_crossing": "0.5122687217"
+    },
+    {
+      "n": 16,
+      "satellite_base": 30,
+      "psd_crossing": "0.5175164183"
+    },
+    {
+      "n": 16,
+      "satellite_base": 300,
+      "psd_crossing": "0.5175164183"
+    }
+  ],
+  "first_k_mean_components": [
+    {
+      "k_first_primes": 3,
+      "psd_crossing": "0.08459317957",
+      "mean_component_of_min_eigvec": "0.05293598257"
+    },
+    {
+      "k_first_primes": 5,
+      "psd_crossing": "0.1692027651",
+      "mean_component_of_min_eigvec": "0.2299619169"
+    },
+    {
+      "k_first_primes": 7,
+      "psd_crossing": "0.2796888152",
+      "mean_component_of_min_eigvec": "0.3474926155"
+    },
+    {
+      "k_first_primes": 10,
+      "psd_crossing": "0.3849799013",
+      "mean_component_of_min_eigvec": "0.4275133311"
+    },
+    {
+      "k_first_primes": 15,
+      "psd_crossing": "0.484452013",
+      "mean_component_of_min_eigvec": "0.4908675303"
+    }
+  ]
+}
