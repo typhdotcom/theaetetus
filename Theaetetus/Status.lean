@@ -218,6 +218,59 @@ example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal)
     T.leastEnergy < T.residual.leastEnergy :=
   T.leastEnergy_lt_residual hnt hres
 
+example (T : PartitionTower) (n : ℕ) {β : ℝ} (hβ : 1 ≤ β) :
+    (T.peel n).Z β
+      = T.Z β - ∑ i ∈ Finset.range n,
+          ((T.peel i).leastEnergyMult : ℝ)
+            * Real.exp (-(β * (T.peel i).leastEnergy)) :=
+  T.peel_Z n hβ
+
+example (T : PartitionTower) (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun β : ℝ =>
+        -Real.log ((T.Z β - ∑ i ∈ Finset.range n,
+            ((T.peel i).leastEnergyMult : ℝ)
+              * Real.exp (-(β * (T.peel i).leastEnergy))) - 1) / β)
+      atTop (𝓝 (T.peel n).leastEnergy) :=
+  T.tendsto_peel_leastEnergy n hnt
+
+example (T : PartitionTower) (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun β : ℝ =>
+        Real.exp (β * (T.peel n).leastEnergy)
+          * ((T.Z β - ∑ i ∈ Finset.range n,
+              ((T.peel i).leastEnergyMult : ℝ)
+                * Real.exp (-(β * (T.peel i).leastEnergy))) - 1))
+      atTop (𝓝 ((T.peel n).leastEnergyMult : ℝ)) :=
+  T.tendsto_peel_leastEnergyMult n hnt
+
+example (T : PartitionTower) (n : ℕ)
+    (hn : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal)
+    (hn1 : ∃ k : (T.peel (n + 1)).Λ, k ≠ (T.peel (n + 1)).modal) :
+    (T.peel n).leastEnergy < (T.peel (n + 1)).leastEnergy :=
+  T.peel_leastEnergy_strictMono n hn hn1
+
+example (T : PartitionTower) (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun m : ℕ =>
+        -Real.log ((T.Z ((m : ℝ) ^ 2) - ∑ i ∈ Finset.range n,
+            ((T.peel i).leastEnergyMult : ℝ)
+              * Real.exp (-((m : ℝ) ^ 2 * (T.peel i).leastEnergy)))
+          - 1) / (m : ℝ) ^ 2)
+      atTop (𝓝 (T.peel n).leastEnergy) :=
+  T.tendsto_peel_leastEnergy_sample n hnt
+
+example (T : PartitionTower) (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun m : ℕ =>
+        Real.exp ((m : ℝ) ^ 2 * (T.peel n).leastEnergy)
+          * ((T.Z ((m : ℝ) ^ 2) - ∑ i ∈ Finset.range n,
+              ((T.peel i).leastEnergyMult : ℝ)
+                * Real.exp (-((m : ℝ) ^ 2 * (T.peel i).leastEnergy)))
+            - 1))
+      atTop (𝓝 ((T.peel n).leastEnergyMult : ℝ)) :=
+  T.tendsto_peel_leastEnergyMult_sample n hnt
+
 example (G : IncidenceGraph) (q q' : ℕ) [NeZero q] [NeZero q'] :
     G.towerDefect q q' = G.toPartitionTower.defect q q' :=
   G.towerDefect_eq_partitionTower_defect q q'

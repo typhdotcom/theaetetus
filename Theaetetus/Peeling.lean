@@ -18,8 +18,12 @@ the data the recovery formula produces
 determines `λ₁` and `N₁`. The extracted layer subtracts: the
 residual subtower (`residual`, `residual_Z`) deletes the `λ₁`
 level with strictly larger least energy when nontrivial
-(`leastEnergy_lt_residual`); only the iterated enumeration
-capstone remains. -/
+(`leastEnergy_lt_residual`), and the peel sequence
+`peel n := residual^[n]` telescopes (`peel_Z`) with every layer
+a limit of the original data alone. Finite-stage peeling is
+complete; **exhaustion remains** — that the residual tail
+vanishes, `Z_{peel n}(β) → 1`, so that no spectral layer escapes
+the enumeration. -/
 
 namespace Theaetetus
 
@@ -330,6 +334,94 @@ theorem leastEnergy_lt_residual (hnt : ∃ k : T.Λ, k ≠ T.modal)
   have h3 : T.leastEnergy ≤ T.E k.1 := T.leastEnergy_le hnt h1
   rw [← hEk]
   exact lt_of_le_of_ne h3 (Ne.symm h2)
+
+/-! ## The peel sequence: the capstone -/
+
+/-- **The peel sequence**: iterate the residual. `peel 0 = T`, and
+`peel (n+1)` deletes the `(n+1)`-st spectral layer. -/
+noncomputable def peel (n : ℕ) : PartitionTower :=
+  PartitionTower.residual^[n] T
+
+@[simp] theorem peel_zero : T.peel 0 = T := rfl
+
+theorem peel_succ (n : ℕ) : T.peel (n + 1) = (T.peel n).residual :=
+  Function.iterate_succ_apply' _ _ _
+
+/-- **The telescope**: the `n`-th peel's partition function is the
+original minus the `n` extracted layers — unconditional, since a
+trivial iterate contributes an empty level and a vanishing term. -/
+theorem peel_Z (n : ℕ) {β : ℝ} (hβ : 1 ≤ β) :
+    (T.peel n).Z β
+      = T.Z β - ∑ i ∈ Finset.range n,
+          ((T.peel i).leastEnergyMult : ℝ)
+            * Real.exp (-(β * (T.peel i).leastEnergy)) := by
+  induction n with
+  | zero => simp [peel]
+  | succ m ih =>
+    rw [T.peel_succ m, (T.peel m).residual_Z hβ, ih,
+      Finset.sum_range_succ]
+    ring
+
+/-- **The `n`-th least energy from the original data alone**: while
+the `n`-th peel is nontrivial, its least energy is a limit of an
+expression in `T.Z` and the previously extracted layers. -/
+theorem tendsto_peel_leastEnergy (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun β : ℝ =>
+        -Real.log ((T.Z β - ∑ i ∈ Finset.range n,
+            ((T.peel i).leastEnergyMult : ℝ)
+              * Real.exp (-(β * (T.peel i).leastEnergy))) - 1) / β)
+      atTop (𝓝 (T.peel n).leastEnergy) := by
+  refine ((T.peel n).tendsto_neg_log_Z_sub_one_div hnt).congr' ?_
+  filter_upwards [eventually_ge_atTop (1 : ℝ)] with β hβ
+  rw [T.peel_Z n hβ]
+
+/-- **The `n`-th multiplicity from the original data alone.** -/
+theorem tendsto_peel_leastEnergyMult (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun β : ℝ =>
+        Real.exp (β * (T.peel n).leastEnergy)
+          * ((T.Z β - ∑ i ∈ Finset.range n,
+              ((T.peel i).leastEnergyMult : ℝ)
+                * Real.exp (-(β * (T.peel i).leastEnergy))) - 1))
+      atTop (𝓝 ((T.peel n).leastEnergyMult : ℝ)) := by
+  refine ((T.peel n).tendsto_exp_mul_Z_sub_one hnt).congr' ?_
+  filter_upwards [eventually_ge_atTop (1 : ℝ)] with β hβ
+  rw [T.peel_Z n hβ]
+
+/-- The `n`-th least energy along the recovery samples `β = m²` —
+the fixed-matrix datum, literally. -/
+theorem tendsto_peel_leastEnergy_sample (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun m : ℕ =>
+        -Real.log ((T.Z ((m : ℝ) ^ 2) - ∑ i ∈ Finset.range n,
+            ((T.peel i).leastEnergyMult : ℝ)
+              * Real.exp (-((m : ℝ) ^ 2 * (T.peel i).leastEnergy)))
+          - 1) / (m : ℝ) ^ 2)
+      atTop (𝓝 (T.peel n).leastEnergy) :=
+  (T.tendsto_peel_leastEnergy n hnt).comp
+    ((tendsto_pow_atTop two_ne_zero).comp tendsto_natCast_atTop_atTop)
+
+/-- The `n`-th multiplicity along the recovery samples `β = m²`. -/
+theorem tendsto_peel_leastEnergyMult_sample (n : ℕ)
+    (hnt : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal) :
+    Tendsto (fun m : ℕ =>
+        Real.exp ((m : ℝ) ^ 2 * (T.peel n).leastEnergy)
+          * ((T.Z ((m : ℝ) ^ 2) - ∑ i ∈ Finset.range n,
+              ((T.peel i).leastEnergyMult : ℝ)
+                * Real.exp (-((m : ℝ) ^ 2 * (T.peel i).leastEnergy)))
+            - 1))
+      atTop (𝓝 ((T.peel n).leastEnergyMult : ℝ)) :=
+  (T.tendsto_peel_leastEnergyMult n hnt).comp
+    ((tendsto_pow_atTop two_ne_zero).comp tendsto_natCast_atTop_atTop)
+
+/-- **Strict spectral progress along the peel sequence.** -/
+theorem peel_leastEnergy_strictMono (n : ℕ)
+    (hn : ∃ k : (T.peel n).Λ, k ≠ (T.peel n).modal)
+    (hn1 : ∃ k : (T.peel (n + 1)).Λ, k ≠ (T.peel (n + 1)).modal) :
+    (T.peel n).leastEnergy < (T.peel (n + 1)).leastEnergy := by
+  rw [T.peel_succ n] at hn1 ⊢
+  exact (T.peel n).leastEnergy_lt_residual hn hn1
 
 end PartitionTower
 

@@ -115,8 +115,18 @@ negative.
   (`residual_Z`); when the residual is itself nontrivial its
   least energy is strictly larger (`leastEnergy_lt_residual`) —
   each peel moves up the spectrum — and when it is trivial,
-  peeling terminates. The extraction theorems apply verbatim to
-  the residual.
+  peeling terminates. Finite-stage peeling iterates: the peel
+  sequence `peel n := residual^[n]` telescopes,
+  `Z_{peel n}(β) = Z(β) − Σ_{i<n} Nᵢ·e^{−β·λᵢ}` for `β ≥ 1`
+  (`peel_Z`), and while the `n`-th peel is nontrivial its layer
+  `(λₙ, Nₙ)` is a limit of expressions in the original `Z` and
+  the previously extracted layers alone — along the recovery
+  samples `β = m²` too, the fixed-matrix datum literally
+  (`tendsto_peel_leastEnergy`, `tendsto_peel_leastEnergyMult`,
+  their `_sample` forms, strictly increasing by
+  `peel_leastEnergy_strictMono`). Exhaustion — that no spectral
+  layer escapes the enumeration — is the open remainder
+  (roadmap, target 9).
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
@@ -290,9 +300,8 @@ pairwise versus higher-order interaction.
   exactly theta-equivalence, no longer a question; one fixed
   matrix recovers the sample sequence `(F_s(m))_{m≥1}`; and the
   samples determine the full spectrum by peeling, which is
-  roadmap mathematics rather than an open problem (target 9,
-  whose extraction layer is now proved — established, spectral
-  peeling):
+  proved through every finite stage (target 9; exhaustion
+  remains — established, spectral peeling):
   the all-one sample sequence identifies the modal-only tower,
   and on a nontrivial tower summability forces a locally finite
   positive spectrum, so
@@ -548,24 +557,18 @@ Formalization targets:
    star-weight witness closed it without eigenvalue machinery.
    What remains under this heading is the rate, which stays on
    the frontier (Q4-PSD).
-9. **Spectral peeling** — the extraction layer is done
-   (`Theaetetus.Peeling`): the all-one sample sequence
-   identifies the modal-only tower
-   (`defect_forall_eq_zero_iff`), and on a nontrivial tower
-   local finiteness (`finite_energy_le`), attainment
-   (`leastEnergy_isLeast`), and both limits
-   (`tendsto_neg_log_Z_sub_one_div`,
-   `tendsto_exp_mul_Z_sub_one`, with `β = m²` sampled forms) are
-   theorems, as are the residual subtower (`residual`: the `λ₁`
-   level deleted, the modal sector kept, all fields inherited),
-   its bridge `Z_res(β) = Z(β) − N₁·e^{−β·λ₁}` for `β ≥ 1`
-   (`residual_Z`), and strict spectral progress on a nontrivial
-   residual (`leastEnergy_lt_residual`; a trivial residual is
-   the natural stopping condition). Remaining: the iterated
-   capstone — `residual` is an endomorphism of `PartitionTower`,
-   so the peel sequence is `Function.iterate`, extracting layers
-   while the iterate is nontrivial and enumerating the full
-   spectrum with multiplicities from one fixed defect matrix.
+9. **Spectral peeling** — finite-stage complete
+   (`Theaetetus.Peeling`): local finiteness, attainment, both
+   extraction limits with sampled forms, the residual subtower
+   with its bridge, strict progress, the telescoped peel
+   sequence, and every layer as a limit of the original data
+   alone. Remaining: **exhaustion** — the residual tail
+   vanishes,
+   `HasSum (fun n => Nₙ·e^{−β·λₙ}) (Z(β) − 1)` for `β ≥ 1`,
+   equivalently `Tendsto (fun n => Z_{peel n}(β)) atTop (𝓝 1)` —
+   the theorem excluding an unenumerated tail, after which one
+   fixed defect matrix determines the full spectrum with
+   multiplicities.
 
 Reconnaissance, falsify-first:
 
@@ -604,8 +607,9 @@ The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, and the recovery formula are
-complete; the certification chain (target 5) and the peeling
-iteration (the capstone of target 9) are the open targets. The verdicts to date:
+and finite-stage peeling are complete; the certification chain
+(target 5) and peeling exhaustion (the remainder of target 9)
+are the open targets. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
