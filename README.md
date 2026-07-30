@@ -98,6 +98,17 @@ negative.
   (`towerDefect_eq_partitionTower_defect`,
   `towerDefect_forall_eq_zero_iff`) — and **every positive-definite
   lattice action** (`QuadLatticeAction.toPartitionTower`).
+- **Spectral peeling, the first layer.** On a nontrivial tower
+  summability forces a locally finite spectrum
+  (`finite_energy_le`), so the least positive energy is attained
+  (`leastEnergy_isLeast`), strictly positive (`leastEnergy_pos`),
+  with finite positive multiplicity (`leastEnergyMult_pos`), and
+  both are asymptotic observables of the partition function:
+  `−log(Z(β) − 1)/β → λ₁` and `e^{β·λ₁}·(Z(β) − 1) → N₁`
+  (`tendsto_neg_log_Z_sub_one_div`, `tendsto_exp_mul_Z_sub_one`;
+  sampled along `β = m²` as `tendsto_leastEnergy_sample`,
+  `tendsto_leastEnergyMult_sample`) — consuming exactly the data
+  the recovery formula produces.
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
@@ -271,7 +282,9 @@ pairwise versus higher-order interaction.
   exactly theta-equivalence, no longer a question; one fixed
   matrix recovers the sample sequence `(F_s(m))_{m≥1}`; and the
   samples determine the full spectrum by peeling, which is
-  roadmap mathematics rather than an open problem (target 9):
+  roadmap mathematics rather than an open problem (target 9,
+  whose extraction layer is now proved — established, spectral
+  peeling):
   the all-one sample sequence identifies the modal-only tower,
   and on a nontrivial tower summability forces a locally finite
   positive spectrum, so
@@ -527,16 +540,20 @@ Formalization targets:
    star-weight witness closed it without eigenvalue machinery.
    What remains under this heading is the rate, which stays on
    the frontier (Q4-PSD).
-9. **Spectral peeling.** From the recovered samples `(Z(m²))`
-   (`tendsto_defect_row_sub_succ`): the all-one sample sequence
-   identifies the modal-only tower, and on a nontrivial tower
-   summability forces a locally finite positive spectrum, so the
-   least energy and its multiplicity are extracted
-   asymptotically,
-   `λ₁ = lim_m −log(Z(m²) − 1)/m²`,
-   `N₁ = lim_m e^{λ₁m²}(Z(m²) − 1)`, and the tower peels by
-   subtraction and recursion: one fixed defect matrix determines
-   the full spectrum with multiplicities.
+9. **Spectral peeling** — the extraction layer is done
+   (`Theaetetus.Peeling`): the all-one sample sequence
+   identifies the modal-only tower
+   (`defect_forall_eq_zero_iff`), and on a nontrivial tower
+   local finiteness (`finite_energy_le`), attainment
+   (`leastEnergy_isLeast`), and both limits
+   (`tendsto_neg_log_Z_sub_one_div`,
+   `tendsto_exp_mul_Z_sub_one`, with `β = m²` sampled forms) are
+   theorems. Remaining: the residual subtower — restrict the
+   carrier by deleting the `λ₁` level while keeping the modal
+   sector, so summability and positivity are inherited and
+   `Z_res(β) = Z(β) − N₁·e^{−β·λ₁}` — and recursion: one fixed
+   defect matrix determines the full spectrum with
+   multiplicities.
 
 Reconnaissance, falsify-first:
 
@@ -575,8 +592,8 @@ The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, and the recovery formula are
-complete; the certification chain (target 5) and spectral
-peeling (target 9) are the open targets. The verdicts to date:
+complete; the certification chain (target 5) and the peeling
+recursion (the remainder of target 9) are the open targets. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD

@@ -91,6 +91,9 @@ import Theaetetus.CrossRatio
 -- The abstract partition tower: the interface behind the classification
 import Theaetetus.PartitionTower
 
+-- Spectral peeling: the least energy and its multiplicity from the samples
+import Theaetetus.Peeling
+
 -- The zero-defect classification: lattices, carriers, and C₃'s kernel
 import Theaetetus.Classification
 

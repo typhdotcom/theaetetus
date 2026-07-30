@@ -3,6 +3,7 @@ import Theaetetus.Midpoint
 import Theaetetus.Factorization
 import Theaetetus.RankFunction
 import Theaetetus.Classification
+import Theaetetus.Peeling
 import Theaetetus.LargeScale
 import Theaetetus.SmallScale
 import Theaetetus.StarObstruction
@@ -162,6 +163,45 @@ example {s : ℝ} (hs : 0 < s) (m : ℕ) (hm : m ≠ 0) :
         - defect s (k + 1) (k + 2)) atTop
       (𝓝 (Real.log (theta ((m : ℝ) ^ 2 * s)))) :=
   tendsto_defect_recovery hs m hm
+
+example (T : PartitionTower) (c : ℝ) :
+    {k : T.Λ | k ≠ T.modal ∧ T.E k ≤ c}.Finite :=
+  T.finite_energy_le c
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    IsLeast (T.E '' {k | k ≠ T.modal}) T.leastEnergy :=
+  T.leastEnergy_isLeast hnt
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    0 < T.leastEnergy :=
+  T.leastEnergy_pos hnt
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    0 < T.leastEnergyMult :=
+  T.leastEnergyMult_pos hnt
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    Tendsto (fun β : ℝ => Real.exp (β * T.leastEnergy) * (T.Z β - 1))
+      atTop (𝓝 (T.leastEnergyMult : ℝ)) :=
+  T.tendsto_exp_mul_Z_sub_one hnt
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    Tendsto (fun β : ℝ => -Real.log (T.Z β - 1) / β)
+      atTop (𝓝 T.leastEnergy) :=
+  T.tendsto_neg_log_Z_sub_one_div hnt
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    Tendsto (fun m : ℕ =>
+        -Real.log (T.Z ((m : ℝ) ^ 2) - 1) / (m : ℝ) ^ 2)
+      atTop (𝓝 T.leastEnergy) :=
+  T.tendsto_leastEnergy_sample hnt
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) :
+    Tendsto (fun m : ℕ =>
+        Real.exp ((m : ℝ) ^ 2 * T.leastEnergy)
+          * (T.Z ((m : ℝ) ^ 2) - 1))
+      atTop (𝓝 (T.leastEnergyMult : ℝ)) :=
+  T.tendsto_leastEnergyMult_sample hnt
 
 example (G : IncidenceGraph) (q q' : ℕ) [NeZero q] [NeZero q'] :
     G.towerDefect q q' = G.toPartitionTower.defect q q' :=
