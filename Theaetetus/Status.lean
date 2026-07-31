@@ -11,6 +11,7 @@ import Theaetetus.DiagonalCurvature
 import Theaetetus.Certification
 import Theaetetus.Tails
 import Theaetetus.Shells
+import Theaetetus.GramDuality
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -26,7 +27,8 @@ coupling reading; the sign; the classification; the pairing; the
 reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
-coercivity; certified tails; certified shell counts. -/
+coercivity; certified tails; certified shell counts; higher-rank
+defect duality. -/
 
 namespace Theaetetus
 
@@ -711,5 +713,39 @@ example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
     (hRN : R < μ * ((N : ℝ) + 1) ^ 2) :
     {k : Fin r → ℤ | A.energy k = R}.ncard ≤ (2 * N + 1) ^ r :=
   A.energy_shell_ncard_le hμ0 hμ hRN
+
+/-! ## Higher-rank defect duality -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) :
+    gramTheta M⁻¹ (Real.pi ^ 2 / α)
+      = (α / Real.pi) ^ ((d : ℝ) / 2) * M.det ^ ((1 : ℝ) / 2)
+          * gramTheta M α :=
+  gramTheta_dual hM hα
+
+example (α : ℝ) :
+    gramTheta (!![1] : Matrix (Fin 1) (Fin 1) ℝ) α = theta α :=
+  gramTheta_one_eq_theta α
+
+example (s : ℝ) (q q' : ℕ) :
+    gramDefect (!![1] : Matrix (Fin 1) (Fin 1) ℝ) s q q'
+      = defect s q q' :=
+  gramDefect_one_eq_defect s q q'
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    gramDefect M s q q'
+      = gramDefect M⁻¹
+          (Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s))
+          (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
+  gramDefect_dual hM hs hq hq'
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    (hco : Nat.Coprime p q) :
+    gramDefect M s p q
+      = gramDefect M⁻¹
+          (Real.pi ^ 2 / (((p : ℝ) * (q : ℝ)) ^ 2 * s)) p q :=
+  gramDefect_dual_coprime hM hs hp hq hco
 
 end Theaetetus

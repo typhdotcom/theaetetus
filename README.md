@@ -522,11 +522,28 @@ say.
 
 Formalization targets:
 
-1. **Higher-rank defect duality.** Multivariate Poisson summation
-   gives `D_{L,s}(q,q′) = D_{L*,π²/(s·lcm²)}(q/g, q′/g)` — the
-   weight-zero cancellation of The symmetry with the dual lattice
-   appearing. `theta_rect_dual` is the rank-one case and the
-   template.
+1. **Higher-rank defect duality** — the Gram-chart engine is
+   complete (`Theaetetus.GramDuality`): the scale-indexed
+   Boltzmann sum of a positive-definite Gram form reflects
+   through the dual Gram,
+   `gramTheta M⁻¹(π²/α) = (α/π)^(d/2)·det(M)^(1/2)·gramTheta M α`
+   (`gramTheta_dual`, from the Gaussian Poisson summation of
+   `Theaetetus.Periodization`), and the defect of the Gram form
+   on the divisibility lattice (`gramDefect`) satisfies
+   `D_{M,s}(q,q′) = D_{M⁻¹,π²/(s·lcm²)}(q/g, q′/g)`
+   (`gramDefect_dual`) — the weight-zero cancellation: the
+   determinant weights cancel with multiplicity zero, the scale
+   weights cancel by `gcd·lcm = q·q′`, and the dual Gram appears
+   with no modular weight. At coprime resolutions the carrier
+   pair is fixed and only the coupling reflects
+   (`gramDefect_dual_coprime`). At rank one with unit Gram the
+   objects restrict to the scalar theory
+   (`gramTheta_one_eq_theta`, `gramDefect_one_eq_defect`), so
+   `defect_dual` is the rank-one case, with `theta_rect_dual` the
+   multiplicative engine beneath it. What remains under this
+   heading is the intrinsic lift: basis invariance of the Gram
+   defect, and the intrinsic dual lattice whose chart is `M⁻¹`,
+   connected to the lattice actions and the tower defect.
 2. **Strict Q5 for positive diagonal forms** — done
    (`diagTheta_rect_strict`, `diagTheta_sq_lt`, lifted from
    `theta_rect_strict` by the `Theaetetus.Diagonal` pattern).
@@ -656,10 +673,11 @@ The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, the recovery formula, spectral
-peeling, and the certification chain are complete. Still open:
-higher-rank duality (target 1), the Regev–Stephens-Davidowitz
-implication (target 3), and Q6's identity layer (target 7). The
-verdicts to date:
+peeling, and the certification chain are complete; the Gram-chart
+half of higher-rank duality is in place. Still open: the
+intrinsic lift of higher-rank duality (target 1), the
+Regev–Stephens-Davidowitz implication (target 3), and Q6's
+identity layer (target 7). The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
