@@ -59,6 +59,43 @@ theorem fieldDefect_self (Z : ℝ → ℝ) (s : ℝ) (q : ℕ) :
     fieldDefect Z s q q = 0 :=
   fieldDefect_eq_zero_of_dvd Z s dvd_rfl
 
+/-- The field defect only reads its field at the four positive
+arguments: agreement on positive couplings suffices. -/
+theorem fieldDefect_congr {Z W : ℝ → ℝ}
+    (h : ∀ β : ℝ, 0 < β → Z β = W β) {s : ℝ} (hs : 0 < s)
+    {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect Z s q q' = fieldDefect W s q q' := by
+  have hqR : (0 : ℝ) < (q : ℝ) := by exact_mod_cast hq
+  have hq'R : (0 : ℝ) < (q' : ℝ) := by exact_mod_cast hq'
+  have hgR : (0 : ℝ) < (Nat.gcd q q' : ℝ) := by
+    exact_mod_cast Nat.gcd_pos_of_pos_left _ hq
+  have hlR : (0 : ℝ) < (Nat.lcm q q' : ℝ) := by
+    exact_mod_cast Nat.pos_of_ne_zero (Nat.lcm_ne_zero hq.ne' hq'.ne')
+  unfold fieldDefect
+  rw [h _ (by positivity), h _ (by positivity), h _ (by positivity),
+    h _ (by positivity)]
+
+/-- **Description costs add**: the field defect of a pointwise
+product of positive fields is the sum of the field defects. -/
+theorem fieldDefect_mul {Z Z' : ℝ → ℝ}
+    (hZ : ∀ β : ℝ, 0 < β → 0 < Z β)
+    (hZ' : ∀ β : ℝ, 0 < β → 0 < Z' β) {s : ℝ} (hs : 0 < s)
+    {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect (fun β => Z β * Z' β) s q q'
+      = fieldDefect Z s q q' + fieldDefect Z' s q q' := by
+  have hqR : (0 : ℝ) < (q : ℝ) := by exact_mod_cast hq
+  have hq'R : (0 : ℝ) < (q' : ℝ) := by exact_mod_cast hq'
+  have hgR : (0 : ℝ) < (Nat.gcd q q' : ℝ) := by
+    exact_mod_cast Nat.gcd_pos_of_pos_left _ hq
+  have hlR : (0 : ℝ) < (Nat.lcm q q' : ℝ) := by
+    exact_mod_cast Nat.pos_of_ne_zero (Nat.lcm_ne_zero hq.ne' hq'.ne')
+  unfold fieldDefect
+  rw [Real.log_mul (hZ _ (by positivity)).ne' (hZ' _ (by positivity)).ne',
+    Real.log_mul (hZ _ (by positivity)).ne' (hZ' _ (by positivity)).ne',
+    Real.log_mul (hZ _ (by positivity)).ne' (hZ' _ (by positivity)).ne',
+    Real.log_mul (hZ _ (by positivity)).ne' (hZ' _ (by positivity)).ne']
+  ring
+
 /-- **Reduction to the coprime base**: the field defect at any pair
 of resolutions is the field defect at the reduced pair and the
 `gcd²`-rescaled coupling — the four arguments coincide. -/

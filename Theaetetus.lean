@@ -121,6 +121,9 @@ import Theaetetus.LatticeDuality
 -- Positive correlation and the sign of the defect
 import Theaetetus.Correlation
 
+-- The orthogonal sum: partition functions multiply, defects add
+import Theaetetus.OrthogonalSum
+
 -- Scalar bounds and the rank-two witness on the theta graph
 import Theaetetus.ThetaBounds
 import Theaetetus.RankTwo

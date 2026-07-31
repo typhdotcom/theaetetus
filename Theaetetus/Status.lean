@@ -14,6 +14,7 @@ import Theaetetus.Shells
 import Theaetetus.GramDuality
 import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
+import Theaetetus.OrthogonalSum
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -31,7 +32,7 @@ the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
 coercivity; certified tails; certified shell counts; higher-rank
 defect duality; the field defect and the intrinsic lift; the
-shifted mass and positive correlation. -/
+shifted mass and positive correlation; the orthogonal sum. -/
 
 namespace Theaetetus
 
@@ -912,5 +913,64 @@ example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
     (hq : 0 < q) (hq' : 0 < q') :
     Q.defect s q q' ≤ 0 :=
   Q.defect_nonpos hs hq hq'
+
+/-! ## The orthogonal sum -/
+
+example {Z W : ℝ → ℝ} (h : ∀ β : ℝ, 0 < β → Z β = W β) {s : ℝ}
+    (hs : 0 < s) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect Z s q q' = fieldDefect W s q q' :=
+  fieldDefect_congr h hs hq hq'
+
+example {Z Z' : ℝ → ℝ} (hZ : ∀ β : ℝ, 0 < β → 0 < Z β)
+    (hZ' : ∀ β : ℝ, 0 < β → 0 < Z' β) {s : ℝ} (hs : 0 < s)
+    {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect (fun β => Z β * Z' β) s q q'
+      = fieldDefect Z s q q' + fieldDefect Z' s q q' :=
+  fieldDefect_mul hZ hZ' hs hq hq'
+
+example (Q : QuadLatticeAction) {β : ℝ} (hβ : 0 < β) :
+    0 < Q.scaledPartFn β :=
+  Q.scaledPartFn_pos hβ
+
+example (Q Q' : QuadLatticeAction) {β : ℝ} (hβ : 0 < β) :
+    (Q.orthSum Q').scaledPartFn β
+      = Q.scaledPartFn β * Q'.scaledPartFn β :=
+  QuadLatticeAction.orthSum_scaledPartFn Q Q' hβ
+
+example (Q Q' : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
+    (hq : 0 < q) (hq' : 0 < q') :
+    (Q.orthSum Q').defect s q q'
+      = Q.defect s q q' + Q'.defect s q q' :=
+  QuadLatticeAction.orthSum_defect Q Q' hs hq hq'
+
+example (Q Q' : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
+    (hq : 0 < q) (hq' : 0 < q') :
+    (Q.orthSum Q').defect s q q' = 0
+      ↔ Q.defect s q q' = 0 ∧ Q'.defect s q q' = 0 :=
+  QuadLatticeAction.orthSum_defect_eq_zero_iff Q Q' hs hq hq'
+
+example (Q Q' : QuadLatticeAction) {t a b : ℝ} (ht : 0 < t)
+    (ha : 1 < a) (hb : 1 < b)
+    (h : Q.scaledPartFn (a ^ 2 * t) * Q.scaledPartFn (b ^ 2 * t)
+      < Q.scaledPartFn t * Q.scaledPartFn ((a * b) ^ 2 * t))
+    (h' : Q'.scaledPartFn (a ^ 2 * t) * Q'.scaledPartFn (b ^ 2 * t)
+      < Q'.scaledPartFn t * Q'.scaledPartFn ((a * b) ^ 2 * t)) :
+    (Q.orthSum Q').scaledPartFn (a ^ 2 * t)
+        * (Q.orthSum Q').scaledPartFn (b ^ 2 * t)
+      < (Q.orthSum Q').scaledPartFn t
+        * (Q.orthSum Q').scaledPartFn ((a * b) ^ 2 * t) :=
+  QuadLatticeAction.orthSum_rect_strict Q Q' ht ha hb h h'
+
+example (Q Q' : QuadLatticeAction) {t a b : ℝ} (ht : 0 < t)
+    (ha : 1 < a) (hb : 1 < b)
+    (hfail : ¬ ((Q.orthSum Q').scaledPartFn (a ^ 2 * t)
+        * (Q.orthSum Q').scaledPartFn (b ^ 2 * t)
+      < (Q.orthSum Q').scaledPartFn t
+        * (Q.orthSum Q').scaledPartFn ((a * b) ^ 2 * t))) :
+    ¬ (Q.scaledPartFn (a ^ 2 * t) * Q.scaledPartFn (b ^ 2 * t)
+        < Q.scaledPartFn t * Q.scaledPartFn ((a * b) ^ 2 * t))
+    ∨ ¬ (Q'.scaledPartFn (a ^ 2 * t) * Q'.scaledPartFn (b ^ 2 * t)
+        < Q'.scaledPartFn t * Q'.scaledPartFn ((a * b) ^ 2 * t)) :=
+  QuadLatticeAction.rect_strict_descend Q Q' ht ha hb hfail
 
 end Theaetetus

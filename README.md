@@ -572,11 +572,24 @@ Formalization targets:
    `QuadLatticeAction.defect_dual`.
 2. **Strict Q5 for positive diagonal forms** — done
    (`diagTheta_rect_strict`, `diagTheta_sq_lt`, lifted from
-   `theta_rect_strict` by the `Theaetetus.Diagonal` pattern).
-   What remains under this heading is the general orthogonal-sum
-   reduction — any Q5 counterexample yields an orthogonally
-   indecomposable one — which awaits a formal orthogonal sum of
-   lattice actions.
+   `theta_rect_strict` by the `Theaetetus.Diagonal` pattern), and
+   the orthogonal-sum reduction with it
+   (`Theaetetus.OrthogonalSum`): the orthogonal sum of two
+   lattice actions (`QuadLatticeAction.orthSum`) multiplies
+   partition functions (`QuadLatticeAction.orthSum_scaledPartFn`,
+   with positivity `QuadLatticeAction.scaledPartFn_pos`), adds
+   defects (`QuadLatticeAction.orthSum_defect`, through the
+   generic laws `fieldDefect_congr` and `fieldDefect_mul`), and —
+   because every factor's defect is nonpositive — vanishes iff
+   every factor's defect vanishes
+   (`QuadLatticeAction.orthSum_defect_eq_zero_iff`): any
+   zero-defect witness descends past every orthogonal
+   decomposition. At real scale the strict rectangle inequality
+   is preserved by orthogonal sums
+   (`QuadLatticeAction.orthSum_rect_strict`), so any failure of
+   Q5 strictness descends to a factor
+   (`QuadLatticeAction.rect_strict_descend`) — the promised
+   counterexample reduction.
 3. **The Regev–Stephens-Davidowitz implication** — done. The
    substrate (`Theaetetus.ShiftedMass`): the shifted Gaussian
    mass `gramMass M α x = ∑_{k∈ℤᵈ} e^{−α·Q(x+k)}`, its residue
@@ -735,9 +748,9 @@ forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, the recovery formula, spectral
 peeling, the certification chain, higher-rank defect duality, and
-the Regev–Stephens-Davidowitz implication are complete. Still
-open: Q6's identity layer (target 7), the orthogonal-sum
-reduction remaining under target 2, and the equality chain
+the Regev–Stephens-Davidowitz implication are complete, and the
+orthogonal-sum reduction has closed the remainder of target 2.
+Still open: Q6's identity layer (target 7) and the equality chain
 (target 10). The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving

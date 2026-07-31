@@ -18,9 +18,9 @@ rectangle inequality
 reconnaissance this pins the search space: no positive
 diagonal form can be a counterexample, so the sweep starts at
 non-orthogonal Gram matrices. The stronger reduction — any
-counterexample yields an orthogonally *indecomposable* one —
-awaits a formal orthogonal sum of lattice actions; the diagonal
-case is what is closed here. -/
+counterexample descends through every orthogonal decomposition —
+is `QuadLatticeAction.rect_strict_descend`; the diagonal case is
+what is closed here. -/
 
 namespace Theaetetus
 
