@@ -12,6 +12,7 @@ import Theaetetus.Certification
 import Theaetetus.Tails
 import Theaetetus.Shells
 import Theaetetus.GramDuality
+import Theaetetus.LatticeDuality
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -28,7 +29,7 @@ reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
 coercivity; certified tails; certified shell counts; higher-rank
-defect duality. -/
+defect duality; the field defect and the intrinsic lift. -/
 
 namespace Theaetetus
 
@@ -747,5 +748,66 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
       = gramDefect M⁻¹
           (Real.pi ^ 2 / (((p : ℝ) * (q : ℝ)) ^ 2 * s)) p q :=
   gramDefect_dual_coprime hM hs hp hq hco
+
+/-! ## The field defect and the intrinsic lift -/
+
+example {Z Z' : ℝ → ℝ} {a b : ℝ}
+    (hrefl : ∀ α : ℝ, 0 < α →
+      Real.log (Z' (Real.pi ^ 2 / α))
+        = a * Real.log α + b + Real.log (Z α))
+    {s : ℝ} (hs : 0 < s) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect Z s q q'
+      = fieldDefect Z' (Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s))
+          (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
+  fieldDefect_dual_of_log_reflect hrefl hs hq hq'
+
+example (s : ℝ) (q q' : ℕ) :
+    defect s q q' = fieldDefect theta s q q' :=
+  defect_eq_fieldDefect s q q'
+
+example (T : PartitionTower) (q q' : ℕ) :
+    T.defect q q' = fieldDefect T.Z 1 q q' :=
+  T.defect_eq_fieldDefect q q'
+
+example {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ) (q q' : ℕ) :
+    gramDefect M s q q' = fieldDefect (gramTheta M) s q q' :=
+  gramDefect_eq_fieldDefect M s q q'
+
+example (Q : QuadLatticeAction) {n : ℕ}
+    (b : Module.Basis (Fin n) ℤ Q.Λ) (β : ℝ) :
+    Q.scaledPartFn β = gramTheta (Q.gram b) β :=
+  Q.scaledPartFn_eq_gramTheta b β
+
+example (Q : QuadLatticeAction) {n m : ℕ}
+    (b : Module.Basis (Fin n) ℤ Q.Λ)
+    (b' : Module.Basis (Fin m) ℤ Q.Λ) (s : ℝ) (q q' : ℕ) :
+    gramDefect (Q.gram b) s q q' = gramDefect (Q.gram b') s q q' :=
+  Q.gramDefect_gram_eq b b' s q q'
+
+example (Q : QuadLatticeAction) {n : ℕ}
+    (b : Module.Basis (Fin n) ℤ Q.Λ) (s : ℝ) (q q' : ℕ) :
+    Q.defect s q q' = gramDefect (Q.gram b) s q q' :=
+  Q.defect_eq_gramDefect b s q q'
+
+example (Q : QuadLatticeAction) (q q' : ℕ) :
+    Q.toPartitionTower.defect q q' = Q.defect 1 q q' :=
+  Q.toPartitionTower_defect q q'
+
+example (Q : QuadLatticeAction) :
+    Q.dual.gram (Module.finBasis ℤ Q.Λ).dualBasis
+      = (Q.gram (Module.finBasis ℤ Q.Λ))⁻¹ :=
+  Q.dual_gram
+
+example (Q : QuadLatticeAction) {n : ℕ}
+    (b : Module.Basis (Fin n) ℤ Q.Λ) :
+    Q.dual.gram b.dualBasis = (Q.gram b)⁻¹ :=
+  Q.dual_gram_at b
+
+example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
+    (hq : 0 < q) (hq' : 0 < q') :
+    Q.defect s q q'
+      = Q.dual.defect (Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s))
+          (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
+  Q.defect_dual hs hq hq'
 
 end Theaetetus

@@ -78,6 +78,9 @@ import Theaetetus.Tails
 -- Certified shell counts: energy sublevels confined to boxes
 import Theaetetus.Shells
 
+-- The field defect and the annihilation of affine log weights
+import Theaetetus.FieldDefect
+
 -- Higher-rank defect duality: reflection through the dual Gram
 import Theaetetus.GramDuality
 
@@ -108,6 +111,9 @@ import Theaetetus.Peeling
 
 -- The zero-defect classification: lattices, carriers, and C₃'s kernel
 import Theaetetus.Classification
+
+-- Intrinsic defect duality: the lattice and its dual
+import Theaetetus.LatticeDuality
 
 -- Scalar bounds and the rank-two witness on the theta graph
 import Theaetetus.ThetaBounds

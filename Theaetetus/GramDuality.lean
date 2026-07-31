@@ -1,7 +1,7 @@
 import Theaetetus.Periodization
-import Theaetetus.Defect
+import Theaetetus.FieldDefect
 
-/-! # Higher-rank defect duality
+/-! # Higher-rank defect duality: the Gram chart
 
 The scale-indexed Boltzmann sum of a positive-definite Gram form,
 `gramTheta M α = ∑_{k ∈ ℤᵈ} e^{−α·kᵀMk}`, reflects through the dual
@@ -12,18 +12,18 @@ Gram: Poisson summation for the Gaussian family
 
 (`gramTheta_dual`), the rank-`d` form of `theta_duality_real` — at
 `M = !![1]` the two coincide (`gramTheta_one_eq_theta`). The defect
-of the Gram form on the divisibility lattice
-(`gramDefect`, restricting to `defect` at rank one,
-`gramDefect_one_eq_defect`) then satisfies the weight-zero duality
+of the Gram form on the divisibility lattice (`gramDefect`, the
+Gram instance of `fieldDefect` and at rank one the scalar `defect`)
+then satisfies the weight-zero duality
 
     `D_{M,s}(q,q′) = D_{M⁻¹,π²/(lcm²·s)}(q/gcd, q′/gcd)`
 
-(`gramDefect_dual`): in the four-term alternating sum the
-determinant weights cancel with multiplicity zero and the scale
-weights cancel by `gcd·lcm = q·q′` — the symmetry survives at every
-rank, with the dual Gram appearing. For coprime resolutions the
-carrier pair is fixed and only the coupling reflects
-(`gramDefect_dual_coprime`). -/
+(`gramDefect_dual`): the reflection weight is affine in `log α`, so
+the annihilation law `fieldDefect_dual_of_log_reflect` erases it —
+the determinant weight by sign count zero, the scale weight by
+`gcd·lcm = q·q′` — and the symmetry survives at every rank with the
+dual Gram appearing. For coprime resolutions the carrier pair is
+fixed and only the coupling reflects (`gramDefect_dual_coprime`). -/
 
 namespace Theaetetus
 
@@ -148,9 +148,10 @@ theorem gramTheta_dual (hM : M.PosDef) {α : ℝ} (hα : 0 < α) :
     _ = (α / Real.pi) ^ ((d : ℝ) / 2) * M.det ^ ((1 : ℝ) / 2)
           * gramTheta M α := by rw [hD]
 
-/-- The reflection in logarithmic form: the weight splits into the
-scale part and the determinant part. -/
-private theorem log_gramTheta_dual (hM : M.PosDef) {α : ℝ}
+/-- The reflection in logarithmic form: the weight is affine in
+`log α` — the shape the annihilation law
+`fieldDefect_dual_of_log_reflect` consumes. -/
+theorem log_gramTheta_dual (hM : M.PosDef) {α : ℝ}
     (hα : 0 < α) :
     Real.log (gramTheta M⁻¹ (Real.pi ^ 2 / α))
       = ((d : ℝ) / 2) * (Real.log α - Real.log Real.pi)
@@ -179,6 +180,12 @@ noncomputable def gramDefect (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ)
     - (Real.log (gramTheta M ((Nat.gcd q q' : ℝ) ^ 2 * s))
       + Real.log (gramTheta M ((Nat.lcm q q' : ℝ) ^ 2 * s)))
 
+/-- The Gram instance: the Gram defect is the field defect of the
+Gram Boltzmann sum. -/
+theorem gramDefect_eq_fieldDefect (M : Matrix (Fin d) (Fin d) ℝ)
+    (s : ℝ) (q q' : ℕ) :
+    gramDefect M s q q' = fieldDefect (gramTheta M) s q q' := rfl
+
 /-- At rank one with unit Gram, the Gram defect is the defect. -/
 theorem gramDefect_one_eq_defect (s : ℝ) (q q' : ℕ) :
     gramDefect (!![1] : Matrix (Fin 1) (Fin 1) ℝ) s q q'
@@ -186,107 +193,22 @@ theorem gramDefect_one_eq_defect (s : ℝ) (q q' : ℕ) :
   unfold gramDefect defect
   simp only [gramTheta_one_eq_theta]
 
-/-- **Higher-rank defect duality**: the defect of a Gram form at
-scale `s` equals the defect of the dual Gram at the reflected scale
-`π²/(lcm²·s)` and reduced resolutions. In the four-term alternating
-sum the determinant weights of `gramTheta_dual` cancel with
-multiplicity zero, and the scale weights cancel by
-`gcd·lcm = q·q′`. -/
+/-- **Higher-rank defect duality in the Gram chart**: the defect of
+a Gram form at scale `s` equals the defect of the dual Gram at the
+reflected scale `π²/(lcm²·s)` and reduced resolutions. The
+reflection weight is affine in the log-scale, so the defect
+annihilates it (`fieldDefect_dual_of_log_reflect`). -/
 theorem gramDefect_dual (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
     {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
     gramDefect M s q q'
       = gramDefect M⁻¹
           (Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s))
           (q / Nat.gcd q q') (q' / Nat.gcd q q') := by
-  have hπ := Real.pi_pos
-  -- arithmetic of the reduction
-  have hg : 0 < Nat.gcd q q' := Nat.gcd_pos_of_pos_left _ hq
-  have hgq : Nat.gcd q q' ∣ q := Nat.gcd_dvd_left q q'
-  have hgq' : Nat.gcd q q' ∣ q' := Nat.gcd_dvd_right q q'
-  have hco : Nat.Coprime (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
-    Nat.coprime_div_gcd_div_gcd hg
-  -- real casts
-  have hqR : (0 : ℝ) < (q : ℝ) := by exact_mod_cast hq
-  have hq'R : (0 : ℝ) < (q' : ℝ) := by exact_mod_cast hq'
-  have hgR : (0 : ℝ) < (Nat.gcd q q' : ℝ) := by exact_mod_cast hg
-  have hlR : (0 : ℝ) < (Nat.lcm q q' : ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Nat.lcm_ne_zero hq.ne' hq'.ne')
-  have hglqq : (Nat.gcd q q' : ℝ) * (Nat.lcm q q' : ℝ)
-      = (q : ℝ) * (q' : ℝ) := by
-    exact_mod_cast Nat.gcd_mul_lcm q q'
-  have haR : ((q / Nat.gcd q q' : ℕ) : ℝ)
-      = (q : ℝ) / (Nat.gcd q q' : ℝ) := Nat.cast_div hgq hgR.ne'
-  have hbR : ((q' / Nat.gcd q q' : ℕ) : ℝ)
-      = (q' : ℝ) / (Nat.gcd q q' : ℝ) := Nat.cast_div hgq' hgR.ne'
-  set t : ℝ := Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s) with htdef
-  -- the involution permutes the four couplings
-  have hswap : ∀ x y : ℝ, 0 < x → 0 < y
-      → x * y = (Nat.gcd q q' : ℝ) * (Nat.lcm q q' : ℝ)
-      → (x / (Nat.gcd q q' : ℝ)) ^ 2 * t
-        = Real.pi ^ 2 / (y ^ 2 * s) := by
-    intro x y hx hy hxy
-    have hgl : (Nat.gcd q q' : ℝ) ^ 2 * ((Nat.lcm q q' : ℝ) ^ 2 * s)
-        = x ^ 2 * (y ^ 2 * s) := by
-      calc (Nat.gcd q q' : ℝ) ^ 2 * ((Nat.lcm q q' : ℝ) ^ 2 * s)
-          = ((Nat.gcd q q' : ℝ) * (Nat.lcm q q' : ℝ)) ^ 2 * s := by ring
-        _ = (x * y) ^ 2 * s := by rw [hxy]
-        _ = x ^ 2 * (y ^ 2 * s) := by ring
-    rw [htdef, div_pow, div_mul_div_comm, hgl,
-      div_eq_div_iff (by positivity) (by positivity)]
-    ring
-  have e1 : ((q / Nat.gcd q q' : ℕ) : ℝ) ^ 2 * t
-      = Real.pi ^ 2 / ((q' : ℝ) ^ 2 * s) := by
-    rw [haR]
-    exact hswap _ _ hqR hq'R (by linarith [hglqq])
-  have e2 : ((q' / Nat.gcd q q' : ℕ) : ℝ) ^ 2 * t
-      = Real.pi ^ 2 / ((q : ℝ) ^ 2 * s) := by
-    rw [hbR]
-    exact hswap _ _ hq'R hqR (by linarith [hglqq])
-  have e3 : ((1 : ℕ) : ℝ) ^ 2 * t
-      = Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s) := by
-    rw [htdef]
-    norm_num
-  have e4 : (((q / Nat.gcd q q') * (q' / Nat.gcd q q') : ℕ) : ℝ) ^ 2 * t
-      = Real.pi ^ 2 / ((Nat.gcd q q' : ℝ) ^ 2 * s) := by
-    have hab : (((q / Nat.gcd q q') * (q' / Nat.gcd q q') : ℕ) : ℝ)
-        = (Nat.lcm q q' : ℝ) / (Nat.gcd q q' : ℝ) := by
-      rw [Nat.cast_mul, haR, hbR, div_mul_div_comm,
-        div_eq_div_iff (by positivity) hgR.ne']
-      linear_combination (-(Nat.gcd q q' : ℝ)) * hglqq
-    rw [hab, htdef, div_pow, div_mul_div_comm,
-      div_eq_div_iff (by positivity) (by positivity)]
-    ring
-  -- the four dual terms, reflected back
-  have hda := log_gramTheta_dual hM
-    (show (0 : ℝ) < (q' : ℝ) ^ 2 * s by positivity)
-  have hdb := log_gramTheta_dual hM
-    (show (0 : ℝ) < (q : ℝ) ^ 2 * s by positivity)
-  have hdg := log_gramTheta_dual hM
-    (show (0 : ℝ) < (Nat.lcm q q' : ℝ) ^ 2 * s by positivity)
-  have hdl := log_gramTheta_dual hM
-    (show (0 : ℝ) < (Nat.gcd q q' : ℝ) ^ 2 * s by positivity)
-  -- the scale weights cancel by `gcd·lcm = q·q′`
-  have hlogsum : Real.log ((q : ℝ) ^ 2 * s) + Real.log ((q' : ℝ) ^ 2 * s)
-      = Real.log ((Nat.gcd q q' : ℝ) ^ 2 * s)
-        + Real.log ((Nat.lcm q q' : ℝ) ^ 2 * s) := by
-    rw [Real.log_mul (by positivity) hs.ne',
-      Real.log_mul (by positivity) hs.ne',
-      Real.log_mul (by positivity) hs.ne',
-      Real.log_mul (by positivity) hs.ne']
-    have hsq : Real.log ((q : ℝ) ^ 2) + Real.log ((q' : ℝ) ^ 2)
-        = Real.log ((Nat.gcd q q' : ℝ) ^ 2)
-          + Real.log ((Nat.lcm q q' : ℝ) ^ 2) := by
-      rw [← Real.log_mul (by positivity) (by positivity),
-        ← Real.log_mul (by positivity) (by positivity)]
-      congr 1
-      linear_combination
-        (-((q : ℝ) * (q' : ℝ)
-          + (Nat.gcd q q' : ℝ) * (Nat.lcm q q' : ℝ))) * hglqq
-    linarith
-  unfold gramDefect
-  rw [Nat.Coprime.gcd_eq_one hco, Nat.Coprime.lcm_eq_mul hco,
-    e1, e2, e3, e4, hda, hdb, hdg, hdl]
-  linear_combination (-(d : ℝ) / 2) * hlogsum
+  rw [gramDefect_eq_fieldDefect, gramDefect_eq_fieldDefect]
+  exact fieldDefect_dual_of_log_reflect
+    (a := (d : ℝ) / 2)
+    (b := (1 / 2) * Real.log M.det - (d : ℝ) / 2 * Real.log Real.pi)
+    (fun α hα => by rw [log_gramTheta_dual hM hα]; ring) hs hq hq'
 
 /-- **Duality at coprime resolutions**: the carrier pair is fixed
 and only the coupling reflects — through the dual Gram. -/
