@@ -84,6 +84,9 @@ import Theaetetus.Shells
 -- Higher-rank defect duality: reflection through the dual Gram
 import Theaetetus.GramDuality
 
+-- The shifted Gaussian mass and its lattice decompositions
+import Theaetetus.ShiftedMass
+
 -- Fiber products and Boltzmann coarse-graining
 import Theaetetus.Pullback
 import Theaetetus.CoarseGrain
