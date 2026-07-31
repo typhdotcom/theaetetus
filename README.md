@@ -72,7 +72,7 @@ negative.
   defects, so every positive diagonal form inherits the rank-one
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
-  The *formalized* frontier is failure of orthogonal
+  What remains unformalized is failure of orthogonal
   diagonalization into rank-one summands, not rank.
 - **The classification, through the partition tower.** The
   argument consumes only three fields — a distinguished zero-energy
@@ -515,7 +515,8 @@ pairwise versus higher-order interaction.
 ## The roadmap
 
 Known mathematics awaiting formalization, and the reconnaissance
-that decides where the frontier actually is. Every target names
+that decides where the open questions actually lie. Every target
+names
 its landing; these results stay useful whatever the experiments
 say.
 
@@ -589,8 +590,7 @@ Formalization targets:
 8. **The star obstruction** — done (`deficit_not_psd`,
    `cnd_not_psd` in `Theaetetus.StarObstruction`): the explicit
    star-weight witness closed it without eigenvalue machinery.
-   What remains under this heading is the rate, which stays on
-   the frontier (Q4-PSD).
+   What remains under this heading is the rate (Q4-PSD).
 9. **Spectral peeling** — done (`Theaetetus.Peeling`): local
    finiteness, attainment, both extraction limits with sampled
    forms, the residual subtower with its bridge, strict
@@ -633,7 +633,7 @@ Reconnaissance, falsify-first:
    sampled grid with brackets bisected, and the historically
    cited transitions and `s = 0.12` witness reproduced from
    committed code. Next: certified entry intervals and interval
-   linear algebra for the crossings (target 5), harder
+   linear algebra for the crossings (target 5), further
    intervality falsification, and the star-obstruction rate
    against its `s_PSD ~ (1/6)·log n` benchmark.
 
