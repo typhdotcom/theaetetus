@@ -1,17 +1,23 @@
-import Theaetetus.Defect
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Data.Nat.Cast.Field
 
 /-! # The field defect and the annihilation of affine log weights
 
 The defect construction — the alternating sum of logarithms over
 the resolution rectangle `{q, q′, gcd, lcm}` — applies to any
-partition field `Z : ℝ → ℝ` (`fieldDefect`). The scalar defect is
-its theta instance (`defect_eq_fieldDefect`); the tower and Gram
-instances are recorded where those objects live
-(`PartitionTower.defect_eq_fieldDefect`,
-`gramDefect_eq_fieldDefect`).
+partition field `Z : ℝ → ℝ` (`fieldDefect`), before any analysis:
+this module depends on nothing but logarithms and `gcd`/`lcm`
+arithmetic. The scalar, tower, and Gram defects are instances
+(`defect_eq_fieldDefect`, `PartitionTower.defect_eq_fieldDefect`,
+`gramDefect_eq_fieldDefect`, recorded where those objects live),
+and the structural laws are proved once here and inherited by
+every instance: symmetry (`fieldDefect_comm`), vanishing on chains
+(`fieldDefect_eq_zero_of_dvd`), and vanishing on the diagonal
+(`fieldDefect_self`).
 
-The law this module isolates: **the defect annihilates affine log
-weights** (`fieldDefect_dual_of_log_reflect`). If a reflection
+The law that carries the duality: **the defect annihilates affine
+log weights** (`fieldDefect_dual_of_log_reflect`). If a reflection
 sends `log Z′(π²/α)` to `log Z(α)` plus an affine weight
 `a·log α + b`, the weight cancels in the four-term alternating
 sum — the constant by sign count zero, the log-linear part by
@@ -30,10 +36,28 @@ noncomputable def fieldDefect (Z : ℝ → ℝ) (s : ℝ) (q q' : ℕ) : ℝ :=
     - (Real.log (Z ((Nat.gcd q q' : ℝ) ^ 2 * s))
       + Real.log (Z ((Nat.lcm q q' : ℝ) ^ 2 * s)))
 
-/-- The scalar instance: the defect is the field defect of the
-theta function. -/
-theorem defect_eq_fieldDefect (s : ℝ) (q q' : ℕ) :
-    defect s q q' = fieldDefect theta s q q' := rfl
+/-- The field defect is symmetric in its resolutions. -/
+theorem fieldDefect_comm (Z : ℝ → ℝ) (s : ℝ) (q q' : ℕ) :
+    fieldDefect Z s q q' = fieldDefect Z s q' q := by
+  unfold fieldDefect
+  rw [Nat.gcd_comm, Nat.lcm_comm]
+  ring
+
+/-- **The field defect vanishes on chains**: along a divisibility
+relation the pair `{gcd, lcm}` collapses to `{q, q′}` — pure
+`gcd`/`lcm` algebra, before any analysis. -/
+theorem fieldDefect_eq_zero_of_dvd (Z : ℝ → ℝ) (s : ℝ) {q q' : ℕ}
+    (hdvd : q ∣ q') :
+    fieldDefect Z s q q' = 0 := by
+  unfold fieldDefect
+  rw [Nat.gcd_eq_left hdvd,
+    Nat.dvd_antisymm (Nat.lcm_dvd hdvd dvd_rfl) (Nat.dvd_lcm_right q q')]
+  ring
+
+/-- The field defect vanishes on the diagonal. -/
+theorem fieldDefect_self (Z : ℝ → ℝ) (s : ℝ) (q : ℕ) :
+    fieldDefect Z s q q = 0 :=
+  fieldDefect_eq_zero_of_dvd Z s dvd_rfl
 
 /-- **The defect annihilates affine log weights**: if a reflection
 sends `log Z′(π²/α)` to `log Z(α)` plus an affine weight

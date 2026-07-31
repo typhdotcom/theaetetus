@@ -531,7 +531,12 @@ Formalization targets:
    alternating sum obeys is isolated once: **the defect
    annihilates affine log weights**
    (`fieldDefect_dual_of_log_reflect`) — the constant by sign
-   count zero, the log-linear part by `gcd·lcm = q·q′`. The Gram
+   count zero, the log-linear part by `gcd·lcm = q·q′`. The
+   structural laws are generic too — symmetry, vanishing on
+   chains, vanishing on the diagonal (`fieldDefect_comm`,
+   `fieldDefect_eq_zero_of_dvd`, `fieldDefect_self`) — and the
+   scalar and tower instances inherit them rather than reprove
+   them. The Gram
    chart engine (`Theaetetus.GramDuality`): the Boltzmann sum of
    a positive-definite Gram form reflects through the dual Gram,
    `gramTheta M⁻¹(π²/α) = (α/π)^(d/2)·det(M)^(1/2)·gramTheta M α`

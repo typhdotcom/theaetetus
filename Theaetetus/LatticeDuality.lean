@@ -30,14 +30,6 @@ open Matrix
 
 universe u
 
-/-- The tower instance of the field defect: the tower defect is the
-field defect of the tower's partition function at unit scale. -/
-theorem PartitionTower.defect_eq_fieldDefect (T : PartitionTower.{u})
-    (q q' : ℕ) :
-    T.defect q q' = fieldDefect T.Z 1 q q' := by
-  unfold PartitionTower.defect fieldDefect
-  simp only [mul_one]
-
 /-- The inverse-Gram pairing collapses at dual-basis vectors: the
 dual basis evaluates to Kronecker deltas on the basis. -/
 private theorem sum_dual_delta {Λ : Type u} [AddCommGroup Λ]

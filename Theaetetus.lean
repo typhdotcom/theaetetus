@@ -14,6 +14,9 @@ import Theaetetus.Fluctuation
 -- The refined log-convexity: the strict rectangle inequality at rank one
 import Theaetetus.LogConvexity
 
+-- The field defect and the annihilation of affine log weights
+import Theaetetus.FieldDefect
+
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness
@@ -77,9 +80,6 @@ import Theaetetus.Tails
 
 -- Certified shell counts: energy sublevels confined to boxes
 import Theaetetus.Shells
-
--- The field defect and the annihilation of affine log weights
-import Theaetetus.FieldDefect
 
 -- Higher-rank defect duality: reflection through the dual Gram
 import Theaetetus.GramDuality

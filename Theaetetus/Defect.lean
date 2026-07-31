@@ -1,4 +1,5 @@
 import Theaetetus.Theta
+import Theaetetus.FieldDefect
 
 /-! # The rank-one defect
 
@@ -26,22 +27,23 @@ noncomputable def defect (s : ℝ) (q q' : ℕ) : ℝ :=
     - (Real.log (theta ((Nat.gcd q q' : ℝ) ^ 2 * s))
       + Real.log (theta ((Nat.lcm q q' : ℝ) ^ 2 * s)))
 
-/-- The defect is symmetric in its resolutions. -/
-theorem defect_comm (s : ℝ) (q q' : ℕ) : defect s q q' = defect s q' q := by
-  unfold defect
-  rw [Nat.gcd_comm, Nat.lcm_comm]
-  ring
+/-- The scalar instance of the field defect: the defect is the
+field defect of the theta function. -/
+theorem defect_eq_fieldDefect (s : ℝ) (q q' : ℕ) :
+    defect s q q' = fieldDefect theta s q q' := rfl
+
+/-- The defect is symmetric in its resolutions — inherited from the
+field defect. -/
+theorem defect_comm (s : ℝ) (q q' : ℕ) : defect s q q' = defect s q' q :=
+  fieldDefect_comm theta s q q'
 
 /-- **The defect vanishes on chains**: along a divisibility relation
 `q ∣ q′` the pair `{gcd, lcm}` collapses to `{q, q′}` and the
 four-term combination cancels identically — no positivity of `s`
-needed. -/
+needed. Inherited from the field defect. -/
 theorem defect_eq_zero_of_dvd (s : ℝ) {q q' : ℕ} (hdvd : q ∣ q') :
-    defect s q q' = 0 := by
-  unfold defect
-  rw [Nat.gcd_eq_left hdvd,
-    Nat.dvd_antisymm (Nat.lcm_dvd hdvd dvd_rfl) (Nat.dvd_lcm_right q q')]
-  ring
+    defect s q q' = 0 :=
+  fieldDefect_eq_zero_of_dvd theta s hdvd
 
 /-- The diagonal is a chain: `D_s(q, q) = 0`. -/
 theorem defect_self (s : ℝ) (q : ℕ) : defect s q q = 0 :=

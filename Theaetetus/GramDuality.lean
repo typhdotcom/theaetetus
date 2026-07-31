@@ -1,5 +1,5 @@
 import Theaetetus.Periodization
-import Theaetetus.FieldDefect
+import Theaetetus.Defect
 
 /-! # Higher-rank defect duality: the Gram chart
 

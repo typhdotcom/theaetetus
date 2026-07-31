@@ -161,14 +161,30 @@ noncomputable def defect (q q' : ℕ) : ℝ :=
     - (Real.log (T.Z ((Nat.gcd q q' : ℝ) ^ 2))
       + Real.log (T.Z ((Nat.lcm q q' : ℝ) ^ 2)))
 
+/-- The tower instance of the field defect: the tower defect is the
+field defect of the tower's partition function at unit scale. -/
+theorem defect_eq_fieldDefect (q q' : ℕ) :
+    T.defect q q' = fieldDefect T.Z 1 q q' := by
+  unfold defect fieldDefect
+  simp only [mul_one]
+
+/-- The tower defect is symmetric in its resolutions — inherited
+from the field defect. -/
+theorem defect_comm (q q' : ℕ) : T.defect q q' = T.defect q' q := by
+  rw [T.defect_eq_fieldDefect, T.defect_eq_fieldDefect]
+  exact fieldDefect_comm T.Z 1 q q'
+
 /-- The tower defect vanishes on chains — pure `gcd`/`lcm` algebra,
-before any analysis. -/
+before any analysis, inherited from the field defect. -/
 theorem defect_eq_zero_of_dvd {q q' : ℕ} (hdvd : q ∣ q') :
     T.defect q q' = 0 := by
-  unfold defect
-  rw [Nat.gcd_eq_left hdvd,
-    Nat.dvd_antisymm (Nat.lcm_dvd hdvd dvd_rfl) (Nat.dvd_lcm_right q q')]
-  ring
+  rw [T.defect_eq_fieldDefect]
+  exact fieldDefect_eq_zero_of_dvd T.Z 1 hdvd
+
+/-- The tower defect vanishes on the diagonal — inherited from the
+field defect. -/
+theorem defect_self (q : ℕ) : T.defect q q = 0 :=
+  T.defect_eq_zero_of_dvd dvd_rfl
 
 private lemma coprime_succ_succ (n : ℕ) : Nat.Coprime (n + 1) (n + 2) :=
   Nat.coprime_self_add_right.mpr (Nat.coprime_one_right _)

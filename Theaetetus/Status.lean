@@ -765,9 +765,28 @@ example (s : ℝ) (q q' : ℕ) :
     defect s q q' = fieldDefect theta s q q' :=
   defect_eq_fieldDefect s q q'
 
+example (Z : ℝ → ℝ) (s : ℝ) (q q' : ℕ) :
+    fieldDefect Z s q q' = fieldDefect Z s q' q :=
+  fieldDefect_comm Z s q q'
+
+example (Z : ℝ → ℝ) (s : ℝ) {q q' : ℕ} (hdvd : q ∣ q') :
+    fieldDefect Z s q q' = 0 :=
+  fieldDefect_eq_zero_of_dvd Z s hdvd
+
+example (Z : ℝ → ℝ) (s : ℝ) (q : ℕ) :
+    fieldDefect Z s q q = 0 :=
+  fieldDefect_self Z s q
+
 example (T : PartitionTower) (q q' : ℕ) :
     T.defect q q' = fieldDefect T.Z 1 q q' :=
   T.defect_eq_fieldDefect q q'
+
+example (T : PartitionTower) (q q' : ℕ) :
+    T.defect q q' = T.defect q' q :=
+  T.defect_comm q q'
+
+example (T : PartitionTower) (q : ℕ) : T.defect q q = 0 :=
+  T.defect_self q
 
 example {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ) (q q' : ℕ) :
     gramDefect M s q q' = fieldDefect (gramTheta M) s q q' :=
