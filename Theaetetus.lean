@@ -118,6 +118,9 @@ import Theaetetus.Classification
 -- Intrinsic defect duality: the lattice and its dual
 import Theaetetus.LatticeDuality
 
+-- Positive correlation and the sign of the defect
+import Theaetetus.Correlation
+
 -- Scalar bounds and the rank-two witness on the theta graph
 import Theaetetus.ThetaBounds
 import Theaetetus.RankTwo

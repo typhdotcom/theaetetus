@@ -279,13 +279,18 @@ pairwise versus higher-order interaction.
   ([*An Inequality for Gaussians on Lattices*](https://doi.org/10.1137/15M1052226),
   Theorem 5.1), and applying this inside `gL` to `qL` and `q′L` —
   intersection `lcm(q,q′)L` — gives `D_L(q,q′) ≤ 0` for every
-  lattice. Formalizing that implication is roadmap work, not a
-  question. Open is what the correlation inequality cannot see:
-  on a positive-rank lattice, is `D_L(q,q′) = 0` exactly when
-  `q ∣ q′` or `q′ ∣ q`? Strict Q5 would answer outright — the
-  defect is a rectangle of `H_L`, and strict convexity kills
-  every nondegenerate rectangle — so Q1 is now downstream of the
-  master conjecture. Independently: a generic residue tower on
+  lattice. That implication is now formalized:
+  `QuadLatticeAction.defect_nonpos`. Open is the equality
+  classification: on a positive-rank lattice, is `D_L(q,q′) = 0`
+  exactly when `q ∣ q′` or `q′ ∣ q`? Two routes are now visible.
+  Strict Q5 would answer outright — the defect is a rectangle of
+  `H_L`, and strict convexity kills every nondegenerate
+  rectangle — so Q1 is downstream of the master conjecture. And
+  the formalized correlation proof exposes an equality chain of
+  its own: zero defect forces simultaneous saturation of the
+  parity-vector Cauchy–Schwarz (collinearity), the AM–GM
+  equality, and every residue-class inequality — a route to the
+  classification independent of higher-rank Q5. Independently: a generic residue tower on
   `L ⧸ qL` would make the correlation an intrinsic event
   statement and supply the general-lattice cross-ratio law.
 
@@ -572,9 +577,32 @@ Formalization targets:
    reduction — any Q5 counterexample yields an orthogonally
    indecomposable one — which awaits a formal orthogonal sum of
    lattice actions.
-3. **The Regev–Stephens-Davidowitz implication.** Sublattice
-   correlation applied inside `gL` gives the non-strict
-   `D_L(q,q′) ≤ 0` for every lattice — Q1's inequality half.
+3. **The Regev–Stephens-Davidowitz implication** — done. The
+   substrate (`Theaetetus.ShiftedMass`): the shifted Gaussian
+   mass `gramMass M α x = ∑_{k∈ℤᵈ} e^{−α·Q(x+k)}`, its residue
+   decomposition mod `n` (`gramMass_coset`), and the parity
+   transport of a product — the parallelogram law splits the
+   Gaussian, parity splits the image (`gramMass_mul_gramMass`).
+   The geometry (`Theaetetus.Correlation`): the **parity feature
+   vector** (`parityVector`) with its two identities — a product
+   of masses is an inner product of feature vectors
+   (`gramMass_mul_eq_inner`), and a squared norm is a mass
+   product (`sum_sq_parityVector`) — so Cauchy–Schwarz gives the
+   correlation inequality `m(x)²·m(y)² ≤ m(0)²·m(x+y)·m(x−y)`
+   (`gramMass_sq_mul_sq_le`), its averaged form
+   (`gramMass_mul_le_avg`), monotonicity under scalar dilation
+   (`gramMass_dilate_mul_le`), and positive correlation at
+   coprime dilations (`gramMass_coprime_mul_le`). With the
+   coprime reduction of the field defect
+   (`fieldDefect_div_gcd`), the sign lands: the defect is
+   nonpositive for every positive-definite Gram form
+   (`gramDefect_nonpos`) and every lattice action
+   (`QuadLatticeAction.defect_nonpos`) — Q1's inequality half,
+   at every rank. The defect is logarithmic correlation slack
+   whose sign is controlled by the parity-vector Cauchy–Schwarz
+   geometry; equality demands simultaneous saturation —
+   collinearity of the feature vectors, the AM–GM equality, and
+   every residue-class inequality in the chain.
 4. **The Q2 recovery formula** — done
    (`tendsto_defect_row_sub_succ` at `PartitionTower` level,
    instantiated at rank one as `tendsto_defect_recovery`), in the
@@ -694,10 +722,10 @@ The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, the recovery formula, spectral
-peeling, the certification chain, and higher-rank defect duality
-are complete. Still open: the Regev–Stephens-Davidowitz
-implication (target 3) and Q6's identity layer (target 7). The
-verdicts to date:
+peeling, the certification chain, higher-rank defect duality, and
+the Regev–Stephens-Davidowitz implication are complete. Still
+open: Q6's identity layer (target 7), and the orthogonal-sum
+reduction remaining under target 2. The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD

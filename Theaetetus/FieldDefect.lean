@@ -59,6 +59,51 @@ theorem fieldDefect_self (Z : ℝ → ℝ) (s : ℝ) (q : ℕ) :
     fieldDefect Z s q q = 0 :=
   fieldDefect_eq_zero_of_dvd Z s dvd_rfl
 
+/-- **Reduction to the coprime base**: the field defect at any pair
+of resolutions is the field defect at the reduced pair and the
+`gcd²`-rescaled coupling — the four arguments coincide. -/
+theorem fieldDefect_div_gcd (Z : ℝ → ℝ) (s : ℝ) {q q' : ℕ}
+    (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect Z s q q'
+      = fieldDefect Z ((Nat.gcd q q' : ℝ) ^ 2 * s)
+          (q / Nat.gcd q q') (q' / Nat.gcd q q') := by
+  have hg : 0 < Nat.gcd q q' := Nat.gcd_pos_of_pos_left _ hq
+  have hgq : Nat.gcd q q' ∣ q := Nat.gcd_dvd_left q q'
+  have hgq' : Nat.gcd q q' ∣ q' := Nat.gcd_dvd_right q q'
+  have hco : Nat.Coprime (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
+    Nat.coprime_div_gcd_div_gcd hg
+  have hgR : (0 : ℝ) < (Nat.gcd q q' : ℝ) := by exact_mod_cast hg
+  have hglqq : (Nat.gcd q q' : ℝ) * (Nat.lcm q q' : ℝ)
+      = (q : ℝ) * (q' : ℝ) := by
+    exact_mod_cast Nat.gcd_mul_lcm q q'
+  have haR : ((q / Nat.gcd q q' : ℕ) : ℝ)
+      = (q : ℝ) / (Nat.gcd q q' : ℝ) := Nat.cast_div hgq hgR.ne'
+  have hbR : ((q' / Nat.gcd q q' : ℕ) : ℝ)
+      = (q' : ℝ) / (Nat.gcd q q' : ℝ) := Nat.cast_div hgq' hgR.ne'
+  have e1 : ((q / Nat.gcd q q' : ℕ) : ℝ) ^ 2
+      * ((Nat.gcd q q' : ℝ) ^ 2 * s) = (q : ℝ) ^ 2 * s := by
+    rw [haR, div_pow]
+    field_simp
+  have e2 : ((q' / Nat.gcd q q' : ℕ) : ℝ) ^ 2
+      * ((Nat.gcd q q' : ℝ) ^ 2 * s) = (q' : ℝ) ^ 2 * s := by
+    rw [hbR, div_pow]
+    field_simp
+  have e3 : ((1 : ℕ) : ℝ) ^ 2 * ((Nat.gcd q q' : ℝ) ^ 2 * s)
+      = (Nat.gcd q q' : ℝ) ^ 2 * s := by
+    norm_num
+  have e4 : (((q / Nat.gcd q q') * (q' / Nat.gcd q q') : ℕ) : ℝ) ^ 2
+      * ((Nat.gcd q q' : ℝ) ^ 2 * s) = (Nat.lcm q q' : ℝ) ^ 2 * s := by
+    have hab : (((q / Nat.gcd q q') * (q' / Nat.gcd q q') : ℕ) : ℝ)
+        = (Nat.lcm q q' : ℝ) / (Nat.gcd q q' : ℝ) := by
+      rw [Nat.cast_mul, haR, hbR, div_mul_div_comm,
+        div_eq_div_iff (by positivity) hgR.ne']
+      linear_combination (-(Nat.gcd q q' : ℝ)) * hglqq
+    rw [hab, div_pow]
+    field_simp
+  unfold fieldDefect
+  rw [Nat.Coprime.gcd_eq_one hco, Nat.Coprime.lcm_eq_mul hco,
+    e1, e2, e3, e4]
+
 /-- **The defect annihilates affine log weights**: if a reflection
 sends `log Z′(π²/α)` to `log Z(α)` plus an affine weight
 `a·log α + b`, the weight cancels in the four-term alternating sum

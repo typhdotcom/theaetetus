@@ -13,6 +13,7 @@ import Theaetetus.Tails
 import Theaetetus.Shells
 import Theaetetus.GramDuality
 import Theaetetus.LatticeDuality
+import Theaetetus.Correlation
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -29,7 +30,8 @@ reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
 coercivity; certified tails; certified shell counts; higher-rank
-defect duality; the field defect and the intrinsic lift. -/
+defect duality; the field defect and the intrinsic lift; the
+shifted mass and positive correlation. -/
 
 namespace Theaetetus
 
@@ -828,5 +830,87 @@ example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
       = Q.dual.defect (Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s))
           (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
   Q.defect_dual hs hq hq'
+
+/-! ## The shifted mass and positive correlation -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M α x
+      = ∑ c : Fin d → ZMod n,
+          gramMass M ((n : ℝ) ^ 2 * α)
+            ((n : ℝ)⁻¹ • (x + fun i => ((c i).val : ℝ))) :=
+  gramMass_coset hM hα x n
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x * gramMass M α y
+      = ∑ c : Fin d → ZMod 2,
+          gramMass M (2 * α)
+            ((2 : ℝ)⁻¹ • (x + y + fun i => ((c i).val : ℝ)))
+          * gramMass M (2 * α)
+            ((2 : ℝ)⁻¹ • (x - y + fun i => ((c i).val : ℝ))) :=
+  gramMass_mul_gramMass hM hα x y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (z : Fin d → ℝ) (c : Fin d → ZMod 2) :
+    0 < parityVector M α z c :=
+  parityVector_pos hM hα z c
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x * gramMass M α y
+      = ∑ c : Fin d → ZMod 2,
+          parityVector M α (x + y) c * parityVector M α (x - y) c :=
+  gramMass_mul_eq_inner hM hα x y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (z : Fin d → ℝ) :
+    ∑ c : Fin d → ZMod 2, parityVector M α z c ^ 2
+      = gramMass M α 0 * gramMass M α z :=
+  sum_sq_parityVector hM hα z
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x ^ 2 * gramMass M α y ^ 2
+      ≤ gramMass M α 0 ^ 2
+          * (gramMass M α (x + y) * gramMass M α (x - y)) :=
+  gramMass_sq_mul_sq_le hM hα x y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x * gramMass M α y
+      ≤ gramMass M α 0
+          * ((gramMass M α (x + y) + gramMass M α (x - y)) / 2) :=
+  gramMass_mul_le_avg hM hα x y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x) * gramMass M α 0
+      ≤ gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x :=
+  gramMass_dilate_mul_le hM hα x n
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+      ≤ gramMass M s 0
+          * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0 :=
+  gramMass_coprime_mul_le hM hs ha hb hco
+
+example (Z : ℝ → ℝ) (s : ℝ) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect Z s q q'
+      = fieldDefect Z ((Nat.gcd q q' : ℝ) ^ 2 * s)
+          (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
+  fieldDefect_div_gcd Z s hq hq'
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    gramDefect M s q q' ≤ 0 :=
+  gramDefect_nonpos hM hs hq hq'
+
+example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
+    (hq : 0 < q) (hq' : 0 < q') :
+    Q.defect s q q' ≤ 0 :=
+  Q.defect_nonpos hs hq hq'
 
 end Theaetetus
