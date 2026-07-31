@@ -290,7 +290,7 @@ pairwise versus higher-order interaction.
   its own: zero defect forces simultaneous saturation of the
   parity-vector Cauchy–Schwarz (collinearity), the AM–GM
   equality, and every residue-class inequality — a route to the
-  classification independent of higher-rank Q5. Independently: a generic residue tower on
+  classification independent of higher-rank Q5 (target 10). Independently: a generic residue tower on
   `L ⧸ qL` would make the correlation an intrinsic event
   statement and supply the general-lattice cross-ratio law.
 
@@ -684,6 +684,18 @@ Formalization targets:
    `β ≥ 1` (`hasSum_peel_layers`, `tsum_peel_layers`). One fixed
    defect matrix determines the full spectrum with
    multiplicities.
+10. **The equality chain.** Zero defect forces simultaneous
+    saturation of every inequality in the correlation proof:
+    collinearity of the parity feature vectors in Cauchy–Schwarz,
+    the AM–GM equality `m(x+y) = m(x−y)`, and the saturation of
+    each residue-class instance in the dilation and coprime
+    telescopes. The landing: equality conditions for each link —
+    Cauchy–Schwarz equality as collinearity of `parityVector`s,
+    the averaged bound's equality case, and per-class saturation
+    in `gramMass_dilate_mul_le` and `gramMass_coprime_mul_le` —
+    assembled into a characterization of `D_L(q,q′) = 0`. This is
+    the route to Q1's equality classification that is independent
+    of higher-rank Q5.
 
 Reconnaissance, falsify-first:
 
@@ -724,8 +736,9 @@ sweeps, the first Q4 sweep, the star-obstruction theorem, the
 manifest with its docstring sweep, the recovery formula, spectral
 peeling, the certification chain, higher-rank defect duality, and
 the Regev–Stephens-Davidowitz implication are complete. Still
-open: Q6's identity layer (target 7), and the orthogonal-sum
-reduction remaining under target 2. The verdicts to date:
+open: Q6's identity layer (target 7), the orthogonal-sum
+reduction remaining under target 2, and the equality chain
+(target 10). The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
