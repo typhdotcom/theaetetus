@@ -614,9 +614,12 @@ Reconnaissance, falsify-first:
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
-manifest with its docstring sweep, and the recovery formula are
-and spectral peeling are complete; the certification chain
-(target 5) is the last open target. The verdicts to date:
+manifest with its docstring sweep, the recovery formula, and
+spectral peeling are complete. Still open: higher-rank duality
+(target 1), the Regev–Stephens-Davidowitz implication
+(target 3), the certification chain (target 5) — the one both
+reconnaissance lanes name as their next step — and Q6's
+identity layer (target 7). The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
