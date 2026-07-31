@@ -8,6 +8,7 @@ import Theaetetus.LargeScale
 import Theaetetus.SmallScale
 import Theaetetus.StarObstruction
 import Theaetetus.DiagonalCurvature
+import Theaetetus.Certification
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -22,11 +23,12 @@ Topics: the theta identification; the cross-ratio law and the
 coupling reading; the sign; the classification; the pairing; the
 reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
-fluctuation, and the strict rectangle; diagonal forms. -/
+fluctuation, and the strict rectangle; diagonal forms; certified
+coercivity. -/
 
 namespace Theaetetus
 
-open Filter Topology
+open Filter Topology Matrix
 
 /-! ## The theta identification -/
 
@@ -528,5 +530,49 @@ example {r : ℕ} {c : Fin r → ℝ} (hr : r ≠ 0) (hc : ∀ i, 0 < c i)
     diagTheta c (a ^ 2 * t) ^ 2
       < diagTheta c t * diagTheta c (a ^ 4 * t) :=
   diagTheta_sq_lt hr hc ht ha
+
+/-! ## Certified coercivity -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {μ : ℝ} (hμ : ∀ i, μ ≤ hM.eigenvalues i) (x : Fin d → ℝ) :
+    μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x :=
+  hM.mul_sum_sq_le_quadForm hμ x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {μ : ℝ} (h : ∀ x : Fin d → ℝ, μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x)
+    (i : Fin d) :
+    μ ≤ hM.eigenvalues i :=
+  hM.le_eigenvalues_of_mul_sum_sq_le h i
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {μ : ℝ} :
+    (∀ x : Fin d → ℝ, μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x)
+      ↔ ∀ i, μ ≤ hM.eigenvalues i :=
+  hM.mul_sum_sq_le_quadForm_iff
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hsym : M.IsSymm)
+    {μ : ℝ}
+    (hdom : ∀ i, μ + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ M i i)
+    (x : Fin d → ℝ) :
+    μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x :=
+  mul_sum_sq_le_quadForm_of_dominant hsym hdom x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hsym : M.IsSymm)
+    {μ : ℝ} (hμ : 0 < μ)
+    (hdom : ∀ i, μ + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ M i i) :
+    M.PosDef :=
+  posDef_of_dominant hsym hμ hdom
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {μ : ℝ}
+    (hdom : ∀ i, μ + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ M i i)
+    (i : Fin d) :
+    μ ≤ hM.eigenvalues i :=
+  le_eigenvalues_of_dominant hM hdom i
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ}
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (k : Fin r → ℤ) :
+    μ * ∑ i, (k i : ℝ) ^ 2 ≤ A.energy k :=
+  A.mul_sum_sq_le_energy hμ k
 
 end Theaetetus

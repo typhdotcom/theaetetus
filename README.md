@@ -547,9 +547,23 @@ Formalization targets:
    counts, moment tails with the dimension-dependent polynomial
    factor, and interval linear algebra for extremal eigenvalues.
    `Theaetetus.Fluctuation`'s geometric-domination bounds are the
-   rank-one shapes. Certified this way, a reconnaissance sign is
-   a certificate — and a counterexample arrives pre-packaged for
-   its own formalization.
+   rank-one shapes. The first link is in place
+   (`Theaetetus.Certification`): `μ` is a coercivity constant for
+   a Gram form — `μ·∑xᵢ² ≤ xᵀQx` — iff it lower-bounds every
+   eigenvalue (`Matrix.IsHermitian.mul_sum_sq_le_quadForm`,
+   `Matrix.IsHermitian.le_eigenvalues_of_mul_sum_sq_le`, packaged
+   as `Matrix.IsHermitian.mul_sum_sq_le_quadForm_iff`), while row
+   dominance `μ + ∑_{j≠i}|Qᵢⱼ| ≤ Qᵢᵢ` — finitely many entrywise
+   inequalities, rational arithmetic when the entries are
+   rational — certifies the same bound, positive definiteness,
+   and a spectrum-wide `μ ≤ λ`
+   (`mul_sum_sq_le_quadForm_of_dominant`, `posDef_of_dominant`,
+   `le_eigenvalues_of_dominant`), transferring to lattice energies
+   through `QuadraticAction.mul_sum_sq_le_energy`. Shell counts,
+   moment tails, and the interval crossing algebra remain.
+   Certified this way, a reconnaissance sign is a certificate —
+   and a counterexample arrives pre-packaged for its own
+   formalization.
 6. **`Theaetetus/Status.lean`** — done: the statement-level
    manifest exists — every claim this document makes of the
    tree, restated as an `example` discharged by the theorem it
