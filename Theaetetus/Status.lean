@@ -10,6 +10,7 @@ import Theaetetus.StarObstruction
 import Theaetetus.DiagonalCurvature
 import Theaetetus.Certification
 import Theaetetus.Tails
+import Theaetetus.Shells
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -25,7 +26,7 @@ coupling reading; the sign; the classification; the pairing; the
 reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
-coercivity; certified tails. -/
+coercivity; certified tails; certified shell counts. -/
 
 namespace Theaetetus
 
@@ -576,6 +577,50 @@ example {r : ℕ} (A : QuadraticAction r) {μ : ℝ}
     μ * ∑ i, (k i : ℝ) ^ 2 ≤ A.energy k :=
   A.mul_sum_sq_le_energy hμ k
 
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {ν : ℝ} (hν : ∀ i, hM.eigenvalues i ≤ ν) (x : Fin d → ℝ) :
+    x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2 :=
+  hM.quadForm_le_mul_sum_sq hν x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {ν : ℝ}
+    (h : ∀ x : Fin d → ℝ, x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2)
+    (i : Fin d) :
+    hM.eigenvalues i ≤ ν :=
+  hM.eigenvalues_le_of_quadForm_le h i
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {ν : ℝ} :
+    (∀ x : Fin d → ℝ, x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2)
+      ↔ ∀ i, hM.eigenvalues i ≤ ν :=
+  hM.quadForm_le_mul_sum_sq_iff
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hsym : M.IsSymm)
+    {ν : ℝ}
+    (hdom : ∀ i, M i i + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ ν)
+    (x : Fin d → ℝ) :
+    x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2 :=
+  quadForm_le_mul_sum_sq_of_dominant hsym hdom x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {ν : ℝ}
+    (hdom : ∀ i, M i i + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ ν)
+    (i : Fin d) :
+    hM.eigenvalues i ≤ ν :=
+  eigenvalues_le_of_dominant hM hdom i
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {c : ℝ} {x : Fin d → ℝ}
+    (hx : x ⬝ᵥ M.mulVec x < c * ∑ i, x i ^ 2) :
+    ∃ i, hM.eigenvalues i < c :=
+  hM.exists_eigenvalues_lt hx
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.IsHermitian)
+    {c : ℝ} {x : Fin d → ℝ}
+    (hx : c * ∑ i, x i ^ 2 < x ⬝ᵥ M.mulVec x) :
+    ∃ i, c < hM.eigenvalues i :=
+  hM.exists_lt_eigenvalues hx
+
 /-! ## Certified tails -/
 
 example (r : ℕ) (f : Fin r → ℤ → ℝ) (hf_nn : ∀ i z, 0 ≤ f i z)
@@ -619,5 +664,52 @@ example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
             * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
                 * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹))) :=
   A.partFn_mem_box_Icc hμ0 hμ N
+
+example {r : ℕ} {E : (Fin r → ℤ) → ℝ} {ν : ℝ} (hν : 0 < ν)
+    (hcoer : ∀ k : Fin r → ℤ, ν * ∑ i, (k i : ℝ) ^ 2 ≤ E k)
+    (N : ℕ) :
+    (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+        Real.exp (-E k.1))
+      ≤ (r : ℝ) * theta ν ^ (r - 1)
+          * (2 * (Real.exp (-ν * ((N : ℝ) + 1) ^ 2)
+              * (1 - Real.exp (-(2 * ν * ((N : ℝ) + 1))))⁻¹)) :=
+  tail_exp_le hν hcoer N
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (m N : ℕ) :
+    (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+        A.energy k.1 ^ m * Real.exp (-A.energy k.1))
+      ≤ 2 ^ m * (m.factorial : ℝ)
+          * ((r : ℝ) * theta (μ / 2) ^ (r - 1)
+              * (2 * (Real.exp (-(μ / 2) * ((N : ℝ) + 1) ^ 2)
+                  * (1 - Real.exp (-(2 * (μ / 2) * ((N : ℝ) + 1))))⁻¹))) :=
+  A.moment_tail_le hμ0 hμ m N
+
+/-! ## Certified shell counts -/
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) {R : ℝ} {N : ℕ}
+    (hRN : R < μ * ((N : ℝ) + 1) ^ 2) {k : Fin r → ℤ}
+    (hk : A.energy k ≤ R) (i : Fin r) :
+    |k i| ≤ (N : ℤ) :=
+  A.abs_le_of_energy_le hμ0 hμ hRN hk i
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) {R : ℝ} {N : ℕ}
+    (hRN : R < μ * ((N : ℝ) + 1) ^ 2) :
+    {k : Fin r → ℤ | A.energy k ≤ R}.Finite :=
+  A.finite_energy_sublevel hμ0 hμ hRN
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) {R : ℝ} {N : ℕ}
+    (hRN : R < μ * ((N : ℝ) + 1) ^ 2) :
+    {k : Fin r → ℤ | A.energy k ≤ R}.ncard ≤ (2 * N + 1) ^ r :=
+  A.energy_sublevel_ncard_le hμ0 hμ hRN
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) {R : ℝ} {N : ℕ}
+    (hRN : R < μ * ((N : ℝ) + 1) ^ 2) :
+    {k : Fin r → ℤ | A.energy k = R}.ncard ≤ (2 * N + 1) ^ r :=
+  A.energy_shell_ncard_le hμ0 hμ hRN
 
 end Theaetetus

@@ -26,7 +26,22 @@ and pushes `μ` below the whole spectrum
 in quadratic-form clothing: a certified eigenvalue bound for a
 concrete Gram matrix reduces to inequalities the kernel checks.
 Through `QuadraticAction.mul_sum_sq_le_energy` the bound transfers
-to lattice energies, where it dominates Boltzmann tails. -/
+to lattice energies, where it dominates Boltzmann tails.
+
+The same algebra runs upward: eigenvalue upper bounds and upper
+bounds on the form determine each other
+(`Matrix.IsHermitian.quadForm_le_mul_sum_sq`,
+`Matrix.IsHermitian.eigenvalues_le_of_quadForm_le`,
+`Matrix.IsHermitian.quadForm_le_mul_sum_sq_iff`), row dominance
+from above caps the spectrum
+(`quadForm_le_mul_sum_sq_of_dominant`,
+`eigenvalues_le_of_dominant`), and a single evaluation of the form
+at a concrete vector drives an eigenvalue out of a half-line in
+either direction (`Matrix.IsHermitian.exists_eigenvalues_lt`,
+`Matrix.IsHermitian.exists_lt_eigenvalues`). Together these are
+two-sided interval bounds on the extremal eigenvalues, obtained
+from finitely many entrywise checks and single form
+evaluations. -/
 
 namespace Theaetetus
 
@@ -111,14 +126,11 @@ theorem _root_.Matrix.IsHermitian.mul_sum_sq_le_quadForm
   exact Finset.sum_le_sum fun i _ =>
     mul_le_mul_of_nonneg_right (hμ i) (sq_nonneg _)
 
-/-- **Sharpness**: every coercivity constant of the quadratic form
-is at most every eigenvalue. Witnessed by rotating a coordinate
-vector into the eigenbasis. -/
-theorem _root_.Matrix.IsHermitian.le_eigenvalues_of_mul_sum_sq_le
-    (hM : M.IsHermitian) {μ : ℝ}
-    (h : ∀ x : Fin d → ℝ, μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x)
-    (i : Fin d) :
-    μ ≤ hM.eigenvalues i := by
+/-- A unit witness realizing each eigenvalue as a value of the
+quadratic form: the rotated coordinate vector. -/
+private theorem exists_eigen_witness (hM : M.IsHermitian) (i : Fin d) :
+    ∃ x : Fin d → ℝ, (∑ j, x j ^ 2) = 1
+      ∧ x ⬝ᵥ M.mulVec x = hM.eigenvalues i := by
   have hstarU : star (hM.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℝ)
       * (hM.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℝ) = 1 := by
     rw [← Unitary.coe_star]
@@ -131,25 +143,32 @@ theorem _root_.Matrix.IsHermitian.le_eigenvalues_of_mul_sum_sq_le
       = Pi.single i 1 := by
     rw [hx, ← Matrix.mulVec_transpose, Matrix.mulVec_mulVec,
       ← star_eq_transpose, hstarU, Matrix.one_mulVec]
-  have hval := h x
-  rw [hM.quadForm_eq_eigen_sum x, hvec] at hval
-  have hnorm : ∑ j, x j ^ 2 = 1 := by
-    rw [← hM.sum_sq_vecMul_eigenvectorUnitary x, hvec,
+  refine ⟨x, ?_, ?_⟩
+  · rw [← hM.sum_sq_vecMul_eigenvectorUnitary x, hvec,
       Fintype.sum_eq_single i]
     · rw [Pi.single_eq_same]
       norm_num
     · intro b hb
       rw [Pi.single_eq_of_ne hb]
       ring
-  have heig : ∑ j, hM.eigenvalues j * (Pi.single i 1 : Fin d → ℝ) j ^ 2
-      = hM.eigenvalues i := by
-    rw [Fintype.sum_eq_single i]
+  · rw [hM.quadForm_eq_eigen_sum x, hvec, Fintype.sum_eq_single i]
     · rw [Pi.single_eq_same]
       ring
     · intro b hb
       rw [Pi.single_eq_of_ne hb]
       ring
-  rw [hnorm, heig] at hval
+
+/-- **Sharpness**: every coercivity constant of the quadratic form
+is at most every eigenvalue. Witnessed by rotating a coordinate
+vector into the eigenbasis. -/
+theorem _root_.Matrix.IsHermitian.le_eigenvalues_of_mul_sum_sq_le
+    (hM : M.IsHermitian) {μ : ℝ}
+    (h : ∀ x : Fin d → ℝ, μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x)
+    (i : Fin d) :
+    μ ≤ hM.eigenvalues i := by
+  obtain ⟨x, hx1, hxE⟩ := exists_eigen_witness hM i
+  have hval := h x
+  rw [hx1, hxE] at hval
   linarith
 
 /-- **The coercivity criterion**: `μ` is a coercivity constant for
@@ -162,40 +181,81 @@ theorem _root_.Matrix.IsHermitian.mul_sum_sq_le_quadForm_iff
   ⟨hM.le_eigenvalues_of_mul_sum_sq_le,
     fun hμ x => hM.mul_sum_sq_le_quadForm hμ x⟩
 
+/-- **Bounding above at the spectrum**: a uniform upper bound `ν`
+on the eigenvalues of a real symmetric matrix bounds its quadratic
+form above by `ν·∑xᵢ²`. -/
+theorem _root_.Matrix.IsHermitian.quadForm_le_mul_sum_sq
+    (hM : M.IsHermitian) {ν : ℝ} (hν : ∀ i, hM.eigenvalues i ≤ ν)
+    (x : Fin d → ℝ) :
+    x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2 := by
+  rw [hM.quadForm_eq_eigen_sum x,
+    ← hM.sum_sq_vecMul_eigenvectorUnitary x, Finset.mul_sum]
+  exact Finset.sum_le_sum fun i _ =>
+    mul_le_mul_of_nonneg_right (hν i) (sq_nonneg _)
+
+/-- **Sharpness above**: every upper bound on the quadratic form is
+an upper bound on every eigenvalue. -/
+theorem _root_.Matrix.IsHermitian.eigenvalues_le_of_quadForm_le
+    (hM : M.IsHermitian) {ν : ℝ}
+    (h : ∀ x : Fin d → ℝ, x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2)
+    (i : Fin d) :
+    hM.eigenvalues i ≤ ν := by
+  obtain ⟨x, hx1, hxE⟩ := exists_eigen_witness hM i
+  have hval := h x
+  rw [hx1, hxE] at hval
+  linarith
+
+/-- **The upper criterion**: `ν` bounds the quadratic form above by
+`ν·∑xᵢ²` iff it bounds every eigenvalue above. -/
+theorem _root_.Matrix.IsHermitian.quadForm_le_mul_sum_sq_iff
+    (hM : M.IsHermitian) {ν : ℝ} :
+    (∀ x : Fin d → ℝ, x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2)
+      ↔ ∀ i, hM.eigenvalues i ≤ ν :=
+  ⟨hM.eigenvalues_le_of_quadForm_le,
+    fun hν x => hM.quadForm_le_mul_sum_sq hν x⟩
+
+/-- **The Rayleigh witness, downward**: a vector on which the form
+falls below `c` times the square sum forces an eigenvalue below
+`c`. -/
+theorem _root_.Matrix.IsHermitian.exists_eigenvalues_lt
+    (hM : M.IsHermitian) {c : ℝ} {x : Fin d → ℝ}
+    (hx : x ⬝ᵥ M.mulVec x < c * ∑ i, x i ^ 2) :
+    ∃ i, hM.eigenvalues i < c := by
+  by_contra h
+  push Not at h
+  exact absurd (hM.mul_sum_sq_le_quadForm h x) (not_le.mpr hx)
+
+/-- **The Rayleigh witness, upward**: a vector on which the form
+exceeds `c` times the square sum forces an eigenvalue above `c`. -/
+theorem _root_.Matrix.IsHermitian.exists_lt_eigenvalues
+    (hM : M.IsHermitian) {c : ℝ} {x : Fin d → ℝ}
+    (hx : c * ∑ i, x i ^ 2 < x ⬝ᵥ M.mulVec x) :
+    ∃ i, c < hM.eigenvalues i := by
+  by_contra h
+  push Not at h
+  exact absurd (hM.quadForm_le_mul_sum_sq h x) (not_le.mpr hx)
+
 /-! ## The checkable half: row dominance -/
 
-/-- **The dominance certificate**: for a symmetric matrix, the row
-bounds `μ + ∑_{j ≠ i} |M i j| ≤ M i i` — finitely many inequalities
-in the entries — force the quadratic form to dominate `μ·∑xᵢ²`. The
-off-diagonal mass is absorbed pairwise through
-`|Mᵢⱼ·xᵢ·xⱼ| ≤ |Mᵢⱼ|·(xᵢ² + xⱼ²)/2`, and symmetry folds the two
-halves onto the rows. -/
-theorem mul_sum_sq_le_quadForm_of_dominant (hsym : M.IsSymm) {μ : ℝ}
-    (hdom : ∀ i, μ + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ M i i)
-    (x : Fin d → ℝ) :
-    μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x := by
-  have hexpand : x ⬝ᵥ M.mulVec x
+/-- The quadratic form with the diagonal split off. -/
+private theorem quadForm_expand (x : Fin d → ℝ) :
+    x ⬝ᵥ M.mulVec x
       = ∑ i, (M i i * x i ^ 2
           + ∑ j ∈ Finset.univ.erase i, M i j * (x i * x j)) := by
-    show (∑ i, x i * ∑ j, M i j * x j) = _
-    refine Finset.sum_congr rfl fun i _ => ?_
-    rw [← Finset.add_sum_erase _ (fun j => M i j * x j)
-        (Finset.mem_univ i), mul_add, Finset.mul_sum]
-    congr 1
-    · ring
-    · exact Finset.sum_congr rfl fun j _ => by ring
-  have hcross : ∀ i,
-      -(∑ j ∈ Finset.univ.erase i, |M i j| * (x i ^ 2 + x j ^ 2) / 2)
-        ≤ ∑ j ∈ Finset.univ.erase i, M i j * (x i * x j) := by
-    intro i
-    rw [← Finset.sum_neg_distrib]
-    refine Finset.sum_le_sum fun j _ => ?_
-    have habs : |x i * x j| ≤ (x i ^ 2 + x j ^ 2) / 2 := by
-      rw [abs_mul]
-      nlinarith [sq_nonneg (|x i| - |x j|), sq_abs (x i), sq_abs (x j)]
-    have hlow := neg_abs_le (M i j * (x i * x j))
-    rw [abs_mul] at hlow
-    nlinarith [hlow, mul_le_mul_of_nonneg_left habs (abs_nonneg (M i j))]
+  show (∑ i, x i * ∑ j, M i j * x j) = _
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [← Finset.add_sum_erase _ (fun j => M i j * x j)
+      (Finset.mem_univ i), mul_add, Finset.mul_sum]
+  congr 1
+  · ring
+  · exact Finset.sum_congr rfl fun j _ => by ring
+
+/-- The pairwise absorption masses, folded onto the rows by
+symmetry. -/
+private theorem sum_abs_halves_eq (hsym : M.IsSymm) (x : Fin d → ℝ) :
+    (∑ i, ∑ j ∈ Finset.univ.erase i,
+        |M i j| * (x i ^ 2 + x j ^ 2) / 2)
+      = ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2 := by
   have hswap : (∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2)
       = ∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2 := by
     have hcomm : (∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2)
@@ -210,33 +270,53 @@ theorem mul_sum_sq_le_quadForm_of_dominant (hsym : M.IsSymm) {μ : ℝ}
       calc M b a = Mᵀ a b := rfl
         _ = M a b := by rw [hMsym]
     rw [hab]
-  have hA : (∑ i, ∑ j ∈ Finset.univ.erase i,
+  have hhalf : ∀ i,
+      (∑ j ∈ Finset.univ.erase i, |M i j| * (x i ^ 2 + x j ^ 2) / 2)
+        = ((∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2)
+            + ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2) / 2 := by
+    intro i
+    rw [← Finset.sum_add_distrib, ← Finset.sum_div]
+    congr 1
+    exact Finset.sum_congr rfl fun j _ => by ring
+  calc (∑ i, ∑ j ∈ Finset.univ.erase i,
         |M i j| * (x i ^ 2 + x j ^ 2) / 2)
-      = ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2 := by
-    have hhalf : ∀ i,
-        (∑ j ∈ Finset.univ.erase i, |M i j| * (x i ^ 2 + x j ^ 2) / 2)
-          = ((∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2)
-              + ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2) / 2 := by
-      intro i
-      rw [← Finset.sum_add_distrib, ← Finset.sum_div]
-      congr 1
-      exact Finset.sum_congr rfl fun j _ => by ring
-    calc (∑ i, ∑ j ∈ Finset.univ.erase i,
-          |M i j| * (x i ^ 2 + x j ^ 2) / 2)
-        = ∑ i, ((∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2)
-            + ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2) / 2 :=
-          Finset.sum_congr rfl fun i _ => hhalf i
-      _ = ((∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2)
-            + ∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2) / 2 := by
-          rw [← Finset.sum_div, Finset.sum_add_distrib]
-      _ = ∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2 := by
-          rw [hswap]
-          ring
-      _ = ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2 :=
-          Finset.sum_congr rfl fun i _ => by rw [Finset.sum_mul]
+      = ∑ i, ((∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2)
+          + ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2) / 2 :=
+        Finset.sum_congr rfl fun i _ => hhalf i
+    _ = ((∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2)
+          + ∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x j ^ 2) / 2 := by
+        rw [← Finset.sum_div, Finset.sum_add_distrib]
+    _ = ∑ i, ∑ j ∈ Finset.univ.erase i, |M i j| * x i ^ 2 := by
+        rw [hswap]
+        ring
+    _ = ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2 :=
+        Finset.sum_congr rfl fun i _ => by rw [Finset.sum_mul]
+
+/-- **The dominance certificate**: for a symmetric matrix, the row
+bounds `μ + ∑_{j ≠ i} |M i j| ≤ M i i` — finitely many inequalities
+in the entries — force the quadratic form to dominate `μ·∑xᵢ²`. The
+off-diagonal mass is absorbed pairwise through
+`|Mᵢⱼ·xᵢ·xⱼ| ≤ |Mᵢⱼ|·(xᵢ² + xⱼ²)/2`, and symmetry folds the two
+halves onto the rows. -/
+theorem mul_sum_sq_le_quadForm_of_dominant (hsym : M.IsSymm) {μ : ℝ}
+    (hdom : ∀ i, μ + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ M i i)
+    (x : Fin d → ℝ) :
+    μ * ∑ i, x i ^ 2 ≤ x ⬝ᵥ M.mulVec x := by
+  have hcross : ∀ i,
+      -(∑ j ∈ Finset.univ.erase i, |M i j| * (x i ^ 2 + x j ^ 2) / 2)
+        ≤ ∑ j ∈ Finset.univ.erase i, M i j * (x i * x j) := by
+    intro i
+    rw [← Finset.sum_neg_distrib]
+    refine Finset.sum_le_sum fun j _ => ?_
+    have habs : |x i * x j| ≤ (x i ^ 2 + x j ^ 2) / 2 := by
+      rw [abs_mul]
+      nlinarith [sq_nonneg (|x i| - |x j|), sq_abs (x i), sq_abs (x j)]
+    have hlow := neg_abs_le (M i j * (x i * x j))
+    rw [abs_mul] at hlow
+    nlinarith [hlow, mul_le_mul_of_nonneg_left habs (abs_nonneg (M i j))]
   have h2 : -(∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2)
       ≤ ∑ i, ∑ j ∈ Finset.univ.erase i, M i j * (x i * x j) := by
-    rw [← hA, ← Finset.sum_neg_distrib]
+    rw [← sum_abs_halves_eq hsym x, ← Finset.sum_neg_distrib]
     exact Finset.sum_le_sum fun i _ => hcross i
   have h1 : (∑ i, μ * x i ^ 2)
         + ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2
@@ -247,7 +327,43 @@ theorem mul_sum_sq_le_quadForm_of_dominant (hsym : M.IsSymm) {μ : ℝ}
   calc μ * ∑ i, x i ^ 2
       = ∑ i, μ * x i ^ 2 := by rw [Finset.mul_sum]
     _ ≤ x ⬝ᵥ M.mulVec x := by
-        rw [hexpand, Finset.sum_add_distrib]
+        rw [quadForm_expand x, Finset.sum_add_distrib]
+        linarith [h1, h2]
+
+/-- **The dominance certificate, upper side**: for a symmetric
+matrix, the row bounds `M i i + ∑_{j ≠ i} |M i j| ≤ ν` force the
+quadratic form below `ν·∑xᵢ²`. -/
+theorem quadForm_le_mul_sum_sq_of_dominant (hsym : M.IsSymm) {ν : ℝ}
+    (hdom : ∀ i, M i i + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ ν)
+    (x : Fin d → ℝ) :
+    x ⬝ᵥ M.mulVec x ≤ ν * ∑ i, x i ^ 2 := by
+  have hcross : ∀ i,
+      (∑ j ∈ Finset.univ.erase i, M i j * (x i * x j))
+        ≤ ∑ j ∈ Finset.univ.erase i, |M i j| * (x i ^ 2 + x j ^ 2) / 2 := by
+    intro i
+    refine Finset.sum_le_sum fun j _ => ?_
+    have habs : |x i * x j| ≤ (x i ^ 2 + x j ^ 2) / 2 := by
+      rw [abs_mul]
+      nlinarith [sq_nonneg (|x i| - |x j|), sq_abs (x i), sq_abs (x j)]
+    have hup := le_abs_self (M i j * (x i * x j))
+    rw [abs_mul] at hup
+    nlinarith [hup, mul_le_mul_of_nonneg_left habs (abs_nonneg (M i j))]
+  have h2 : (∑ i, ∑ j ∈ Finset.univ.erase i, M i j * (x i * x j))
+      ≤ ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2 := by
+    rw [← sum_abs_halves_eq hsym x]
+    exact Finset.sum_le_sum fun i _ => hcross i
+  have h1 : (∑ i, M i i * x i ^ 2)
+        + ∑ i, (∑ j ∈ Finset.univ.erase i, |M i j|) * x i ^ 2
+      ≤ ∑ i, ν * x i ^ 2 := by
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_le_sum fun i _ => by
+      nlinarith [hdom i, sq_nonneg (x i)]
+  calc x ⬝ᵥ M.mulVec x
+      = ∑ i, (M i i * x i ^ 2
+          + ∑ j ∈ Finset.univ.erase i, M i j * (x i * x j)) :=
+        quadForm_expand x
+    _ ≤ ν * ∑ i, x i ^ 2 := by
+        rw [Finset.sum_add_distrib, Finset.mul_sum]
         linarith [h1, h2]
 
 /-- **Positive definiteness from strict dominance**: a symmetric
@@ -278,6 +394,17 @@ theorem le_eigenvalues_of_dominant (hM : M.IsHermitian) {μ : ℝ}
     μ ≤ hM.eigenvalues i :=
   hM.le_eigenvalues_of_mul_sum_sq_le
     (fun x => mul_sum_sq_le_quadForm_of_dominant
+      (isHermitian_iff_isSymm.mp hM) hdom x) i
+
+/-- **The certified spectral upper bound**: row dominance from
+above pushes every eigenvalue below `ν` — again finitely many
+entrywise inequalities. -/
+theorem eigenvalues_le_of_dominant (hM : M.IsHermitian) {ν : ℝ}
+    (hdom : ∀ i, M i i + ∑ j ∈ Finset.univ.erase i, |M i j| ≤ ν)
+    (i : Fin d) :
+    hM.eigenvalues i ≤ ν :=
+  hM.eigenvalues_le_of_quadForm_le
+    (fun x => quadForm_le_mul_sum_sq_of_dominant
       (isHermitian_iff_isSymm.mp hM) hdom x) i
 
 /-- **Coercivity of the lattice energy**: a certified lower bound on

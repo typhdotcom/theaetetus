@@ -543,40 +543,55 @@ Formalization targets:
    datum-honest form: a single limit of differences of entries of
    one fixed-scale defect matrix,
    `D_s(m, km+1) − D_s(k+1, k+2) → F_s(m)`.
-5. **The certification chain** for higher-rank numerics: a lower
-   bound `Q(x) ≥ μ‖x‖²` from the least Gram eigenvalue, shell
-   counts, moment tails with the dimension-dependent polynomial
-   factor, and interval linear algebra for extremal eigenvalues.
-   `Theaetetus.Fluctuation`'s geometric-domination bounds are the
-   rank-one shapes. The first link is in place
+5. **The certification chain** for higher-rank numerics — done:
+   coercivity, tails, moments, shell counts, and two-sided
+   spectral bounds, all reduced to finitely many checkable
+   inequalities. `Theaetetus.Fluctuation`'s geometric-domination
+   bounds were the rank-one shapes. Coercivity
    (`Theaetetus.Certification`): `μ` is a coercivity constant for
    a Gram form — `μ·∑xᵢ² ≤ xᵀQx` — iff it lower-bounds every
    eigenvalue (`Matrix.IsHermitian.mul_sum_sq_le_quadForm`,
-   `Matrix.IsHermitian.le_eigenvalues_of_mul_sum_sq_le`, packaged
-   as `Matrix.IsHermitian.mul_sum_sq_le_quadForm_iff`), while row
-   dominance `μ + ∑_{j≠i}|Qᵢⱼ| ≤ Qᵢᵢ` — finitely many entrywise
+   `Matrix.IsHermitian.le_eigenvalues_of_mul_sum_sq_le`,
+   `Matrix.IsHermitian.mul_sum_sq_le_quadForm_iff`), and the same
+   holds above (`Matrix.IsHermitian.quadForm_le_mul_sum_sq`,
+   `Matrix.IsHermitian.eigenvalues_le_of_quadForm_le`,
+   `Matrix.IsHermitian.quadForm_le_mul_sum_sq_iff`); row dominance
+   `μ + ∑_{j≠i}|Qᵢⱼ| ≤ Qᵢᵢ` — finitely many entrywise
    inequalities, rational arithmetic when the entries are
-   rational — certifies the same bound, positive definiteness,
+   rational — certifies the lower bound, positive definiteness,
    and a spectrum-wide `μ ≤ λ`
    (`mul_sum_sq_le_quadForm_of_dominant`, `posDef_of_dominant`,
-   `le_eigenvalues_of_dominant`), transferring to lattice energies
-   through `QuadraticAction.mul_sum_sq_le_energy`. The second link
-   follows (`Theaetetus.Tails`): the lattice sum of a product
-   weight factorizes exactly
-   (`QuadraticAction.tsum_finPi_prod`), the scalar tail
-   beyond radius `N` is geometrically dominated (`theta_tail_le`),
-   and outside the sup-norm box the Boltzmann sum of a certified
-   action is bounded by `r·θ(μ)^{r−1}` copies of the scalar tail
-   (`QuadraticAction.tail_le`), splitting the partition function
-   into a finite box plus a certified truncation error
-   (`QuadraticAction.partFn_le_box_add_tail`), packaged as the
-   two-sided interval enclosure
-   (`QuadraticAction.partFn_mem_box_Icc`). Shell counts,
-   weighted moment tails, and the interval crossing algebra
-   remain.
-   Certified this way, a reconnaissance sign is a certificate —
-   and a counterexample arrives pre-packaged for its own
-   formalization.
+   `le_eigenvalues_of_dominant`), dominance from above caps the
+   spectrum (`quadForm_le_mul_sum_sq_of_dominant`,
+   `eigenvalues_le_of_dominant`), and a single form evaluation at
+   a concrete vector drives an eigenvalue out of a half-line in
+   either direction (`Matrix.IsHermitian.exists_eigenvalues_lt`,
+   `Matrix.IsHermitian.exists_lt_eigenvalues`) — the interval
+   algebra for extremal eigenvalues. Coercivity transfers to
+   lattice energies (`QuadraticAction.mul_sum_sq_le_energy`).
+   Tails (`Theaetetus.Tails`): the lattice sum of a product weight
+   factorizes exactly (`QuadraticAction.tsum_finPi_prod`), the
+   scalar tail beyond radius `N` is geometrically dominated
+   (`theta_tail_le`), any energy dominating `ν·∑kᵢ²` has its
+   Boltzmann sum outside the sup-norm box bounded by
+   `r·θ(ν)^{r−1}` copies of the scalar tail (`tail_exp_le`,
+   instantiated as `QuadraticAction.tail_le`), the partition
+   function splits into a finite box plus a certified truncation
+   error (`QuadraticAction.partFn_le_box_add_tail`, packaged as
+   the enclosure `QuadraticAction.partFn_mem_box_Icc`), and
+   polynomial energy weights absorb at half coupling —
+   `xᵐ·e^{−x} ≤ 2ᵐ·m!·e^{−x/2}` — so every energy-moment tail is
+   the plain tail at `μ/2` with the factorial constant
+   (`QuadraticAction.moment_tail_le`). Shell counts
+   (`Theaetetus.Shells`): coercivity confines energy sublevels to
+   boxes (`QuadraticAction.abs_le_of_energy_le`), so they are
+   finite (`QuadraticAction.finite_energy_sublevel`) with at most
+   `(2N+1)^r` sectors once `R < μ(N+1)²`
+   (`QuadraticAction.energy_sublevel_ncard_le`), and every energy
+   shell obeys the same bound
+   (`QuadraticAction.energy_shell_ncard_le`). Certified this way,
+   a reconnaissance sign is a certificate — and a counterexample
+   arrives pre-packaged for its own formalization.
 6. **`Theaetetus/Status.lean`** — done: the statement-level
    manifest exists — every claim this document makes of the
    tree, restated as an `example` discharged by the theorem it
@@ -624,7 +639,7 @@ Reconnaissance, falsify-first:
    as well — rank-3 baselines, the cubic→FCC path, the FCC
    squash family with two fine scans; under genuine dual
    asymmetry the sampled minimum leaves the duality center.
-   Next: certified tails (target 5) to harden the
+   Next: apply the certification chain (target 5) to the
    deep-degeneration margins.
 2. **Q4 phase geometry** — first uncertified sweep complete
    (`recon/q4.py`; `q4_sweep_*.json`, `q4_witness.json`;
@@ -632,20 +647,19 @@ Reconnaissance, falsify-first:
    eigenvalues, one detected sign change per statistic per
    sampled grid with brackets bisected, and the historically
    cited transitions and `s = 0.12` witness reproduced from
-   committed code. Next: certified entry intervals and interval
-   linear algebra for the crossings (target 5), further
-   intervality falsification, and the star-obstruction rate
-   against its `s_PSD ~ (1/6)·log n` benchmark.
+   committed code. Next: apply the crossing algebra (target 5) to
+   certify the entry intervals and brackets, further intervality
+   falsification, and the star-obstruction rate against its
+   `s_PSD ~ (1/6)·log n` benchmark.
 
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
 sweeps, the first Q4 sweep, the star-obstruction theorem, the
-manifest with its docstring sweep, the recovery formula, and
-spectral peeling are complete. Still open: higher-rank duality
-(target 1), the Regev–Stephens-Davidowitz implication
-(target 3), the certification chain (target 5) — the one both
-reconnaissance lanes name as their next step — and Q6's
-identity layer (target 7). The verdicts to date:
+manifest with its docstring sweep, the recovery formula, spectral
+peeling, and the certification chain are complete. Still open:
+higher-rank duality (target 1), the Regev–Stephens-Davidowitz
+implication (target 3), and Q6's identity layer (target 7). The
+verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD

@@ -75,6 +75,9 @@ import Theaetetus.Certification
 -- Certified Boltzmann tails: the box truncation error, dominated
 import Theaetetus.Tails
 
+-- Certified shell counts: energy sublevels confined to boxes
+import Theaetetus.Shells
+
 -- Fiber products and Boltzmann coarse-graining
 import Theaetetus.Pullback
 import Theaetetus.CoarseGrain

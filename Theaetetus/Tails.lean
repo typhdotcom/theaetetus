@@ -7,16 +7,20 @@ Lattice Boltzmann sums are computed numerically by truncating
 the truncation discards. The scalar tail beyond radius `N` is
 geometrically dominated:
 `∑_{|m|>N} e^{−αm²} ≤ 2·e^{−α(N+1)²}·(1 − e^{−2α(N+1)})⁻¹`
-(`theta_tail_le`). For a quadratic action with a certified positive
-eigenvalue lower bound `μ`, coercivity
-(`QuadraticAction.mul_sum_sq_le_energy`) dominates every Boltzmann
-weight by a product of scalar Gaussians, and a union bound over an
-escaping coordinate reduces the lattice tail outside the sup-norm
-box to `r` copies of the scalar tail, each padded by a full theta
-factor for every remaining coordinate (`QuadraticAction.tail_le`).
-The resulting split of the partition function into box plus
-certified tail (`QuadraticAction.partFn_le_box_add_tail`) is the
-shape a truncated numeric evaluation consumes. -/
+(`theta_tail_le`). The lattice tail is a union bound over an
+escaping coordinate: any energy dominating `ν·∑kᵢ²` has its
+Boltzmann sum outside the sup-norm box bounded by `r` copies of
+the scalar tail, each padded by a full theta factor for every
+remaining coordinate (`tail_exp_le`). A quadratic action with a
+certified positive eigenvalue lower bound `μ` instantiates this
+through coercivity (`QuadraticAction.tail_le`), the partition
+function splits into box plus certified truncation error
+(`QuadraticAction.partFn_le_box_add_tail`,
+`QuadraticAction.partFn_mem_box_Icc`), and polynomial energy
+weights are absorbed at half the coupling —
+`xᵐ·e^{−x} ≤ 2ᵐ·m!·e^{−x/2}` — so every energy-moment tail is an
+instance of the plain tail at `μ/2`
+(`QuadraticAction.moment_tail_le`). -/
 
 namespace Theaetetus
 
@@ -149,22 +153,25 @@ theorem theta_tail_le {α : ℝ} (hα : 0 < α) (N : ℕ) :
 
 /-! ## The lattice tail -/
 
-/-- **The lattice Boltzmann tail**: outside the sup-norm box of
-radius `N`, the Boltzmann sum of a quadratic action with a
-certified positive eigenvalue lower bound `μ` is dominated by `r`
-copies of the scalar tail, each padded by a full theta factor for
-every remaining coordinate. -/
-theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
-    {μ : ℝ} (hμ0 : 0 < μ)
-    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (N : ℕ) :
+/-- **The lattice Boltzmann tail, coercive form**: any energy
+dominating `ν·∑kᵢ²` has its Boltzmann sum outside the sup-norm box
+of radius `N` bounded by `r` copies of the scalar tail, each padded
+by a full theta factor for every remaining coordinate. The escape
+is a union bound over the escaping coordinate, and each escaping
+term is itself a product weight, evaluated exactly by
+`QuadraticAction.tsum_finPi_prod`. -/
+theorem tail_exp_le {r : ℕ} {E : (Fin r → ℤ) → ℝ} {ν : ℝ}
+    (hν : 0 < ν)
+    (hcoer : ∀ k : Fin r → ℤ, ν * ∑ i, (k i : ℝ) ^ 2 ≤ E k)
+    (N : ℕ) :
     (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
-        Real.exp (-A.energy k.1))
-      ≤ (r : ℝ) * theta μ ^ (r - 1)
-          * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
-              * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹)) := by
-  set gauss : ℤ → ℝ := fun m => Real.exp (-μ * (m : ℝ) ^ 2) with hgauss
+        Real.exp (-E k.1))
+      ≤ (r : ℝ) * theta ν ^ (r - 1)
+          * (2 * (Real.exp (-ν * ((N : ℝ) + 1) ^ 2)
+              * (1 - Real.exp (-(2 * ν * ((N : ℝ) + 1))))⁻¹)) := by
+  set gauss : ℤ → ℝ := fun m => Real.exp (-ν * (m : ℝ) ^ 2) with hgauss
   set tailg : ℤ → ℝ := fun m =>
-    if (N : ℤ) < |m| then Real.exp (-μ * (m : ℝ) ^ 2) else 0 with htailg
+    if (N : ℤ) < |m| then Real.exp (-ν * (m : ℝ) ^ 2) else 0 with htailg
   have hgauss_nn : ∀ m, 0 ≤ gauss m := fun m => (Real.exp_pos _).le
   have htailg_nn : ∀ m, 0 ≤ tailg m := fun m => by
     simp only [htailg]
@@ -178,12 +185,30 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
     · positivity
   have hgauss_sum : Summable gauss := by
     rw [hgauss]
-    exact summable_theta μ hμ0
+    exact summable_theta ν hν
   have htailg_sum : Summable tailg :=
     Summable.of_nonneg_of_le htailg_nn htailg_le hgauss_sum
-  have htheta : (∑' m : ℤ, gauss m) = theta μ := by
+  have htheta : (∑' m : ℤ, gauss m) = theta ν := by
     rw [hgauss]
     rfl
+  have hgdom : ∀ k : Fin r → ℤ,
+      Real.exp (-E k) ≤ ∏ j, gauss (k j) := by
+    intro k
+    calc Real.exp (-E k)
+        ≤ Real.exp (-(ν * ∑ j, (k j : ℝ) ^ 2)) := by
+          apply Real.exp_le_exp.mpr
+          have := hcoer k
+          linarith
+      _ = ∏ j, gauss (k j) := by
+          simp only [hgauss]
+          rw [← Real.exp_sum]
+          congr 1
+          rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
+          exact Finset.sum_congr rfl fun j _ => by ring
+  have hEsum : Summable fun k : Fin r → ℤ => Real.exp (-E k) :=
+    Summable.of_nonneg_of_le (fun k => (Real.exp_pos _).le) hgdom
+      (QuadraticAction.summable_finPi_prod r (fun _ => gauss)
+        (fun _ m => hgauss_nn m) (fun _ => hgauss_sum))
   have hfam_nn : ∀ (i j : Fin r) (m : ℤ),
       0 ≤ (if j = i then tailg else gauss) m := fun i j m => by
     by_cases hj : j = i
@@ -204,7 +229,7 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
       (fun j m => hfam_nn i j m) (fun j => hfam_sum i j)
   have hpoint : ∀ k : Fin r → ℤ,
       Set.indicator {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
-          (fun k => Real.exp (-A.energy k)) k
+          (fun k => Real.exp (-E k)) k
         ≤ ∑ i, ∏ j, (if j = i then tailg else gauss) (k j) := by
     intro k
     by_cases hk : k ∈ {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
@@ -213,18 +238,6 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
         by_contra hno
         push Not at hno
         exact hk fun i => hno i
-      have hdom : Real.exp (-A.energy k) ≤ ∏ j, gauss (k j) := by
-        have hE := A.mul_sum_sq_le_energy hμ k
-        calc Real.exp (-A.energy k)
-            ≤ Real.exp (-(μ * ∑ j, (k j : ℝ) ^ 2)) := by
-              apply Real.exp_le_exp.mpr
-              linarith
-          _ = ∏ j, gauss (k j) := by
-              simp only [hgauss]
-              rw [← Real.exp_sum]
-              congr 1
-              rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
-              exact Finset.sum_congr rfl fun j _ => by ring
       have hswitch : (∏ j, gauss (k j))
           = ∏ j, (if j = i₀ then tailg else gauss) (k j) := by
         refine Finset.prod_congr rfl fun j _ => ?_
@@ -234,8 +247,8 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
           simp only [hgauss, htailg]
           rw [if_pos hi₀]
         · rw [if_neg hj]
-      calc Real.exp (-A.energy k)
-          ≤ ∏ j, gauss (k j) := hdom
+      calc Real.exp (-E k)
+          ≤ ∏ j, gauss (k j) := hgdom k
         _ = ∏ j, (if j = i₀ then tailg else gauss) (k j) := hswitch
         _ ≤ ∑ i, ∏ j, (if j = i then tailg else gauss) (k j) :=
             Finset.single_le_sum
@@ -246,12 +259,10 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
         Finset.prod_nonneg fun j _ => hfam_nn i j (k j)
   have hind_sum : Summable
       (Set.indicator {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
-        (fun k => Real.exp (-A.energy k))) := by
-    have hsum : Summable fun k : Fin r → ℤ => Real.exp (-A.energy k) :=
-      A.summable.congr fun k => rfl
+        (fun k => Real.exp (-E k))) := by
     refine Summable.of_nonneg_of_le
       (fun k => Set.indicator_nonneg (fun _ _ => (Real.exp_pos _).le) k)
-      (fun k => ?_) hsum
+      (fun k => ?_) hEsum
     by_cases hk : k ∈ {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
     · exact le_of_eq (Set.indicator_of_mem hk _)
     · rw [Set.indicator_of_notMem hk]
@@ -262,22 +273,22 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
         ∏ j, (if j = i then tailg else gauss) (k j)) :=
     hasSum_sum fun i _ => (hP_sum i).hasSum
   have hsub : (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
-      Real.exp (-A.energy k.1))
+      Real.exp (-E k.1))
       = ∑' k : Fin r → ℤ,
         Set.indicator {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
-          (fun k => Real.exp (-A.energy k)) k :=
+          (fun k => Real.exp (-E k)) k :=
     tsum_subtype {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
-      (fun k => Real.exp (-A.energy k))
+      (fun k => Real.exp (-E k))
   rw [hsub]
   calc (∑' k : Fin r → ℤ,
         Set.indicator {k : Fin r → ℤ | ¬ ∀ i, |k i| ≤ (N : ℤ)}
-          (fun k => Real.exp (-A.energy k)) k)
+          (fun k => Real.exp (-E k)) k)
       ≤ ∑' k : Fin r → ℤ,
           ∑ i, ∏ j, (if j = i then tailg else gauss) (k j) :=
         hind_sum.tsum_le_tsum hpoint hswap.summable
     _ = ∑ i, ∑' k : Fin r → ℤ,
           ∏ j, (if j = i then tailg else gauss) (k j) := hswap.tsum_eq
-    _ = ∑ _i : Fin r, (∑' m : ℤ, tailg m) * theta μ ^ (r - 1) := by
+    _ = ∑ _i : Fin r, (∑' m : ℤ, tailg m) * theta ν ^ (r - 1) := by
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [QuadraticAction.tsum_finPi_prod r _
           (fun j m => hfam_nn i j m) (fun j => hfam_sum i j)]
@@ -288,28 +299,44 @@ theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
         · rw [if_pos rfl]
         · calc (∏ j ∈ Finset.univ.erase i,
                 ∑' m : ℤ, (if j = i then tailg else gauss) m)
-              = ∏ _j ∈ Finset.univ.erase i, theta μ :=
+              = ∏ _j ∈ Finset.univ.erase i, theta ν :=
                 Finset.prod_congr rfl fun j hj => by
                   rw [if_neg (Finset.ne_of_mem_erase hj), htheta]
-            _ = theta μ ^ (r - 1) := by
+            _ = theta ν ^ (r - 1) := by
                 rw [Finset.prod_const,
                   Finset.card_erase_of_mem (Finset.mem_univ i),
                   Finset.card_univ, Fintype.card_fin]
-    _ = (r : ℝ) * ((∑' m : ℤ, tailg m) * theta μ ^ (r - 1)) := by
+    _ = (r : ℝ) * ((∑' m : ℤ, tailg m) * theta ν ^ (r - 1)) := by
         rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
           nsmul_eq_mul]
-    _ ≤ (r : ℝ) * ((2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
-            * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹))
-          * theta μ ^ (r - 1)) := by
+    _ ≤ (r : ℝ) * ((2 * (Real.exp (-ν * ((N : ℝ) + 1) ^ 2)
+            * (1 - Real.exp (-(2 * ν * ((N : ℝ) + 1))))⁻¹))
+          * theta ν ^ (r - 1)) := by
         apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg r)
         apply mul_le_mul_of_nonneg_right _
-          (pow_nonneg (theta_pos μ hμ0).le _)
+          (pow_nonneg (theta_pos ν hν).le _)
         simp only [htailg]
-        exact theta_tail_le hμ0 N
-    _ = (r : ℝ) * theta μ ^ (r - 1)
-          * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
-              * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹)) := by
+        exact theta_tail_le hν N
+    _ = (r : ℝ) * theta ν ^ (r - 1)
+          * (2 * (Real.exp (-ν * ((N : ℝ) + 1) ^ 2)
+              * (1 - Real.exp (-(2 * ν * ((N : ℝ) + 1))))⁻¹)) := by
         ring
+
+/-- **The lattice Boltzmann tail**: outside the sup-norm box of
+radius `N`, the Boltzmann sum of a quadratic action with a
+certified positive eigenvalue lower bound `μ` is dominated by `r`
+copies of the scalar tail, each padded by a full theta factor for
+every remaining coordinate. -/
+theorem QuadraticAction.tail_le {r : ℕ} (A : QuadraticAction r)
+    {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (N : ℕ) :
+    (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+        Real.exp (-A.energy k.1))
+      ≤ (r : ℝ) * theta μ ^ (r - 1)
+          * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
+              * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹)) :=
+  tail_exp_le (E := A.energy) hμ0
+    (fun k => A.mul_sum_sq_le_energy hμ k) N
 
 /-- **The box approximation**: the partition function splits into
 the sup-norm box of radius `N` plus a tail dominated by the
@@ -366,5 +393,109 @@ theorem QuadraticAction.partFn_mem_box_Icc {r : ℕ}
       tsum_nonneg fun k => (Real.exp_pos _).le
     linarith [hsplit]
   · exact A.partFn_le_box_add_tail hμ0 hμ N
+
+/-! ## Moment tails -/
+
+/-- Factorial absorption of a polynomial weight into half the
+exponent: `xᵐ·e^{−x} ≤ 2ᵐ·m!·e^{−x/2}` for `x ≥ 0`. -/
+private theorem pow_mul_exp_neg_le {x : ℝ} (hx : 0 ≤ x) (m : ℕ) :
+    x ^ m * Real.exp (-x)
+      ≤ 2 ^ m * (m.factorial : ℝ) * Real.exp (-(x / 2)) := by
+  have hhalf : (0 : ℝ) ≤ x / 2 := by linarith
+  have hfac : (0 : ℝ) < (m.factorial : ℝ) := by
+    exact_mod_cast m.factorial_pos
+  have hser : (x / 2) ^ m / (m.factorial : ℝ) ≤ Real.exp (x / 2) := by
+    calc (x / 2) ^ m / (m.factorial : ℝ)
+        ≤ ∑ i ∈ Finset.range (m + 1), (x / 2) ^ i / (i.factorial : ℝ) :=
+          Finset.single_le_sum
+            (f := fun i => (x / 2) ^ i / (i.factorial : ℝ))
+            (fun i _ => div_nonneg (pow_nonneg hhalf i)
+              (Nat.cast_nonneg _))
+            (Finset.mem_range.mpr (Nat.lt_succ_self m))
+      _ ≤ Real.exp (x / 2) := Real.sum_le_exp_of_nonneg hhalf (m + 1)
+  have hpow : x ^ m ≤ 2 ^ m * (m.factorial : ℝ) * Real.exp (x / 2) := by
+    have h1 : (x / 2) ^ m ≤ (m.factorial : ℝ) * Real.exp (x / 2) := by
+      rw [div_le_iff₀ hfac] at hser
+      linarith
+    have h2 : x ^ m = 2 ^ m * (x / 2) ^ m := by
+      rw [← mul_pow]
+      congr 1
+      ring
+    rw [h2]
+    calc 2 ^ m * (x / 2) ^ m
+        ≤ 2 ^ m * ((m.factorial : ℝ) * Real.exp (x / 2)) := by
+          apply mul_le_mul_of_nonneg_left h1 (by positivity)
+      _ = 2 ^ m * (m.factorial : ℝ) * Real.exp (x / 2) := by ring
+  calc x ^ m * Real.exp (-x)
+      ≤ (2 ^ m * (m.factorial : ℝ) * Real.exp (x / 2)) * Real.exp (-x) :=
+        mul_le_mul_of_nonneg_right hpow (Real.exp_pos _).le
+    _ = 2 ^ m * (m.factorial : ℝ) * Real.exp (-(x / 2)) := by
+        rw [mul_assoc, ← Real.exp_add]
+        congr 2
+        ring
+
+/-- **The lattice moment tail**: outside the sup-norm box, the
+`m`-th energy-moment Boltzmann sum of a certified action is
+dominated by the factorial constant times the plain tail at half
+the certified coupling. -/
+theorem QuadraticAction.moment_tail_le {r : ℕ} (A : QuadraticAction r)
+    {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (m N : ℕ) :
+    (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+        A.energy k.1 ^ m * Real.exp (-A.energy k.1))
+      ≤ 2 ^ m * (m.factorial : ℝ)
+          * ((r : ℝ) * theta (μ / 2) ^ (r - 1)
+              * (2 * (Real.exp (-(μ / 2) * ((N : ℝ) + 1) ^ 2)
+                  * (1 - Real.exp (-(2 * (μ / 2) * ((N : ℝ) + 1))))⁻¹))) := by
+  have hμ2 : (0 : ℝ) < μ / 2 := by linarith
+  have hcoer : ∀ k : Fin r → ℤ,
+      (μ / 2) * ∑ i, (k i : ℝ) ^ 2 ≤ A.energy k / 2 := by
+    intro k
+    have := A.mul_sum_sq_le_energy hμ k
+    linarith
+  have htail := tail_exp_le (E := fun k => A.energy k / 2) hμ2 hcoer N
+  have habs : ∀ k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+      A.energy k.1 ^ m * Real.exp (-A.energy k.1)
+        ≤ 2 ^ m * (m.factorial : ℝ) * Real.exp (-(A.energy k.1 / 2)) :=
+    fun k => pow_mul_exp_neg_le (A.energy_nonneg k.1) m
+  have hhalf_sum : Summable fun k : Fin r → ℤ =>
+      Real.exp (-(A.energy k / 2)) := by
+    refine Summable.of_nonneg_of_le (fun k => (Real.exp_pos _).le)
+      (fun k => ?_)
+      (QuadraticAction.summable_finPi_prod r
+        (fun _ => fun z : ℤ => Real.exp (-(μ / 2) * (z : ℝ) ^ 2))
+        (fun _ z => (Real.exp_pos _).le)
+        (fun _ => summable_theta _ hμ2))
+    calc Real.exp (-(A.energy k / 2))
+        ≤ Real.exp (-((μ / 2) * ∑ j, (k j : ℝ) ^ 2)) := by
+          apply Real.exp_le_exp.mpr
+          have := hcoer k
+          linarith
+      _ = ∏ j, Real.exp (-(μ / 2) * (k j : ℝ) ^ 2) := by
+          rw [← Real.exp_sum]
+          congr 1
+          rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
+          exact Finset.sum_congr rfl fun j _ => by ring
+  have hmom_sum : Summable
+      fun k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)} =>
+        A.energy k.1 ^ m * Real.exp (-A.energy k.1) :=
+    Summable.of_nonneg_of_le
+      (fun k => mul_nonneg (pow_nonneg (A.energy_nonneg k.1) m)
+        (Real.exp_pos _).le)
+      habs ((hhalf_sum.subtype _).mul_left _)
+  calc (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+        A.energy k.1 ^ m * Real.exp (-A.energy k.1))
+      ≤ ∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+          2 ^ m * (m.factorial : ℝ) * Real.exp (-(A.energy k.1 / 2)) :=
+        hmom_sum.tsum_le_tsum habs ((hhalf_sum.subtype _).mul_left _)
+    _ = 2 ^ m * (m.factorial : ℝ)
+          * ∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+              Real.exp (-(A.energy k.1 / 2)) :=
+        (hhalf_sum.subtype _).tsum_mul_left _
+    _ ≤ 2 ^ m * (m.factorial : ℝ)
+          * ((r : ℝ) * theta (μ / 2) ^ (r - 1)
+              * (2 * (Real.exp (-(μ / 2) * ((N : ℝ) + 1) ^ 2)
+                  * (1 - Real.exp (-(2 * (μ / 2) * ((N : ℝ) + 1))))⁻¹))) := by
+        apply mul_le_mul_of_nonneg_left htail (by positivity)
 
 end Theaetetus
