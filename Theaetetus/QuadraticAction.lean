@@ -65,6 +65,51 @@ theorem summable_finPi_prod (r : ℕ) (f : Fin r → ℤ → ℝ)
     exact (e.summable_iff.mpr hFG).congr fun k =>
       (Fin.prod_univ_castSucc (fun i => f i (k i))).symm
 
+/-- Fubini factorization for products of independent non-negative
+summable factors over `Fin r → ℤ`: the lattice sum of a product
+weight is the product of the scalar sums — the equality half of
+`summable_finPi_prod`. -/
+theorem tsum_finPi_prod (r : ℕ) (f : Fin r → ℤ → ℝ)
+    (hf_nn : ∀ i z, 0 ≤ f i z)
+    (hf_sum : ∀ i, Summable (f i)) :
+    ∑' k : Fin r → ℤ, ∏ i, f i (k i) = ∏ i, ∑' z : ℤ, f i z := by
+  induction r with
+  | zero =>
+    have h0 := hasSum_single (f := fun k : Fin 0 → ℤ => ∏ i, f i (k i))
+      default fun b hb => absurd (Subsingleton.elim b default) hb
+    rw [h0.tsum_eq]
+    simp
+  | succ n ih =>
+    let e := Fin.succFunEquiv ℤ n
+    set F : (Fin n → ℤ) → ℝ := fun q => ∏ i : Fin n, f (Fin.castSucc i) (q i)
+      with hF
+    set G : ℤ → ℝ := f (Fin.last n) with hG
+    have hF_nn : ∀ q, 0 ≤ F q := fun q =>
+      Finset.prod_nonneg (fun i _ => hf_nn (Fin.castSucc i) (q i))
+    have hG_nn : ∀ z, 0 ≤ G z := hf_nn (Fin.last n)
+    have hF_sum : Summable F :=
+      summable_finPi_prod n (fun i => f (Fin.castSucc i))
+        (fun i z => hf_nn (Fin.castSucc i) z)
+        (fun i => hf_sum (Fin.castSucc i))
+    have hG_sum : Summable G := hf_sum (Fin.last n)
+    have hFn : Summable fun q => ‖F q‖ :=
+      hF_sum.congr fun q => (Real.norm_eq_abs (F q) ▸ abs_of_nonneg (hF_nn q)).symm
+    have hGn : Summable fun z => ‖G z‖ :=
+      hG_sum.congr fun z => (Real.norm_eq_abs (G z) ▸ abs_of_nonneg (hG_nn z)).symm
+    calc ∑' k : Fin (n + 1) → ℤ, ∏ i, f i (k i)
+        = ∑' p : (Fin n → ℤ) × ℤ, F p.1 * G p.2 := by
+          rw [← e.tsum_eq (fun p : (Fin n → ℤ) × ℤ => F p.1 * G p.2)]
+          exact tsum_congr fun k => Fin.prod_univ_castSucc (fun i => f i (k i))
+      _ = (∑' q : Fin n → ℤ, F q) * ∑' z : ℤ, G z :=
+          (tsum_mul_tsum_of_summable_norm hFn hGn).symm
+      _ = (∏ i : Fin n, ∑' z : ℤ, f (Fin.castSucc i) z) * ∑' z : ℤ, G z := by
+          simp only [hF]
+          rw [ih (fun i => f (Fin.castSucc i))
+            (fun i z => hf_nn (Fin.castSucc i) z)
+            (fun i => hf_sum (Fin.castSucc i))]
+      _ = ∏ i : Fin (n + 1), ∑' z : ℤ, f i z :=
+          (Fin.prod_univ_castSucc (fun i => ∑' z : ℤ, f i z)).symm
+
 end QuadraticAction
 
 /-- The quadratic form of a matrix is continuous. Public: the Gaussian

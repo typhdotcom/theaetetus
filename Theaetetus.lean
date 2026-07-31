@@ -72,6 +72,9 @@ import Theaetetus.Periodization
 -- Certified coercivity: the least Gram eigenvalue and the dominance certificate
 import Theaetetus.Certification
 
+-- Certified Boltzmann tails: the box truncation error, dominated
+import Theaetetus.Tails
+
 -- Fiber products and Boltzmann coarse-graining
 import Theaetetus.Pullback
 import Theaetetus.CoarseGrain

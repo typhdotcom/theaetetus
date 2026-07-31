@@ -9,6 +9,7 @@ import Theaetetus.SmallScale
 import Theaetetus.StarObstruction
 import Theaetetus.DiagonalCurvature
 import Theaetetus.Certification
+import Theaetetus.Tails
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -24,7 +25,7 @@ coupling reading; the sign; the classification; the pairing; the
 reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
-coercivity. -/
+coercivity; certified tails. -/
 
 namespace Theaetetus
 
@@ -574,5 +575,49 @@ example {r : ℕ} (A : QuadraticAction r) {μ : ℝ}
     (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (k : Fin r → ℤ) :
     μ * ∑ i, (k i : ℝ) ^ 2 ≤ A.energy k :=
   A.mul_sum_sq_le_energy hμ k
+
+/-! ## Certified tails -/
+
+example (r : ℕ) (f : Fin r → ℤ → ℝ) (hf_nn : ∀ i z, 0 ≤ f i z)
+    (hf_sum : ∀ i, Summable (f i)) :
+    ∑' k : Fin r → ℤ, ∏ i, f i (k i) = ∏ i, ∑' z : ℤ, f i z :=
+  QuadraticAction.tsum_finPi_prod r f hf_nn hf_sum
+
+example {α : ℝ} (hα : 0 < α) (N : ℕ) :
+    (∑' m : ℤ, if (N : ℤ) < |m| then Real.exp (-α * (m : ℝ) ^ 2) else 0)
+      ≤ 2 * (Real.exp (-α * ((N : ℝ) + 1) ^ 2)
+          * (1 - Real.exp (-(2 * α * ((N : ℝ) + 1))))⁻¹) :=
+  theta_tail_le hα N
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (N : ℕ) :
+    (∑' k : {k : Fin r → ℤ // ¬ ∀ i, |k i| ≤ (N : ℤ)},
+        Real.exp (-A.energy k.1))
+      ≤ (r : ℝ) * theta μ ^ (r - 1)
+          * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
+              * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹)) :=
+  A.tail_le hμ0 hμ N
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (N : ℕ) :
+    A.toSectorAction.partFn
+      ≤ (∑' k : {k : Fin r → ℤ // ∀ i, |k i| ≤ (N : ℤ)},
+          Real.exp (-A.energy k.1))
+        + (r : ℝ) * theta μ ^ (r - 1)
+            * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
+                * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹)) :=
+  A.partFn_le_box_add_tail hμ0 hμ N
+
+example {r : ℕ} (A : QuadraticAction r) {μ : ℝ} (hμ0 : 0 < μ)
+    (hμ : ∀ i, μ ≤ A.Q_posDef.1.eigenvalues i) (N : ℕ) :
+    A.toSectorAction.partFn ∈ Set.Icc
+      (∑' k : {k : Fin r → ℤ // ∀ i, |k i| ≤ (N : ℤ)},
+        Real.exp (-A.energy k.1))
+      ((∑' k : {k : Fin r → ℤ // ∀ i, |k i| ≤ (N : ℤ)},
+          Real.exp (-A.energy k.1))
+        + (r : ℝ) * theta μ ^ (r - 1)
+            * (2 * (Real.exp (-μ * ((N : ℝ) + 1) ^ 2)
+                * (1 - Real.exp (-(2 * μ * ((N : ℝ) + 1))))⁻¹))) :=
+  A.partFn_mem_box_Icc hμ0 hμ N
 
 end Theaetetus

@@ -559,8 +559,20 @@ Formalization targets:
    and a spectrum-wide `μ ≤ λ`
    (`mul_sum_sq_le_quadForm_of_dominant`, `posDef_of_dominant`,
    `le_eigenvalues_of_dominant`), transferring to lattice energies
-   through `QuadraticAction.mul_sum_sq_le_energy`. Shell counts,
-   moment tails, and the interval crossing algebra remain.
+   through `QuadraticAction.mul_sum_sq_le_energy`. The second link
+   follows (`Theaetetus.Tails`): the lattice sum of a product
+   weight factorizes exactly
+   (`QuadraticAction.tsum_finPi_prod`), the scalar tail
+   beyond radius `N` is geometrically dominated (`theta_tail_le`),
+   and outside the sup-norm box the Boltzmann sum of a certified
+   action is bounded by `r·θ(μ)^{r−1}` copies of the scalar tail
+   (`QuadraticAction.tail_le`), splitting the partition function
+   into a finite box plus a certified truncation error
+   (`QuadraticAction.partFn_le_box_add_tail`), packaged as the
+   two-sided interval enclosure
+   (`QuadraticAction.partFn_mem_box_Icc`). Shell counts,
+   weighted moment tails, and the interval crossing algebra
+   remain.
    Certified this way, a reconnaissance sign is a certificate —
    and a counterexample arrives pre-packaged for its own
    formalization.
