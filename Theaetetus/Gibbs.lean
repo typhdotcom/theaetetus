@@ -170,4 +170,22 @@ theorem deriv_theta {α : ℝ} (hα : 0 < α) :
     deriv theta α = thetaDeriv α :=
   (hasDerivAt_theta hα).deriv
 
+/-- **Strict decrease**: the theta function is strictly decreasing on
+positive couplings, since its derivative is the negated second
+moment. -/
+theorem theta_strictAntiOn : StrictAntiOn theta (Set.Ioi 0) := by
+  refine strictAntiOn_of_deriv_neg (convex_Ioi 0)
+    (fun x hx => (theta_continuousAt (Set.mem_Ioi.mp hx)).continuousWithinAt)
+    fun x hx => ?_
+  rw [interior_Ioi] at hx
+  rw [deriv_theta (Set.mem_Ioi.mp hx)]
+  exact thetaDeriv_neg (Set.mem_Ioi.mp hx)
+
+/-- Larger positive couplings suppress the nonzero modes: if
+`0 < α < β`, then `θ(β) < θ(α)`. -/
+theorem theta_lt_theta {α β : ℝ} (hα : 0 < α) (hαβ : α < β) :
+    theta β < theta α :=
+  theta_strictAntiOn (Set.mem_Ioi.mpr hα)
+    (Set.mem_Ioi.mpr (hα.trans hαβ)) hαβ
+
 end Theaetetus

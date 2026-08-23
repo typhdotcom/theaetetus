@@ -16,6 +16,7 @@ import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
+import Theaetetus.SublatticeDiamond
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -35,7 +36,8 @@ coercivity; certified tails; certified shell counts; higher-rank
 defect duality; the field defect and the intrinsic lift; the
 shifted mass and positive correlation; the orthogonal sum;
 the arithmetic realization of the abstract defect and the
-coprime telescope of its corrected orders. -/
+coprime telescope of its corrected orders; the Gaussian diamond of
+sublattices. -/
 
 namespace Theaetetus
 
@@ -1042,5 +1044,108 @@ example {s : ℝ} (hs : 0 < s) :
     Descent.defect3 (logField theta s) (Descent.Arith.of 2)
       (Descent.Arith.of 3) (Descent.Arith.of 5) < 0 :=
   defect3_theta_235_neg hs
+
+/-! ## The Gaussian diamond of sublattices -/
+
+example : LatticeHom Descent.Diamond (AddSubgroup (ℤ × ℤ)) :=
+  diamondHom
+
+example : Function.Injective diamondSub :=
+  diamondSub_injective
+
+example : evenFst ⊓ evenSum = evenBoth :=
+  inf_evenFst_evenSum
+
+example : evenFst ⊔ evenSum = ⊤ :=
+  sup_evenFst_evenSum
+
+example {s : ℝ} (hs : 0 < s) (H : AddSubgroup (ℤ × ℤ)) : 0 < latMass s H :=
+  latMass_pos hs H
+
+example {s : ℝ} (hs : 0 < s) : latMass s ⊤ = theta s ^ 2 :=
+  latMass_top hs
+
+example {s : ℝ} (hs : 0 < s) : latMass s evenBoth = theta (4 * s) ^ 2 :=
+  latMass_evenBoth hs
+
+example {s : ℝ} (hs : 0 < s) :
+    latMass s evenSnd = theta s * theta (4 * s) :=
+  latMass_evenSnd hs
+
+example {s : ℝ} (hs : 0 < s) :
+    latMass s evenFst = theta s * theta (4 * s) :=
+  latMass_evenFst hs
+
+example {s : ℝ} (hs : 0 < s) : latMass s evenSum = theta (2 * s) ^ 2 :=
+  latMass_evenSum hs
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect (latField s) evenFst evenSnd = 0 :=
+  defect_evenFst_evenSnd hs
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect (latField s) evenFst evenSum
+      = 2 * Real.log (theta (2 * s)) - Real.log (theta s)
+        - Real.log (theta (4 * s)) :=
+  defect_evenFst_evenSum hs
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect (latField s) evenFst evenSum
+      = Descent.defect (latField s) evenSnd evenSum :=
+  defect_evenFst_evenSum_eq_evenSnd hs
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect (latField s) evenSnd evenSum < 0 :=
+  defect_evenSnd_evenSum_neg hs
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect3 (latField s ∘ diamondHom) Descent.Diamond.x
+        Descent.Diamond.y Descent.Diamond.z
+      = 2 * Real.log (theta (2 * s) / theta (4 * s)) :=
+  defect3_diamondHom hs
+
+example {s : ℝ} (hs : 0 < s) (p q : Descent.Diamond) :
+    Descent.defect (latField s ∘ diamondHom) p q ≤ 0 :=
+  defect_diamondHom_nonpos hs p q
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect3 (latField s) evenFst evenSnd evenSum
+      = latField s evenSum - latField s evenBoth :=
+  defect3_diamond hs
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect3 (latField s) evenFst evenSnd evenSum
+      = 2 * Real.log (theta (2 * s) / theta (4 * s)) :=
+  defect3_diamond_eq hs
+
+example {s : ℝ} (hs : 0 < s) :
+    0 < Descent.defect3 (latField s) evenFst evenSnd evenSum :=
+  defect3_diamond_pos hs
+
+example :
+    Tendsto (fun s => Descent.defect3 (latField s) evenFst evenSnd evenSum)
+      (𝓝[>] (0 : ℝ)) (𝓝 (Real.log 2)) :=
+  tendsto_defect3_diamond
+
+example : evenFst.index = 2 :=
+  index_evenFst
+
+example : evenSnd.index = 2 :=
+  index_evenSnd
+
+example : evenSum.index = 2 :=
+  index_evenSum
+
+example : evenBoth.relIndex evenSum = 2 :=
+  relIndex_evenBoth_evenSum
+
+example :
+    Tendsto (fun s => Descent.defect3 (latField s) evenFst evenSnd evenSum)
+      (𝓝[>] (0 : ℝ))
+      (𝓝 (Real.log ((evenBoth.relIndex evenSum : ℕ) : ℝ))) :=
+  tendsto_defect3_diamond_index
+
+example {α β : ℝ} (hα : 0 < α) (hαβ : α < β) : theta β < theta α :=
+  theta_lt_theta hα hαβ
 
 end Theaetetus

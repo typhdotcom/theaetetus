@@ -305,12 +305,13 @@ pairwise versus higher-order interaction.
   The scope matters: the conjecture concerns the scalar dilation
   chain `q ↦ qL`. On the full modular lattice of sublattices,
   incomparable pairs can have zero defect through an orthogonal
-  splitting; the index-two diamond in target 7 is the calibration
-  example. Thus the equality chain must rule that mechanism out for
-  nontrivial coprime scalar dilations, not prove a false statement
-  about arbitrary sublattices. Independently, a generic residue
-  tower on `L ⧸ qL` would make the correlation an intrinsic event
-  statement and supply the general-lattice cross-ratio law.
+  splitting; the index-two diamond of target 7 is the calibration
+  example (`defect_evenFst_evenSnd`). Thus the equality chain must
+  rule that mechanism out for nontrivial coprime scalar dilations,
+  not prove a false statement about arbitrary sublattices.
+  Independently, a generic residue tower on `L ⧸ qL` would make the
+  correlation an intrinsic event statement and supply the
+  general-lattice cross-ratio law.
 
 - **Q2 — sparse spectral rigidity, by datum.** Put
   `F_s(m) := log Z(m²s)` for `m ≥ 1`. Four input regimes: the
@@ -568,16 +569,51 @@ pairwise versus higher-order interaction.
   (`defect3_theta_235_neg`). Neither statement makes any pairwise
   defect vanish.
 
-  Genuine irreducible higher interaction moves to the carrier. The
-  modular, non-distributive lattice of finite-index sublattices
-  contains diamonds where `D₃` need not descend to pairwise data.
-  Open is the Gaussian geometry there: how the third-order defect
-  is controlled by the distributivity-gap interval, which signs
-  and equality mechanisms occur, and how this order-three
-  observable interacts with lattice duality. The hierarchy is
-  observationally capped at order three, so this is a sharply
-  bounded research problem rather than an unending tower of new
-  couplings.
+  Genuine irreducible higher interaction moves to the carrier,
+  and the Gaussian geometry there is now on the record. In the
+  modular, non-distributive lattice of subgroups of `ℤ²` the five
+  sublattices `2ℤ² ≤ {a even}, {b even}, {a+b even} ≤ ℤ²` realize
+  the diamond faithfully, each priced by the logarithm of its own
+  Gaussian mass. The pairwise data is nonpositive: the two
+  coordinate sublattices split orthogonally and have zero defect,
+  and each of them against the checkerboard has the strict
+  midpoint defect `2·log θ(2s) − log θ(s) − log θ(4s)`. The
+  order-three defect is nevertheless strictly positive — the
+  exact recurrence kills all three pairwise terms and leaves the
+  field gap across the distributivity-defect interval
+  `[2ℤ², {a+b even}]`:
+
+      D₃ = log ρ({a+b even}) − log ρ(2ℤ²) = 2·log(θ(2s)/θ(4s)) > 0
+
+  (`defect3_diamond`, `defect3_diamond_eq`, `defect3_diamond_pos`
+  in `Theaetetus.SublatticeDiamond`), tending to `log 2`, the
+  logarithm of the index of the doubled lattice inside the
+  checkerboard, as the scale falls to zero
+  (`tendsto_defect3_diamond`).
+  So off distributivity `D₃` does not descend to pairwise data,
+  while the hierarchy stays observationally capped at order three.
+  Every pairwise observation on that five-point carrier is
+  nonpositive (`defect_diamondHom_nonpos`); the positive
+  order-three one is the formal contrast.
+
+  The boundary value being an index is the suggestive part, and
+  what follows is a conjecture, not a theorem. For full-rank
+  finite-index sublattices `A, B, C`, put `U = (A+B) ∩ C` and
+  `V = (A∩C) + (B∩C)` — the two ends of the distributivity-defect
+  interval. Then
+
+      D₃,s(A,B,C) → log [U : V]   as   s → 0⁺.
+
+  The proposed mechanism is one sentence: at the boundary the
+  pairwise terms tend to zero by multiplicativity of covolume in
+  the Gaussian mass, while `defect3_recurrence` leaves exactly the
+  Gaussian mass gap from `V` to `U`, whose ratio is the index. The
+  proved diamond is the first nontrivial case, `[U : V] = 2`
+  (`relIndex_evenBoth_evenSum`, `tendsto_defect3_diamond_index`);
+  the general statement is target 12. What remains beyond it is
+  the equality mechanisms and the interaction of this order-three
+  observable with lattice duality — a sharply bounded research
+  problem rather than an unending tower of new couplings.
 
 - **Q7 — realizability.** Split from the old Q6; either half is
   a program. Which abstract hierarchies actually come from
@@ -627,8 +663,10 @@ dependency pinned to an immutable revision, and the bridge module
 `Theaetetus.HigherInteraction` identifies the four-term
 `fieldDefect` of any partition field with `Descent.defect` of its
 fixed-scale logarithmic context field on the carrier of positive
-naturals under divisibility (`fieldDefect_eq_defect`). The
-abstract hierarchy is consumed, never forked. The dependency is
+naturals under divisibility (`fieldDefect_eq_defect`); the same
+imported surface carries `Theaetetus.SublatticeDiamond` on the
+subgroup lattice of `ℤ²`. The abstract hierarchy is consumed,
+never forked. The dependency is
 passive as well as one-way: Theaetetus does not schedule changes in
 Descent, advance its roadmap, or require its active development to
 accommodate this project. Adapter lemmas and application-specific
@@ -790,8 +828,8 @@ Formalization targets:
    docstring sweep is also done: no Lean docstring or comment
    references a prose coordinate (the one-way rule, now in
    `CLAUDE.md`).
-7. **The higher-interaction bridge.** Descent remains the source of
-   truth for the order-separated hierarchy: `defect3`,
+7. **The higher-interaction bridge** — done. Descent remains the
+   source of truth for the order-separated hierarchy: `defect3`,
    `defectFam`, the raw-cube isolation identity
    (`mixedDiff_triple_inf`), distributive decomposition
    (`defect3_decompose`, `gauge3_eq_gauge`), and universal
@@ -818,11 +856,40 @@ Formalization targets:
      `mixedDiff_two_three_five` at the observed triple, against the
      corrected sign `defect3_theta_235_neg`);
    - formalize the canonical `M₃` witness from the three index-two
-     sublattices of `ℤ²`: one incomparable pair has zero defect by
-     orthogonal splitting, the other two have the strict rank-one
-     midpoint defect, and
-     `D₃ = 2·log(θ(2s)/θ(4s)) > 0`, tending to `log 2` as
-     `s → 0`.
+     sublattices of `ℤ²` — done (`Theaetetus.SublatticeDiamond`).
+     The five sublattices `2ℤ² ≤ {a even}, {b even}, {a+b even} ≤
+     ℤ²` realize the diamond faithfully in the subgroup lattice of
+     `ℤ²` (`diamondHom`, `diamondSub_injective`), with distinct
+     atoms meeting at `2ℤ²` and joining to `ℤ²`. Each is priced by
+     its own convergent Gaussian mass (`latMass`, `latMass_pos`),
+     and the table is exact — `ρ(ℤ²) = θ(s)²`, `ρ(2ℤ²) = θ(4s)²`,
+     `ρ({a even}) = ρ({b even}) = θ(s)·θ(4s)`,
+     `ρ({a+b even}) = θ(2s)²` (`latMass_top`, `latMass_evenBoth`,
+     `latMass_evenFst`, `latMass_evenSnd`, `latMass_evenSum`, the
+     last through the parity rotation `(u,v) ↦ (u+v, u−v)`, whose
+     energy is `2(u²+v²)`). The coordinate pair splits
+     orthogonally and has zero defect
+     (`defect_evenFst_evenSnd`); the other two pairs share the
+     strict midpoint defect
+     `2·log θ(2s) − log θ(s) − log θ(4s) < 0`
+     (`defect_evenFst_evenSum_eq_evenSnd`,
+     `defect_evenFst_evenSum_neg`, `defect_evenSnd_evenSum_neg`).
+     The exact order-3 recurrence kills all three pairwise terms
+     and leaves the field gap across the distributivity-defect
+     interval `[2ℤ², {a+b even}]` (`distrib_interval`), so
+     `D₃ = 2·log(θ(2s)/θ(4s)) > 0` (`defect3_diamond`,
+     `defect3_diamond_eq`, `defect3_diamond_pos`, using the strict
+     decrease of `theta` on positive couplings, `theta_lt_theta`),
+     and `D₃ → log 2` as `s → 0⁺` (`tendsto_defect3_diamond`).
+     The contrast is packaged: every pairwise observation on the
+     realized diamond is nonpositive
+     (`defect_diamondHom_nonpos`) while this order-three one is
+     positive. And the limit is an index: each atom has index two
+     in `ℤ²` (`index_evenFst`, `index_evenSnd`, `index_evenSum`),
+     the doubled lattice has index two inside the checkerboard
+     (`relIndex_evenBoth_evenSum`), and the boundary value is the
+     logarithm of that relative index
+     (`tendsto_defect3_diamond_index`).
 
    This closes the original resolution-tower question and opens the
    genuinely new one on non-distributive sublattice carriers.
@@ -861,10 +928,10 @@ Formalization targets:
     assembled into a characterization of `D_L(q,q′) = 0`. The
     target is specifically scalar dilations: the index-two diamond
     shows that arbitrary incomparable sublattices may saturate by
-    orthogonal splitting. The endgame must show that this splitting
-    cannot occur for a nontrivial coprime scalar pair. This is the
-    route to Q1's equality classification that is independent of
-    higher-rank Q5.
+    orthogonal splitting (`defect_evenFst_evenSnd`). The endgame
+    must show that this splitting cannot occur for a nontrivial
+    coprime scalar pair. This is the route to Q1's equality
+    classification that is independent of higher-rank Q5.
 11. **The resolution metric.** Import Descent's join-kernel
     pseudometric theorem through the same package boundary as target
     7 and instantiate it with the normalized field
@@ -879,6 +946,26 @@ Formalization targets:
     metric geometry in which Q4's CND/Schoenberg question naturally
     lives. Completion and diameter claims remain outside the target
     until they are proved.
+12. **The distributivity-index law.** Conjectural, and stated as
+    such. For full-rank finite-index sublattices `A, B, C`, with
+    `U = (A+B) ∩ C` and `V = (A∩C) + (B∩C)` the two ends of the
+    distributivity-defect interval, the landing is
+
+        D₃,s(A,B,C) → log [U : V]   as   s → 0⁺,
+
+    the order-three defect at the boundary reading off the index
+    of the interval the recurrence leaves behind. The proved `M₃`
+    diamond of target 7 is its first nontrivial case: there
+    `[U : V] = 2` (`relIndex_evenBoth_evenSum`) and the limit is
+    `log 2` (`tendsto_defect3_diamond_index`). The route follows
+    that proof: at the boundary every pairwise term vanishes by
+    multiplicativity of covolume in the Gaussian mass, and
+    `defect3_recurrence` leaves the mass gap from `V` to `U`,
+    whose ratio tends to the index. First prove the Gaussian
+    mass-ratio limit for a finite-index inclusion `V ≤ U`; then
+    combine it with pairwise covolume cancellation and
+    `defect3_recurrence`. Until then this is a conjecture with one
+    witness, not a theorem with a general proof.
 
 Reconnaissance, falsify-first:
 
@@ -920,16 +1007,18 @@ manifest with its docstring sweep, the recovery formula, spectral
 peeling, the certification chain, higher-rank defect duality, and
 the Regev–Stephens-Davidowitz implication are complete, and the
 orthogonal-sum reduction has closed the remainder of target 2.
-Still open: the higher-interaction bridge (target 7), whose seam,
-coprime telescope, sign laws, and raw-difference isolation have
-landed, leaving only the `M₃` diamond; the equality chain
-(target 10); and the resolution metric (target 11). The verdicts
-to date:
-Q5 stays a universal conjecture, with margins vanishing toward
-every degenerate boundary probed and its binding point leaving
-the duality center under dual asymmetry; Q4's uniform-PSD
-question is resolved negatively by the star obstruction, leaving
-the rate and intervality open.
+The higher-interaction bridge (target 7) is complete: the seam,
+the coprime telescope with its sign laws, the raw-difference
+isolation, and the Gaussian `M₃` diamond, whose order-three defect
+is strictly positive and survives the small-scale boundary. Still
+open: the equality chain (target 10), the resolution metric
+(target 11), and the distributivity-index law (target 12), a
+conjecture whose first nontrivial case is that diamond. The
+verdicts to date: Q5 stays a universal conjecture, with margins
+vanishing toward every degenerate boundary probed and its binding
+point leaving the duality center under dual asymmetry; Q4's
+uniform-PSD question is resolved negatively by the star
+obstruction, leaving the rate and intervality open.
 
 ## The ladder
 

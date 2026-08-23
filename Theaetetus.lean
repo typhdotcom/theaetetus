@@ -128,6 +128,10 @@ import Theaetetus.OrthogonalSum
 -- the coprime telescope of its corrected orders
 import Theaetetus.HigherInteraction
 
+-- The Gaussian diamond: irreducible order-three interaction on the
+-- non-distributive carrier of sublattices of ℤ²
+import Theaetetus.SublatticeDiamond
+
 -- Scalar bounds and the rank-two witness on the theta graph
 import Theaetetus.ThetaBounds
 import Theaetetus.RankTwo
