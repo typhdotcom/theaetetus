@@ -60,9 +60,32 @@ vector: `gramMass_dilate_mul_eq_iff` says that scalar dilation is
 an equality precisely when `parityVector` at `u + v_c` equals
 `parityVector` at `u − v_c` for every residue class `c`.
 
-What remains: the coprime resummation of
-`gramMass_coprime_mul_le`, and the classification of the vanishing
-locus of `QuadLatticeAction.defect` for scalar dilations. -/
+The coprime resummation closes the same way, one grid further out.
+Both sides of positive correlation at coprime dilations decompose
+over the `b`-grid into the two sides of scalar dilation
+monotonicity at dilation `a`, taken at the outer shifts
+`dilatedResidueShift a b r` (`gramMass_coprime_mul_eq_sum` and
+`gramMass_coprime_avg_eq_sum`, the second through the unit
+permutation `r ↦ a·r` of residues,
+`sum_gramMass_dilatedResidueShift`). Saturation is therefore class
+by class (`gramMass_coprime_mul_eq_iff_forall_class`), and since
+the outer shift normalizes,
+`dilateShift a (dilatedResidueShift a b r) = residueShift b r`,
+each outer class contributes the residue family of its own
+dilation. The criterion is two-grid
+(`gramMass_coprime_mul_eq_iff`): correlation at coprime dilations
+is an equality exactly when
+
+    parityVector (v_r + v_c) = parityVector (v_r − v_c)
+
+at the joint scale, for every residue `r` mod `b` and every residue
+`c` mod `a` — every point of the `b`-grid a reflection center for
+the `a`-grid.
+
+What remains: converting a vanishing `gramDefect`, or a vanishing
+`QuadLatticeAction.defect`, into this mass equality, and then
+deciding whether the two-grid reflection symmetry can occur at all
+for a nontrivial coprime pair of scalar dilations. -/
 
 namespace Theaetetus
 
@@ -287,5 +310,59 @@ theorem gramMass_dilate_mul_eq_iff (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
   exact forall_congr' fun c =>
     gramMass_mul_eq_avg_iff_parityVector_eq hM hβ (dilateShift n x)
       (residueShift n c)
+
+/-! ## Saturation of the coprime resummation -/
+
+/-- **The coprime link, class by class**: positive correlation at
+coprime dilations is an equality exactly when every outer residue
+class saturates scalar dilation monotonicity. Both sides decompose
+over the `b`-grid, so the global equality is class-by-class
+saturation and nothing else. -/
+theorem gramMass_coprime_mul_eq_iff_forall_class (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+        = gramMass M s 0
+            * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+      ↔ ∀ r : Fin d → ZMod b,
+          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+                (dilateShift a (dilatedResidueShift a b r))
+              * gramMass M ((b : ℝ) ^ 2 * s) 0
+            = gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+                * gramMass M ((b : ℝ) ^ 2 * s)
+                    (dilatedResidueShift a b r) := by
+  have : NeZero a := ⟨ha.ne'⟩
+  have : NeZero b := ⟨hb.ne'⟩
+  have hbR : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb
+  have hβb : (0 : ℝ) < (b : ℝ) ^ 2 * s := by positivity
+  rw [gramMass_coprime_mul_eq_sum hM hs ha,
+    gramMass_coprime_avg_eq_sum hM hs hco,
+    sum_eq_iff_of_le fun r =>
+      gramMass_dilate_mul_le hM hβb (dilatedResidueShift a b r) a]
+
+/-- **The two-grid reflection criterion**: positive correlation at
+coprime dilations is an equality exactly when every point of the
+`b`-grid is a center of reflection for the `a`-grid, in the parity
+feature vectors at the joint scale. Each outer class contributes the
+inner residue family of its own dilation, and the outer shift
+normalizes to the residue shift of the `b`-grid. -/
+theorem gramMass_coprime_mul_eq_iff (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+        = gramMass M s 0
+            * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+      ↔ ∀ (r : Fin d → ZMod b) (c : Fin d → ZMod a),
+          parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+              (residueShift b r + residueShift a c)
+            = parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+                (residueShift b r - residueShift a c) := by
+  have : NeZero a := ⟨ha.ne'⟩
+  have : NeZero b := ⟨hb.ne'⟩
+  have hbR : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb
+  have hβb : (0 : ℝ) < (b : ℝ) ^ 2 * s := by positivity
+  rw [gramMass_coprime_mul_eq_iff_forall_class hM hs ha hb hco]
+  refine forall_congr' fun r => ?_
+  rw [gramMass_dilate_mul_eq_iff hM hβb (dilatedResidueShift a b r) a,
+    dilateShift_dilatedResidueShift ha b r]
 
 end Theaetetus

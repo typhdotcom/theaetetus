@@ -923,6 +923,38 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
           * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0 :=
   gramMass_coprime_mul_le hM hs ha hb hco
 
+example {d : ℕ} (a b : ℕ) (r : Fin d → ZMod b) :
+    dilatedResidueShift a b r = (a : ℝ) • residueShift b r :=
+  dilatedResidueShift_eq a b r
+
+example {d : ℕ} {a : ℕ} (ha : 0 < a) (b : ℕ) (r : Fin d → ZMod b) :
+    dilateShift a (dilatedResidueShift a b r) = residueShift b r :=
+  dilateShift_dilatedResidueShift ha b r
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} [NeZero b] (hco : Nat.Coprime a b) :
+    ∑ r : Fin d → ZMod b,
+        gramMass M ((b : ℝ) ^ 2 * s) (dilatedResidueShift a b r)
+      = gramMass M s 0 :=
+  sum_gramMass_dilatedResidueShift hM hs hco
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) [NeZero b] :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+      = ∑ r : Fin d → ZMod b,
+          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+              (dilateShift a (dilatedResidueShift a b r))
+            * gramMass M ((b : ℝ) ^ 2 * s) 0 :=
+  gramMass_coprime_mul_eq_sum hM hs ha
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} [NeZero b] (hco : Nat.Coprime a b) :
+    gramMass M s 0 * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+      = ∑ r : Fin d → ZMod b,
+          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+            * gramMass M ((b : ℝ) ^ 2 * s) (dilatedResidueShift a b r) :=
+  gramMass_coprime_avg_eq_sum hM hs hco
+
 example (Z : ℝ → ℝ) (s : ℝ) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
     fieldDefect Z s q q'
       = fieldDefect Z ((Nat.gcd q q' : ℝ) ^ 2 * s)
@@ -986,6 +1018,34 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
             = parityVector M ((n : ℝ) ^ 2 * α)
                 (dilateShift n x - residueShift n c) :=
   gramMass_dilate_mul_eq_iff hM hα x n
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+        = gramMass M s 0
+            * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+      ↔ ∀ r : Fin d → ZMod b,
+          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+                (dilateShift a (dilatedResidueShift a b r))
+              * gramMass M ((b : ℝ) ^ 2 * s) 0
+            = gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+                * gramMass M ((b : ℝ) ^ 2 * s)
+                    (dilatedResidueShift a b r) :=
+  gramMass_coprime_mul_eq_iff_forall_class hM hs ha hb hco
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+        = gramMass M s 0
+            * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+      ↔ ∀ (r : Fin d → ZMod b) (c : Fin d → ZMod a),
+          parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+              (residueShift b r + residueShift a c)
+            = parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+                (residueShift b r - residueShift a c) :=
+  gramMass_coprime_mul_eq_iff hM hs ha hb hco
 
 /-! ## The orthogonal sum -/
 

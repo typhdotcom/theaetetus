@@ -228,6 +228,29 @@ theorem gramMass_dilate_mul_le (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
 
 /-! ## Positive correlation at coprime dilations -/
 
+/-- The outer shift `x_r = a·(b⁻¹·r)`: the residue shift of the
+`b`-grid, read in the chart dilated by `a`. -/
+noncomputable def dilatedResidueShift (a b : ℕ) (r : Fin d → ZMod b) :
+    Fin d → ℝ :=
+  (a : ℝ) • residueShift b r
+
+theorem dilatedResidueShift_eq (a b : ℕ) (r : Fin d → ZMod b) :
+    dilatedResidueShift a b r = (a : ℝ) • residueShift b r :=
+  rfl
+
+/-- **Normalization**: dilating the outer shift by `a` returns the
+residue shift of the `b`-grid. -/
+theorem dilateShift_dilatedResidueShift {a : ℕ} (ha : 0 < a) (b : ℕ)
+    (r : Fin d → ZMod b) :
+    dilateShift a (dilatedResidueShift a b r) = residueShift b r := by
+  have haR : (a : ℝ) ≠ 0 := by
+    have : (0 : ℝ) < (a : ℝ) := by exact_mod_cast ha
+    exact this.ne'
+  funext i
+  show (a : ℝ)⁻¹ * ((a : ℝ) * ((b : ℝ)⁻¹ * ((r i).val : ℝ)))
+      = (b : ℝ)⁻¹ * ((r i).val : ℝ)
+  field_simp
+
 /-- Multiplication by a unit is a bijection of residues. -/
 private def zmodMulUnitEquiv {n : ℕ} (u : (ZMod n)ˣ) :
     ZMod n ≃ ZMod n where
@@ -276,15 +299,110 @@ private theorem gramMass_dilate_class {β : ℝ}
     field_simp
   rw [hvec, gramMass_int_shift]
 
+/-- **The outer resummation**: the residue shifts of the `b`-grid,
+dilated by `a`, run over the same `b`-grid — the unit `a mod b`
+permutes the residues — so their masses re-sum to the mass of the
+undilated lattice. -/
+theorem sum_gramMass_dilatedResidueShift (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} [NeZero b] (hco : Nat.Coprime a b) :
+    ∑ r : Fin d → ZMod b,
+        gramMass M ((b : ℝ) ^ 2 * s) (dilatedResidueShift a b r)
+      = gramMass M s 0 := by
+  set u : (ZMod b)ˣ := ZMod.unitOfCoprime a hco with hu
+  have hcoe : ((u : ZMod b)) = (a : ZMod b) := ZMod.coe_unitOfCoprime a hco
+  have hstep : ∀ r : Fin d → ZMod b,
+      gramMass M ((b : ℝ) ^ 2 * s) (dilatedResidueShift a b r)
+      = gramMass M ((b : ℝ) ^ 2 * s)
+          ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
+            + fun i => (((zmodMulUnitEquiv u (r i))).val : ℝ))) := by
+    intro r
+    have s1 : gramMass M ((b : ℝ) ^ 2 * s) (dilatedResidueShift a b r)
+        = gramMass M ((b : ℝ) ^ 2 * s)
+          ((b : ℝ)⁻¹ • fun i => ((a * (r i).val : ℕ) : ℝ)) :=
+      gramMass_congr rfl (by
+        funext i
+        show (a : ℝ) * ((b : ℝ)⁻¹ * ((r i).val : ℝ))
+            = (b : ℝ)⁻¹ * ((a * (r i).val : ℕ) : ℝ)
+        push_cast
+        ring)
+    have s2 : gramMass M ((b : ℝ) ^ 2 * s)
+        ((b : ℝ)⁻¹ • fun i => ((a * (r i).val : ℕ) : ℝ))
+        = gramMass M ((b : ℝ) ^ 2 * s)
+          ((b : ℝ)⁻¹ • fun i => ((((a : ZMod b) * r i)).val : ℝ)) :=
+      gramMass_dilate_class a r
+    have s3 : gramMass M ((b : ℝ) ^ 2 * s)
+        ((b : ℝ)⁻¹ • fun i => ((((a : ZMod b) * r i)).val : ℝ))
+        = gramMass M ((b : ℝ) ^ 2 * s)
+          ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
+            + fun i => (((zmodMulUnitEquiv u (r i))).val : ℝ))) :=
+      gramMass_congr rfl (by
+        funext i
+        show (b : ℝ)⁻¹ * ((((a : ZMod b) * r i)).val : ℝ)
+            = (b : ℝ)⁻¹ * (0 + (((u : ZMod b) * r i).val : ℝ))
+        rw [hcoe]
+        ring)
+    exact (s1.trans s2).trans s3
+  rw [Finset.sum_congr rfl fun r _ => hstep r]
+  have hbij : ∑ r : Fin d → ZMod b,
+      gramMass M ((b : ℝ) ^ 2 * s)
+        ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
+          + fun i => (((zmodMulUnitEquiv u (r i))).val : ℝ)))
+      = ∑ r : Fin d → ZMod b,
+          gramMass M ((b : ℝ) ^ 2 * s)
+            ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
+              + fun i => ((r i).val : ℝ))) :=
+    Equiv.sum_comp (Equiv.piCongrRight fun _ => zmodMulUnitEquiv u)
+      (fun r : Fin d → ZMod b =>
+        gramMass M ((b : ℝ) ^ 2 * s)
+          ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
+            + fun i => ((r i).val : ℝ))))
+  rw [hbij, ← gramMass_coset hM hs (0 : Fin d → ℝ) b]
+
+/-- **The correlation product, decomposed**: the left side of the
+coprime bound is the sum over the `b`-grid of the left sides of
+scalar dilation monotonicity at base scale `b²s`, dilation `a`, and
+outer shift `x_r`. -/
+theorem gramMass_coprime_mul_eq_sum (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} (ha : 0 < a) [NeZero b] :
+    gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+      = ∑ r : Fin d → ZMod b,
+          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+              (dilateShift a (dilatedResidueShift a b r))
+            * gramMass M ((b : ℝ) ^ 2 * s) 0 := by
+  have haR : (0 : ℝ) < (a : ℝ) := by exact_mod_cast ha
+  have hβa : (0 : ℝ) < (a : ℝ) ^ 2 * s := by positivity
+  rw [← Finset.sum_mul]
+  congr 1
+  rw [gramMass_coset hM hβa (0 : Fin d → ℝ) b]
+  refine Finset.sum_congr rfl fun r _ => gramMass_congr (by ring) ?_
+  funext i
+  show (b : ℝ)⁻¹ * (0 + ((r i).val : ℝ))
+      = (a : ℝ)⁻¹ * ((a : ℝ) * ((b : ℝ)⁻¹ * ((r i).val : ℝ)))
+  field_simp
+  ring
+
+/-- **The aligned product, decomposed**: the right side of the
+coprime bound is the sum over the `b`-grid of the right sides of
+scalar dilation monotonicity at the same base scale, dilation, and
+outer shifts — by the outer resummation. -/
+theorem gramMass_coprime_avg_eq_sum (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} [NeZero b] (hco : Nat.Coprime a b) :
+    gramMass M s 0 * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+      = ∑ r : Fin d → ZMod b,
+          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
+            * gramMass M ((b : ℝ) ^ 2 * s) (dilatedResidueShift a b r) := by
+  rw [← Finset.mul_sum, sum_gramMass_dilatedResidueShift hM hs hco]
+  ring
+
 /-- **Positive correlation at coprime dilations** — the
 Regev–Stephens-Davidowitz correlation inequality at scalar
 dilations of the integer lattice: for coprime `a`, `b`,
 
     `m_{a²s}(0)·m_{b²s}(0) ≤ m_s(0)·m_{a²b²s}(0)`.
 
-Decompose the `a`-dilated mass over residues mod `b`, apply
-dilation monotonicity in each class, and re-sum the right side
-through the unit bijection `r ↦ a·r` of residues. -/
+Both sides decompose over the `b`-grid into the two sides of scalar
+dilation monotonicity at dilation `a`, which holds in each outer
+class. -/
 theorem gramMass_coprime_mul_le (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
     {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
     gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
@@ -292,98 +410,12 @@ theorem gramMass_coprime_mul_le (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
           * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0 := by
   have : NeZero a := ⟨ha.ne'⟩
   have : NeZero b := ⟨hb.ne'⟩
-  have haR : (0 : ℝ) < (a : ℝ) := by exact_mod_cast ha
   have hbR : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb
-  have hβa : (0 : ℝ) < (a : ℝ) ^ 2 * s := by positivity
   have hβb : (0 : ℝ) < (b : ℝ) ^ 2 * s := by positivity
-  -- decompose the a-dilated mass over residues mod b
-  have hdec := gramMass_coset hM hβa (0 : Fin d → ℝ) b
-  -- the unit bijection of residues
-  set u : (ZMod b)ˣ := ZMod.unitOfCoprime a hco with hu
-  have hcoe : ((u : ZMod b)) = (a : ZMod b) := ZMod.coe_unitOfCoprime a hco
-  -- the right-side resummation
-  have hresum : ∑ r : Fin d → ZMod b,
-      gramMass M ((b : ℝ) ^ 2 * s)
-        ((a : ℝ) • ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-          + fun i => ((r i).val : ℝ))))
-      = gramMass M s 0 := by
-    have hstep : ∀ r : Fin d → ZMod b,
-        gramMass M ((b : ℝ) ^ 2 * s)
-          ((a : ℝ) • ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-            + fun i => ((r i).val : ℝ))))
-        = gramMass M ((b : ℝ) ^ 2 * s)
-            ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-              + fun i => (((zmodMulUnitEquiv u (r i))).val : ℝ))) := by
-      intro r
-      have s1 : gramMass M ((b : ℝ) ^ 2 * s)
-          ((a : ℝ) • ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-            + fun i => ((r i).val : ℝ))))
-          = gramMass M ((b : ℝ) ^ 2 * s)
-            ((b : ℝ)⁻¹ • fun i => ((a * (r i).val : ℕ) : ℝ)) :=
-        gramMass_congr rfl (by
-          funext i
-          show (a : ℝ) * ((b : ℝ)⁻¹ * (0 + ((r i).val : ℝ)))
-              = (b : ℝ)⁻¹ * ((a * (r i).val : ℕ) : ℝ)
-          push_cast
-          ring)
-      have s2 : gramMass M ((b : ℝ) ^ 2 * s)
-          ((b : ℝ)⁻¹ • fun i => ((a * (r i).val : ℕ) : ℝ))
-          = gramMass M ((b : ℝ) ^ 2 * s)
-            ((b : ℝ)⁻¹ • fun i => ((((a : ZMod b) * r i)).val : ℝ)) :=
-        gramMass_dilate_class a r
-      have s3 : gramMass M ((b : ℝ) ^ 2 * s)
-          ((b : ℝ)⁻¹ • fun i => ((((a : ZMod b) * r i)).val : ℝ))
-          = gramMass M ((b : ℝ) ^ 2 * s)
-            ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-              + fun i => (((zmodMulUnitEquiv u (r i))).val : ℝ))) :=
-        gramMass_congr rfl (by
-          funext i
-          show (b : ℝ)⁻¹ * ((((a : ZMod b) * r i)).val : ℝ)
-              = (b : ℝ)⁻¹ * (0 + (((u : ZMod b) * r i).val : ℝ))
-          rw [hcoe]
-          ring)
-      exact (s1.trans s2).trans s3
-    rw [Finset.sum_congr rfl fun r _ => hstep r]
-    have hbij : ∑ r : Fin d → ZMod b,
-        gramMass M ((b : ℝ) ^ 2 * s)
-          ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-            + fun i => (((zmodMulUnitEquiv u (r i))).val : ℝ)))
-        = ∑ r : Fin d → ZMod b,
-            gramMass M ((b : ℝ) ^ 2 * s)
-              ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-                + fun i => ((r i).val : ℝ))) :=
-      Equiv.sum_comp (Equiv.piCongrRight fun _ => zmodMulUnitEquiv u)
-        (fun r : Fin d → ZMod b =>
-          gramMass M ((b : ℝ) ^ 2 * s)
-            ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-              + fun i => ((r i).val : ℝ))))
-    rw [hbij, ← gramMass_coset hM hs (0 : Fin d → ℝ) b]
-  -- the telescope
-  calc gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
-      = ∑ r : Fin d → ZMod b,
-          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
-            ((a : ℝ)⁻¹ • ((a : ℝ) • ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-              + fun i => ((r i).val : ℝ)))))
-            * gramMass M ((b : ℝ) ^ 2 * s) 0 := by
-        rw [← Finset.sum_mul]
-        congr 1
-        rw [hdec]
-        refine Finset.sum_congr rfl fun r _ => gramMass_congr (by ring) ?_
-        funext i
-        show (b : ℝ)⁻¹ * (0 + ((r i).val : ℝ))
-            = (a : ℝ)⁻¹ * ((a : ℝ) * ((b : ℝ)⁻¹ * (0 + ((r i).val : ℝ))))
-        field_simp
-    _ ≤ ∑ r : Fin d → ZMod b,
-          gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0
-            * gramMass M ((b : ℝ) ^ 2 * s)
-              ((a : ℝ) • ((b : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-                + fun i => ((r i).val : ℝ)))) :=
-        Finset.sum_le_sum fun r _ =>
-          gramMass_dilate_mul_le hM hβb _ a
-    _ = gramMass M s 0
-          * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0 := by
-        rw [← Finset.mul_sum, hresum]
-        ring
+  rw [gramMass_coprime_mul_eq_sum hM hs ha,
+    gramMass_coprime_avg_eq_sum hM hs hco]
+  exact Finset.sum_le_sum fun r _ =>
+    gramMass_dilate_mul_le hM hβb (dilatedResidueShift a b r) a
 
 /-! ## The sign of the defect -/
 

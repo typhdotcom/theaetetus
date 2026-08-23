@@ -944,10 +944,31 @@ Formalization targets:
     a dominated sum meets its dominating sum exactly when every
     term does (`sum_eq_iff_of_le`), and so scalar dilation is an
     equality exactly when every residue class is
-    reflection-invariant (`gramMass_dilate_mul_eq_iff`). Still
-    open, and explicitly so: the coprime resummation of
-    `gramMass_coprime_mul_le`, and the assembly of all links into a
-    characterization of `D_L(q,q′) = 0`. The
+    reflection-invariant (`gramMass_dilate_mul_eq_iff`). The
+    coprime resummation closes the same way one grid out: both
+    sides of `gramMass_coprime_mul_le` are sums over the `b`-grid
+    of the two sides of dilation monotonicity at the outer shifts
+    `dilatedResidueShift a b r` (`gramMass_coprime_mul_eq_sum`,
+    `gramMass_coprime_avg_eq_sum`, the second through the named
+    unit resummation `sum_gramMass_dilatedResidueShift`), so
+    equality is class-by-class saturation
+    (`gramMass_coprime_mul_eq_iff_forall_class`), and since the
+    outer shift normalizes
+    (`dilateShift_dilatedResidueShift`) the criterion is two-grid
+    (`gramMass_coprime_mul_eq_iff`): correlation at coprime
+    dilations is an equality exactly when
+
+        P(v_r + v_c) = P(v_r − v_c)   for all r mod b, c mod a,
+
+    with `P` the parity feature vector at the joint scale — every
+    point of the `b`-grid a reflection center for the `a`-grid.
+    Compositions of two such reflections are translations, which is
+    the rigidity the endgame should exploit. Still open, and
+    explicitly so: converting a vanishing `gramDefect`, or a
+    vanishing `QuadLatticeAction.defect`, into this mass equality,
+    and then deciding whether the two-grid symmetry can occur at
+    all for a nontrivial coprime pair — which is the assembly into
+    a characterization of `D_L(q,q′) = 0`. The
     target is specifically scalar dilations: the index-two diamond
     shows that arbitrary incomparable sublattices may saturate by
     orthogonal splitting (`defect_evenFst_evenSnd`). The endgame
@@ -1033,10 +1054,10 @@ The higher-interaction bridge (target 7) is complete: the seam,
 the coprime telescope with its sign laws, the raw-difference
 isolation, and the Gaussian `M₃` diamond, whose order-three defect
 is strictly positive and survives the small-scale boundary. Still
-open: the equality chain (target 10), whose analytic links and
-dilation-level residue saturation are characterized and whose
-coprime resummation is not; the resolution metric (target 11); and
-the distributivity-index law
+open: the equality chain (target 10), whose analytic, dilation,
+and coprime links are now characterized and whose passage from a
+vanishing defect to the two-grid criterion is not; the resolution
+metric (target 11); and the distributivity-index law
 (target 12), a conjecture whose first nontrivial case is that
 diamond. The
 verdicts to date: Q5 stays a universal conjecture, with margins
