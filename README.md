@@ -1002,13 +1002,31 @@ Formalization targets:
     and the criterion is that family over anchors of the
     parity-refined `b`-grid — which is the `2b`-grid,
     `anchorShift_eq_residueShift` — and displacements of the half
-    `a`-grid (`twoGridReflection_iff_fourier`). The coefficients
-    are positive but the sine products are not of one sign, so
-    vanishing is not settled termwise: what is open is the
-    cancellation question — how the characters cancel across the
-    dual lattice — and the natural next move is finite Fourier
-    orthogonality over the residue and parity indices, isolating
-    alias classes, rather than a termwise sign estimate. Once the
+    `a`-grid (`twoGridReflection_iff_fourier`). That cancellation
+    question now has its exact finite form. The criterion is
+    symmetric in the pair (`twoGridReflection_comm`), so orient it
+    with `a` odd; then `a` is coprime to `2b`, the anchor and
+    displacement digits fuse into a single index on the `2ba`-grid
+    (`jointIndex`, bijective), and reflection is multiplication of
+    that index by a CRT involution — `1` mod `2b`, `−1` mod `a`
+    (`exists_crtInvolution`, `crtInvolution_dvd`), nontrivial for a
+    nontrivial pair (`crtInvolution_nontrivial`). The criterion is
+    then a dilation invariance of the sampled mass
+    (`twoGridReflection_iff_crt`), and grouping the dual lattice
+    into residue classes turns it into invariance of the alias
+    sums, each strictly positive (`aliasSum`, `aliasSum_pos`,
+    `gramMass_eq_sum_aliasSum`):
+
+        A_ν = A_{Uν}   for every dual class ν
+
+    (`twoGridReflection_iff_alias`, by linear independence of the
+    grid characters). Positivity does not finish it: the condition
+    equates positive alias sums, it does not make one vanish. At
+    rank one the invariance already fails, since the strict sign
+    theorem makes an incomparable defect negative
+    (`not_twoGridReflection_rankOne`,
+    `exists_aliasSum_ne_rankOne`); the open statement is that the
+    failure persists in every positive rank. Once the
     rigidity theorem exists,
     `fieldDefect_div_gcd` reduces an arbitrary pair to its coprime
     base and turns the equivalence into the full equality

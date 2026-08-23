@@ -1,4 +1,5 @@
 import Theaetetus.CorrelationEquality
+import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
 
 /-! # The Fourier form of the two-grid criterion
 
@@ -46,12 +47,48 @@ criterion or not (`gramMass_chain_eq`, through
 `gramMass_int_shift`). The sampled fibers close only trivially; no
 rigidity follows from composition.
 
-What the transformed criterion leaves open is the
-cancellation question. Every coefficient is strictly positive, but
-the sine products are not of one sign, so vanishing is not settled
-termwise: it is a question of how the characters cancel across the
-dual lattice. Deciding it for coprime `a, b > 1` in positive rank
-is the remaining rigidity step. -/
+What the transformed criterion leaves open is the cancellation
+question. Every coefficient is strictly positive, but the sine
+products are not of one sign, so vanishing is not settled termwise:
+it is a question of how the characters cancel across the dual
+lattice. The rest of this module puts that question in its exact
+finite form.
+
+The criterion is symmetric in the two dilations
+(`twoGridReflection_comm`, through the symmetry of the defect), so a
+coprime pair may be oriented with `a` odd; then `a` is coprime to
+`2b` and the two grids fuse. The sample points are exactly the
+points of the `2ba`-grid — anchor digit and displacement digit
+compose into the joint index (`jointIndex`, bijectively by
+`jointIndex_injective` and `jointIndex_surjective`) — and reflection
+becomes multiplication of that index by a CRT involution, `1` modulo
+`2b` and `−1` modulo `a` (`exists_crtInvolution`,
+`crtInvolution_dvd`, `crtInvolution_sq`). The criterion is therefore
+a dilation invariance of the sampled mass
+(`twoGridReflection_iff_crt`), and for a nontrivial pair the
+dilation is itself nontrivial (`crtInvolution_nontrivial`).
+
+Finite Fourier transformation turns that into invariance of alias
+sums. Grouping the dual lattice by residue classes modulo the joint
+denominator gives the alias weights `aliasSum`, each strictly
+positive (`aliasSum_pos`), and at every grid point the mass is the
+alias-weighted sum of the grid characters (`hasSum_aliasSum`,
+`gramMass_eq_sum_aliasSum`). Distinct dual classes carry distinct
+characters (`gridChar_injective`), so the characters are linearly
+independent and the criterion is exactly
+
+    A_ν = A_{Uν}   for every dual class ν
+
+(`twoGridReflection_iff_alias`). Positivity does not finish the
+argument: the condition equates positive alias sums; it does not
+force any of them to vanish.
+
+At rank one the invariance already fails
+(`not_twoGridReflection_rankOne`, and in the two transformed forms
+`exists_not_crt_invariant_rankOne` and `exists_aliasSum_ne_rankOne`),
+because the strict rank-one sign theorem makes the defect of an
+incomparable pair negative. The open rigidity statement is that the
+failure persists in every positive rank. -/
 
 namespace Theaetetus
 
@@ -430,5 +467,656 @@ theorem exists_anchorShift (b : ℕ) [NeZero b] (k : Fin d → ZMod (2 * b)) :
   have h2 : ((((k i).val / b : ℕ) : ZMod 2)).val = (k i).val / b :=
     ZMod.val_natCast_of_lt (Nat.div_lt_of_lt_mul (by omega))
   rw [h1, h2, Nat.mod_add_div, ZMod.natCast_val, ZMod.cast_id]
+
+/-! ## The joint sample grid -/
+
+/-- Grid points with congruent numerators carry the same mass: the
+Gaussian mass is invariant under integer translation, so a numerator
+matters only modulo its denominator. -/
+theorem gramMass_residueShift_of_intCast (M : Matrix (Fin d) (Fin d) ℝ)
+    (α : ℝ) {L : ℕ} [NeZero L] (n : Fin d → ZMod L) (w : Fin d → ℤ)
+    (h : ∀ i, n i = ((w i : ℤ) : ZMod L)) :
+    gramMass M α (residueShift L n)
+      = gramMass M α (fun i => (L : ℝ)⁻¹ * (w i : ℝ)) := by
+  have hL : (0 : ℝ) < (L : ℝ) := by
+    have : 0 < L := Nat.pos_of_ne_zero (NeZero.ne L)
+    exact_mod_cast this
+  have hdvd : ∀ i, (L : ℤ) ∣ (((n i).val : ℤ) - w i) := by
+    intro i
+    rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
+    push_cast
+    rw [ZMod.natCast_val, ZMod.cast_id, h i, sub_self]
+  choose z hz using hdvd
+  have hshift : residueShift L n
+      = (fun i => (L : ℝ)⁻¹ * (w i : ℝ)) + fun i => ((z i : ℤ) : ℝ) := by
+    funext i
+    have hzi : (((n i).val : ℤ) : ℝ) = (w i : ℝ) + (L : ℝ) * (z i : ℝ) := by
+      have hzr := congrArg (fun t : ℤ => (t : ℝ)) (hz i)
+      push_cast at hzr ⊢
+      linarith
+    show (L : ℝ)⁻¹ * (((n i).val : ℕ) : ℝ)
+      = (L : ℝ)⁻¹ * (w i : ℝ) + ((z i : ℤ) : ℝ)
+    have hcast : (((n i).val : ℕ) : ℝ) = (((n i).val : ℤ) : ℝ) := by
+      push_cast
+      ring
+    rw [hcast, hzi]
+    field_simp
+  rw [hshift, gramMass_int_shift]
+
+/-- The joint index of an anchor digit modulo `2b` and a displacement
+digit modulo `a`: the numerator of the sample point over the common
+denominator `2ba`. -/
+def jointIndex (a b : ℕ) (k : ZMod (2 * b)) (c : ZMod a) :
+    ZMod (2 * b * a) :=
+  ((a * k.val + b * c.val : ℕ) : ZMod (2 * b * a))
+
+/-- **A CRT involution** for the pair `(2b, a)`: an integer that is
+`1` modulo `2b` and `−1` modulo `a`. It exists when the two moduli
+are coprime — which is what orienting the coprime pair with `a` odd
+secures. -/
+theorem exists_crtInvolution {a b : ℕ} (hco : Nat.Coprime (2 * b) a) :
+    ∃ U : ℤ, (2 * (b : ℤ)) ∣ U - 1 ∧ (a : ℤ) ∣ U + 1 := by
+  obtain ⟨x, y, hxy⟩ := Nat.isCoprime_iff_coprime.mpr hco
+  refine ⟨1 - 4 * (b : ℤ) * x, ⟨-2 * x, by ring⟩, ⟨2 * y, ?_⟩⟩
+  push_cast at hxy
+  linarith
+
+/-- The involution squares to the identity modulo the joint
+denominator. -/
+theorem crtInvolution_sq {a b : ℕ} {U : ℤ} (h1 : (2 * (b : ℤ)) ∣ U - 1)
+    (h2 : (a : ℤ) ∣ U + 1) :
+    (2 * (b : ℤ) * (a : ℤ)) ∣ U ^ 2 - 1 := by
+  obtain ⟨w, hw⟩ := h1
+  obtain ⟨v, hv⟩ := h2
+  exact ⟨w * v, by linear_combination (U + 1) * hw + (2 * (b : ℤ) * w) * hv⟩
+
+private theorem dvd_two_b {a b : ℕ} : 2 * b ∣ 2 * b * a := Dvd.intro a rfl
+
+private theorem dvd_a {a b : ℕ} : a ∣ 2 * b * a := Dvd.intro_left (2 * b) rfl
+
+theorem jointIndex_cast_a {a b : ℕ} [NeZero a] (k : ZMod (2 * b))
+    (c : ZMod a) :
+    ZMod.castHom dvd_a (ZMod a) (jointIndex a b k c) = (b : ZMod a) * c := by
+  rw [jointIndex, map_natCast]
+  push_cast
+  rw [ZMod.natCast_self, zero_mul, zero_add, ZMod.natCast_val c,
+    ZMod.cast_id]
+
+theorem jointIndex_cast_two_b {a b : ℕ} [NeZero b] (k : ZMod (2 * b))
+    (c : ZMod a) :
+    ZMod.castHom dvd_two_b (ZMod (2 * b)) (jointIndex a b k c)
+      = (a : ZMod (2 * b)) * k
+        + (b : ZMod (2 * b)) * ((c.val : ℕ) : ZMod (2 * b)) := by
+  have hb2 : NeZero (2 * b) := ⟨by
+    have : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    omega⟩
+  rw [jointIndex, map_natCast]
+  push_cast
+  rw [ZMod.natCast_val k, ZMod.cast_id]
+
+theorem jointIndex_injective {a b : ℕ} [NeZero a] [NeZero b]
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) :
+    Function.Injective
+      (fun p : ZMod (2 * b) × ZMod a => jointIndex a b p.1 p.2) := by
+  have hbunit : IsUnit (b : ZMod a) :=
+    (ZMod.isUnit_iff_coprime b a).mpr (Nat.Coprime.symm hab)
+  have haunit : IsUnit (a : ZMod (2 * b)) :=
+    (ZMod.isUnit_iff_coprime a (2 * b)).mpr (Nat.Coprime.symm hco)
+  rintro ⟨k, c⟩ ⟨k', c'⟩ h
+  simp only at h
+  have hc : c = c' := by
+    have := congrArg (ZMod.castHom dvd_a (ZMod a)) h
+    rw [jointIndex_cast_a, jointIndex_cast_a] at this
+    exact hbunit.mul_left_cancel this
+  subst hc
+  have hk : k = k' := by
+    have := congrArg (ZMod.castHom dvd_two_b (ZMod (2 * b))) h
+    rw [jointIndex_cast_two_b, jointIndex_cast_two_b] at this
+    exact haunit.mul_left_cancel (by linear_combination this)
+  subst hk
+  rfl
+
+theorem jointIndex_surjective {a b : ℕ} [NeZero a] [NeZero b]
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) :
+    Function.Surjective
+      (fun p : ZMod (2 * b) × ZMod a => jointIndex a b p.1 p.2) := by
+  have : NeZero (2 * b) := ⟨by
+    have : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    omega⟩
+  have : NeZero (2 * b * a) := ⟨by
+    have h1 : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    have h2 : 0 < a := Nat.pos_of_ne_zero (NeZero.ne a)
+    positivity⟩
+  have hcard : Fintype.card (ZMod (2 * b) × ZMod a)
+      = Fintype.card (ZMod (2 * b * a)) := by
+    rw [Fintype.card_prod, ZMod.card, ZMod.card, ZMod.card]
+  exact (Fintype.bijective_iff_injective_and_card _).mpr
+    ⟨jointIndex_injective hco hab, hcard⟩ |>.2
+
+/-- **The involution reflects the joint index**: multiplying the
+numerator of a sample point by an integer that is `1` modulo `2b`
+and `−1` modulo `a` negates its displacement digit and fixes its
+anchor digit — modulo the joint denominator. Oddness of `a` is what
+makes the second congruence carry the factor `2`. -/
+theorem crtInvolution_dvd {a b : ℕ} (hodd : ¬ 2 ∣ a) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) (k c : ℤ) :
+    ((2 * b * a : ℕ) : ℤ)
+      ∣ U * ((a : ℤ) * k + (b : ℤ) * c) - ((a : ℤ) * k - (b : ℤ) * c) := by
+  obtain ⟨w, hw⟩ := h1
+  obtain ⟨v, hv⟩ := h2
+  have hev : Even ((a : ℤ) * v) := ⟨1 + (b : ℤ) * w, by linarith⟩
+  have hna : ¬ Even ((a : ℤ)) := by
+    rw [Int.even_coe_nat]
+    exact fun hE => hodd hE.two_dvd
+  obtain ⟨v', hv'⟩ := (Int.even_mul.mp hev).resolve_left hna
+  refine ⟨w * k + v' * c, ?_⟩
+  push_cast
+  linear_combination ((a : ℤ) * k) * hw + ((b : ℤ) * c) * hv
+    + ((b : ℤ) * c * (a : ℤ)) * hv'
+
+/-! ## The criterion on the joint grid -/
+
+/-- The criterion, unfolded at the anchors and displacements. -/
+theorem twoGridReflection_iff_anchor (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ)
+    (a b : ℕ) :
+    TwoGridReflection M s a b
+      ↔ ∀ (r : Fin d → ZMod b) (c : Fin d → ZMod a) (e : Fin d → ZMod 2),
+          gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+              (anchorShift b r e + displaceShift a c)
+            = gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+                (anchorShift b r e - displaceShift a c) := by
+  constructor
+  · intro h r c e
+    rw [← parityVector_residueShift_add, ← parityVector_residueShift_sub]
+    exact congrFun (h r c) e
+  · intro h r c
+    funext e
+    rw [parityVector_residueShift_add, parityVector_residueShift_sub]
+    exact h r c e
+
+/-- The criterion on the anchor grid: the anchors are the whole
+`2b`-grid. -/
+theorem twoGridReflection_iff_grid (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ)
+    (a : ℕ) {b : ℕ} [NeZero b] :
+    TwoGridReflection M s a b
+      ↔ ∀ (k : Fin d → ZMod (2 * b)) (c : Fin d → ZMod a),
+          gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+              (residueShift (2 * b) k + displaceShift a c)
+            = gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+                (residueShift (2 * b) k - displaceShift a c) := by
+  rw [twoGridReflection_iff_anchor]
+  constructor
+  · intro h k c
+    obtain ⟨r, e, hre⟩ := exists_anchorShift b k
+    rw [← hre]
+    exact h r c e
+  · intro h r c e
+    rw [anchorShift_eq_residueShift]
+    exact h _ c
+
+private theorem neZero_joint {a b : ℕ} [NeZero a] [NeZero b] :
+    NeZero (2 * b * a) := by
+  have h1 : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+  have h2 : 0 < a := Nat.pos_of_ne_zero (NeZero.ne a)
+  exact ⟨by positivity⟩
+
+/-- **The sample point is a joint grid point**: anchor plus
+displacement is the grid point of the joint index. -/
+theorem gramMass_grid_add (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ) {a b : ℕ}
+    [NeZero a] [NeZero b] (k : Fin d → ZMod (2 * b)) (c : Fin d → ZMod a) :
+    gramMass M α (residueShift (2 * b) k + displaceShift a c)
+      = gramMass M α
+          (residueShift (2 * b * a)
+            (fun i => jointIndex a b (k i) (c i))) := by
+  have : NeZero (2 * b * a) := neZero_joint
+  have hcast : ∀ i : Fin d, jointIndex a b (k i) (c i)
+      = ((((a : ℤ) * ((k i).val : ℤ) + (b : ℤ) * ((c i).val : ℤ)) : ℤ)
+          : ZMod (2 * b * a)) := by
+    intro i
+    rw [jointIndex]
+    push_cast
+    ring
+  rw [gramMass_residueShift_of_intCast M α _
+    (fun i => (a : ℤ) * ((k i).val : ℤ) + (b : ℤ) * ((c i).val : ℤ)) hcast]
+  congr 1
+  funext i
+  have haR : (0 : ℝ) < (a : ℝ) := by
+    have : 0 < a := Nat.pos_of_ne_zero (NeZero.ne a)
+    exact_mod_cast this
+  have hbR : (0 : ℝ) < (b : ℝ) := by
+    have : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    exact_mod_cast this
+  show ((2 * b : ℕ) : ℝ)⁻¹ * (((k i).val : ℕ) : ℝ)
+      + (2 : ℝ)⁻¹ * (((a : ℕ) : ℝ)⁻¹ * (((c i).val : ℕ) : ℝ))
+    = ((2 * b * a : ℕ) : ℝ)⁻¹
+        * ((((a : ℤ) * ((k i).val : ℤ) + (b : ℤ) * ((c i).val : ℤ)) : ℤ) : ℝ)
+  push_cast
+  field_simp
+
+/-- **The reflected sample point is the involution's grid point**:
+anchor minus displacement is the grid point of the joint index
+multiplied by the CRT involution. -/
+theorem gramMass_grid_sub (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ) {a b : ℕ}
+    [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1)
+    (k : Fin d → ZMod (2 * b)) (c : Fin d → ZMod a) :
+    gramMass M α (residueShift (2 * b) k - displaceShift a c)
+      = gramMass M α
+          (residueShift (2 * b * a)
+            (fun i =>
+              (U : ZMod (2 * b * a)) * jointIndex a b (k i) (c i))) := by
+  have : NeZero (2 * b * a) := neZero_joint
+  have hcast : ∀ i : Fin d,
+      (U : ZMod (2 * b * a)) * jointIndex a b (k i) (c i)
+      = ((((a : ℤ) * ((k i).val : ℤ) - (b : ℤ) * ((c i).val : ℤ)) : ℤ)
+          : ZMod (2 * b * a)) := by
+    intro i
+    rw [jointIndex]
+    have hd := crtInvolution_dvd hodd h1 h2 ((k i).val : ℤ) ((c i).val : ℤ)
+    have hz : (((U * ((a : ℤ) * ((k i).val : ℤ) + (b : ℤ) * ((c i).val : ℤ))
+        - ((a : ℤ) * ((k i).val : ℤ) - (b : ℤ) * ((c i).val : ℤ))) : ℤ)
+        : ZMod (2 * b * a)) = 0 :=
+      (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mpr hd
+    push_cast at hz ⊢
+    linear_combination hz
+  rw [gramMass_residueShift_of_intCast M α _
+    (fun i => (a : ℤ) * ((k i).val : ℤ) - (b : ℤ) * ((c i).val : ℤ)) hcast]
+  congr 1
+  funext i
+  have haR : (0 : ℝ) < (a : ℝ) := by
+    have : 0 < a := Nat.pos_of_ne_zero (NeZero.ne a)
+    exact_mod_cast this
+  have hbR : (0 : ℝ) < (b : ℝ) := by
+    have : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    exact_mod_cast this
+  show ((2 * b : ℕ) : ℝ)⁻¹ * (((k i).val : ℕ) : ℝ)
+      - (2 : ℝ)⁻¹ * (((a : ℕ) : ℝ)⁻¹ * (((c i).val : ℕ) : ℝ))
+    = ((2 * b * a : ℕ) : ℝ)⁻¹
+        * ((((a : ℤ) * ((k i).val : ℤ) - (b : ℤ) * ((c i).val : ℤ)) : ℤ) : ℝ)
+  push_cast
+  field_simp
+
+/-- **The criterion is a CRT dilation invariance**: with the coprime
+pair oriented so that `a` is odd, the sample points of the criterion
+are exactly the points of the `2ba`-grid, and reflection is
+multiplication of the grid index by the CRT involution. -/
+theorem twoGridReflection_iff_crt (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ)
+    {a b : ℕ} [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    TwoGridReflection M s a b
+      ↔ ∀ n : Fin d → ZMod (2 * b * a),
+          gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+              (residueShift (2 * b * a) n)
+            = gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+                (residueShift (2 * b * a)
+                  (fun i => (U : ZMod (2 * b * a)) * n i)) := by
+  rw [twoGridReflection_iff_grid]
+  constructor
+  · intro h n
+    choose p hp using fun i : Fin d => jointIndex_surjective hco hab (n i)
+    have hk := h (fun i => (p i).1) (fun i => (p i).2)
+    rw [gramMass_grid_add, gramMass_grid_sub _ _ hodd h1 h2] at hk
+    simp only [hp] at hk
+    exact hk
+  · intro h k c
+    rw [gramMass_grid_add, gramMass_grid_sub _ _ hodd h1 h2]
+    exact h _
+
+/-- **The involution is nontrivial**: for a nontrivial coprime pair
+it is neither `1` nor `−1` modulo the joint denominator, so the
+criterion asks for invariance under a genuine dilation of the
+grid. -/
+theorem crtInvolution_nontrivial {a b : ℕ} (hodd : ¬ 2 ∣ a) (ha : 1 < a)
+    (hb : 1 < b) {U : ℤ} (h1 : (2 * (b : ℤ)) ∣ U - 1)
+    (h2 : (a : ℤ) ∣ U + 1) :
+    ¬ ((2 * b * a : ℕ) : ℤ) ∣ U - 1 ∧ ¬ ((2 * b * a : ℕ) : ℤ) ∣ U + 1 := by
+  have haZ : (0 : ℤ) < (a : ℤ) := by
+    exact_mod_cast Nat.lt_of_lt_of_le one_pos ha.le
+  have hbZ : (0 : ℤ) < (b : ℤ) := by
+    exact_mod_cast Nat.lt_of_lt_of_le one_pos hb.le
+  constructor
+  · intro hcon
+    have hda : (a : ℤ) ∣ U - 1 :=
+      dvd_trans ⟨2 * (b : ℤ), by push_cast; ring⟩ hcon
+    have h2a : (a : ℤ) ∣ 2 := by
+      have := dvd_sub h2 hda
+      simpa using this
+    have hd2 : (a : ℕ) ∣ 2 := by exact_mod_cast h2a
+    have hale : a ≤ 2 := Nat.le_of_dvd (by norm_num) hd2
+    have ha2 : a = 2 := by omega
+    exact hodd (ha2 ▸ dvd_rfl)
+  · intro hcon
+    have hdb : (2 * (b : ℤ)) ∣ U + 1 :=
+      dvd_trans ⟨(a : ℤ), by push_cast; ring⟩ hcon
+    have h2b : (2 * (b : ℤ)) ∣ 2 := by
+      have := dvd_sub hdb h1
+      simpa using this
+    have hble : (2 * (b : ℤ)) ≤ 2 := Int.le_of_dvd (by norm_num) h2b
+    omega
+
+/-! ## The rank-one calibration -/
+
+private theorem posDef_one_one :
+    (!![1] : Matrix (Fin 1) (Fin 1) ℝ).PosDef := by
+  refine posDef_iff_dotProduct_mulVec.mpr ⟨?_, fun x hx => ?_⟩
+  · ext i j
+    fin_cases i
+    fin_cases j
+    simp
+  · have hx0 : x 0 ≠ 0 := by
+      intro h
+      exact hx (funext fun i => by fin_cases i; exact h)
+    have hstar : star x = x := funext fun i => star_trivial _
+    have hval : x ⬝ᵥ (!![1] : Matrix (Fin 1) (Fin 1) ℝ).mulVec x
+        = x 0 * x 0 := by
+      simp [Matrix.mulVec, dotProduct]
+    rw [hstar, hval]
+    exact mul_self_pos.mpr hx0
+
+/-- **The criterion already fails at rank one**: the strict
+rank-one sign theorem says the defect of an incomparable pair is
+negative, so the two-grid reflection condition cannot hold there.
+Whatever rigidity holds in higher rank must extend this. -/
+theorem not_twoGridReflection_rankOne {s : ℝ} (hs : 0 < s) {a b : ℕ}
+    (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) (hab : ¬ a ∣ b)
+    (hba : ¬ b ∣ a) :
+    ¬ TwoGridReflection (!![1] : Matrix (Fin 1) (Fin 1) ℝ) s a b := by
+  intro h
+  have h0 := (gramDefect_eq_zero_iff_twoGridReflection posDef_one_one hs ha hb
+    hco).mpr h
+  rw [gramDefect_one_eq_defect] at h0
+  exact absurd h0 (defect_neg_of_incomparable hs hab hba).ne
+
+private theorem not_dvd_of_coprime {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
+    (hab : Nat.Coprime a b) : ¬ a ∣ b ∧ ¬ b ∣ a := by
+  constructor
+  · intro hd
+    have hg : a ∣ Nat.gcd a b := Nat.dvd_gcd dvd_rfl hd
+    rw [Nat.Coprime.gcd_eq_one hab] at hg
+    have := Nat.le_of_dvd one_pos hg
+    omega
+  · intro hd
+    have hg : b ∣ Nat.gcd a b := Nat.dvd_gcd hd dvd_rfl
+    rw [Nat.Coprime.gcd_eq_one hab] at hg
+    have := Nat.le_of_dvd one_pos hg
+    omega
+
+/-- The calibration in CRT form: at rank one the sampled Gaussian
+mass is *not* invariant under the involution's dilation of the
+grid. -/
+theorem exists_not_crt_invariant_rankOne {s : ℝ} (hs : 0 < s) {a b : ℕ}
+    (ha : 1 < a) (hb : 1 < b) (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    ∃ n : Fin 1 → ZMod (2 * b * a),
+      gramMass (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+            (residueShift (2 * b * a) n)
+        ≠ gramMass (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+            (residueShift (2 * b * a)
+              (fun i => (U : ZMod (2 * b * a)) * n i)) := by
+  have : NeZero a := ⟨by omega⟩
+  have : NeZero b := ⟨by omega⟩
+  obtain ⟨hnd, hnd'⟩ := not_dvd_of_coprime ha hb hab
+  by_contra hcon
+  have hall : ∀ n : Fin 1 → ZMod (2 * b * a),
+      gramMass (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+            (residueShift (2 * b * a) n)
+        = gramMass (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+            (residueShift (2 * b * a)
+              (fun i => (U : ZMod (2 * b * a)) * n i)) := by
+    intro n
+    by_contra hne
+    exact hcon ⟨n, hne⟩
+  exact not_twoGridReflection_rankOne hs (by omega) (by omega) hab hnd hnd'
+    ((twoGridReflection_iff_crt _ s hodd hco hab h1 h2).mpr hall)
+
+/-! ## Alias classes -/
+
+/-- The pairing of a dual class with a grid index. -/
+def gridPairing {L : ℕ} (ν n : Fin d → ZMod L) : ZMod L := ∑ i, ν i * n i
+
+/-- The character of the joint grid at a dual class. -/
+noncomputable def gridChar {L : ℕ} [NeZero L] (ν : Fin d → ZMod L) :
+    AddChar (Fin d → ZMod L) ℂ :=
+  ZMod.stdAddChar.compAddMonoidHom
+    (AddMonoidHom.mk' (gridPairing ν) fun x y => by
+      simp only [gridPairing, Pi.add_apply, mul_add]
+      rw [Finset.sum_add_distrib])
+
+@[simp] theorem gridChar_apply {L : ℕ} [NeZero L] (ν n : Fin d → ZMod L) :
+    gridChar ν n = ZMod.stdAddChar (gridPairing ν n) := rfl
+
+/-- Distinct dual classes carry distinct characters. -/
+theorem gridChar_injective {L : ℕ} [NeZero L] :
+    Function.Injective (gridChar (d := d) (L := L)) := by
+  intro ν ν' h
+  funext i
+  classical
+  set u : Fin d → ZMod L := Pi.single i 1 with hu
+  have hev := congrArg (fun ψ : AddChar (Fin d → ZMod L) ℂ => ψ u) h
+  simp only [gridChar_apply] at hev
+  have hsum : ∀ μ : Fin d → ZMod L, gridPairing μ u = μ i := by
+    intro μ
+    rw [gridPairing, Finset.sum_eq_single_of_mem i (Finset.mem_univ i)
+      (fun j _ hj => by rw [hu, Pi.single_eq_of_ne hj, mul_zero])]
+    rw [hu, Pi.single_eq_same, mul_one]
+  rw [hsum, hsum] at hev
+  exact ZMod.injective_stdAddChar hev
+
+/-- The torus character at a grid point is the grid character of the
+reduced dual vector. -/
+theorem mFourier_residueShift {L : ℕ} [NeZero L] (m : Fin d → ℤ)
+    (n : Fin d → ZMod L) :
+    mFourier m (torusMk (residueShift L n))
+      = gridChar (fun i => ((m i : ℤ) : ZMod L)) n := by
+  have hL : (0 : ℝ) < (L : ℝ) := by
+    have : 0 < L := Nat.pos_of_ne_zero (NeZero.ne L)
+    exact_mod_cast this
+  have hpair : gridPairing (fun i => ((m i : ℤ) : ZMod L)) n
+      = (((∑ i, m i * ((n i).val : ℤ)) : ℤ) : ZMod L) := by
+    rw [gridPairing]
+    push_cast
+    exact Finset.sum_congr rfl fun i _ => by
+      rw [ZMod.natCast_val, ZMod.cast_id]
+  rw [mFourier_torusMk, gridChar_apply, hpair, ZMod.stdAddChar_coe]
+  congr 1
+  have hdp : dualPairing m (residueShift L n)
+      = (∑ i, (m i : ℝ) * (((n i).val : ℕ) : ℝ)) / (L : ℝ) := by
+    rw [dualPairing, Finset.sum_div]
+    exact Finset.sum_congr rfl fun i _ => by
+      show (m i : ℝ) * ((L : ℝ)⁻¹ * (((n i).val : ℕ) : ℝ)) = _
+      field_simp
+  rw [hdp]
+  push_cast
+  field_simp
+
+/-- **The alias sum** of a dual class: the total Fourier weight of
+the dual vectors congruent to it modulo the joint denominator. -/
+noncomputable def aliasSum (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ) (L : ℕ)
+    (ν : Fin d → ZMod L) : ℝ :=
+  ∑' m : {m : Fin d → ℤ // (fun i => ((m i : ℤ) : ZMod L)) = ν},
+    massFourierCoeff M α (m : Fin d → ℤ)
+
+theorem summable_aliasFiber (hM : M.PosDef) {α : ℝ} (hα : 0 < α) {L : ℕ}
+    (ν : Fin d → ZMod L) :
+    Summable
+      (fun m : {m : Fin d → ℤ // (fun i => ((m i : ℤ) : ZMod L)) = ν} =>
+        massFourierCoeff M α (m : Fin d → ℤ)) :=
+  (summable_massFourierCoeff hM hα).subtype _
+
+/-- Every alias sum is strictly positive: its class is nonempty and
+every dual weight is positive. -/
+theorem aliasSum_pos (hM : M.PosDef) {α : ℝ} (hα : 0 < α) {L : ℕ} [NeZero L]
+    (ν : Fin d → ZMod L) : 0 < aliasSum M α L ν := by
+  have hmem : (fun i => (((((ν i).val : ℕ) : ℤ) : ℤ)) : Fin d → ℤ)
+      ∈ {m : Fin d → ℤ | (fun i => ((m i : ℤ) : ZMod L)) = ν} := by
+    funext i
+    push_cast
+    rw [ZMod.natCast_val, ZMod.cast_id]
+  exact (summable_aliasFiber hM hα ν).tsum_pos
+    (fun m => (massFourierCoeff_pos hM hα _).le) ⟨_, hmem⟩
+    (massFourierCoeff_pos hM hα _)
+
+/-- **The finite expansion at a grid point**: the mass at a grid
+point is the alias-weighted sum of the grid characters. -/
+theorem hasSum_aliasSum (hM : M.PosDef) {α : ℝ} (hα : 0 < α) {L : ℕ}
+    [NeZero L] (n : Fin d → ZMod L) :
+    HasSum (fun ν : Fin d → ZMod L =>
+        ((aliasSum M α L ν : ℝ) : ℂ) * gridChar ν n)
+      ((gramMass M α (residueShift L n) : ℝ) : ℂ) := by
+  have hbase : HasSum (fun m : Fin d → ℤ =>
+      ((massFourierCoeff M α m : ℝ) : ℂ)
+        * gridChar (fun i => ((m i : ℤ) : ZMod L)) n)
+      ((gramMass M α (residueShift L n) : ℝ) : ℂ) := by
+    refine (hasSum_massFourier hM hα (residueShift L n)).congr_fun fun m => ?_
+    rw [mFourier_residueShift]
+  have hsig := ((Equiv.sigmaFiberEquiv
+    (fun m : Fin d → ℤ => fun i => ((m i : ℤ) : ZMod L))).hasSum_iff
+      (f := fun m : Fin d → ℤ =>
+        ((massFourierCoeff M α m : ℝ) : ℂ)
+          * gridChar (fun i => ((m i : ℤ) : ZMod L)) n)).mpr hbase
+  refine hsig.sigma fun ν => ?_
+  have hreal := ((summable_aliasFiber hM hα ν).hasSum.map
+    (Complex.ofRealHom.toAddMonoidHom) Complex.continuous_ofReal).mul_right
+      (gridChar ν n)
+  refine hreal.congr_fun fun c => ?_
+  show ((massFourierCoeff M α (c : Fin d → ℤ) : ℝ) : ℂ)
+      * gridChar (fun i => (((c : Fin d → ℤ) i : ℤ) : ZMod L)) n
+    = ((massFourierCoeff M α (c : Fin d → ℤ) : ℝ) : ℂ) * gridChar ν n
+  rw [c.2]
+
+/-- The expansion as a finite sum. -/
+theorem gramMass_eq_sum_aliasSum (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+    {L : ℕ} [NeZero L] (n : Fin d → ZMod L) :
+    ((gramMass M α (residueShift L n) : ℝ) : ℂ)
+      = ∑ ν : Fin d → ZMod L, ((aliasSum M α L ν : ℝ) : ℂ) * gridChar ν n :=
+  (hasSum_aliasSum hM hα n).unique (hasSum_fintype _)
+
+/-- **The alias-class equivalence**: the two-grid criterion holds
+exactly when the alias sums are invariant under the CRT involution.
+Every alias sum is positive, so the condition equates positive
+Gaussian sums; it does not by itself make any of them vanish. -/
+theorem twoGridReflection_iff_alias (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    TwoGridReflection M s a b
+      ↔ ∀ ν : Fin d → ZMod (2 * b * a),
+          aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+            = aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+                (fun i => (U : ZMod (2 * b * a)) * ν i) := by
+  have hLz : NeZero (2 * b * a) := neZero_joint
+  have haR : (0 : ℝ) < (a : ℝ) := by
+    have : 0 < a := Nat.pos_of_ne_zero (NeZero.ne a)
+    exact_mod_cast this
+  have hbR : (0 : ℝ) < (b : ℝ) := by
+    have : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    exact_mod_cast this
+  have hα : (0 : ℝ) < 2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) := by positivity
+  set L := 2 * b * a with hLdef
+  set α := 2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) with hαdef
+  set u : ZMod L := (U : ZMod L) with hudef
+  have hu2 : u * u = 1 := by
+    have hsq := crtInvolution_sq h1 h2
+    have hz : (((U ^ 2 - 1 : ℤ)) : ZMod L) = 0 := by
+      refine (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mpr ?_
+      rw [hLdef]
+      push_cast
+      exact hsq
+    push_cast at hz
+    rw [hudef]
+    linear_combination hz
+  have hchar : ∀ ν n : Fin d → ZMod L,
+      gridChar ν (fun i => u * n i) = gridChar (fun i => u * ν i) n := by
+    intro ν n
+    rw [gridChar_apply, gridChar_apply, gridPairing, gridPairing]
+    exact congrArg _ (Finset.sum_congr rfl fun i _ => by ring)
+  have hinv : ∀ ν : Fin d → ZMod L, (fun i => u * (u * ν i)) = ν := by
+    intro ν
+    funext i
+    rw [← mul_assoc, hu2, one_mul]
+  let e : (Fin d → ZMod L) ≃ (Fin d → ZMod L) :=
+    { toFun := fun ν i => u * ν i
+      invFun := fun ν i => u * ν i
+      left_inv := fun ν => hinv ν
+      right_inv := fun ν => hinv ν }
+  rw [twoGridReflection_iff_crt M s hodd hco hab h1 h2]
+  constructor
+  · intro h ν
+    have hpt : ∀ n : Fin d → ZMod L,
+        ∑ μ : Fin d → ZMod L, ((aliasSum M α L μ : ℝ) : ℂ) * gridChar μ n
+          = ∑ μ : Fin d → ZMod L,
+              ((aliasSum M α L (fun i => u * μ i) : ℝ) : ℂ)
+                * gridChar μ n := by
+      intro n
+      rw [← gramMass_eq_sum_aliasSum hM hα n, h n,
+        gramMass_eq_sum_aliasSum hM hα (fun i => u * n i)]
+      refine Fintype.sum_equiv e _ _ fun μ => ?_
+      show ((aliasSum M α L μ : ℝ) : ℂ) * gridChar μ (fun i => u * n i)
+        = ((aliasSum M α L (fun i => u * (u * μ i)) : ℝ) : ℂ)
+            * gridChar (fun i => u * μ i) n
+      rw [hchar, hinv]
+    have hindep : LinearIndependent ℂ
+        (fun ν : Fin d → ZMod L =>
+          ((gridChar ν).toMonoidHom :
+            Multiplicative (Fin d → ZMod L) → ℂ)) := by
+      refine (linearIndependent_monoidHom
+        (Multiplicative (Fin d → ZMod L)) ℂ).comp _ fun ν ν' hh => ?_
+      exact gridChar_injective (AddChar.toMonoidHomEquiv.injective hh)
+    have hfun : (∑ μ : Fin d → ZMod L, ((aliasSum M α L μ : ℝ) : ℂ) •
+          ((gridChar μ).toMonoidHom : Multiplicative (Fin d → ZMod L) → ℂ))
+        = ∑ μ : Fin d → ZMod L,
+            ((aliasSum M α L (fun i => u * μ i) : ℝ) : ℂ) •
+              ((gridChar μ).toMonoidHom :
+                Multiplicative (Fin d → ZMod L) → ℂ) := by
+      funext n
+      simpa using hpt (Multiplicative.toAdd n)
+    exact_mod_cast Fintype.linearIndependent_iffₛ.mp hindep _ _ hfun ν
+  · intro h n
+    have key : ((gramMass M α (residueShift L n) : ℝ) : ℂ)
+        = ((gramMass M α (residueShift L (fun i => u * n i)) : ℝ) : ℂ) := by
+      rw [gramMass_eq_sum_aliasSum hM hα n,
+        gramMass_eq_sum_aliasSum hM hα (fun i => u * n i)]
+      refine Fintype.sum_equiv e _ _ fun μ => ?_
+      show ((aliasSum M α L μ : ℝ) : ℂ) * gridChar μ n
+        = ((aliasSum M α L (fun i => u * μ i) : ℝ) : ℂ)
+            * gridChar (fun i => u * μ i) (fun i => u * n i)
+      rw [hchar, hinv, ← h μ]
+    exact Complex.ofReal_inj.mp key
+
+/-- **The rank-one calibration, on the alias classes**: at rank one
+the alias sums are *not* invariant under the involution. Any
+higher-rank rigidity theorem must extend this failure. -/
+theorem exists_aliasSum_ne_rankOne {s : ℝ} (hs : 0 < s) {a b : ℕ}
+    (ha : 1 < a) (hb : 1 < b) (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    ∃ ν : Fin 1 → ZMod (2 * b * a),
+      aliasSum (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+          (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+        ≠ aliasSum (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+            (fun i => (U : ZMod (2 * b * a)) * ν i) := by
+  have : NeZero a := ⟨by omega⟩
+  have : NeZero b := ⟨by omega⟩
+  obtain ⟨hnd, hnd'⟩ := not_dvd_of_coprime ha hb hab
+  by_contra hcon
+  have hall : ∀ ν : Fin 1 → ZMod (2 * b * a),
+      aliasSum (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+          (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+        = aliasSum (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+            (fun i => (U : ZMod (2 * b * a)) * ν i) := by
+    intro ν
+    by_contra hne
+    exact hcon ⟨ν, hne⟩
+  exact not_twoGridReflection_rankOne hs (by omega) (by omega) hab hnd hnd'
+    ((twoGridReflection_iff_alias posDef_one_one hs hodd hco hab h1 h2).mpr
+      hall)
 
 end Theaetetus

@@ -426,6 +426,17 @@ theorem gramDefect_eq_zero_iff_twoGridReflection (hM : M.PosDef) {s : ℝ}
   (gramDefect_eq_zero_iff_mul_eq hM hs ha hb hco).trans
     (gramMass_coprime_mul_eq_iff hM hs ha hb hco)
 
+/-- **The criterion is symmetric in the pair**: swapping the two
+dilations preserves it, because both readings are the vanishing of
+the same defect and the defect is symmetric in its resolutions. -/
+theorem twoGridReflection_comm (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
+    TwoGridReflection M s a b ↔ TwoGridReflection M s b a := by
+  rw [← gramDefect_eq_zero_iff_twoGridReflection hM hs ha hb hco,
+    ← gramDefect_eq_zero_iff_twoGridReflection hM hs hb ha hco.symm,
+    gramDefect_eq_fieldDefect, gramDefect_eq_fieldDefect,
+    fieldDefect_comm]
+
 /-- **The intrinsic equivalence**: the defect of a positive-definite
 lattice action vanishes at a coprime pair exactly when the two-grid
 reflection criterion holds in one — hence any — integral chart. -/

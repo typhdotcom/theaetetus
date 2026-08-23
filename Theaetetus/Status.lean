@@ -1172,6 +1172,91 @@ example {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ) {a b : ℕ}
       = gramMass M α (anchorShift b r' e' - displaceShift a c') :=
   gramMass_chain_eq M α ha hb hco h
 
+/-! ## The CRT grid and the alias classes -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    TwoGridReflection M s a b ↔ TwoGridReflection M s b a :=
+  twoGridReflection_comm hM hs ha hb hco
+
+example {a b : ℕ} (hco : Nat.Coprime (2 * b) a) :
+    ∃ U : ℤ, (2 * (b : ℤ)) ∣ U - 1 ∧ (a : ℤ) ∣ U + 1 :=
+  exists_crtInvolution hco
+
+example {a b : ℕ} (hodd : ¬ 2 ∣ a) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) (k c : ℤ) :
+    ((2 * b * a : ℕ) : ℤ)
+      ∣ U * ((a : ℤ) * k + (b : ℤ) * c) - ((a : ℤ) * k - (b : ℤ) * c) :=
+  crtInvolution_dvd hodd h1 h2 k c
+
+example {a b : ℕ} {U : ℤ} (h1 : (2 * (b : ℤ)) ∣ U - 1)
+    (h2 : (a : ℤ) ∣ U + 1) :
+    (2 * (b : ℤ) * (a : ℤ)) ∣ U ^ 2 - 1 :=
+  crtInvolution_sq h1 h2
+
+example {a b : ℕ} (hodd : ¬ 2 ∣ a) (ha : 1 < a) (hb : 1 < b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    ¬ ((2 * b * a : ℕ) : ℤ) ∣ U - 1 ∧ ¬ ((2 * b * a : ℕ) : ℤ) ∣ U + 1 :=
+  crtInvolution_nontrivial hodd ha hb h1 h2
+
+example {a b : ℕ} [NeZero a] [NeZero b]
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) :
+    Function.Bijective
+      (fun p : ZMod (2 * b) × ZMod a => jointIndex a b p.1 p.2) :=
+  ⟨jointIndex_injective hco hab, jointIndex_surjective hco hab⟩
+
+example {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ) {a b : ℕ}
+    [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a) (hco : Nat.Coprime (2 * b) a)
+    (hab : Nat.Coprime a b) {U : ℤ} (h1 : (2 * (b : ℤ)) ∣ U - 1)
+    (h2 : (a : ℤ) ∣ U + 1) :
+    TwoGridReflection M s a b
+      ↔ ∀ n : Fin d → ZMod (2 * b * a),
+          gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+              (residueShift (2 * b * a) n)
+            = gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+                (residueShift (2 * b * a)
+                  (fun i => (U : ZMod (2 * b * a)) * n i)) :=
+  twoGridReflection_iff_crt M s hodd hco hab h1 h2
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {L : ℕ} [NeZero L] (ν : Fin d → ZMod L) :
+    0 < aliasSum M α L ν :=
+  aliasSum_pos hM hα ν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {L : ℕ} [NeZero L] (n : Fin d → ZMod L) :
+    ((gramMass M α (residueShift L n) : ℝ) : ℂ)
+      = ∑ ν : Fin d → ZMod L, ((aliasSum M α L ν : ℝ) : ℂ) * gridChar ν n :=
+  gramMass_eq_sum_aliasSum hM hα n
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    TwoGridReflection M s a b
+      ↔ ∀ ν : Fin d → ZMod (2 * b * a),
+          aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+            = aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+                (fun i => (U : ZMod (2 * b * a)) * ν i) :=
+  twoGridReflection_iff_alias hM hs hodd hco hab h1 h2
+
+example {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) (hab : ¬ a ∣ b) (hba : ¬ b ∣ a) :
+    ¬ TwoGridReflection (!![1] : Matrix (Fin 1) (Fin 1) ℝ) s a b :=
+  not_twoGridReflection_rankOne hs ha hb hco hab hba
+
+example {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
+    (hodd : ¬ 2 ∣ a) (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b)
+    {U : ℤ} (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    ∃ ν : Fin 1 → ZMod (2 * b * a),
+      aliasSum (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+          (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+        ≠ aliasSum (!![1] : Matrix (Fin 1) (Fin 1) ℝ)
+            (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+            (fun i => (U : ZMod (2 * b * a)) * ν i) :=
+  exists_aliasSum_ne_rankOne hs ha hb hodd hco hab h1 h2
+
 /-! ## The orthogonal sum -/
 
 example {Z W : ℝ → ℝ} (h : ∀ β : ℝ, 0 < β → Z β = W β) {s : ℝ}
