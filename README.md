@@ -962,19 +962,36 @@ Formalization targets:
 
     with `P` the parity feature vector at the joint scale — every
     point of the `b`-grid a reflection center for the `a`-grid.
-    Compositions of two such reflections are translations, which is
-    the rigidity the endgame should exploit. Still open, and
-    explicitly so: converting a vanishing `gramDefect`, or a
-    vanishing `QuadLatticeAction.defect`, into this mass equality,
-    and then deciding whether the two-grid symmetry can occur at
-    all for a nontrivial coprime pair — which is the assembly into
-    a characterization of `D_L(q,q′) = 0`. The
-    target is specifically scalar dilations: the index-two diamond
-    shows that arbitrary incomparable sublattices may saturate by
-    orthogonal splitting (`defect_evenFst_evenSnd`). The endgame
-    must show that this splitting cannot occur for a nontrivial
-    coprime scalar pair. This is the route to Q1's equality
-    classification that is independent of higher-rank Q5.
+    Each equality has reflection form. Whether the sampled fibers
+    close under composition strongly enough to force a nontrivial
+    translation is part of the remaining rigidity problem. The
+    chain now reaches
+    the defect itself. For a positive field, vanishing at a coprime
+    pair is exactly multiplicativity across the rectangle
+    `{a, b, 1, a·b}` (`fieldDefect_eq_zero_iff_mul_eq`, generic and
+    logarithm-only), so a vanishing Gram defect is exactly the mass
+    identity (`gramDefect_eq_zero_iff_mul_eq`) and hence exactly
+    the criterion (`TwoGridReflection`,
+    `gramDefect_eq_zero_iff_twoGridReflection`); intrinsically, a
+    lattice action has zero defect at a coprime pair exactly when
+    the criterion holds in an integral chart
+    (`QuadLatticeAction.defect_eq_zero_iff_twoGridReflection`), and
+    therefore in one chart exactly when in every other
+    (`QuadLatticeAction.twoGridReflection_gram_iff`). The equality
+    chain is complete through the intrinsic two-grid criterion.
+
+    The sole mathematical remainder is one rigidity statement: in
+    positive rank, for coprime `a, b > 1`, the two-grid parity
+    reflection condition is impossible. Once that theorem exists,
+    `fieldDefect_div_gcd` reduces an arbitrary pair to its coprime
+    base and turns the equivalence into the full equality
+    classification. The target is specifically scalar dilations:
+    the index-two diamond shows that arbitrary incomparable
+    sublattices may saturate by orthogonal splitting
+    (`defect_evenFst_evenSnd`), so the rigidity must use
+    coprimality of the scalar pair, not merely incomparability.
+    This is the route to Q1's equality classification that is
+    independent of higher-rank Q5.
 11. **The resolution metric.** Import Descent's join-kernel
     pseudometric theorem through the same package boundary as target
     7 and instantiate it with the normalized field
@@ -1054,10 +1071,10 @@ The higher-interaction bridge (target 7) is complete: the seam,
 the coprime telescope with its sign laws, the raw-difference
 isolation, and the Gaussian `M₃` diamond, whose order-three defect
 is strictly positive and survives the small-scale boundary. Still
-open: the equality chain (target 10), whose analytic, dilation,
-and coprime links are now characterized and whose passage from a
-vanishing defect to the two-grid criterion is not; the resolution
-metric (target 11); and the distributivity-index law
+open: the equality chain (target 10), complete through the
+intrinsic two-grid criterion and awaiting only the rigidity
+theorem that the criterion is impossible for coprime `a, b > 1`;
+the resolution metric (target 11); and the distributivity-index law
 (target 12), a conjecture whose first nontrivial case is that
 diamond. The
 verdicts to date: Q5 stays a universal conjecture, with margins

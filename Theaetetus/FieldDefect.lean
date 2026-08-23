@@ -141,6 +141,32 @@ theorem fieldDefect_div_gcd (Z : ℝ → ℝ) (s : ℝ) {q q' : ℕ}
   rw [Nat.Coprime.gcd_eq_one hco, Nat.Coprime.lcm_eq_mul hco,
     e1, e2, e3, e4]
 
+/-- **The vanishing locus on a coprime rectangle**: for a positive
+field the defect at a coprime pair vanishes exactly when the
+partition values multiply across the rectangle — the coprime
+rectangle has corners `{a, b, 1, a·b}`, and taking exponentials
+turns the vanishing alternating log sum into that product
+identity. -/
+theorem fieldDefect_eq_zero_iff_mul_eq {Z : ℝ → ℝ}
+    (hZ : ∀ β, 0 < β → 0 < Z β) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
+    fieldDefect Z s a b = 0
+      ↔ Z ((a : ℝ) ^ 2 * s) * Z ((b : ℝ) ^ 2 * s)
+          = Z s * Z (((a * b : ℕ) : ℝ) ^ 2 * s) := by
+  have haR : (0 : ℝ) < (a : ℝ) := by exact_mod_cast ha
+  have hbR : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb
+  have hza : 0 < Z ((a : ℝ) ^ 2 * s) := hZ _ (by positivity)
+  have hzb : 0 < Z ((b : ℝ) ^ 2 * s) := hZ _ (by positivity)
+  have hz1 : 0 < Z s := hZ _ hs
+  have hzab : 0 < Z (((a * b : ℕ) : ℝ) ^ 2 * s) := hZ _ (by positivity)
+  have e1 : ((1 : ℕ) : ℝ) ^ 2 * s = s := by norm_num
+  unfold fieldDefect
+  rw [Nat.Coprime.gcd_eq_one hco, Nat.Coprime.lcm_eq_mul hco, e1,
+    ← Real.log_mul hza.ne' hzb.ne', ← Real.log_mul hz1.ne' hzab.ne',
+    sub_eq_zero,
+    Real.log_injOn_pos.eq_iff (Set.mem_Ioi.mpr (mul_pos hza hzb))
+      (Set.mem_Ioi.mpr (mul_pos hz1 hzab))]
+
 /-- **The defect annihilates affine log weights**: if a reflection
 sends `log Z′(π²/α)` to `log Z(α)` plus an affine weight
 `a·log α + b`, the weight cancels in the four-term alternating sum

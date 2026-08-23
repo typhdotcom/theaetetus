@@ -82,14 +82,33 @@ at the joint scale, for every residue `r` mod `b` and every residue
 `c` mod `a` — every point of the `b`-grid a reflection center for
 the `a`-grid.
 
-What remains: converting a vanishing `gramDefect`, or a vanishing
-`QuadLatticeAction.defect`, into this mass equality, and then
-deciding whether the two-grid reflection symmetry can occur at all
-for a nontrivial coprime pair of scalar dilations. -/
+The chain closes at the defect itself. For a positive field the
+defect at a coprime pair vanishes exactly when the partition values
+multiply across the rectangle `{a, b, 1, a·b}`
+(`fieldDefect_eq_zero_iff_mul_eq`, generic and logarithm-only), so
+in the Gram chart a vanishing defect is exactly that mass identity
+(`gramDefect_eq_zero_iff_mul_eq`) and hence exactly the two-grid
+criterion (`TwoGridReflection`,
+`gramDefect_eq_zero_iff_twoGridReflection`). Intrinsically, the
+defect of a positive-definite lattice action vanishes at a coprime
+pair exactly when the criterion holds in a chosen integral chart
+(`QuadLatticeAction.defect_eq_zero_iff_twoGridReflection`); the
+left side of that equivalence names no chart, so the criterion
+holds in one integral chart exactly when it holds in every other
+(`QuadLatticeAction.twoGridReflection_gram_iff`) — chart
+independence with no coordinate change between parity vectors.
+
+What remains is one rigidity statement: in positive rank, for
+coprime `a, b > 1`, the two-grid reflection condition is
+impossible. With it, `fieldDefect_div_gcd` reduces an arbitrary
+pair to its coprime base and turns the equivalence into the
+classification of the vanishing locus. -/
 
 namespace Theaetetus
 
 open Matrix
+
+universe u
 
 variable {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ}
 
@@ -364,5 +383,72 @@ theorem gramMass_coprime_mul_eq_iff (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
   refine forall_congr' fun r => ?_
   rw [gramMass_dilate_mul_eq_iff hM hβb (dilatedResidueShift a b r) a,
     dilateShift_dilatedResidueShift ha b r]
+
+/-! ## From a vanishing defect to the two-grid symmetry -/
+
+/-- **The two-grid reflection criterion** at coprime dilations `a`
+and `b`: at the joint scale every point of the `b`-grid is a center
+of reflection for the `a`-grid, read in the parity feature
+vectors. -/
+def TwoGridReflection (M : Matrix (Fin d) (Fin d) ℝ) (s : ℝ)
+    (a b : ℕ) : Prop :=
+  ∀ (r : Fin d → ZMod b) (c : Fin d → ZMod a),
+    parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+        (residueShift b r + residueShift a c)
+      = parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+          (residueShift b r - residueShift a c)
+
+/-- **The Gram mass bridge**: at a coprime pair the Gram defect
+vanishes exactly when the Boltzmann masses multiply across the
+resolution rectangle, whose corners are `{a, b, 1, a·b}`. -/
+theorem gramDefect_eq_zero_iff_mul_eq (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
+    gramDefect M s a b = 0
+      ↔ gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
+          = gramMass M s 0
+              * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0 := by
+  have e2 : ((a * b : ℕ) : ℝ) ^ 2 * s = (a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s) := by
+    push_cast
+    ring
+  rw [gramDefect_eq_fieldDefect,
+    fieldDefect_eq_zero_iff_mul_eq (fun β hβ => gramTheta_pos hM hβ) hs ha hb
+      hco, e2]
+  simp only [gramMass_zero]
+
+/-- **The coprime zero-defect/two-grid equivalence** in the Gram
+chart: the defect of a positive-definite Gram form vanishes at a
+coprime pair exactly when the two-grid reflection criterion holds at
+the joint scale. -/
+theorem gramDefect_eq_zero_iff_twoGridReflection (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    gramDefect M s a b = 0 ↔ TwoGridReflection M s a b :=
+  (gramDefect_eq_zero_iff_mul_eq hM hs ha hb hco).trans
+    (gramMass_coprime_mul_eq_iff hM hs ha hb hco)
+
+/-- **The intrinsic equivalence**: the defect of a positive-definite
+lattice action vanishes at a coprime pair exactly when the two-grid
+reflection criterion holds in one — hence any — integral chart. -/
+theorem QuadLatticeAction.defect_eq_zero_iff_twoGridReflection
+    (Q : QuadLatticeAction.{u}) {n : ℕ} (bs : Module.Basis (Fin n) ℤ Q.Λ)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    Q.defect s a b = 0 ↔ TwoGridReflection (Q.gram bs) s a b := by
+  rw [Q.defect_eq_gramDefect bs]
+  exact gramDefect_eq_zero_iff_twoGridReflection (Q.gram_posDef bs) hs ha hb
+    hco
+
+/-- **Chart independence of the criterion**: the two-grid condition
+holds in one integral chart exactly when it holds in every other,
+both being equivalent to the same intrinsic vanishing. No change of
+coordinates between the parity vectors is computed. -/
+theorem QuadLatticeAction.twoGridReflection_gram_iff
+    (Q : QuadLatticeAction.{u}) {n m : ℕ} (bs : Module.Basis (Fin n) ℤ Q.Λ)
+    (bs' : Module.Basis (Fin m) ℤ Q.Λ) {s : ℝ} (hs : 0 < s) {a b : ℕ}
+    (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
+    TwoGridReflection (Q.gram bs) s a b
+      ↔ TwoGridReflection (Q.gram bs') s a b :=
+  (Q.defect_eq_zero_iff_twoGridReflection bs hs ha hb hco).symm.trans
+    (Q.defect_eq_zero_iff_twoGridReflection bs' hs ha hb hco)
 
 end Theaetetus
