@@ -588,7 +588,14 @@ dependency pinned to an immutable revision, and the bridge module
 `fieldDefect` of any partition field with `Descent.defect` of its
 fixed-scale logarithmic context field on the carrier of positive
 naturals under divisibility (`fieldDefect_eq_defect`). The
-abstract hierarchy is consumed, never forked.
+abstract hierarchy is consumed, never forked. The dependency is
+passive as well as one-way: Theaetetus does not schedule changes in
+Descent, advance its roadmap, or require its active development to
+accommodate this project. Adapter lemmas and application-specific
+corollaries live here against the pinned release. A result that may
+belong upstream is recorded only as a **Consider upstreaming to
+Descent** note; Descent's own team decides whether and when to
+harvest it, and Theaetetus continues without waiting.
 
 Formalization targets:
 
@@ -771,6 +778,13 @@ Formalization targets:
 
    This closes the original resolution-tower question and opens the
    genuinely new one on non-distributive sublattice carriers.
+
+   **Consider upstreaming to Descent:** if the coprime telescope
+   naturally produces a reusable theorem for pairwise-disjoint
+   families on distributive lattices, Descent may eventually want
+   that abstraction. Theaetetus will prove and use the needed
+   specialization locally; this note creates no upstream task and
+   does not block the target.
 8. **The star obstruction** — done (`deficit_not_psd`,
    `cnd_not_psd` in `Theaetetus.StarObstruction`): the explicit
    star-weight witness closed it without eigenvalue machinery.
