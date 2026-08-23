@@ -1022,4 +1022,25 @@ example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) (d : ℕ+) (l : List ℕ+
         (l.map Descent.Arith.of) ≤ 0 :=
   Q.defectFam_nonpos hs d l h
 
+example (Z : ℝ → ℝ) (s : ℝ) (a b c : ℕ+) (h : PairwiseCoprime [a, b, c]) :
+    Descent.mixedDiff
+        [Descent.Arith.of a, Descent.Arith.of b, Descent.Arith.of c]
+        (logField Z s) (Descent.Arith.of 1)
+      = fieldDefect Z s ((a : ℕ+) : ℕ) ((c : ℕ+) : ℕ)
+        + fieldDefect Z s ((b : ℕ+) : ℕ) ((c : ℕ+) : ℕ)
+        - fieldDefect Z s ((a * b : ℕ+) : ℕ) ((c : ℕ+) : ℕ) :=
+  mixedDiff_triple_of_pairwiseCoprime Z s a b c h
+
+example (Z : ℝ → ℝ) (s : ℝ) :
+    Descent.mixedDiff
+        [Descent.Arith.of 2, Descent.Arith.of 3, Descent.Arith.of 5]
+        (logField Z s) (Descent.Arith.of 1)
+      = fieldDefect Z s 2 5 + fieldDefect Z s 3 5 - fieldDefect Z s 6 5 :=
+  mixedDiff_two_three_five Z s
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.defect3 (logField theta s) (Descent.Arith.of 2)
+      (Descent.Arith.of 3) (Descent.Arith.of 5) < 0 :=
+  defect3_theta_235_neg hs
+
 end Theaetetus

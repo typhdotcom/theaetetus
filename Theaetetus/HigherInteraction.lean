@@ -2,6 +2,8 @@ import Theaetetus.Submodular
 import Theaetetus.Correlation
 import Descent.Core.Field
 import Descent.Core.Defect
+import Descent.Core.Cube
+import Descent.Core.Higher
 import Descent.Core.Hierarchy
 import Descent.Models.Arithmetic
 
@@ -39,8 +41,25 @@ reorganization, not a vanishing theorem: at rank one every
 corrected order of a nontrivial coprime family is strictly
 negative (`defectFam_theta_neg`), and for every positive-definite
 lattice action it is nonpositive
-(`QuadLatticeAction.defectFam_nonpos`). Raw mixed differences of
-the field are a different object and are not treated here. -/
+(`QuadLatticeAction.defectFam_nonpos`).
+
+Raw mixed differences are a different object, and the difference is
+exactly measurable: on a coprime triple the raw order-three cube at
+the trivial resolution is its three pairwise faces minus the
+corrected defect, and both correction terms are pairwise data, so
+the raw quantity is the balance
+
+    raw(a,b,c) = D(a,c) + D(b,c) − D(a·b,c)
+
+(`mixedDiff_triple_of_pairwiseCoprime`). Its sign is undetermined
+because it subtracts `D(a·b,c)`: at the rank-one theta field all
+three terms are strictly negative
+(`defect_neg_of_incomparable`), so the balance may fall either way.
+The corrected order-three defect is a different observable: at the
+nontrivial coprime triple `2, 3, 5` it is strictly negative at
+every positive scale (`defect3_theta_235_neg`), an instance of the
+family sign law, which needs each resolution to be nontrivial.
+Neither statement makes any pairwise defect vanish. -/
 
 namespace Theaetetus
 
@@ -323,5 +342,103 @@ theorem QuadLatticeAction.defectFam_nonpos (Q : QuadLatticeAction.{u})
       have h3 : fieldDefect Q.scaledPartFn s
           ((prodFam a t : ℕ+) : ℕ) ((d : ℕ+) : ℕ) ≤ 0 := h2
       linarith
+
+/-! ## Raw mixed differences on a coprime triple -/
+
+/-- Coprime resolutions meet at the trivial resolution. -/
+private theorem inf_eq_one_of_coprime {a b : ℕ+}
+    (h : Nat.Coprime (a : ℕ) (b : ℕ)) :
+    Descent.Arith.of a ⊓ Descent.Arith.of b = Descent.Arith.of 1 :=
+  arith_ext (by rw [Descent.Arith.num_inf]; exact h)
+
+/-- Coprime resolutions join at their product. -/
+private theorem sup_eq_mul_of_coprime {a b : ℕ+}
+    (h : Nat.Coprime (a : ℕ) (b : ℕ)) :
+    Descent.Arith.of a ⊔ Descent.Arith.of b = Descent.Arith.of (a * b) := by
+  refine arith_ext ?_
+  rw [Descent.Arith.num_sup]
+  show Nat.lcm ((a : ℕ+) : ℕ) ((b : ℕ+) : ℕ) = ((a * b : ℕ+) : ℕ)
+  rw [h.lcm_eq_mul, PNat.mul_coe]
+
+/-- **Raw order-three isolation on a coprime triple**: at the
+trivial resolution the raw mixed difference of a partition field's
+logarithmic context field along a pairwise coprime triple is a
+balance of pairwise defects,
+
+    raw(a,b,c) = D(a,c) + D(b,c) − D(a·b,c),
+
+with no third-order content. The raw cube is its three pairwise
+faces minus the corrected defect (`Descent.mixedDiff_triple_inf`);
+on the distributive carrier that corrected defect is itself
+pairwise (`Descent.defect3_decompose`), its meet-derived term
+`D(a ⊓ c, b ⊓ c)` collapses to `D(1,1) = 0` by coprimality, and
+the shared face `D(a,b)` cancels between the two. -/
+theorem mixedDiff_triple_of_pairwiseCoprime (Z : ℝ → ℝ) (s : ℝ)
+    (a b c : ℕ+) (h : PairwiseCoprime [a, b, c]) :
+    Descent.mixedDiff
+        [Descent.Arith.of a, Descent.Arith.of b, Descent.Arith.of c]
+        (logField Z s) (Descent.Arith.of 1)
+      = fieldDefect Z s ((a : ℕ+) : ℕ) ((c : ℕ+) : ℕ)
+        + fieldDefect Z s ((b : ℕ+) : ℕ) ((c : ℕ+) : ℕ)
+        - fieldDefect Z s ((a * b : ℕ+) : ℕ) ((c : ℕ+) : ℕ) := by
+  have h1 := (List.pairwise_cons.mp h).1
+  have h2 := (List.pairwise_cons.mp (List.pairwise_cons.mp h).2).1
+  have hab : Nat.Coprime ((a : ℕ+) : ℕ) ((b : ℕ+) : ℕ) :=
+    h1 b (List.mem_cons_self ..)
+  have hac : Nat.Coprime ((a : ℕ+) : ℕ) ((c : ℕ+) : ℕ) :=
+    h1 c (List.mem_cons_of_mem b (List.mem_cons_self ..))
+  have hbc : Nat.Coprime ((b : ℕ+) : ℕ) ((c : ℕ+) : ℕ) :=
+    h2 c (List.mem_cons_self ..)
+  have hbase : Descent.Arith.of a ⊓ Descent.Arith.of b ⊓ Descent.Arith.of c
+      = Descent.Arith.of 1 := by
+    refine arith_ext ?_
+    rw [Descent.Arith.num_inf, Descent.Arith.num_inf]
+    refine Nat.dvd_one.mp ?_
+    refine hac ▸ Nat.dvd_gcd ?_ (Nat.gcd_dvd_right _ _)
+    exact (Nat.gcd_dvd_left _ _).trans (Nat.gcd_dvd_left _ _)
+  have hraw := Descent.mixedDiff_triple_inf (logField Z s)
+    (Descent.Arith.of a) (Descent.Arith.of b) (Descent.Arith.of c)
+  rw [hbase] at hraw
+  rw [hraw, Descent.defect3_decompose, sup_eq_mul_of_coprime hab,
+    inf_eq_one_of_coprime hac, inf_eq_one_of_coprime hbc,
+    Descent.defect_self]
+  simp only [← fieldDefect_eq_defect]
+  ring
+
+/-- The triple `2, 3, 5` is pairwise coprime. -/
+theorem pairwiseCoprime_two_three_five :
+    PairwiseCoprime [2, 3, 5] := by
+  show List.Pairwise (fun x y : ℕ+ => Nat.Coprime (x : ℕ) (y : ℕ)) [2, 3, 5]
+  decide
+
+/-- **The `2, 3, 5` raw difference is pairwise data**: the raw
+order-three mixed difference at the trivial resolution is the
+balance `D(2,5) + D(3,5) − D(6,5)` of rank-one pairwise defects.
+The sign it was observed to change is the sign of that balance, not
+an irreducible third-order observable. -/
+theorem mixedDiff_two_three_five (Z : ℝ → ℝ) (s : ℝ) :
+    Descent.mixedDiff
+        [Descent.Arith.of 2, Descent.Arith.of 3, Descent.Arith.of 5]
+        (logField Z s) (Descent.Arith.of 1)
+      = fieldDefect Z s 2 5 + fieldDefect Z s 3 5 - fieldDefect Z s 6 5 := by
+  have h := mixedDiff_triple_of_pairwiseCoprime Z s 2 3 5
+    pairwiseCoprime_two_three_five
+  rwa [show (((2 : ℕ+) * 3 : ℕ+) : ℕ) = 6 from rfl] at h
+
+/-- **The corrected `2, 3, 5` defect is strictly negative**: at rank
+one, at every positive scale — the order-separated observable over
+the same triple, in contrast to the undetermined sign of the raw
+difference. -/
+theorem defect3_theta_235_neg {s : ℝ} (hs : 0 < s) :
+    Descent.defect3 (logField theta s) (Descent.Arith.of 2)
+      (Descent.Arith.of 3) (Descent.Arith.of 5) < 0 := by
+  have hp : PairwiseCoprime [5, 3, 2] := by
+    show List.Pairwise (fun x y : ℕ+ => Nat.Coprime (x : ℕ) (y : ℕ)) [5, 3, 2]
+    decide
+  have h := defectFam_theta_neg (s := s) hs (d := 5) (l := [3, 2])
+    (List.cons_ne_nil _ _) hp (by decide)
+  rwa [show (([3, 2] : List ℕ+).map Descent.Arith.of)
+      = [Descent.Arith.of 3, Descent.Arith.of 2] from rfl,
+    Descent.defectFam_triple] at h
 
 end Theaetetus

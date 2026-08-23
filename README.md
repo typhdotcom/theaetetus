@@ -544,9 +544,29 @@ pairwise versus higher-order interaction.
   (`QuadLatticeAction.defectFam_nonpos`). The telescope
   reorganizes the corrected defects into pairwise ones; it does
   not make them vanish, and raw mixed differences remain a
-  different object. The old `2,3,5` chamber is thereby
-  reclassified as cancellation among pairwise terms, not a new
-  three-body phase.
+  different object.
+
+  How different is now exact. On a pairwise coprime triple the raw
+  order-three cube at the trivial resolution is
+
+      raw(a,b,c) = D(a,c) + D(b,c) − D(a·b,c)
+
+  (`mixedDiff_triple_of_pairwiseCoprime`): the raw cube is its
+  three pairwise faces minus the corrected defect, the corrected
+  defect is itself pairwise on this distributive carrier, the
+  meet-derived term `D(a ⊓ c, b ⊓ c)` collapses to `D(1,1) = 0`,
+  and the shared face `D(a,b)` cancels. At `2,3,5` this reads
+
+      raw(2,3,5) = D(2,5) + D(3,5) − D(6,5)
+
+  (`mixedDiff_two_three_five`). The old `2,3,5` chamber is thereby
+  a balance among three strictly negative rank-one pairwise
+  defects — its sign is undetermined because the raw quantity
+  subtracts `D(6,5)` — and not a new three-body phase. The
+  corrected observable over the same triple has a determined sign:
+  strictly negative at every positive scale
+  (`defect3_theta_235_neg`). Neither statement makes any pairwise
+  defect vanish.
 
   Genuine irreducible higher interaction moves to the carrier. The
   modular, non-distributive lattice of finite-index sublattices
@@ -793,7 +813,10 @@ Formalization targets:
      `QuadLatticeAction.defectFam_nonpos`);
    - isolate the raw `2,3,5` mixed difference as a combination of
      pairwise entries, explaining its sign change without promoting
-     it to a new observable;
+     it to a new observable — done
+     (`mixedDiff_triple_of_pairwiseCoprime` generically,
+     `mixedDiff_two_three_five` at the observed triple, against the
+     corrected sign `defect3_theta_235_neg`);
    - formalize the canonical `M₃` witness from the three index-two
      sublattices of `ℤ²`: one incomparable pair has zero defect by
      orthogonal splitting, the other two have the strict rank-one
@@ -898,8 +921,8 @@ peeling, the certification chain, higher-rank defect duality, and
 the Regev–Stephens-Davidowitz implication are complete, and the
 orthogonal-sum reduction has closed the remainder of target 2.
 Still open: the higher-interaction bridge (target 7), whose seam,
-coprime telescope, and sign laws have landed, leaving the raw
-`2,3,5` isolation and the `M₃` diamond; the equality chain
+coprime telescope, sign laws, and raw-difference isolation have
+landed, leaving only the `M₃` diamond; the equality chain
 (target 10); and the resolution metric (target 11). The verdicts
 to date:
 Q5 stays a universal conjecture, with margins vanishing toward
