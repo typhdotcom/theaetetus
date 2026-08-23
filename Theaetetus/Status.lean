@@ -14,6 +14,7 @@ import Theaetetus.Shells
 import Theaetetus.GramDuality
 import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
+import Theaetetus.CorrelationEquality
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
 import Theaetetus.SublatticeDiamond
@@ -37,7 +38,7 @@ defect duality; the field defect and the intrinsic lift; the
 shifted mass and positive correlation; the orthogonal sum;
 the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
-sublattices. -/
+sublattices; the equality cases of the correlation inequalities. -/
 
 namespace Theaetetus
 
@@ -918,6 +919,39 @@ example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
     (hq : 0 < q) (hq' : 0 < q') :
     Q.defect s q q' ≤ 0 :=
   Q.defect_nonpos hs hq hq'
+
+/-! ## The equality cases of the correlation inequalities -/
+
+example {ι : Type} [Fintype ι] [Nonempty ι] {f g : ι → ℝ}
+    (hf : ∀ i, 0 < f i) (hg : ∀ i, 0 < g i) :
+    (∑ i, f i * g i) ^ 2 = (∑ i, f i ^ 2) * (∑ i, g i ^ 2)
+      ↔ ∃ r : ℝ, 0 < r ∧ ∀ i, f i = r * g i :=
+  sum_mul_sq_eq_sq_mul_sq_iff_of_pos hf hg
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x ^ 2 * gramMass M α y ^ 2
+        = gramMass M α 0 ^ 2
+            * (gramMass M α (x + y) * gramMass M α (x - y))
+      ↔ ParityCollinear M α (x + y) (x - y) :=
+  gramMass_sq_mul_sq_eq_iff hM hα x y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x * gramMass M α y
+        = gramMass M α 0
+            * ((gramMass M α (x + y) + gramMass M α (x - y)) / 2)
+      ↔ ParityCollinear M α (x + y) (x - y)
+          ∧ gramMass M α (x + y) = gramMass M α (x - y) :=
+  gramMass_mul_eq_avg_iff hM hα x y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x y : Fin d → ℝ) :
+    gramMass M α x * gramMass M α y
+        = gramMass M α 0
+            * ((gramMass M α (x + y) + gramMass M α (x - y)) / 2)
+      ↔ parityVector M α (x + y) = parityVector M α (x - y) :=
+  gramMass_mul_eq_avg_iff_parityVector_eq hM hα x y
 
 /-! ## The orthogonal sum -/
 

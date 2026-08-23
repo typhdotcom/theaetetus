@@ -121,6 +121,9 @@ import Theaetetus.LatticeDuality
 -- Positive correlation and the sign of the defect
 import Theaetetus.Correlation
 
+-- The equality cases of the correlation inequalities
+import Theaetetus.CorrelationEquality
+
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
 

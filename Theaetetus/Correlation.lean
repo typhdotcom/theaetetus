@@ -26,7 +26,8 @@ positive-definite lattice action
 correlation slack whose sign is controlled by the parity-vector
 Cauchy–Schwarz geometry; an equality analysis must track
 collinearity of the feature vectors, the AM–GM equality, and the
-saturation of every residue-class inequality in the chain. -/
+saturation of every residue-class inequality in the chain. The
+first two are characterized in `Theaetetus.CorrelationEquality`. -/
 
 namespace Theaetetus
 

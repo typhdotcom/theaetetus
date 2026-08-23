@@ -301,7 +301,9 @@ pairwise versus higher-order interaction.
   its own: zero defect forces simultaneous saturation of the
   parity-vector Cauchy–Schwarz (collinearity), the AM–GM
   equality, and every residue-class inequality — a route to the
-  classification independent of higher-rank Q5 (target 10).
+  classification independent of higher-rank Q5 (target 10), whose
+  two analytic links are now characterized
+  (`gramMass_sq_mul_sq_eq_iff`, `gramMass_mul_eq_avg_iff`).
   The scope matters: the conjecture concerns the scalar dilation
   chain `q ↦ qL`. On the full modular lattice of sublattices,
   incomparable pairs can have zero defect through an orthogonal
@@ -921,11 +923,24 @@ Formalization targets:
     collinearity of the parity feature vectors in Cauchy–Schwarz,
     the AM–GM equality `m(x+y) = m(x−y)`, and the saturation of
     each residue-class instance in the dilation and coprime
-    telescopes. The landing: equality conditions for each link —
-    Cauchy–Schwarz equality as collinearity of `parityVector`s,
-    the averaged bound's equality case, and per-class saturation
-    in `gramMass_dilate_mul_le` and `gramMass_coprime_mul_le` —
-    assembled into a characterization of `D_L(q,q′) = 0`. The
+    telescopes. The two analytic links are done
+    (`Theaetetus.CorrelationEquality`), and as biconditionals:
+    Cauchy–Schwarz equality is exactly positive collinearity of the
+    two parity feature vectors (`ParityCollinear`,
+    `gramMass_sq_mul_sq_eq_iff`), resting on a general criterion
+    for strictly positive finite vectors
+    (`sum_mul_sq_eq_sq_mul_sq_iff_of_pos`, by the Lagrange
+    identity), and the averaged bound is an equality exactly when
+    that collinearity holds together with the reflected-mass
+    equality `m(x+y) = m(x−y)` (`gramMass_mul_eq_avg_iff`) — which
+    collapses further to literal equality of the two parity feature
+    vectors (`gramMass_mul_eq_avg_iff_parityVector_eq`), the
+    canonical form for the chain, the conjunction being kept to
+    expose the two links separately. Still
+    open, and explicitly so: per-class saturation in
+    `gramMass_dilate_mul_le` and `gramMass_coprime_mul_le`, and the
+    assembly of all links into a characterization of
+    `D_L(q,q′) = 0`. The
     target is specifically scalar dilations: the index-two diamond
     shows that arbitrary incomparable sublattices may saturate by
     orthogonal splitting (`defect_evenFst_evenSnd`). The endgame
@@ -1011,9 +1026,11 @@ The higher-interaction bridge (target 7) is complete: the seam,
 the coprime telescope with its sign laws, the raw-difference
 isolation, and the Gaussian `M₃` diamond, whose order-three defect
 is strictly positive and survives the small-scale boundary. Still
-open: the equality chain (target 10), the resolution metric
-(target 11), and the distributivity-index law (target 12), a
-conjecture whose first nontrivial case is that diamond. The
+open: the equality chain (target 10), whose two analytic links
+are characterized and whose residue-class saturation is not; the
+resolution metric (target 11); and the distributivity-index law
+(target 12), a conjecture whose first nontrivial case is that
+diamond. The
 verdicts to date: Q5 stays a universal conjecture, with margins
 vanishing toward every degenerate boundary probed and its binding
 point leaving the duality center under dual asymmetry; Q4's
