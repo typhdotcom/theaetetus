@@ -68,7 +68,16 @@ negative.
   `defect_eq_zero_iff`), and residue complexity is a submodular
   rank function on the divisibility lattice, strictly off chains
   (`resComplexity_strictSubmodular`).
-- **The sign, diagonal forms, every rank.** Orthogonal sums add
+- **The sign, every lattice, non-strict.** The shifted-mass parity
+  decomposition turns products of Gaussian masses into inner
+  products of finite positive feature vectors
+  (`gramMass_mul_eq_inner`, `sum_sq_parityVector`).
+  Cauchy–Schwarz, AM–GM, residue dilation and coprime reduction then
+  give `D_L(q,q′) ≤ 0` for every positive-definite lattice action
+  (`gramDefect_nonpos`, `QuadLatticeAction.defect_nonpos`) — the
+  Regev–Stephens-Davidowitz correlation theorem ported through to
+  the defect.
+- **The strict sign, diagonal forms, every rank.** Orthogonal sums add
   defects, so every positive diagonal form inherits the rank-one
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
@@ -253,8 +262,10 @@ Poisson summation gives the same cancellation with the dual
 lattice (inverse Gram) appearing:
 `D_{L,s}(q,q′) = D_{L*,π²/(s·lcm²)}(q/g, q′/g)` — the defect
 field of `L` at scale `s` is the defect field of `L*` at
-reflected scales. The higher-rank statement is the roadmap's
-first formalization target.
+reflected scales. This is now intrinsic, not merely a Gram-chart
+calculation (`QuadLatticeAction.defect_dual`, through
+`gramDefect_dual` and the weight-annihilation law
+`fieldDefect_dual_of_log_reflect`).
 
 ## The questions
 
@@ -290,8 +301,15 @@ pairwise versus higher-order interaction.
   its own: zero defect forces simultaneous saturation of the
   parity-vector Cauchy–Schwarz (collinearity), the AM–GM
   equality, and every residue-class inequality — a route to the
-  classification independent of higher-rank Q5 (target 10). Independently: a generic residue tower on
-  `L ⧸ qL` would make the correlation an intrinsic event
+  classification independent of higher-rank Q5 (target 10).
+  The scope matters: the conjecture concerns the scalar dilation
+  chain `q ↦ qL`. On the full modular lattice of sublattices,
+  incomparable pairs can have zero defect through an orthogonal
+  splitting; the index-two diamond in target 7 is the calibration
+  example. Thus the equality chain must rule that mechanism out for
+  nontrivial coprime scalar dilations, not prove a false statement
+  about arbitrary sublattices. Independently, a generic residue
+  tower on `L ⧸ qL` would make the correlation an intrinsic event
   statement and supply the general-lattice cross-ratio law.
 
 - **Q2 — sparse spectral rigidity, by datum.** Put
@@ -408,7 +426,10 @@ pairwise versus higher-order interaction.
   hunt found one detected sign change per statistic on each
   sampled grid, brackets bisected (`recon/README.md`) —
   consistent with intervality, still unproven. The transform-realization question that
-  used to close this entry now seeds Q7.
+  used to close this entry now seeds Q7. A second geometry is now
+  visible as well: the join kernel of `q ↦ -log Z(q²s)` is the
+  resolution distance in target 11, and on coprime primes the
+  pairing is a difference of two of its distances.
 
 - **Q5 — higher-rank thermodynamic curvature: the master
   conjecture.** Rank one is closed (established, the refined
@@ -483,20 +504,40 @@ pairwise versus higher-order interaction.
   sign-changing counterexample makes Q5 the curvature analogue
   of Q4.
 
-- **Q6 — higher mixed-difference chambers.** The correct
-  algebraic object is the symmetric mixed-difference hierarchy of
-  `K` on the prime-exponent lattice: `Δ_{p₁}⋯Δ_{p_k}K` measures
-  `k`-prime coupling. The pairing matrix is this hierarchy's
-  `k = 2` layer, and Q4's saturation deficit is its union form
-  `F(p) + F(q) − F(pq)` off the diagonal: Q4's kernel geometry is
-  the definiteness theory of the first nontrivial level (its
-  identity layer is roadmap work, target 7).
-  Numerical evidence in rank one indicates that the
-  three-prime difference at `2,3,5` changes sign with the scale,
-  so the expected structure is a system of sign chambers rather
-  than a uniform alternating-sign law. Which asymptotic regimes
-  and inequalities survive beyond pairwise correlation — what are
-  the `k ≥ 3` analogues of the two proved Q4 regimes?
+- **Q6 — higher interaction and the carrier boundary.** Raw mixed
+  differences `Δ_{p₁}⋯Δ_{p_k}K` are not order-separated:
+  degenerate cubes retain lower-order field data. Their observed
+  sign changes therefore do not define new interaction chambers.
+  The corrected object is the inclusion–exclusion defect `D_k`,
+  which removes the lower-order faces. The abstract calculus is
+  already formalized in the sibling project **Descent**. On a
+  distributive lattice `D₃` decomposes into pairwise defects at
+  derived squares (`defect3_decompose`) and the order-three gauge
+  equals the pairwise gauge (`gauge3_eq_gauge`); on every lattice,
+  observation at all finite orders adds nothing beyond orders two
+  and three (`gaugeFam_eq_gauge3`). Since the divisibility lattice
+  is distributive, its corrected hierarchy contains no
+  irreducible higher-order datum. At pairwise-coprime resolutions
+  the recurrence should telescope to
+
+      D_k(q₁,…,q_k) = Σ_{j=2}^k D(q₁⋯q_{j-1}, q_j),
+
+  making every corrected defect nonpositive for arbitrary lattices
+  and strictly negative at rank one; formalizing that
+  Gaussian/arithmetic bridge is target 7. The old `2,3,5` chamber
+  is thereby reclassified as cancellation among pairwise terms,
+  not a new three-body phase.
+
+  Genuine irreducible higher interaction moves to the carrier. The
+  modular, non-distributive lattice of finite-index sublattices
+  contains diamonds where `D₃` need not descend to pairwise data.
+  Open is the Gaussian geometry there: how the third-order defect
+  is controlled by the distributivity-gap interval, which signs
+  and equality mechanisms occur, and how this order-three
+  observable interacts with lattice duality. The hierarchy is
+  observationally capped at order three, so this is a sharply
+  bounded research problem rather than an unending tower of new
+  couplings.
 
 - **Q7 — realizability.** Split from the old Q6; either half is
   a program. Which abstract hierarchies actually come from
@@ -504,6 +545,16 @@ pairwise versus higher-order interaction.
   remainders are realizable by lattice theta functions? Because
   `K` is an intersection surprisal rather than an entropy,
   entropic-cone membership is a separate representation problem.
+  The datum must be named carefully. The image question for defect
+  data — whether *some* theta field realizes a proposed observable
+  — is well-posed. Recovering or rejecting a particular field
+  representative from its defect alone is not: valuation shifts
+  are invisible to the defect, and Descent already has
+  defect-equivalent arithmetic fields with different realization
+  status (`exists_defectEquiv_realizable_not_realizable`). Any
+  field-level criterion must therefore fix a representative; the
+  theta class supplies the canonical saturation normalization
+  `K(q) → 0` as `q → ∞`.
   The concrete seed is the transform question inherited from Q4
   (with `F(m) := log θ(m²s)` as in the kernel chambers):
   saturated rows obstruct any Gram representation of `B/2` by
@@ -524,6 +575,17 @@ that decides where the open questions actually lie. Every target
 names
 its landing; these results stay useful whatever the experiments
 say.
+
+The abstract lattice calculus belongs to **Descent**; Theaetetus
+owns its Gaussian and arithmetic realization. Reuse across that
+boundary should be an ordinary Lake dependency pinned to an
+immutable revision, with a narrow imported surface and a local
+bridge module. A mutable sibling-path dependency would make builds
+checkout-dependent, while copying the hierarchy would create two
+sources of truth. The dependency lands only after the projects have
+compatible Lean/mathlib pins and Descent has a stable, fetchable,
+licensed release; until then target 7 remains a packaging boundary,
+not permission to fork the abstract theory.
 
 Formalization targets:
 
@@ -678,9 +740,32 @@ Formalization targets:
    docstring sweep is also done: no Lean docstring or comment
    references a prose coordinate (the one-way rule, now in
    `CLAUDE.md`).
-7. **Q6's identity layer.** Rectangle identities and the
-   characterization of vanishing cross-prime differences for the
-   mixed-difference hierarchy `Δ_{p₁}⋯Δ_{p_k}K`.
+7. **The higher-interaction bridge.** Descent remains the source of
+   truth for the order-separated hierarchy: `defect3`,
+   `defectFam`, the raw-cube isolation identity
+   (`mixedDiff_triple_inf`), distributive decomposition
+   (`defect3_decompose`, `gauge3_eq_gauge`), and universal
+   saturation (`gaugeFam_eq_gauge3`). The Theaetetus landing is a
+   thin bridge, not a reimplementation:
+
+   - identify its positive-natural `fieldDefect` with Descent's
+     pairwise defect on the arithmetic carrier;
+   - prove the pairwise-coprime family telescope and compose it with
+     `defect_neg_of_incomparable` and
+     `QuadLatticeAction.defect_nonpos`, giving the strict rank-one
+     and non-strict all-lattice sign laws for every corrected order;
+   - isolate the raw `2,3,5` mixed difference as a combination of
+     pairwise entries, explaining its sign change without promoting
+     it to a new observable;
+   - formalize the canonical `M₃` witness from the three index-two
+     sublattices of `ℤ²`: one incomparable pair has zero defect by
+     orthogonal splitting, the other two have the strict rank-one
+     midpoint defect, and
+     `D₃ = 2·log(θ(2s)/θ(4s)) > 0`, tending to `log 2` as
+     `s → 0`.
+
+   This closes the original resolution-tower question and opens the
+   genuinely new one on non-distributive sublattice carriers.
 8. **The star obstruction** — done (`deficit_not_psd`,
    `cnd_not_psd` in `Theaetetus.StarObstruction`): the explicit
    star-weight witness closed it without eigenvalue machinery.
@@ -706,9 +791,27 @@ Formalization targets:
     Cauchy–Schwarz equality as collinearity of `parityVector`s,
     the averaged bound's equality case, and per-class saturation
     in `gramMass_dilate_mul_le` and `gramMass_coprime_mul_le` —
-    assembled into a characterization of `D_L(q,q′) = 0`. This is
-    the route to Q1's equality classification that is independent
-    of higher-rank Q5.
+    assembled into a characterization of `D_L(q,q′) = 0`. The
+    target is specifically scalar dilations: the index-two diamond
+    shows that arbitrary incomparable sublattices may saturate by
+    orthogonal splitting. The endgame must show that this splitting
+    cannot occur for a nontrivial coprime scalar pair. This is the
+    route to Q1's equality classification that is independent of
+    higher-rank Q5.
+11. **The resolution metric.** Import Descent's join-kernel
+    pseudometric theorem through the same package boundary as target
+    7 and instantiate it with the normalized field
+    `q ↦ -log Z(q²s)`. The landing is
+
+        d_s(q,q′) := log (Z(q²s)·Z(q′²s) / Z(lcm(q,q′)²s)²),
+
+    a pseudometric on positive resolutions for every lattice and
+    scale; prove separation for every nontrivial partition tower,
+    making it a metric. At rank one and coprime `p,q`, record
+    `⟨p,q⟩ = d_s(1,pq) − d_s(p,q)`. This supplies the intrinsic
+    metric geometry in which Q4's CND/Schoenberg question naturally
+    lives. Completion and diameter claims remain outside the target
+    until they are proved.
 
 Reconnaissance, falsify-first:
 
@@ -750,8 +853,9 @@ manifest with its docstring sweep, the recovery formula, spectral
 peeling, the certification chain, higher-rank defect duality, and
 the Regev–Stephens-Davidowitz implication are complete, and the
 orthogonal-sum reduction has closed the remainder of target 2.
-Still open: Q6's identity layer (target 7) and the equality chain
-(target 10). The verdicts to date:
+Still open: the Descent-to-Theaetetus higher-interaction bridge
+(target 7), the equality chain (target 10), and the resolution
+metric (target 11). The verdicts to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD
