@@ -88,7 +88,23 @@ At rank one the invariance already fails
 `exists_not_crt_invariant_rankOne` and `exists_aliasSum_ne_rankOne`),
 because the strict rank-one sign theorem makes the defect of an
 incomparable pair negative. The open rigidity statement is that the
-failure persists in every positive rank. -/
+failure persists in every positive rank.
+
+The transform is canonical, and that is also its limit. The alias
+sums are not merely positive aggregates: up to a single positive
+prefactor each one is a shifted Gaussian mass of the *inverse* Gram
+at the reflected coupling, evaluated at the grid point of its class
+(`massFourierCoeff_eq`, `aliasSum_eq_dual`). At the criterion's own
+coupling the reflected one is `2π²/s`, which is exactly the
+coupling the criterion for `M⁻¹` at the reflected scale
+`π²/(a²b²s)` uses — so invariance of the alias sums *is* that dual
+criterion (`aliasSum_invariant_iff_dual`), and the criterion was
+already self-dual at the defect level (`twoGridReflection_dual`,
+through `gramDefect_dual_coprime`). The Fourier route therefore
+closes a loop: it rediscovers duality rather than supplying a new
+strictness mechanism. Positivity of the alias sums equates them
+across the involution and stops there; a proof of the rigidity
+statement must break the symmetry this transform preserves. -/
 
 namespace Theaetetus
 
@@ -1118,5 +1134,185 @@ theorem exists_aliasSum_ne_rankOne {s : ℝ} (hs : 0 < s) {a b : ℕ}
   exact not_twoGridReflection_rankOne hs (by omega) (by omega) hab hnd hnd'
     ((twoGridReflection_iff_alias posDef_one_one hs hodd hco hab h1 h2).mpr
       hall)
+
+/-! ## The alias sums are dual masses -/
+
+/-- The dual weight in closed form: a Gaussian of the inverse Gram
+at the reflected coupling, with a scale-and-determinant prefactor. -/
+theorem massFourierCoeff_eq (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+    (m : Fin d → ℤ) :
+    massFourierCoeff M α m
+      = ((α / Real.pi) ^ d * M.det)⁻¹ ^ ((1 : ℝ) / 2)
+        * Real.exp (-(Real.pi ^ 2 / α)
+            * ∑ i, ∑ j, M⁻¹ i j * (m i : ℝ) * (m j : ℝ)) := by
+  have hdet_unit : IsUnit M.det := isUnit_iff_ne_zero.mpr hM.det_pos.ne'
+  have hMinv : ((α / Real.pi) • M)⁻¹ = (Real.pi / α) • M⁻¹ := by
+    apply Matrix.inv_eq_right_inv
+    rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul,
+      Matrix.mul_nonsing_inv _ hdet_unit,
+      show α / Real.pi * (Real.pi / α) = 1 from by
+        field_simp, one_smul]
+  unfold massFourierCoeff gaussFourierCoeff
+  rw [Matrix.det_smul, Fintype.card_fin, hMinv]
+  congr 1
+  congr 1
+  rw [neg_mul, neg_mul, neg_inj, Finset.mul_sum, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [Finset.mul_sum, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [Matrix.smul_apply, smul_eq_mul]
+  field_simp
+
+/-- The class of a dual residue is the `L`-dilate of the dual
+lattice through its representative. -/
+private def aliasEquiv {L : ℕ} [NeZero L] (ν : Fin d → ZMod L) :
+    (Fin d → ℤ)
+      ≃ {m : Fin d → ℤ // (fun i => ((m i : ℤ) : ZMod L)) = ν} where
+  toFun k := ⟨fun i => (L : ℤ) * k i + ((ν i).val : ℤ), by
+    funext i
+    push_cast
+    rw [ZMod.natCast_self, zero_mul, zero_add, ZMod.natCast_val,
+      ZMod.cast_id]⟩
+  invFun m := fun i => ((m : Fin d → ℤ) i - ((ν i).val : ℤ)) / (L : ℤ)
+  left_inv k := by
+    funext i
+    have hL : (L : ℤ) ≠ 0 := by
+      have : 0 < L := Nat.pos_of_ne_zero (NeZero.ne L)
+      exact_mod_cast this.ne'
+    show ((L : ℤ) * k i + ((ν i).val : ℤ) - ((ν i).val : ℤ)) / (L : ℤ) = k i
+    rw [add_sub_cancel_right, Int.mul_ediv_cancel_left _ hL]
+  right_inv m := by
+    have hL : (L : ℤ) ≠ 0 := by
+      have : 0 < L := Nat.pos_of_ne_zero (NeZero.ne L)
+      exact_mod_cast this.ne'
+    refine Subtype.ext ?_
+    funext i
+    have hmem : (((m : Fin d → ℤ) i : ℤ) : ZMod L) = ν i := congrFun m.2 i
+    have hdvd : (L : ℤ) ∣ ((m : Fin d → ℤ) i - ((ν i).val : ℤ)) := by
+      rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
+      push_cast
+      rw [hmem, ZMod.natCast_val, ZMod.cast_id, sub_self]
+    obtain ⟨t, ht⟩ := hdvd
+    show (L : ℤ) * (((m : Fin d → ℤ) i - ((ν i).val : ℤ)) / (L : ℤ))
+        + ((ν i).val : ℤ) = (m : Fin d → ℤ) i
+    rw [ht, Int.mul_ediv_cancel_left _ hL]
+    linarith
+
+/-- **The alias sums are dual masses**: up to one positive
+prefactor, the alias sum at a dual class is the shifted Gaussian
+mass of the inverse Gram at the reflected coupling, evaluated at the
+grid point of that class. -/
+theorem aliasSum_eq_dual (hM : M.PosDef) {α : ℝ} (hα : 0 < α) {L : ℕ}
+    [NeZero L] (ν : Fin d → ZMod L) :
+    aliasSum M α L ν
+      = ((α / Real.pi) ^ d * M.det)⁻¹ ^ ((1 : ℝ) / 2)
+        * gramMass M⁻¹ (Real.pi ^ 2 * (L : ℝ) ^ 2 / α)
+            (residueShift L ν) := by
+  have hLR : (0 : ℝ) < (L : ℝ) := by
+    have : 0 < L := Nat.pos_of_ne_zero (NeZero.ne L)
+    exact_mod_cast this
+  rw [aliasSum, ← (aliasEquiv ν).tsum_eq
+    (fun m : {m : Fin d → ℤ // (fun i => ((m i : ℤ) : ZMod L)) = ν} =>
+      massFourierCoeff M α (m : Fin d → ℤ)), gramMass, ← tsum_mul_left]
+  refine tsum_congr fun k => ?_
+  have hquad : (∑ i, ∑ j, M⁻¹ i j
+        * ((((L : ℤ) * k i + ((ν i).val : ℤ)) : ℤ) : ℝ)
+        * ((((L : ℤ) * k j + ((ν j).val : ℤ)) : ℤ) : ℝ))
+      = (L : ℝ) ^ 2 * ((residueShift L ν + fun i => ((k i : ℤ) : ℝ))
+          ⬝ᵥ M⁻¹.mulVec (residueShift L ν + fun i => ((k i : ℤ) : ℝ))) := by
+    rw [← quadForm_dotProduct, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    show M⁻¹ i j * ((((L : ℤ) * k i + ((ν i).val : ℤ)) : ℤ) : ℝ)
+        * ((((L : ℤ) * k j + ((ν j).val : ℤ)) : ℤ) : ℝ)
+      = (L : ℝ) ^ 2 * (M⁻¹ i j
+          * ((L : ℝ)⁻¹ * (((ν i).val : ℕ) : ℝ) + ((k i : ℤ) : ℝ))
+          * ((L : ℝ)⁻¹ * (((ν j).val : ℕ) : ℝ) + ((k j : ℤ) : ℝ)))
+    push_cast
+    field_simp
+    ring
+  rw [massFourierCoeff_eq hM hα]
+  show ((α / Real.pi) ^ d * M.det)⁻¹ ^ ((1 : ℝ) / 2)
+      * Real.exp (-(Real.pi ^ 2 / α)
+          * ∑ i, ∑ j, M⁻¹ i j
+              * ((((L : ℤ) * k i + ((ν i).val : ℤ)) : ℤ) : ℝ)
+              * ((((L : ℤ) * k j + ((ν j).val : ℤ)) : ℤ) : ℝ))
+    = ((α / Real.pi) ^ d * M.det)⁻¹ ^ ((1 : ℝ) / 2)
+      * Real.exp (-(Real.pi ^ 2 * (L : ℝ) ^ 2 / α)
+          * ((residueShift L ν + fun i => ((k i : ℤ) : ℝ))
+              ⬝ᵥ M⁻¹.mulVec (residueShift L ν + fun i => ((k i : ℤ) : ℝ))))
+  rw [hquad]
+  congr 2
+  field_simp
+
+/-! ## The duality loop -/
+
+/-- **The criterion is self-dual**: the two-grid reflection
+condition for a Gram form at a scale is the same condition for the
+dual Gram at the reflected scale. This is the defect duality
+already known at coprime resolutions, read at the level of the
+equality criterion. -/
+theorem twoGridReflection_dual (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b) :
+    TwoGridReflection M s a b
+      ↔ TwoGridReflection M⁻¹
+          (Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s)) a b := by
+  have hinv : M⁻¹.PosDef := posDef_inv hM
+  have haR : (0 : ℝ) < (a : ℝ) := by exact_mod_cast ha
+  have hbR : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb
+  have hs' : (0 : ℝ) < Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s) := by
+    positivity
+  rw [← gramDefect_eq_zero_iff_twoGridReflection hM hs ha hb hco,
+    ← gramDefect_eq_zero_iff_twoGridReflection hinv hs' ha hb hco,
+    gramDefect_dual_coprime hM hs ha hb hco]
+
+/-- **The alias invariance is the dual criterion**: the finite
+Fourier coordinates of the criterion are the dual masses, so
+invariance of the alias sums under the involution is literally the
+two-grid criterion for the dual Gram at the reflected scale. The
+transform closes the duality loop; it introduces no mechanism
+beyond it. -/
+theorem aliasSum_invariant_iff_dual (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
+    {a b : ℕ} [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    (∀ ν : Fin d → ZMod (2 * b * a),
+        aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+          = aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+              (fun i => (U : ZMod (2 * b * a)) * ν i))
+      ↔ TwoGridReflection M⁻¹
+          (Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s)) a b := by
+  have hLz : NeZero (2 * b * a) := neZero_joint
+  have hinv : M⁻¹.PosDef := posDef_inv hM
+  have haR : (0 : ℝ) < (a : ℝ) := by
+    have : 0 < a := Nat.pos_of_ne_zero (NeZero.ne a)
+    exact_mod_cast this
+  have hbR : (0 : ℝ) < (b : ℝ) := by
+    have : 0 < b := Nat.pos_of_ne_zero (NeZero.ne b)
+    exact_mod_cast this
+  have hα : (0 : ℝ) < 2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) := by positivity
+  have hD : (0 : ℝ)
+      < ((2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) / Real.pi) ^ d * M.det)⁻¹
+          ^ ((1 : ℝ) / 2) := by
+    refine Real.rpow_pos_of_pos (inv_pos.mpr ?_) _
+    have := hM.det_pos
+    positivity
+  have hcoup : Real.pi ^ 2 * ((2 * b * a : ℕ) : ℝ) ^ 2
+        / (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)))
+      = 2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2
+          * (Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s)))) := by
+    push_cast
+    field_simp
+  rw [twoGridReflection_iff_crt M⁻¹
+    (Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s)) hodd hco hab h1 h2]
+  constructor
+  · intro h n
+    have hn := h n
+    rw [aliasSum_eq_dual hM hα, aliasSum_eq_dual hM hα, hcoup] at hn
+    exact mul_left_cancel₀ hD.ne' hn
+  · intro h ν
+    rw [aliasSum_eq_dual hM hα, aliasSum_eq_dual hM hα, hcoup]
+    exact congrArg _ (h ν)
 
 end Theaetetus

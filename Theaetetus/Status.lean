@@ -1257,6 +1257,44 @@ example {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
             (fun i => (U : ZMod (2 * b * a)) * ν i) :=
   exists_aliasSum_ne_rankOne hs ha hb hodd hco hab h1 h2
 
+/-! ## The duality loop -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (m : Fin d → ℤ) :
+    massFourierCoeff M α m
+      = ((α / Real.pi) ^ d * M.det)⁻¹ ^ ((1 : ℝ) / 2)
+        * Real.exp (-(Real.pi ^ 2 / α)
+            * ∑ i, ∑ j, M⁻¹ i j * (m i : ℝ) * (m j : ℝ)) :=
+  massFourierCoeff_eq hM hα m
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {L : ℕ} [NeZero L] (ν : Fin d → ZMod L) :
+    aliasSum M α L ν
+      = ((α / Real.pi) ^ d * M.det)⁻¹ ^ ((1 : ℝ) / 2)
+        * gramMass M⁻¹ (Real.pi ^ 2 * (L : ℝ) ^ 2 / α)
+            (residueShift L ν) :=
+  aliasSum_eq_dual hM hα ν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) :
+    TwoGridReflection M s a b
+      ↔ TwoGridReflection M⁻¹
+          (Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s)) a b :=
+  twoGridReflection_dual hM hs ha hb hco
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} [NeZero a] [NeZero b] (hodd : ¬ 2 ∣ a)
+    (hco : Nat.Coprime (2 * b) a) (hab : Nat.Coprime a b) {U : ℤ}
+    (h1 : (2 * (b : ℤ)) ∣ U - 1) (h2 : (a : ℤ) ∣ U + 1) :
+    (∀ ν : Fin d → ZMod (2 * b * a),
+        aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a) ν
+          = aliasSum M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) (2 * b * a)
+              (fun i => (U : ZMod (2 * b * a)) * ν i))
+      ↔ TwoGridReflection M⁻¹
+          (Real.pi ^ 2 / (((a : ℝ) * (b : ℝ)) ^ 2 * s)) a b :=
+  aliasSum_invariant_iff_dual hM hs hodd hco hab h1 h2
+
 /-! ## The orthogonal sum -/
 
 example {Z W : ℝ → ℝ} (h : ∀ β : ℝ, 0 < β → Z β = W β) {s : ℝ}

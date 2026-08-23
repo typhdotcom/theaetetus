@@ -1020,13 +1020,25 @@ Formalization targets:
         A_ν = A_{Uν}   for every dual class ν
 
     (`twoGridReflection_iff_alias`, by linear independence of the
-    grid characters). Positivity does not finish it: the condition
-    equates positive alias sums, it does not make one vanish. At
-    rank one the invariance already fails, since the strict sign
-    theorem makes an incomparable defect negative
-    (`not_twoGridReflection_rankOne`,
+    grid characters). At rank one the invariance already fails,
+    since the strict sign theorem makes an incomparable defect
+    negative (`not_twoGridReflection_rankOne`,
     `exists_aliasSum_ne_rankOne`); the open statement is that the
-    failure persists in every positive rank. Once the
+    failure persists in every positive rank.
+
+    That transform closes a loop rather than opening a mechanism.
+    The alias sums are not bare positive aggregates: up to one
+    positive prefactor each is a shifted Gaussian mass of the
+    *inverse* Gram at the reflected coupling
+    (`massFourierCoeff_eq`, `aliasSum_eq_dual`), and the reflected
+    coupling is exactly the one the criterion for `M⁻¹` at scale
+    `π²/(a²b²s)` uses. So alias invariance is that dual criterion
+    (`aliasSum_invariant_iff_dual`), and the criterion was already
+    self-dual (`twoGridReflection_dual`, from
+    `gramDefect_dual_coprime`). Positivity equates the alias sums
+    across the involution and stops there; it has created no new
+    strictness mechanism, and a proof of rigidity must break the
+    symmetry the transform preserves. Once the
     rigidity theorem exists,
     `fieldDefect_div_gcd` reduces an arbitrary pair to its coprime
     base and turns the equivalence into the full equality
