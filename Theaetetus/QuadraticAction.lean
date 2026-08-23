@@ -154,7 +154,7 @@ theorem _root_.Matrix.PosDef.exists_coercivity {d : ℕ}
     have hx₀ne : x₀ ≠ 0 := by
       intro h0
       rw [hS] at hx₀S
-      simp only [Set.mem_setOf_eq, h0, Pi.zero_apply] at hx₀S
+      simp only [Set.mem_ofPred_eq, h0, Pi.zero_apply] at hx₀S
       simp at hx₀S
     have hx₀pos : 0 < x₀ ⬝ᵥ M.mulVec x₀ := by
       have h := (posDef_iff_dotProduct_mulVec.mp hM).2 hx₀ne
@@ -174,7 +174,7 @@ theorem _root_.Matrix.PosDef.exists_coercivity {d : ℕ}
       have ht_sq : t ^ 2 = ∑ i, x i ^ 2 := Real.sq_sqrt hsum_pos.le
       have hy : (t⁻¹ • x) ∈ S := by
         rw [hS]
-        simp only [Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, mul_pow]
+        simp only [Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul, mul_pow]
         rw [← Finset.mul_sum, ← ht_sq]
         field_simp
       have hval : (t⁻¹ • x) ⬝ᵥ M.mulVec (t⁻¹ • x) = t⁻¹ ^ 2 * (x ⬝ᵥ M.mulVec x) := by

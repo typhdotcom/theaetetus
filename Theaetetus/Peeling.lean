@@ -54,7 +54,7 @@ theorem finite_energy_le (c : ℝ) :
   rw [Filter.eventually_cofinite] at hev
   refine hev.subset ?_
   intro k hk
-  simp only [Set.mem_setOf_eq, not_lt]
+  simp only [Set.mem_ofPred_eq, not_lt]
   exact Real.exp_le_exp.mpr (by linarith [hk.2])
 
 /-- The level set of the least energy. -/

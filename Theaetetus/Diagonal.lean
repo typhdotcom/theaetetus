@@ -95,7 +95,7 @@ theorem diagDefect_neg_of_incomparable (hr : r ≠ 0) (hc : ∀ i, 0 < c i)
   have hq : q ≠ 0 := fun h => hq'q (by rw [h]; exact dvd_zero q')
   have hq' : q' ≠ 0 := fun h => hqq' (by rw [h]; exact dvd_zero q)
   rw [diagDefect_eq_sum hc hs hq hq']
-  haveI : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
   exact Finset.sum_neg
     (fun i _ => defect_neg_of_incomparable (mul_pos (hc i) hs) hqq' hq'q)
     Finset.univ_nonempty

@@ -220,7 +220,6 @@ theorem dual_gram_at {n : ℕ} (b : Module.Basis (Fin n) ℤ Q.Λ) :
     ring
   have hdb : Q.dual.gram b.dualBasis = Rᵀ * (Q.gram c)⁻¹ * R := by
     ext i j
-    rw [gram_apply]
     show (∑ k, ∑ l, (Q.gram c)⁻¹ k l
         * ((b.dualBasis i (c k) : ℤ) : ℝ)
         * ((b.dualBasis j (c l) : ℤ) : ℝ))

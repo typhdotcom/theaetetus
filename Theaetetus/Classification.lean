@@ -209,8 +209,8 @@ theorem towerDefect_forall_eq_zero_iff :
     have habs : ∀ q q' : ℕ, q ≠ 0 → q' ≠ 0 →
         G.toPartitionTower.defect q q' = 0 := by
       intro q q' hq hq'
-      haveI : NeZero q := ⟨hq⟩
-      haveI : NeZero q' := ⟨hq'⟩
+      have : NeZero q := ⟨hq⟩
+      have : NeZero q' := ⟨hq'⟩
       rw [← G.towerDefect_eq_partitionTower_defect]
       exact h q q'
     have htriv := (G.toPartitionTower.defect_forall_eq_zero_iff).mp habs

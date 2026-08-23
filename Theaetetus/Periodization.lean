@@ -260,7 +260,7 @@ a continuous surjection compact → Hausdorff is a quotient map. -/
 theorem continuous_torusPeriodization {M : Matrix (Fin d) (Fin d) ℝ}
     (hM : M.PosDef) : Continuous (torusPeriodization M) := by
   have hIcc : IsCompact (Set.Icc (0 : Fin d → ℝ) 1) := isCompact_Icc
-  haveI : CompactSpace (Set.Icc (0 : Fin d → ℝ) 1) :=
+  have : CompactSpace (Set.Icc (0 : Fin d → ℝ) 1) :=
     isCompact_iff_compactSpace.mp hIcc
   set q : Set.Icc (0 : Fin d → ℝ) 1 → UnitAddTorus (Fin d) :=
     (fun p => torusMk p.val) with hq

@@ -55,7 +55,7 @@ def cycleCyclesZ (n : ℕ) : Fin 1 → Fin n → ℤ := fun _ _ => 1
 /-- The all-ones cochain is an integral cycle. -/
 theorem cycleCyclesZ_mem (n : ℕ) (hn : 0 < n) (i : Fin 1) :
     cycleCyclesZ n i ∈ (cycleGraph n hn).cycleLattice := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   rw [IncidenceGraph.mem_cycleLattice]
   intro v
   rw [cycleGraph_boundary_eq]
@@ -118,7 +118,7 @@ integer multiple of the all-ones cycle. -/
 theorem cycle_integral_spanning (n : ℕ) (hn : 0 < n) (x : Fin n → ℤ)
     (hx : x ∈ (cycleGraph n hn).cycleLattice) :
     ∃ a : Fin 1 → ℤ, x = fun e => ∑ i, a i * cycleCyclesZ n i e := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have hclosed : ∀ v,
       (cycleGraph n hn).boundary (fun e => ((x e : ℤ) : ℝ)) v = 0 := by
     intro v

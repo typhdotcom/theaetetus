@@ -251,8 +251,11 @@ theorem classForm_add_left (κ₁ κ₂ κ') :
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun j _ => ?_
-  rw [map_add]
-  push_cast [Pi.add_apply]
+  have hadd : G.h1QuotEquiv (κ₁ + κ₂) i
+      = G.h1QuotEquiv κ₁ i + G.h1QuotEquiv κ₂ i :=
+    (congrFun (map_add G.h1QuotEquiv κ₁ κ₂) i).trans rfl
+  rw [hadd]
+  push_cast
   ring
 
 /-- **Basis charts preserve the form**: the Gram
@@ -271,7 +274,8 @@ theorem classForm_chart {n : ℕ} (B : Module.Basis (Fin n) ℤ G.cycleLattice)
     linarith
   show _ = (G.basisGramData G.cycleBasis).interaction
     (G.h1QuotEquiv κ) (G.h1QuotEquiv κ')
-  rw [hpol, hpol]
+  rw [hpol (G.basisGramData B) (G.latticeQuotEquiv B κ) (G.latticeQuotEquiv B κ'),
+    hpol (G.basisGramData G.cycleBasis) (G.h1QuotEquiv κ) (G.h1QuotEquiv κ')]
   -- `rw [hpol]` instantiates the addends at `Fin H.r`, leaving the
   -- projection unreduced in the `Pi.instAdd` instance; the energy
   -- lemmas below live at `Fin n`. Restate so the two agree.

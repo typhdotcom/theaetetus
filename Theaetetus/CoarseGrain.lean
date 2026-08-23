@@ -99,10 +99,10 @@ theorem coarseGrain_weight (b : B) :
 theorem coarseGrain_partFn :
     (A.coarseGrain p b₀ hpos hmax).partFn
       = A.partFn / A.coarseWeight p b₀ := by
-  show (∑' b : B, (A.coarseGrain p b₀ hpos hmax).weight b) = _
-  rw [tsum_fintype,
-    Finset.sum_congr rfl fun b _ => coarseGrain_weight A p b₀ hpos hmax b,
-    ← Finset.sum_div, A.sum_coarseWeight p]
+  have h : (A.coarseGrain p b₀ hpos hmax).partFn
+      = ∑ b : B, (A.coarseGrain p b₀ hpos hmax).weight b := tsum_fintype _
+  rw [h, ← A.sum_coarseWeight p, Finset.sum_div]
+  exact Finset.sum_congr rfl fun b _ => coarseGrain_weight A p b₀ hpos hmax b
 
 /-- **The partition function factorizes through a coarse-graining**:
 `Z = W b₀ · Z_coarse`. -/

@@ -258,8 +258,8 @@ theorem gramMass_coprime_mul_le (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
     gramMass M ((a : ℝ) ^ 2 * s) 0 * gramMass M ((b : ℝ) ^ 2 * s) 0
       ≤ gramMass M s 0
           * gramMass M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s)) 0 := by
-  haveI : NeZero a := ⟨ha.ne'⟩
-  haveI : NeZero b := ⟨hb.ne'⟩
+  have : NeZero a := ⟨ha.ne'⟩
+  have : NeZero b := ⟨hb.ne'⟩
   have haR : (0 : ℝ) < (a : ℝ) := by exact_mod_cast ha
   have hbR : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb
   have hβa : (0 : ℝ) < (a : ℝ) ^ 2 * s := by positivity

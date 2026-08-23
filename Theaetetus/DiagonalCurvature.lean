@@ -37,7 +37,7 @@ theorem diagTheta_rect_strict (hr : r ≠ 0) (hc : ∀ i, 0 < c i)
       < diagTheta c t * diagTheta c ((a * b) ^ 2 * t) := by
   have ha0 : (0 : ℝ) < a := lt_trans one_pos ha
   have hb0 : (0 : ℝ) < b := lt_trans one_pos hb
-  haveI : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
   unfold diagTheta
   rw [← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
   refine Finset.prod_lt_prod_of_nonempty (fun i _ => ?_) (fun i _ => ?_)
