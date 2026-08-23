@@ -936,11 +936,18 @@ Formalization targets:
     collapses further to literal equality of the two parity feature
     vectors (`gramMass_mul_eq_avg_iff_parityVector_eq`), the
     canonical form for the chain, the conjunction being kept to
-    expose the two links separately. Still
-    open, and explicitly so: per-class saturation in
-    `gramMass_dilate_mul_le` and `gramMass_coprime_mul_le`, and the
-    assembly of all links into a characterization of
-    `D_L(q,q′) = 0`. The
+    expose the two links separately. The dilation-level residue
+    saturation is done too: both sides of `gramMass_dilate_mul_le`
+    are sums over residue classes of the same averaged bound at the
+    named shifts `dilateShift n x` and `residueShift n c`
+    (`gramMass_dilate_mul_eq_sum`, `gramMass_dilate_avg_eq_sum`),
+    a dominated sum meets its dominating sum exactly when every
+    term does (`sum_eq_iff_of_le`), and so scalar dilation is an
+    equality exactly when every residue class is
+    reflection-invariant (`gramMass_dilate_mul_eq_iff`). Still
+    open, and explicitly so: the coprime resummation of
+    `gramMass_coprime_mul_le`, and the assembly of all links into a
+    characterization of `D_L(q,q′) = 0`. The
     target is specifically scalar dilations: the index-two diamond
     shows that arbitrary incomparable sublattices may saturate by
     orthogonal splitting (`defect_evenFst_evenSnd`). The endgame
@@ -1026,9 +1033,10 @@ The higher-interaction bridge (target 7) is complete: the seam,
 the coprime telescope with its sign laws, the raw-difference
 isolation, and the Gaussian `M₃` diamond, whose order-three defect
 is strictly positive and survives the small-scale boundary. Still
-open: the equality chain (target 10), whose two analytic links
-are characterized and whose residue-class saturation is not; the
-resolution metric (target 11); and the distributivity-index law
+open: the equality chain (target 10), whose analytic links and
+dilation-level residue saturation are characterized and whose
+coprime resummation is not; the resolution metric (target 11); and
+the distributivity-index law
 (target 12), a conjecture whose first nontrivial case is that
 diamond. The
 verdicts to date: Q5 stays a universal conjecture, with margins

@@ -47,9 +47,20 @@ equality squared against the product bound leaves
 equality `m(x+y) = m(x−y)`, and with it the product bound becomes
 an equality too.
 
-These are the analytic links of the zero-defect equality chain. The
-remaining links are arithmetic: saturation of every residue-class
-inequality in `gramMass_dilate_mul_le` and
+These are the analytic links of the zero-defect equality chain.
+The next link is arithmetic, and it reduces to them. Both sides of
+scalar dilation monotonicity are sums over residue classes of the
+same averaged bound, at the named shifts `dilateShift n x` and
+`residueShift n c` (`gramMass_dilate_mul_eq_sum`,
+`gramMass_dilate_avg_eq_sum`). A sum of dominated terms meets its
+dominating sum exactly when every term does (`sum_eq_iff_of_le`),
+so the global equality is exactly class-by-class saturation, and
+each saturated class is exactly a reflection-invariant feature
+vector: `gramMass_dilate_mul_eq_iff` says that scalar dilation is
+an equality precisely when `parityVector` at `u + v_c` equals
+`parityVector` at `u − v_c` for every residue class `c`.
+
+What remains: the coprime resummation of
 `gramMass_coprime_mul_le`, and the classification of the vanishing
 locus of `QuadLatticeAction.defect` for scalar dilations. -/
 
@@ -238,5 +249,43 @@ theorem gramMass_mul_eq_avg_iff_parityVector_eq (hM : M.PosDef) {α : ℝ}
     have hab : gramMass M α (x + y) = gramMass M α (x - y) :=
       mul_left_cancel₀ h0.ne' (by rw [← hnp, ← hnm, h])
     exact ⟨⟨1, one_pos, fun c => by rw [h, one_mul]⟩, hab⟩
+
+/-! ## Saturation of the residue-class decomposition -/
+
+/-- **Finite-sum saturation**: a sum of dominated terms meets its
+dominating sum exactly when every term does. -/
+theorem sum_eq_iff_of_le {ι : Type*} [Fintype ι] {f g : ι → ℝ}
+    (h : ∀ i, f i ≤ g i) :
+    (∑ i, f i) = ∑ i, g i ↔ ∀ i, f i = g i := by
+  rw [Finset.sum_eq_sum_iff_of_le fun i _ => h i]
+  exact ⟨fun hh i => hh i (Finset.mem_univ i), fun hh i _ => hh i⟩
+
+/-- **The scalar-dilation link, characterized**: monotonicity under
+scalar dilation is an equality exactly when every residue class is
+reflection-invariant — the parity feature vector at
+`u + v_c` equal to the one at `u − v_c`, class by class. Both sides
+decompose over residue classes, so the global equality saturates
+every class of the averaged reflection bound, and each saturated
+class is exactly a reflection-invariant feature vector. -/
+theorem gramMass_dilate_mul_eq_iff (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+    (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x) * gramMass M α 0
+        = gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x
+      ↔ ∀ c : Fin d → ZMod n,
+          parityVector M ((n : ℝ) ^ 2 * α)
+              (dilateShift n x + residueShift n c)
+            = parityVector M ((n : ℝ) ^ 2 * α)
+                (dilateShift n x - residueShift n c) := by
+  have hβ : (0 : ℝ) < (n : ℝ) ^ 2 * α := by
+    have hn : (0 : ℝ) < (n : ℝ) := by
+      exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne n)
+    positivity
+  rw [gramMass_dilate_mul_eq_sum hM hα x n,
+    gramMass_dilate_avg_eq_sum hM hα x n,
+    sum_eq_iff_of_le fun c => gramMass_mul_le_avg hM hβ (dilateShift n x)
+      (residueShift n c)]
+  exact forall_congr' fun c =>
+    gramMass_mul_eq_avg_iff_parityVector_eq hM hβ (dilateShift n x)
+      (residueShift n c)
 
 end Theaetetus

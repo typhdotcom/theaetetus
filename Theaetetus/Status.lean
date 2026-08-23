@@ -892,9 +892,28 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
 
 example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
     {α : ℝ} (hα : 0 < α) (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
-    gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x) * gramMass M α 0
+    gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x) * gramMass M α 0
       ≤ gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x :=
   gramMass_dilate_mul_le hM hα x n
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x) * gramMass M α 0
+      = ∑ c : Fin d → ZMod n,
+          gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x)
+            * gramMass M ((n : ℝ) ^ 2 * α) (residueShift n c) :=
+  gramMass_dilate_mul_eq_sum hM hα x n
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x
+      = ∑ c : Fin d → ZMod n,
+          gramMass M ((n : ℝ) ^ 2 * α) 0
+            * ((gramMass M ((n : ℝ) ^ 2 * α)
+                  (dilateShift n x + residueShift n c)
+                + gramMass M ((n : ℝ) ^ 2 * α)
+                  (dilateShift n x - residueShift n c)) / 2) :=
+  gramMass_dilate_avg_eq_sum hM hα x n
 
 example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
     {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
@@ -952,6 +971,21 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
             * ((gramMass M α (x + y) + gramMass M α (x - y)) / 2)
       ↔ parityVector M α (x + y) = parityVector M α (x - y) :=
   gramMass_mul_eq_avg_iff_parityVector_eq hM hα x y
+
+example {ι : Type} [Fintype ι] {f g : ι → ℝ} (h : ∀ i, f i ≤ g i) :
+    (∑ i, f i) = ∑ i, g i ↔ ∀ i, f i = g i :=
+  sum_eq_iff_of_le h
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x) * gramMass M α 0
+        = gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x
+      ↔ ∀ c : Fin d → ZMod n,
+          parityVector M ((n : ℝ) ^ 2 * α)
+              (dilateShift n x + residueShift n c)
+            = parityVector M ((n : ℝ) ^ 2 * α)
+                (dilateShift n x - residueShift n c) :=
+  gramMass_dilate_mul_eq_iff hM hα x n
 
 /-! ## The orthogonal sum -/
 

@@ -125,75 +125,106 @@ private theorem gramMass_congr {α α' : ℝ} {x x' : Fin d → ℝ}
     gramMass M α x = gramMass M α' x' := by
   rw [hα, hx]
 
-/-- **Monotonicity under scalar dilation** — the scalar-dilation
-specialization of sublattice monotonicity: dilating the shifted
-lattice by `n` against the full lattice mass is dominated by the
-aligned pairing. Coset-decompose both full-lattice masses mod `n`
-and apply the averaged reflection bound in each class; the minus
-half re-sums to the same total by evenness. -/
-theorem gramMass_dilate_mul_le (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+/-! ## The residue-class decomposition of a scalar dilation -/
+
+/-- The dilated shift `u = n⁻¹·x`: the base point of the
+residue-class decomposition at dilation `n`. -/
+noncomputable def dilateShift (n : ℕ) (x : Fin d → ℝ) : Fin d → ℝ :=
+  (n : ℝ)⁻¹ • x
+
+/-- The residue shift `v_c = n⁻¹·c` at the residue class `c`,
+through the canonical real lift of a residue vector. -/
+noncomputable def residueShift (n : ℕ) (c : Fin d → ZMod n) : Fin d → ℝ :=
+  (n : ℝ)⁻¹ • (fun i => ((c i).val : ℝ))
+
+theorem dilateShift_eq (n : ℕ) (x : Fin d → ℝ) :
+    dilateShift n x = (n : ℝ)⁻¹ • x :=
+  rfl
+
+theorem residueShift_eq (n : ℕ) (c : Fin d → ZMod n) :
+    residueShift n c = (n : ℝ)⁻¹ • (fun i => ((c i).val : ℝ)) :=
+  rfl
+
+/-- **The dilated pairing, decomposed**: the left side of scalar
+dilation monotonicity is the sum over residue classes of the pairing
+of the dilated shift against the residue shift — the coset
+decomposition of the full-lattice mass at the trivial shift. -/
+theorem gramMass_dilate_mul_eq_sum (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
     (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
-    gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x) * gramMass M α 0
-      ≤ gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x := by
-  have hβ : (0 : ℝ) < (n : ℝ) ^ 2 * α := by
-    have hn : (0 : ℝ) < (n : ℝ) := by
-      exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne n)
-    positivity
-  have hdec0 := gramMass_coset hM hα (0 : Fin d → ℝ) n
-  have hdecx := gramMass_coset hM hα x n
+    gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x) * gramMass M α 0
+      = ∑ c : Fin d → ZMod n,
+          gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x)
+            * gramMass M ((n : ℝ) ^ 2 * α) (residueShift n c) := by
+  rw [gramMass_coset hM hα (0 : Fin d → ℝ) n, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun c _ => ?_
+  refine congrArg _ (gramMass_congr rfl ?_)
+  funext i
+  show (n : ℝ)⁻¹ * (0 + ((c i).val : ℝ)) = (n : ℝ)⁻¹ * ((c i).val : ℝ)
+  ring
+
+/-- **The aligned pairing, decomposed**: the right side of scalar
+dilation monotonicity is the sum over residue classes of the
+averaged reflection of the dilated shift by the residue shift. Both
+halves re-sum to the same full-lattice mass, the minus half by
+evenness. -/
+theorem gramMass_dilate_avg_eq_sum (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+    (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x
+      = ∑ c : Fin d → ZMod n,
+          gramMass M ((n : ℝ) ^ 2 * α) 0
+            * ((gramMass M ((n : ℝ) ^ 2 * α)
+                  (dilateShift n x + residueShift n c)
+                + gramMass M ((n : ℝ) ^ 2 * α)
+                  (dilateShift n x - residueShift n c)) / 2) := by
   have hplus : ∑ c : Fin d → ZMod n,
-      gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x
-        + (n : ℝ)⁻¹ • ((0 : Fin d → ℝ) + fun i => ((c i).val : ℝ)))
+      gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x + residueShift n c)
       = gramMass M α x := by
-    rw [hdecx]
+    rw [gramMass_coset hM hα x n]
     exact Finset.sum_congr rfl fun c _ => gramMass_congr rfl (by
       funext i
-      show (n : ℝ)⁻¹ * x i + (n : ℝ)⁻¹ * (0 + ((c i).val : ℝ))
+      show (n : ℝ)⁻¹ * x i + (n : ℝ)⁻¹ * ((c i).val : ℝ)
           = (n : ℝ)⁻¹ * (x i + ((c i).val : ℝ))
       ring)
   have hminus : ∑ c : Fin d → ZMod n,
-      gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x
-        - (n : ℝ)⁻¹ • ((0 : Fin d → ℝ) + fun i => ((c i).val : ℝ)))
+      gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x - residueShift n c)
       = gramMass M α x := by
-    have hnegdec := gramMass_coset hM hα (-x) n
     calc ∑ c : Fin d → ZMod n,
-        gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x
-          - (n : ℝ)⁻¹ • ((0 : Fin d → ℝ) + fun i => ((c i).val : ℝ)))
+        gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x - residueShift n c)
         = ∑ c : Fin d → ZMod n,
             gramMass M ((n : ℝ) ^ 2 * α)
               (-((n : ℝ)⁻¹ • (-x + fun i => ((c i).val : ℝ)))) :=
           Finset.sum_congr rfl fun c _ => gramMass_congr rfl (by
             funext i
-            show (n : ℝ)⁻¹ * x i - (n : ℝ)⁻¹ * (0 + ((c i).val : ℝ))
+            show (n : ℝ)⁻¹ * x i - (n : ℝ)⁻¹ * ((c i).val : ℝ)
                 = -((n : ℝ)⁻¹ * (-x i + ((c i).val : ℝ)))
             ring)
       _ = ∑ c : Fin d → ZMod n,
             gramMass M ((n : ℝ) ^ 2 * α)
               ((n : ℝ)⁻¹ • (-x + fun i => ((c i).val : ℝ))) :=
           Finset.sum_congr rfl fun c _ => gramMass_neg _ _
-      _ = gramMass M α (-x) := hnegdec.symm
+      _ = gramMass M α (-x) := (gramMass_coset hM hα (-x) n).symm
       _ = gramMass M α x := gramMass_neg α x
-  calc gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x) * gramMass M α 0
-      = ∑ c : Fin d → ZMod n,
-          gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x)
-            * gramMass M ((n : ℝ) ^ 2 * α)
-              ((n : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-                + fun i => ((c i).val : ℝ))) := by
-        rw [hdec0, Finset.mul_sum]
-    _ ≤ ∑ c : Fin d → ZMod n,
-          gramMass M ((n : ℝ) ^ 2 * α) 0
-            * ((gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x
-                  + (n : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-                    + fun i => ((c i).val : ℝ)))
-                + gramMass M ((n : ℝ) ^ 2 * α) ((n : ℝ)⁻¹ • x
-                  - (n : ℝ)⁻¹ • ((0 : Fin d → ℝ)
-                    + fun i => ((c i).val : ℝ)))) / 2) :=
-        Finset.sum_le_sum fun c _ => gramMass_mul_le_avg hM hβ _ _
-    _ = gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x := by
-        rw [← Finset.mul_sum, ← Finset.sum_div, Finset.sum_add_distrib,
-          hplus, hminus]
-        congr 1
-        ring
+  rw [← Finset.mul_sum, ← Finset.sum_div, Finset.sum_add_distrib,
+    hplus, hminus]
+  congr 1
+  ring
+
+/-- **Monotonicity under scalar dilation** — the scalar-dilation
+specialization of sublattice monotonicity: dilating the shifted
+lattice by `n` against the full lattice mass is dominated by the
+aligned pairing. Both sides decompose over residue classes, and the
+averaged reflection bound holds in each class. -/
+theorem gramMass_dilate_mul_le (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+    (x : Fin d → ℝ) (n : ℕ) [NeZero n] :
+    gramMass M ((n : ℝ) ^ 2 * α) (dilateShift n x) * gramMass M α 0
+      ≤ gramMass M ((n : ℝ) ^ 2 * α) 0 * gramMass M α x := by
+  have hβ : (0 : ℝ) < (n : ℝ) ^ 2 * α := by
+    have hn : (0 : ℝ) < (n : ℝ) := by
+      exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne n)
+    positivity
+  rw [gramMass_dilate_mul_eq_sum hM hα x n,
+    gramMass_dilate_avg_eq_sum hM hα x n]
+  exact Finset.sum_le_sum fun c _ => gramMass_mul_le_avg hM hβ _ _
 
 /-! ## Positive correlation at coprime dilations -/
 
