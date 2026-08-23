@@ -34,7 +34,8 @@ fluctuation, and the strict rectangle; diagonal forms; certified
 coercivity; certified tails; certified shell counts; higher-rank
 defect duality; the field defect and the intrinsic lift; the
 shifted mass and positive correlation; the orthogonal sum;
-the arithmetic realization of the abstract defect. -/
+the arithmetic realization of the abstract defect and the
+coprime telescope of its corrected orders. -/
 
 namespace Theaetetus
 
@@ -982,5 +983,43 @@ example (Z : ℝ → ℝ) (s : ℝ) (n m : ℕ+) :
       = Descent.defect (logField Z s)
           (Descent.Arith.of n) (Descent.Arith.of m) :=
   fieldDefect_eq_defect Z s n m
+
+example {a : ℕ+} {l : List ℕ+} (h : PairwiseCoprime (a :: l)) :
+    Descent.supFam (Descent.Arith.of a) (l.map Descent.Arith.of)
+      = Descent.Arith.of (prodFam a l) :=
+  supFam_of_pairwiseCoprime h
+
+example (K : Descent.ContextField Descent.Arith ℝ) (d a : ℕ+) (l : List ℕ+)
+    (hd : ∀ x ∈ a :: l, Nat.Coprime (x : ℕ) (d : ℕ))
+    (hl : PairwiseCoprime (a :: l)) :
+    Descent.defectFam K (Descent.Arith.of d) ((a :: l).map Descent.Arith.of)
+      = Descent.defectFam K (Descent.Arith.of a) (l.map Descent.Arith.of)
+        + Descent.defect K (Descent.Arith.of (prodFam a l))
+            (Descent.Arith.of d) :=
+  defectFam_cons_coprime K d a l hd hl
+
+example (Z : ℝ → ℝ) (s : ℝ) (d : ℕ+) (l : List ℕ+)
+    (h : PairwiseCoprime (d :: l)) :
+    Descent.defectFam (logField Z s) (Descent.Arith.of d)
+        (l.map Descent.Arith.of)
+      = telescope Z s d l :=
+  defectFam_logField_eq_telescope Z s d l h
+
+example (Z : ℝ → ℝ) (s : ℝ) {d d' : ℕ+} {l l' : List ℕ+}
+    (hp : (d :: l).Perm (d' :: l')) (h : PairwiseCoprime (d :: l)) :
+    telescope Z s d l = telescope Z s d' l' :=
+  telescope_eq_of_perm Z s hp h
+
+example {s : ℝ} (hs : 0 < s) {d : ℕ+} {l : List ℕ+} (hne : l ≠ [])
+    (h : PairwiseCoprime (d :: l)) (hnt : ∀ x ∈ d :: l, 1 < (x : ℕ)) :
+    Descent.defectFam (logField theta s) (Descent.Arith.of d)
+        (l.map Descent.Arith.of) < 0 :=
+  defectFam_theta_neg hs hne h hnt
+
+example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) (d : ℕ+) (l : List ℕ+)
+    (h : PairwiseCoprime (d :: l)) :
+    Descent.defectFam (logField Q.scaledPartFn s) (Descent.Arith.of d)
+        (l.map Descent.Arith.of) ≤ 0 :=
+  Q.defectFam_nonpos hs d l h
 
 end Theaetetus

@@ -518,15 +518,35 @@ pairwise versus higher-order interaction.
   and three (`gaugeFam_eq_gauge3`). Since the divisibility lattice
   is distributive, its corrected hierarchy contains no
   irreducible higher-order datum. At pairwise-coprime resolutions
-  the recurrence should telescope to
+  the recurrence telescopes to
 
-      D_k(q₁,…,q_k) = Σ_{j=2}^k D(q₁⋯q_{j-1}, q_j),
+      D_k(q₁,…,q_k) = Σ_{j=1}^{k−1} D(q_j, q_{j+1}⋯q_k),
 
-  making every corrected defect nonpositive for arbitrary lattices
-  and strictly negative at rank one; formalizing that
-  Gaussian/arithmetic bridge is target 7. The old `2,3,5` chamber
-  is thereby reclassified as cancellation among pairwise terms,
-  not a new three-body phase.
+  proved for the log-partition field of any `Z` at any scale
+  (`defectFam_logField_eq_telescope`): coprimality collapses the
+  meet-translated subfamily of Descent's exact recurrence to the
+  trivial resolution and annihilates its distributivity-gap
+  remainder, and the join of a coprime family is its product
+  (`supFam_of_pairwiseCoprime`). Eliminating from the front prices
+  each entry against the product of those following it, but the
+  total does not depend on that order: the telescope computes the
+  symmetric abstract defect, so any two presentations of the same
+  coprime family agree (`telescope_eq_of_perm`). At arity three
+  this is the coherence identity
+
+      D(a,b) + D(ab,c) = D(b,c) + D(a,bc),
+
+  which is why prefix and suffix decompositions give the same sum.
+  Composed with the two sign laws
+  this makes every corrected order strictly negative at rank one
+  for nontrivial coprime families (`defectFam_theta_neg`) and
+  nonpositive for every positive-definite lattice action
+  (`QuadLatticeAction.defectFam_nonpos`). The telescope
+  reorganizes the corrected defects into pairwise ones; it does
+  not make them vanish, and raw mixed differences remain a
+  different object. The old `2,3,5` chamber is thereby
+  reclassified as cancellation among pairwise terms, not a new
+  three-body phase.
 
   Genuine irreducible higher interaction moves to the carrier. The
   modular, non-distributive lattice of finite-index sublattices
@@ -765,7 +785,12 @@ Formalization targets:
    - prove the pairwise-coprime family telescope and compose it with
      `defect_neg_of_incomparable` and
      `QuadLatticeAction.defect_nonpos`, giving the strict rank-one
-     and non-strict all-lattice sign laws for every corrected order;
+     and non-strict all-lattice sign laws for every corrected order
+     — done (`defectFam_logField_eq_telescope`, through the peeling
+     step `defectFam_cons_coprime` and the coprime join
+     `supFam_of_pairwiseCoprime`, with elimination order immaterial
+     by `telescope_eq_of_perm`; signs in `defectFam_theta_neg` and
+     `QuadLatticeAction.defectFam_nonpos`);
    - isolate the raw `2,3,5` mixed difference as a combination of
      pairwise entries, explaining its sign change without promoting
      it to a new observable;
@@ -872,9 +897,11 @@ manifest with its docstring sweep, the recovery formula, spectral
 peeling, the certification chain, higher-rank defect duality, and
 the Regev–Stephens-Davidowitz implication are complete, and the
 orthogonal-sum reduction has closed the remainder of target 2.
-Still open: the Descent-to-Theaetetus higher-interaction bridge
-(target 7), the equality chain (target 10), and the resolution
-metric (target 11). The verdicts to date:
+Still open: the higher-interaction bridge (target 7), whose seam,
+coprime telescope, and sign laws have landed, leaving the raw
+`2,3,5` isolation and the `M₃` diamond; the equality chain
+(target 10); and the resolution metric (target 11). The verdicts
+to date:
 Q5 stays a universal conjecture, with margins vanishing toward
 every degenerate boundary probed and its binding point leaving
 the duality center under dual asymmetry; Q4's uniform-PSD

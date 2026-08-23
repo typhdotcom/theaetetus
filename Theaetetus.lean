@@ -17,9 +17,6 @@ import Theaetetus.LogConvexity
 -- The field defect and the annihilation of affine log weights
 import Theaetetus.FieldDefect
 
--- The arithmetic realization of the abstract defect calculus
-import Theaetetus.HigherInteraction
-
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness
@@ -126,6 +123,10 @@ import Theaetetus.Correlation
 
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
+
+-- The arithmetic realization of the abstract defect calculus, and
+-- the coprime telescope of its corrected orders
+import Theaetetus.HigherInteraction
 
 -- Scalar bounds and the rank-two witness on the theta graph
 import Theaetetus.ThetaBounds
