@@ -17,6 +17,9 @@ import Theaetetus.LogConvexity
 -- The field defect and the annihilation of affine log weights
 import Theaetetus.FieldDefect
 
+-- The arithmetic realization of the abstract defect calculus
+import Theaetetus.HigherInteraction
+
 -- The rank-one defect on the divisibility lattice, and its witness
 import Theaetetus.Defect
 import Theaetetus.Witness

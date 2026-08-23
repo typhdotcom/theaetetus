@@ -15,6 +15,7 @@ import Theaetetus.GramDuality
 import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
 import Theaetetus.OrthogonalSum
+import Theaetetus.HigherInteraction
 import Theaetetus.RankTwo
 
 /-! # The manifest
@@ -32,7 +33,8 @@ the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
 coercivity; certified tails; certified shell counts; higher-rank
 defect duality; the field defect and the intrinsic lift; the
-shifted mass and positive correlation; the orthogonal sum. -/
+shifted mass and positive correlation; the orthogonal sum;
+the arithmetic realization of the abstract defect. -/
 
 namespace Theaetetus
 
@@ -972,5 +974,13 @@ example (Q Q' : QuadLatticeAction) {t a b : ℝ} (ht : 0 < t)
     ∨ ¬ (Q'.scaledPartFn (a ^ 2 * t) * Q'.scaledPartFn (b ^ 2 * t)
         < Q'.scaledPartFn t * Q'.scaledPartFn ((a * b) ^ 2 * t)) :=
   QuadLatticeAction.rect_strict_descend Q Q' ht ha hb hfail
+
+/-! ## The arithmetic realization of the abstract defect -/
+
+example (Z : ℝ → ℝ) (s : ℝ) (n m : ℕ+) :
+    fieldDefect Z s (n : ℕ) (m : ℕ)
+      = Descent.defect (logField Z s)
+          (Descent.Arith.of n) (Descent.Arith.of m) :=
+  fieldDefect_eq_defect Z s n m
 
 end Theaetetus

@@ -12,5 +12,10 @@ name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.33.1"
 
+[[require]]
+name = "descent"
+git = "https://git.typh.com/typh/descent.git"
+rev = "717b70d3cd8606b1bc9efddb2fbcdda321538d0d"
+
 [[lean_lib]]
 name = "Theaetetus"

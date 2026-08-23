@@ -582,10 +582,13 @@ boundary should be an ordinary Lake dependency pinned to an
 immutable revision, with a narrow imported surface and a local
 bridge module. A mutable sibling-path dependency would make builds
 checkout-dependent, while copying the hierarchy would create two
-sources of truth. The dependency lands only after the projects have
-compatible Lean/mathlib pins and Descent has a stable, fetchable,
-licensed release; until then target 7 remains a packaging boundary,
-not permission to fork the abstract theory.
+sources of truth. That boundary has landed: Descent is a Lake
+dependency pinned to an immutable revision, and the bridge module
+`Theaetetus.HigherInteraction` identifies the four-term
+`fieldDefect` of any partition field with `Descent.defect` of its
+fixed-scale logarithmic context field on the carrier of positive
+naturals under divisibility (`fieldDefect_eq_defect`). The
+abstract hierarchy is consumed, never forked.
 
 Formalization targets:
 
@@ -749,7 +752,9 @@ Formalization targets:
    thin bridge, not a reimplementation:
 
    - identify its positive-natural `fieldDefect` with Descent's
-     pairwise defect on the arithmetic carrier;
+     pairwise defect on the arithmetic carrier — done
+     (`fieldDefect_eq_defect` in `Theaetetus.HigherInteraction`,
+     through the logarithmic context field `logField`);
    - prove the pairwise-coprime family telescope and compose it with
      `defect_neg_of_incomparable` and
      `QuadLatticeAction.defect_nonpos`, giving the strict rank-one
