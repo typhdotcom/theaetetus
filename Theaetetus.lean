@@ -124,6 +124,9 @@ import Theaetetus.Correlation
 -- The equality cases of the correlation inequalities
 import Theaetetus.CorrelationEquality
 
+-- The Fourier form of the two-grid reflection criterion
+import Theaetetus.ReflectionFourier
+
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
 

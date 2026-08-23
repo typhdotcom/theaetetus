@@ -15,6 +15,7 @@ import Theaetetus.GramDuality
 import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
 import Theaetetus.CorrelationEquality
+import Theaetetus.ReflectionFourier
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
 import Theaetetus.SublatticeDiamond
@@ -38,7 +39,8 @@ defect duality; the field defect and the intrinsic lift; the
 shifted mass and positive correlation; the orthogonal sum;
 the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
-sublattices; the equality cases of the correlation inequalities. -/
+sublattices; the equality cases of the correlation inequalities and
+the Fourier form of the two-grid criterion. -/
 
 namespace Theaetetus
 
@@ -1082,6 +1084,93 @@ example (Q : QuadLatticeAction) {n m : ℕ}
     TwoGridReflection (Q.gram bs) s a b
       ↔ TwoGridReflection (Q.gram bs') s a b :=
   Q.twoGridReflection_gram_iff bs bs' hs ha hb hco
+
+/-! ## The Fourier form of the two-grid criterion -/
+
+example {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ) (x : Fin d → ℝ) :
+    gramMass M α x = periodization ((α / Real.pi) • M) x :=
+  gramMass_eq_periodization M α x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (m : Fin d → ℤ) : 0 < massFourierCoeff M α m :=
+  massFourierCoeff_pos hM hα m
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    HasSum (fun m : Fin d → ℤ =>
+        massFourierCoeff M α m
+          * Real.cos (2 * Real.pi * dualPairing m x))
+      (gramMass M α x) :=
+  hasSum_massFourier_cos hM hα x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (y t : Fin d → ℝ) :
+    gramMass M α (y + t) = gramMass M α (y - t)
+      ↔ (∑' m : Fin d → ℤ, massFourierCoeff M α m
+            * (Real.sin (2 * Real.pi * dualPairing m y)
+                * Real.sin (2 * Real.pi * dualPairing m t))) = 0 :=
+  gramMass_reflect_iff hM hα y t
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
+    TwoGridReflection M s a b
+      ↔ ∀ (r : Fin d → ZMod b) (c : Fin d → ZMod a) (e : Fin d → ZMod 2),
+          (∑' m : Fin d → ℤ,
+              massFourierCoeff M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) m
+                * (Real.sin (2 * Real.pi
+                      * dualPairing m (anchorShift b r e))
+                    * Real.sin (2 * Real.pi
+                      * dualPairing m (displaceShift a c)))) = 0 :=
+  twoGridReflection_iff_fourier hM hs ha hb
+
+example {d : ℕ} (b : ℕ) [NeZero b] (r : Fin d → ZMod b)
+    (e : Fin d → ZMod 2) :
+    anchorShift b r e
+      = residueShift (2 * b)
+          (fun i => (((r i).val + b * (e i).val : ℕ) : ZMod (2 * b))) :=
+  anchorShift_eq_residueShift b r e
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    HasSum (fun m : Fin d → ℤ =>
+        ((massFourierCoeff M α m : ℝ) : ℂ)
+          * UnitAddTorus.mFourier m (torusMk x))
+      ((gramMass M α x : ℝ) : ℂ) :=
+  hasSum_massFourier hM hα x
+
+example {d : ℕ} {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) {r r' : Fin d → ZMod b}
+    {e e' : Fin d → ZMod 2} {c c' : Fin d → ZMod a} {z₀ : Fin d → ℤ}
+    (h : anchorShift b r e - displaceShift a c
+        = anchorShift b r' e' + displaceShift a c'
+            + fun i => ((z₀ i : ℤ) : ℝ)) :
+    ∃ z : Fin d → ℤ,
+      (2 : ℝ) • (displaceShift a c + displaceShift a c')
+        = fun i => ((z i : ℤ) : ℝ) :=
+  chain_displacement_int ha hb hco h
+
+example {d : ℕ} {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (hco : Nat.Coprime a b) {r r' : Fin d → ZMod b}
+    {e e' : Fin d → ZMod 2} {c c' : Fin d → ZMod a} {z₀ : Fin d → ℤ}
+    (h : anchorShift b r e - displaceShift a c
+        = anchorShift b r' e' + displaceShift a c'
+            + fun i => ((z₀ i : ℤ) : ℝ)) :
+    ∃ z : Fin d → ℤ,
+      anchorShift b r e + displaceShift a c
+        = (anchorShift b r' e' - displaceShift a c')
+            + fun i => ((z i : ℤ) : ℝ) :=
+  chain_endpoints_int ha hb hco h
+
+example {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ) {a b : ℕ}
+    (ha : 0 < a) (hb : 0 < b) (hco : Nat.Coprime a b)
+    {r r' : Fin d → ZMod b} {e e' : Fin d → ZMod 2}
+    {c c' : Fin d → ZMod a} {z₀ : Fin d → ℤ}
+    (h : anchorShift b r e - displaceShift a c
+        = anchorShift b r' e' + displaceShift a c'
+            + fun i => ((z₀ i : ℤ) : ℝ)) :
+    gramMass M α (anchorShift b r e + displaceShift a c)
+      = gramMass M α (anchorShift b r' e' - displaceShift a c') :=
+  gramMass_chain_eq M α ha hb hco h
 
 /-! ## The orthogonal sum -/
 

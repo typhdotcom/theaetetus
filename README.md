@@ -962,10 +962,18 @@ Formalization targets:
 
     with `P` the parity feature vector at the joint scale — every
     point of the `b`-grid a reflection center for the `a`-grid.
-    Each equality has reflection form. Whether the sampled fibers
-    close under composition strongly enough to force a nontrivial
-    translation is part of the remaining rigidity problem. The
-    chain now reaches
+    Each equality has reflection form, and that question is now
+    settled — negatively, and modulo the lattice, which is the
+    widest closure a periodic mass can offer. Chaining two
+    instances needs the reflected point of one to be a sampled
+    point of the other only up to an integer vector; even so, at
+    coprime dilations that forces twice the composed displacement
+    to be integral (`chain_displacement_int`) and the two outer
+    points to be congruent modulo `ℤ^d` (`chain_endpoints_int`), so
+    the composed equality holds by periodicity alone, criterion or
+    not (`gramMass_chain_eq`). The sampled fibers close only
+    trivially, and no rigidity follows from composition.
+    The chain now reaches
     the defect itself. For a positive field, vanishing at a coprime
     pair is exactly multiplicativity across the rectangle
     `{a, b, 1, a·b}` (`fieldDefect_eq_zero_iff_mul_eq`, generic and
@@ -982,7 +990,26 @@ Formalization targets:
 
     The sole mathematical remainder is one rigidity statement: in
     positive rank, for coprime `a, b > 1`, the two-grid parity
-    reflection condition is impossible. Once that theorem exists,
+    reflection condition is impossible. It now has a Fourier form
+    (`Theaetetus.ReflectionFourier`). The shifted mass is the
+    periodized Gaussian of the rescaled form
+    (`gramMass_eq_periodization`), so it expands in cosines over
+    the dual lattice with strictly positive Gaussian coefficients
+    (`massFourierCoeff_pos`, `hasSum_massFourier` in character form
+    and `hasSum_massFourier_cos` in real form); reflection
+    about `y` under displacement `t` is exactly the vanishing of
+    `∑ C_m·sin(2π⟨m,y⟩)·sin(2π⟨m,t⟩)` (`gramMass_reflect_iff`);
+    and the criterion is that family over anchors of the
+    parity-refined `b`-grid — which is the `2b`-grid,
+    `anchorShift_eq_residueShift` — and displacements of the half
+    `a`-grid (`twoGridReflection_iff_fourier`). The coefficients
+    are positive but the sine products are not of one sign, so
+    vanishing is not settled termwise: what is open is the
+    cancellation question — how the characters cancel across the
+    dual lattice — and the natural next move is finite Fourier
+    orthogonality over the residue and parity indices, isolating
+    alias classes, rather than a termwise sign estimate. Once the
+    rigidity theorem exists,
     `fieldDefect_div_gcd` reduces an arbitrary pair to its coprime
     base and turns the equivalence into the full equality
     classification. The target is specifically scalar dilations:

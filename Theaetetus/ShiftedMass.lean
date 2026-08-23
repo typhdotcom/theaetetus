@@ -235,6 +235,19 @@ theorem summable_gramMass (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
           * ∏ i, Real.exp (-(α * μ / 2) * (k i : ℝ) ^ 2) := by
         rw [Real.exp_add, Real.exp_sum]
 
+/-- **The periodization bridge**: the shifted Gaussian mass is the
+periodized Gaussian of the rescaled Gram form, at the same shift.
+The scaling `α ↦ α/π` converts the Boltzmann coupling into the
+`exp(-π·xᵀNx)` normalization of the Poisson machinery. -/
+theorem gramMass_eq_periodization (M : Matrix (Fin d) (Fin d) ℝ) (α : ℝ)
+    (x : Fin d → ℝ) :
+    gramMass M α x = periodization ((α / Real.pi) • M) x := by
+  unfold gramMass periodization gaussian
+  refine tsum_congr fun k => ?_
+  congr 1
+  rw [Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul]
+  field_simp
+
 /-- The shifted mass is positive at every positive coupling. -/
 theorem gramMass_pos (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
     (x : Fin d → ℝ) : 0 < gramMass M α x := by
