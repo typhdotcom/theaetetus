@@ -136,6 +136,9 @@ import Theaetetus.GramAsymptotics
 -- The Gaussian mass ratio at a finite-index inclusion
 import Theaetetus.FiniteIndex
 
+-- The pairwise boundary of the sublattice field
+import Theaetetus.SublatticeAsymptotics
+
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
 

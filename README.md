@@ -1131,11 +1131,20 @@ Formalization targets:
 
     (`tendsto_subMass_ratio`, `tendsto_log_subMass_sub`) — the field
     gap `defect3_recurrence` consumes, with full rank and finite
-    index carried as explicit hypotheses. What remains for the law
-    is the pairwise half: that the three pairwise defects vanish at
-    the boundary, and the composition of both ingredients through
-    the recurrence. Until that is proved this is a conjecture with
-    one witness, not a theorem with a general proof.
+    index carried as explicit hypotheses. The pairwise half has
+    landed too (`Theaetetus.SublatticeAsymptotics`): the
+    logarithmic mass is a context field on the subgroups
+    (`subField`), and at the boundary its pairwise defect vanishes
+    (`tendsto_defect_subField`) — the inclusions `A ≤ A+B` and
+    `A∩B ≤ B` contribute the indices `[A+B : A]` and `[B : A∩B]`,
+    which the second isomorphism theorem equates, so covolume is
+    multiplicative across meet and join and the boundary field loses
+    its pairwise curvature. That is what leaves the
+    distributivity-gap index as the only possible surviving
+    order-three value. What remains is the composition of the two
+    halves through the recurrence; until it is proved this is a
+    conjecture with one witness, not a theorem with a general
+    proof.
 
 Reconnaissance, falsify-first:
 

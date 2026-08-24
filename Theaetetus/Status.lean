@@ -19,6 +19,7 @@ import Theaetetus.ReflectionFourier
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
+import Theaetetus.SublatticeAsymptotics
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
 import Theaetetus.SublatticeDiamond
@@ -44,8 +45,9 @@ the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the resolution
-metric; the scale asymptotics of a Gram Boltzmann sum and the
-finite-index mass ratio. -/
+metric; the scale asymptotics of a Gram Boltzmann sum, the
+finite-index mass ratio, and the pairwise boundary of the
+sublattice field. -/
 
 namespace Theaetetus
 
@@ -1655,5 +1657,16 @@ example {d : ℕ} {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
     Tendsto (fun s => Real.log (subMass s U) - Real.log (subMass s V))
       (𝓝[>] (0 : ℝ)) (𝓝 (Real.log (((V.relIndex U : ℕ) : ℝ)))) :=
   tendsto_log_subMass_sub hle hU hV bU bV
+
+/-! ## The pairwise boundary of the sublattice field -/
+
+example {d : ℕ} {A B : AddSubgroup (Fin d → ℤ)} (hA : A.index ≠ 0)
+    (hB : B.index ≠ 0) (bA : Module.Basis (Fin d) ℤ A)
+    (bB : Module.Basis (Fin d) ℤ B)
+    (bI : Module.Basis (Fin d) ℤ (A ⊓ B : AddSubgroup (Fin d → ℤ)))
+    (bS : Module.Basis (Fin d) ℤ (A ⊔ B : AddSubgroup (Fin d → ℤ))) :
+    Tendsto (fun s => Descent.defect (subField s) A B) (𝓝[>] (0 : ℝ))
+      (𝓝 0) :=
+  tendsto_defect_subField hA hB bA bB bI bS
 
 end Theaetetus
