@@ -127,6 +127,9 @@ import Theaetetus.CorrelationEquality
 -- The Fourier form of the two-grid reflection criterion
 import Theaetetus.ReflectionFourier
 
+-- The resolution metric: the join kernel of the normalized field
+import Theaetetus.ResolutionMetric
+
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
 

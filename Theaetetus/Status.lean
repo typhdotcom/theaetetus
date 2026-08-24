@@ -16,6 +16,7 @@ import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
 import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
+import Theaetetus.ResolutionMetric
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
 import Theaetetus.SublatticeDiamond
@@ -40,7 +41,8 @@ shifted mass and positive correlation; the orthogonal sum;
 the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
-the Fourier form of the two-grid criterion. -/
+the Fourier form of the two-grid criterion; the resolution
+metric. -/
 
 namespace Theaetetus
 
@@ -1523,5 +1525,69 @@ example :
 
 example {α β : ℝ} (hα : 0 < α) (hαβ : α < β) : theta β < theta α :=
   theta_lt_theta hα hαβ
+
+/-! ## The resolution metric -/
+
+example (T : PartitionTower) (hnt : ∃ k : T.Λ, k ≠ T.modal) {β β' : ℝ}
+    (hβ : 1 ≤ β) (hlt : β < β') : T.Z β' < T.Z β :=
+  T.Z_lt_Z hnt hβ hlt
+
+example (Q : QuadLatticeAction) (hnt : ∃ a : Q.Λ, a ≠ 0) {β β' : ℝ}
+    (hβ : 0 < β) (hlt : β < β') :
+    Q.scaledPartFn β' < Q.scaledPartFn β :=
+  Q.scaledPartFn_lt hnt hβ hlt
+
+example (Z : ℝ → ℝ) (s : ℝ) (n m : ℕ+) :
+    Descent.defect (resField Z s) (Descent.Arith.of n) (Descent.Arith.of m)
+      = -fieldDefect Z s (n : ℕ) (m : ℕ) :=
+  defect_resField Z s n m
+
+example (Z : ℝ → ℝ) {s : ℝ} (hs : 0 < s) (hZ : ∀ β, 0 < β → 0 < Z β)
+    (a b : Descent.Arith) :
+    resDist Z s a b
+      = Real.log
+          (Z (((Descent.Arith.num a : ℕ) : ℝ) ^ 2 * s)
+              * Z (((Descent.Arith.num b : ℕ) : ℝ) ^ 2 * s)
+            / Z (((Nat.lcm (Descent.Arith.num a : ℕ)
+                  (Descent.Arith.num b : ℕ) : ℕ) : ℝ) ^ 2 * s) ^ 2) :=
+  resDist_eq Z hs hZ a b
+
+example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) :
+    Descent.Submodular (resField Q.scaledPartFn s) :=
+  submodular_resField Q hs
+
+example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s)
+    (hnt : ∃ x : Q.Λ, x ≠ 0) :
+    StrictMono (resField Q.scaledPartFn s) :=
+  strictMono_resField Q hs hnt
+
+noncomputable example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) :
+    PseudoMetricSpace Descent.Arith :=
+  resPseudoMetricSpace Q hs
+
+example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s)
+    (hnt : ∃ x : Q.Λ, x ≠ 0) (a b : Descent.Arith) :
+    resDist Q.scaledPartFn s a b = 0 ↔ a = b :=
+  resDist_eq_zero_iff Q hs hnt a b
+
+noncomputable example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s)
+    (hnt : ∃ x : Q.Λ, x ≠ 0) : MetricSpace Descent.Arith :=
+  resMetricSpace Q hs hnt
+
+example (Z : ℝ → ℝ) (s : ℝ) {a b : Descent.Arith} (h : a ≤ b) :
+    resDist Z s a b = resField Z s b - resField Z s a :=
+  resDist_of_le Z s h
+
+example (s : ℝ) (p q : ℕ+) (hco : Nat.Coprime (p : ℕ) (q : ℕ)) :
+    pairing s (p : ℕ) (q : ℕ)
+      = resDist theta s (Descent.Arith.of 1) (Descent.Arith.of (p * q))
+        - resDist theta s (Descent.Arith.of p) (Descent.Arith.of q) :=
+  pairing_eq_resDist_sub s p q hco
+
+example {s : ℝ} (hs : 0 < s) {p q : ℕ+} (hco : Nat.Coprime (p : ℕ) (q : ℕ))
+    (hpq : ¬ ((p : ℕ) ∣ (q : ℕ))) (hqp : ¬ ((q : ℕ) ∣ (p : ℕ))) :
+    resDist theta s (Descent.Arith.of p) (Descent.Arith.of q)
+      < resDist theta s (Descent.Arith.of 1) (Descent.Arith.of (p * q)) :=
+  resDist_lt_resDist_base hs hco hpq hqp
 
 end Theaetetus

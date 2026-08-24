@@ -96,6 +96,25 @@ theorem one_lt_Z {β : ℝ} (hβ : 1 ≤ β) (hnt : ∃ k : T.Λ, k ≠ T.modal)
         Summable.tsum_lt_tsum hle hstrict
           ⟨1, hasSum_ite_eq T.modal (1 : ℝ)⟩ (T.summable_Z hβ)
 
+/-- **Decay in the coupling**: the scaled partition function is
+antitone above the base, termwise. -/
+theorem Z_le_Z {β β' : ℝ} (hβ : 1 ≤ β) (hle : β ≤ β') : T.Z β' ≤ T.Z β :=
+  (T.summable_Z (le_trans hβ hle)).tsum_le_tsum
+    (fun k => Real.exp_le_exp.mpr (by nlinarith [T.E_nonneg k]))
+    (T.summable_Z hβ)
+
+/-- **Strict decay in the coupling**: on a nontrivial tower the
+scaled partition function strictly decreases above the base — one
+nonmodal sector has positive energy, and its Boltzmann weight
+strictly falls. -/
+theorem Z_lt_Z (hnt : ∃ k : T.Λ, k ≠ T.modal) {β β' : ℝ} (hβ : 1 ≤ β)
+    (hlt : β < β') : T.Z β' < T.Z β := by
+  obtain ⟨k, hk⟩ := hnt
+  exact Summable.tsum_lt_tsum (i := k)
+    (fun j => Real.exp_le_exp.mpr (by nlinarith [T.E_nonneg j]))
+    (Real.exp_lt_exp.mpr (by nlinarith [T.E_pos k hk]))
+    (T.summable_Z (le_trans hβ hlt.le)) (T.summable_Z hβ)
+
 /-- The excess over `1` is the Boltzmann sum off the modal
 sector. -/
 theorem Z_sub_one {β : ℝ} (hβ : 1 ≤ β) :

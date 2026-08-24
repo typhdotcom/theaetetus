@@ -1049,20 +1049,42 @@ Formalization targets:
     coprimality of the scalar pair, not merely incomparability.
     This is the route to Q1's equality classification that is
     independent of higher-rank Q5.
-11. **The resolution metric.** Import Descent's join-kernel
-    pseudometric theorem through the same package boundary as target
-    7 and instantiate it with the normalized field
-    `q ↦ -log Z(q²s)`. The landing is
+11. **The resolution metric** — done (`Theaetetus.ResolutionMetric`):
+    Descent's join-kernel chamber geometry, instantiated through the
+    same package boundary as target 7 with the normalized field
+    `K(q) = −log Z(q²s)` (`resField`, whose defect is the negated
+    field defect, `defect_resField`). The distance is that join
+    kernel (`resDist`), in closed form (`resDist_eq`)
 
-        d_s(q,q′) := log (Z(q²s)·Z(q′²s) / Z(lcm(q,q′)²s)²),
+        d_s(q,q′) = log (Z(q²s)·Z(q′²s) / Z(lcm(q,q′)²s)²),
 
-    a pseudometric on positive resolutions for every lattice and
-    scale; prove separation for every nontrivial partition tower,
-    making it a metric. At rank one and coprime `p,q`, record
-    `⟨p,q⟩ = d_s(1,pq) − d_s(p,q)`. This supplies the intrinsic
-    metric geometry in which Q4's CND/Schoenberg question naturally
-    lives. Completion and diameter claims remain outside the target
-    until they are proved.
+    a pseudometric on positive resolutions for every lattice action
+    and every positive scale (`resPseudoMetricSpace`). The two
+    halves have different scope, and the file says so. The triangle
+    inequality is the correlation theorem: it needs the normalized
+    field in the submodular chamber (`submodular_resField`, from
+    `QuadLatticeAction.defect_nonpos`), which an arbitrary partition
+    tower does not supply. Separation is generic: strict Boltzmann
+    decay at one nonmodal sector makes the scaled partition function
+    strictly decreasing above the base on any nontrivial tower
+    (`PartitionTower.Z_lt_Z`), hence for a nontrivial lattice action
+    at any positive scale (`QuadLatticeAction.scaledPartFn_lt`),
+    hence the normalized field strictly monotone
+    (`strictMono_resField`) and the distance zero only on the
+    diagonal (`resDist_eq_zero_iff`) — so the resolution carrier is
+    a metric space (`resMetricSpace`). Two facts say what the
+    geometry means: on a comparable pair the join kernel is the cost
+    gap itself (`resDist_of_le`), so a divisibility chain embeds in
+    the real cost line; and at rank one and coprime `p,q` the
+    pairing is a distance difference,
+    `⟨p,q⟩_s = d_s(1,pq) − d_s(p,q)`
+    (`pairing_eq_resDist_sub`), so a nontrivial incomparable pair
+    sits strictly closer than its full span,
+    `d_s(p,q) < d_s(1,pq)` (`resDist_lt_resDist_base`). This
+    supplies the intrinsic metric
+    geometry in which Q4's CND/Schoenberg question naturally lives.
+    Completion and diameter claims remain outside the target until
+    they are proved.
 12. **The distributivity-index law.** Conjectural, and stated as
     such. For full-rank finite-index sublattices `A, B, C`, with
     `U = (A+B) ∩ C` and `V = (A∩C) + (B∩C)` the two ends of the
@@ -1127,13 +1149,14 @@ orthogonal-sum reduction has closed the remainder of target 2.
 The higher-interaction bridge (target 7) is complete: the seam,
 the coprime telescope with its sign laws, the raw-difference
 isolation, and the Gaussian `M₃` diamond, whose order-three defect
-is strictly positive and survives the small-scale boundary. Still
-open: the equality chain (target 10), complete through the
-intrinsic two-grid criterion and awaiting only the rigidity
-theorem that the criterion is impossible for coprime `a, b > 1`;
-the resolution metric (target 11); and the distributivity-index law
-(target 12), a conjecture whose first nontrivial case is that
-diamond. The
+is strictly positive and survives the small-scale boundary. The
+resolution metric (target 11) is complete: the join kernel of the
+normalized field, a pseudometric by the correlation theorem and a
+metric by strict Boltzmann decay. Still open: the equality chain
+(target 10), complete through the intrinsic two-grid criterion and
+awaiting only the rigidity theorem that the criterion is impossible
+for coprime `a, b > 1`; and the distributivity-index law (target
+12), a conjecture whose first nontrivial case is that diamond. The
 verdicts to date: Q5 stays a universal conjecture, with margins
 vanishing toward every degenerate boundary probed and its binding
 point leaving the duality center under dual asymmetry; Q4's
