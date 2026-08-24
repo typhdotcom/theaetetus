@@ -5,12 +5,14 @@ def main [] {
     print "usage: nu tasks.nu <task>"
     print ""
     print "tasks:"
-    print "  check    verify the project builds or passes basic checks"
+    print "  check    evaluate the flake, then build the Lean library"
     print "  recon    run reconnaissance self-tests and committed sweeps"
+    print "  fmt      rewrite the tree with the flake's formatters"
 }
 
-# Verify the project builds or passes basic checks
+# Evaluate the flake, then build the Lean library
 def "main check" [] {
+    nix flake check
     lake build
 }
 
@@ -20,4 +22,9 @@ def "main recon" [] {
     uv run recon/q4.py all
     uv run recon/rigidity.py record --write
     uv run recon/logfourier.py sweep --write
+}
+
+# Rewrite the tree with the flake's formatters
+def "main fmt" [] {
+    nix fmt
 }

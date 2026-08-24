@@ -3,54 +3,28 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      ...
-    }:
-    let
-      inherit (nixpkgs) lib;
-      forAllSystems = lib.genAttrs lib.systems.flakeExposed;
-    in
-    {
-      packages = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-        }
-      );
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-      nixosModules.default =
-        { pkgs, ... }:
-        {
-          environment.systemPackages = [
-          ];
-        };
-
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          default = pkgs.mkShell {
-            packages = [
-              pkgs.nushell
-              pkgs.elan
-              pkgs.git
-              pkgs.curl
-            ];
-
-            shellHook = ''
-              export ELAN_HOME="''${ELAN_HOME:-$HOME/.elan}"
-            '';
-          };
-        }
+      # Every *.nix file in nix/ is a flake-parts module, imported here
+      # automatically. Extending the flake means adding a file, not editing
+      # one that came from the template.
+      imports = map (name: ./nix + "/${name}") (
+        builtins.filter (name: builtins.match ".*\\.nix" name != null) (
+          builtins.attrNames (builtins.readDir ./nix)
+        )
       );
     };
 }
