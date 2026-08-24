@@ -1116,10 +1116,26 @@ Formalization targets:
     normalization cancels between two forms of the same rank, so
     their sums compare by the square root of the reciprocal
     determinant ratio — the ratio of covolumes
-    (`tendsto_gramTheta_ratio`). No sublattice or index machinery is
-    introduced yet. Until the law itself is proved this is a
-    conjecture with one witness, not a theorem with a general
-    proof.
+    (`tendsto_gramTheta_ratio`). The finite-index bridge has landed
+    on top of it (`Theaetetus.FiniteIndex`): a `ℤ`-basis of a
+    full-rank subgroup of the integer lattice gives a chart whose
+    determinant is the index up to sign (`natAbs_det_subChart`),
+    hence a positive-definite pulled-back Gram form
+    (`subGram_posDef`) of squared-index determinant
+    (`det_subGram`), through which the intrinsic mass is a Gram
+    Boltzmann sum (`subMass_eq_gramTheta`). For a full-rank
+    finite-index inclusion `V ≤ U` the normalization cancels:
+
+        ρ_s(U)/ρ_s(V) → [U:V],
+        log ρ_s(U) − log ρ_s(V) → log [U:V]   as s → 0⁺
+
+    (`tendsto_subMass_ratio`, `tendsto_log_subMass_sub`) — the field
+    gap `defect3_recurrence` consumes, with full rank and finite
+    index carried as explicit hypotheses. What remains for the law
+    is the pairwise half: that the three pairwise defects vanish at
+    the boundary, and the composition of both ingredients through
+    the recurrence. Until that is proved this is a conjecture with
+    one witness, not a theorem with a general proof.
 
 Reconnaissance, falsify-first:
 

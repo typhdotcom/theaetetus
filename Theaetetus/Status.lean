@@ -18,6 +18,7 @@ import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
+import Theaetetus.FiniteIndex
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
 import Theaetetus.SublatticeDiamond
@@ -43,7 +44,8 @@ the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the resolution
-metric; the scale asymptotics of a Gram Boltzmann sum. -/
+metric; the scale asymptotics of a Gram Boltzmann sum and the
+finite-index mass ratio. -/
 
 namespace Theaetetus
 
@@ -1618,5 +1620,40 @@ example {d : ℕ} {M N : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
     Tendsto (fun s : ℝ => gramTheta M s / gramTheta N s) (𝓝[>] (0 : ℝ))
       (𝓝 ((N.det / M.det) ^ ((1 : ℝ) / 2))) :=
   tendsto_gramTheta_ratio hM hN
+
+/-! ## The finite-index mass ratio -/
+
+example {d : ℕ} {H : AddSubgroup (Fin d → ℤ)}
+    (b : Module.Basis (Fin d) ℤ H) :
+    ∃ n : ℤ, n.natAbs = H.index ∧ (subChart b).det = (n : ℝ) :=
+  natAbs_det_subChart b
+
+example {d : ℕ} {H : AddSubgroup (Fin d → ℤ)} (hidx : H.index ≠ 0)
+    (b : Module.Basis (Fin d) ℤ H) : (subGram b).PosDef :=
+  subGram_posDef hidx b
+
+example {d : ℕ} {H : AddSubgroup (Fin d → ℤ)}
+    (b : Module.Basis (Fin d) ℤ H) :
+    (subGram b).det = ((H.index : ℝ)) ^ 2 :=
+  det_subGram b
+
+example {d : ℕ} {H : AddSubgroup (Fin d → ℤ)} (s : ℝ)
+    (b : Module.Basis (Fin d) ℤ H) :
+    subMass s H = gramTheta (subGram b) s :=
+  subMass_eq_gramTheta s b
+
+example {d : ℕ} {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+    (hU : U.index ≠ 0) (hV : V.index ≠ 0) (bU : Module.Basis (Fin d) ℤ U)
+    (bV : Module.Basis (Fin d) ℤ V) :
+    Tendsto (fun s => subMass s U / subMass s V) (𝓝[>] (0 : ℝ))
+      (𝓝 (((V.relIndex U : ℕ) : ℝ))) :=
+  tendsto_subMass_ratio hle hU hV bU bV
+
+example {d : ℕ} {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+    (hU : U.index ≠ 0) (hV : V.index ≠ 0) (bU : Module.Basis (Fin d) ℤ U)
+    (bV : Module.Basis (Fin d) ℤ V) :
+    Tendsto (fun s => Real.log (subMass s U) - Real.log (subMass s V))
+      (𝓝[>] (0 : ℝ)) (𝓝 (Real.log (((V.relIndex U : ℕ) : ℝ)))) :=
+  tendsto_log_subMass_sub hle hU hV bU bV
 
 end Theaetetus

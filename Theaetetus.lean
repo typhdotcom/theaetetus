@@ -133,6 +133,9 @@ import Theaetetus.ResolutionMetric
 -- The scale asymptotics of a Gram Boltzmann sum
 import Theaetetus.GramAsymptotics
 
+-- The Gaussian mass ratio at a finite-index inclusion
+import Theaetetus.FiniteIndex
+
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
 
