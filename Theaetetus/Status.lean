@@ -18,6 +18,7 @@ import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
 import Theaetetus.MassMaximum
 import Theaetetus.ParitySeparation
+import Theaetetus.EvenPartSeparation
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
@@ -47,8 +48,8 @@ the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the strict maximum of
-the shifted Gaussian mass and the separation of the parity feature
-vectors; the resolution metric; the scale
+the shifted Gaussian mass, the separation of the parity feature
+vectors, and its real Gaussian core; the resolution metric; the scale
 asymptotics of a Gram Boltzmann sum, the finite-index mass ratio,
 and the pairwise boundary of the sublattice field. -/
 
@@ -1746,5 +1747,48 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} {T : Finset (Fin d)}
     (hT : ∀ i j, (i ∈ T) ≠ (j ∈ T) → M i j = 0) {i₀ j₀ : Fin d}
     (hi₀ : i₀ ∈ T) (hj₀ : j₀ ∉ T) (α : ℝ) : ¬ ParitySeparating M α :=
   not_paritySeparating_of_split hT hi₀ hj₀ α
+
+/-! ## The real Gaussian core of separation -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {z w : Fin d → ℝ}
+    (h : parityVector M α z = parityVector M α w) (u : Fin d → ℝ) :
+    gramMass M α ((2 : ℝ)⁻¹ • (z + u))
+        * gramMass M α ((2 : ℝ)⁻¹ • (z - u))
+      = gramMass M α ((2 : ℝ)⁻¹ • (w + u))
+        * gramMass M α ((2 : ℝ)⁻¹ • (w - u)) :=
+  gramMass_reflect_prod_of_parityVector_eq hM hα h u
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {z w : Fin d → ℝ}
+    (h : parityVector M α z = parityVector M α w) (v : Fin d → ℝ) :
+    logMass M α ((2 : ℝ)⁻¹ • z + v) + logMass M α ((2 : ℝ)⁻¹ • z - v)
+      = logMass M α ((2 : ℝ)⁻¹ • w + v)
+        + logMass M α ((2 : ℝ)⁻¹ • w - v) :=
+  logMass_even_part_eq_of_parityVector_eq hM hα h v
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (h : EvenPartSeparating M α) : ParitySeparating M α :=
+  paritySeparating_of_evenPartSeparating hM hα h
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (hd : 0 < d)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
+    (hco : Nat.Coprime a b)
+    (h : EvenPartSeparating M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) :
+    gramDefect M s a b < 0 :=
+  gramDefect_neg_of_evenPartSeparating hM hd hs ha hb hco h
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {T : Finset (Fin d)}
+    (hT : ∀ i j, (i ∈ T) ≠ (j ∈ T) → M i j = 0) {i₀ j₀ : Fin d}
+    (hi₀ : i₀ ∈ T) (hj₀ : j₀ ∉ T) : ¬ EvenPartSeparating M α :=
+  not_evenPartSeparating_of_split hM hα hT hi₀ hj₀
+
+example {d : ℕ} {p q : Fin d → ℝ}
+    (h1 : ∀ i, (∃ k : ℤ, p i = (k : ℝ)) ∨ (∃ k : ℤ, q i = (k : ℝ)))
+    (h2 : ∀ i j, i ≠ j → (∃ k : ℤ, p i + p j = (k : ℝ))
+      ∨ (∃ k : ℤ, q i + q j = (k : ℝ))) :
+    IsLatticeShift p ∨ IsLatticeShift q :=
+  isLatticeShift_or_of_pairwise h1 h2
 
 end Theaetetus

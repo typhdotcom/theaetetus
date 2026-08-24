@@ -1125,14 +1125,112 @@ Formalization targets:
     (`not_paritySeparating_of_split`). Such a form carries one sign
     per block, not one sign overall. The converse — that separation
     holds whenever no such splitting exists — is not proved, and
-    neither is the reduction of a split form to its blocks. The
-    remaining chain is two links: prove the Kummer-style separation
-    statement on the intrinsically indecomposable factors, and
-    formalize that every decomposable case reduces to those factors
-    through the orthogonal-sum defect theorem (`orthSum_defect`,
-    `orthSum_defect_eq_zero_iff`).
+    neither is the reduction of a split form to its blocks.
 
-    That transform closes a loop rather than opening a mechanism.
+    Separation is classically proved through the zero divisor of the
+    theta function, and the shifted mass has no zeros, so that
+    argument does not descend directly to one phrased in the
+    positive real mass alone. It could still be imported through
+    complex geometry; `Theaetetus.EvenPartSeparation` opens a purely
+    real alternative, and completing it requires the Fourier
+    certificate described below. That module isolates what the real
+    locus
+    actually consumes. It is one application of the addition
+    identity `gramMass_mul_eq_inner`, which is the theta addition
+    formula in this normalization. Pairing both sides of a parity
+    equality against the vector at an arbitrary displacement turns
+    the `2^d`-entry equality into a one-parameter family of scalars,
+
+        m((z+u)/2)·m((z−u)/2) = m((w+u)/2)·m((w−u)/2)
+
+    (`gramMass_reflect_prod_of_parityVector_eq`), and taking
+    logarithms — legitimate, the masses being positive — says that
+    the even part of `logMass` about `z/2` equals the even part
+    about `w/2` (`logMass_even_part_eq_of_parityVector_eq`). So
+    separation follows from a property of the logarithmic mass
+    alone: that its even part about a point determines the point up
+    to sign (`EvenPartSeparating`,
+    `paritySeparating_of_evenPartSeparating`,
+    `gramDefect_neg_of_evenPartSeparating`). The block obstruction
+    transports by contraposition
+    (`not_evenPartSeparating_of_split`).
+
+    That reduction settles the shape of the remaining work. Writing
+    `L = logMass M α` — real-valued, `ℤᵈ`-periodic, and even;
+    positivity belongs to `gramMass`, not to its logarithm — with
+    Fourier coefficients `ℓ_ν` on `ℝᵈ/ℤᵈ`, the even-part equation
+    reads coefficientwise as
+
+        ℓ_ν · cos(2πν·a) = ℓ_ν · cos(2πν·b)   for every ν ∈ ℤᵈ,
+
+    and at a frequency with `ℓ_ν ≠ 0` this says `ν·(a−b) ∈ ℤ` or
+    `ν·(a+b) ∈ ℤ`. The frequencies `ν = e_i` put each coordinate on
+    at least one branch — possibly both, and such a coordinate is
+    *flexible*. The frequencies `ν = e_i + e_j`, `i ≠ j`, rule out
+    the coexistence of a coordinate *forced* onto the difference
+    branch with one *forced* onto the sum branch: for such a pair
+    both `(a−b)_i + (a−b)_j` and `(a+b)_i + (a+b)_j` are
+    nonintegral. Flexible coordinates then adopt whichever branch
+    survives, and one branch serves the whole vector. That step is
+    pure arithmetic and is already proved
+    (`isLatticeShift_or_of_pairwise`), flexible coordinates handled
+    explicitly, so the subtlety cannot become a hidden gap in the
+    analytic layer.
+
+    The sufficient hypothesis is therefore nonvanishing of `ℓ_ν` on
+    the **finite** family `{e_i} ∪ {e_i + e_j : i ≠ j}` — not on all
+    `ν ≠ 0`, which is a much stronger demand than target 10 makes,
+    may fail at special forms or couplings, and has not been
+    investigated. In the other direction one implication is proved:
+    a proper coordinate block splitting destroys
+    `EvenPartSeparating`. Fourier analysis explains that
+    obstruction — for `M = M₁ ⊕ M₂` the mass factorizes, so
+    `L(x) = L₁(x₁) + L₂(x₂)` and `ℓ_ν = 0` at every block-mixing
+    frequency, exactly at every coupling, because the logarithm
+    turns the product into a sum. Nothing yet shows that every
+    vanishing coefficient, or every failure of separation, arises
+    from a splitting: the Fourier support is a certificate and a
+    diagnostic until that relationship is proved. The certificate is
+    also **chart-dependent**: the conclusion it yields is
+    geometrically meaningful, but the frequencies `e_i` and
+    `e_i + e_j` are those of a particular integral chart, so
+    nonvanishing on that family is a sufficient condition in that
+    chart, not an intrinsic characterization of indecomposability.
+
+    Two consequences for the roadmap. First, the route needs a
+    Fourier layer on `ℝᵈ/ℤᵈ` for the logarithmic mass, not a Siegel
+    theta library and not a symplectic decomposition layer: the real
+    argument never constructs the abelian variety, and the classical
+    statement now serves only as motivation for a predicate that a
+    purely real one implies. Second, the question of whether
+    decomposability of the associated principally polarized abelian
+    variety coincides with orthogonal decomposability of `(ℤᵈ, M)`
+    is therefore off the critical path, and it is **not settled
+    here**. What is settled about it: the two notions have different
+    invariance groups — `Sp(2d,ℤ)` against `GL_d(ℤ)` — and the
+    period map is not injective on quadratic lattices, since
+    `τ ↦ −τ⁻¹` carries `iT` to `iT⁻¹`, so `(ℤ, t)` and `(ℤ, 1/t)`
+    give the same elliptic curve while they are not isometric
+    lattices. That non-injectivity does not by itself produce a
+    decomposability mismatch, because `UᵀTU = T₁ ⊕ T₂` gives
+    `(U⁻¹)ᵀT⁻¹U⁻¹ = T₁⁻¹ ⊕ T₂⁻¹`, so orthogonal splitting survives
+    inversion. Whether some `Sp(2d,ℤ)` element outside that
+    subgroup makes a lattice-indecomposable `M` decomposable as a
+    ppav at special couplings is open, and no claim either way is
+    made.
+
+    The remaining chain is therefore: define the Fourier
+    coefficients of `logMass` on `ℝᵈ/ℤᵈ` and prove their reality and
+    evenness; extract the coefficient equation from equality of even
+    parts; package the conditional theorem that nonvanishing on the
+    finite family above implies `EvenPartSeparating`; then, kept
+    separate and falsified numerically before any universal proof is
+    attempted, the nonvanishing itself; and finally the reduction of
+    split forms to their blocks through the orthogonal-sum defect
+    theorem (`orthSum_defect`, `orthSum_defect_eq_zero_iff`).
+
+    The earlier CRT/alias transform closes a loop rather than
+    opening a mechanism.
     The alias sums are not bare positive aggregates: up to one
     positive prefactor each is a shifted Gaussian mass of the
     *inverse* Gram at the reflected coupling
@@ -1430,7 +1528,7 @@ weakened statement, or an unwitnessed claim fails the build.
 
     nix develop -c lake build        # or: nu tasks.nu check
 
-Toolchain `leanprover/lean4:v4.26.0`, Mathlib pinned at `v4.26.0`.
+Toolchain `leanprover/lean4:v4.33.1`, Mathlib pinned at `v4.33.1`.
 Zero `sorry`, zero `axiom` declarations; `lake build` green is the
 only definition of done. Where a desired statement fails, the
 counterexample becomes a theorem. Version control is jujutsu.

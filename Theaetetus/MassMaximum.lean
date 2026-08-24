@@ -50,6 +50,16 @@ def IsLatticeShift (x : Fin d → ℝ) : Prop :=
 theorem isLatticeShift_zero : IsLatticeShift (0 : Fin d → ℝ) :=
   ⟨0, by funext i; simp⟩
 
+/-- A shift is a lattice point exactly when each coordinate is. -/
+theorem isLatticeShift_iff_forall {x : Fin d → ℝ} :
+    IsLatticeShift x ↔ ∀ i, ∃ k : ℤ, x i = (k : ℝ) := by
+  constructor
+  · rintro ⟨k, rfl⟩ i
+    exact ⟨k i, rfl⟩
+  · intro h
+    choose k hk using h
+    exact ⟨k, funext hk⟩
+
 theorem gramMass_of_isLatticeShift (α : ℝ) {x : Fin d → ℝ}
     (hx : IsLatticeShift x) : gramMass M α x = gramMass M α 0 := by
   obtain ⟨k, rfl⟩ := hx

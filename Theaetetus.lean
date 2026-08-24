@@ -135,6 +135,10 @@ import Theaetetus.MassMaximum
 -- rigidity, and its failure on decomposable forms
 import Theaetetus.ParitySeparation
 
+-- The real Gaussian core: separation reduced to the even part of the
+-- logarithmic mass
+import Theaetetus.EvenPartSeparation
+
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 
