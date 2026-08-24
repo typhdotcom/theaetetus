@@ -48,11 +48,13 @@ doubling that grid, and structural zeros are identified only where an
 exact reference value predicts them.
 
 Method. `L` is smooth and periodic, so the uniform trapezoidal rule
-is spectrally accurate: on an `N`-point grid per axis the computed
-coefficient differs from `l_nu` by the aliasing sum over
-`nu + N*Z^d`, which falls off with the same Gaussian rate as the
-coefficients themselves. Doubling `N` is therefore a sharp empirical
-convergence test, and it is reported for every entry.
+converges spectrally, and the computed coefficient differs from
+`l_nu` by exactly the aliasing sum over `nu + N*Z^d`. That identity
+is exact; **no decay rate for the tail of `log mass` is asserted
+here** -- the Gaussian rate belongs to the coefficients of the mass,
+and the logarithm moves the rate to the nearest complex zero. What
+the sweep does is estimate convergence empirically by doubling `N`,
+which is reported for every entry.
 
 Exact references. For `M = diag(m_1, ..., m_d)` the mass factorizes,
 so `L(x) = sum_i log g(x_i)` with `g` the rank-one theta, and the

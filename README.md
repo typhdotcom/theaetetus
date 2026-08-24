@@ -1257,16 +1257,38 @@ Formalization targets:
     not a proof of nonvanishing, and the split against decomposability
     is an observation on the sample, not a proved equivalence.
 
-    The remaining chain is therefore: define the Fourier
-    coefficients of `logMass` on `ℝᵈ/ℤᵈ` and prove their reality and
-    evenness; extract the coefficient equation from equality of even
-    parts; package the conditional theorem that nonvanishing on the
-    finite family above implies `EvenPartSeparating`, composing it
-    with `isLatticeShift_or_of_pairwise`; then, kept separate as a
-    research theorem, the nonvanishing itself; and finally the
-    reduction of split forms to their blocks through the
-    orthogonal-sum defect theorem (`orthSum_defect`,
-    `orthSum_defect_eq_zero_iff`).
+    That conditional layer is now formal
+    (`Theaetetus.LogMassFourier`). The logarithmic mass descends to
+    the unit torus through the Gaussian periodization already there
+    (`logMassTorus`, `logMassTorus_mk`), positivity makes the
+    logarithm continuous (`continuous_logMassTorus`), and Mathlib's
+    multivariate transform supplies the coefficients
+    (`logMassCoeff`). Evenness and reality of the mass make every
+    coefficient real and symmetric in the frequency
+    (`logMassCoeff_neg`, `logMassCoeff_conj`,
+    `logMassCoeff_eq_ofReal`). The coefficient equation is obtained
+    by applying the functional to two functions that are literally
+    equal — no reconstruction of the field from its series — using
+    only translation invariance, since evenness rewrites `L(a − v)`
+    as `L(v − a)`: from equality of even parts,
+    `ℓ_ν·cos(2π⟨ν,a⟩) = ℓ_ν·cos(2π⟨ν,b⟩)` at every frequency
+    (`logMassCoeff_cos_eq`). With the singleton and distinct-pair
+    frequencies named (`freqSingle`, `freqPair`), nonvanishing on
+    exactly that finite family
+    (`FiniteCertificate`) implies the even-part property
+    (`evenPartSeparating_of_finiteCertificate`) and hence strict
+    negativity of the coprime defect
+    (`gramDefect_neg_of_finiteCertificate`). Composed with the block
+    obstruction, the certificate is formally a splitting diagnostic
+    as well: a form whose coordinates split with no cross terms
+    admits no finite certificate
+    (`not_finiteCertificate_of_split`) — that direction only.
+    Nonvanishing itself is not proved, assumed, or estimated there.
+
+    The remaining chain is therefore: the analytic nonvanishing
+    theorem, kept separate; and the reduction of split forms to their
+    blocks through the orthogonal-sum defect theorem
+    (`orthSum_defect`, `orthSum_defect_eq_zero_iff`).
 
     The earlier CRT/alias transform closes a loop rather than
     opening a mechanism.

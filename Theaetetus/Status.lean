@@ -19,6 +19,7 @@ import Theaetetus.ReflectionFourier
 import Theaetetus.MassMaximum
 import Theaetetus.ParitySeparation
 import Theaetetus.EvenPartSeparation
+import Theaetetus.LogMassFourier
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
@@ -49,7 +50,8 @@ coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the strict maximum of
 the shifted Gaussian mass, the separation of the parity feature
-vectors, and its real Gaussian core; the resolution metric; the scale
+vectors, its real Gaussian core, and the torus Fourier coefficients
+of the logarithmic mass; the resolution metric; the scale
 asymptotics of a Gram Boltzmann sum, the finite-index mass ratio,
 and the pairwise boundary of the sublattice field. -/
 
@@ -1790,5 +1792,60 @@ example {d : ℕ} {p q : Fin d → ℝ}
       ∨ (∃ k : ℤ, q i + q j = (k : ℝ))) :
     IsLatticeShift p ∨ IsLatticeShift q :=
   isLatticeShift_or_of_pairwise h1 h2
+
+/-! ## The torus Fourier coefficients of the logarithmic mass -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (α : ℝ) (x : Fin d → ℝ) :
+    logMassTorus M α (torusMk x) = logMass M α x :=
+  logMassTorus_mk M α x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) : Continuous (logMassTorus M α) :=
+  continuous_logMassTorus hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (α : ℝ) (ν : Fin d → ℤ) :
+    logMassCoeff M α (-ν) = logMassCoeff M α ν :=
+  logMassCoeff_neg M α ν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (α : ℝ) (ν : Fin d → ℤ) :
+    (starRingEnd ℂ) (logMassCoeff M α ν) = logMassCoeff M α (-ν) :=
+  logMassCoeff_conj M α ν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (α : ℝ) (ν : Fin d → ℤ) :
+    logMassCoeff M α ν = ((logMassRe M α ν : ℝ) : ℂ) :=
+  logMassCoeff_eq_ofReal M α ν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {a b : Fin d → ℝ}
+    (h : ∀ v : Fin d → ℝ, logMass M α (a + v) + logMass M α (a - v)
+      = logMass M α (b + v) + logMass M α (b - v)) (ν : Fin d → ℤ) :
+    logMassRe M α ν * (2 * Real.cos (2 * Real.pi * dualPairing ν a))
+      = logMassRe M α ν * (2 * Real.cos (2 * Real.pi * dualPairing ν b)) :=
+  logMassCoeff_cos_eq hM hα h ν
+
+example {d : ℕ} (i : Fin d) (x : Fin d → ℝ) :
+    dualPairing (freqSingle i) x = x i :=
+  dualPairing_freqSingle i x
+
+example {d : ℕ} (i j : Fin d) (x : Fin d → ℝ) :
+    dualPairing (freqPair i j) x = x i + x j :=
+  dualPairing_freqPair i j x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (hc : FiniteCertificate M α) : EvenPartSeparating M α :=
+  evenPartSeparating_of_finiteCertificate hM hα hc
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {T : Finset (Fin d)}
+    (hT : ∀ i j, (i ∈ T) ≠ (j ∈ T) → M i j = 0) {i₀ j₀ : Fin d}
+    (hi₀ : i₀ ∈ T) (hj₀ : j₀ ∉ T) : ¬ FiniteCertificate M α :=
+  not_finiteCertificate_of_split hM hα hT hi₀ hj₀
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (hd : 0 < d)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
+    (hco : Nat.Coprime a b)
+    (hcert : FiniteCertificate M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) :
+    gramDefect M s a b < 0 :=
+  gramDefect_neg_of_finiteCertificate hM hd hs ha hb hco hcert
 
 end Theaetetus

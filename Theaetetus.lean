@@ -139,6 +139,10 @@ import Theaetetus.ParitySeparation
 -- logarithmic mass
 import Theaetetus.EvenPartSeparation
 
+-- The torus Fourier coefficients of the logarithmic mass, and the
+-- finite frequency certificate
+import Theaetetus.LogMassFourier
+
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 
