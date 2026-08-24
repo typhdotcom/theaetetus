@@ -17,6 +17,7 @@ import Theaetetus.Correlation
 import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
 import Theaetetus.ResolutionMetric
+import Theaetetus.GramAsymptotics
 import Theaetetus.OrthogonalSum
 import Theaetetus.HigherInteraction
 import Theaetetus.SublatticeDiamond
@@ -42,7 +43,7 @@ the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the resolution
-metric. -/
+metric; the scale asymptotics of a Gram Boltzmann sum. -/
 
 namespace Theaetetus
 
@@ -1589,5 +1590,33 @@ example {s : ℝ} (hs : 0 < s) {p q : ℕ+} (hco : Nat.Coprime (p : ℕ) (q : �
     resDist theta s (Descent.Arith.of p) (Descent.Arith.of q)
       < resDist theta s (Descent.Arith.of 1) (Descent.Arith.of (p * q)) :=
   resDist_lt_resDist_base hs hco hpq hqp
+
+/-! ## The scale asymptotics of a Gram Boltzmann sum -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (β : ℝ) :
+    (gramTower hM).Z β = gramTheta M β :=
+  gramTower_Z hM β
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) :
+    Tendsto (gramTheta M) atTop (𝓝 1) :=
+  tendsto_gramTheta_atTop hM
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) :
+    gramTheta M s
+      = (Real.pi / s) ^ ((d : ℝ) / 2) * (M.det⁻¹) ^ ((1 : ℝ) / 2)
+        * gramTheta M⁻¹ (Real.pi ^ 2 / s) :=
+  gramTheta_eq_dual hM hs
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) :
+    Tendsto (fun s : ℝ => (s / Real.pi) ^ ((d : ℝ) / 2) * gramTheta M s)
+      (𝓝[>] (0 : ℝ)) (𝓝 (M.det ^ (-(1 : ℝ) / 2))) :=
+  tendsto_gramTheta_nhdsGT_zero hM
+
+example {d : ℕ} {M N : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    (hN : N.PosDef) :
+    Tendsto (fun s : ℝ => gramTheta M s / gramTheta N s) (𝓝[>] (0 : ℝ))
+      (𝓝 ((N.det / M.det) ^ ((1 : ℝ) / 2))) :=
+  tendsto_gramTheta_ratio hM hN
 
 end Theaetetus

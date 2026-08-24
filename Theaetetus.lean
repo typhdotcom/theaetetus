@@ -130,6 +130,9 @@ import Theaetetus.ReflectionFourier
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 
+-- The scale asymptotics of a Gram Boltzmann sum
+import Theaetetus.GramAsymptotics
+
 -- The orthogonal sum: partition functions multiply, defects add
 import Theaetetus.OrthogonalSum
 

@@ -1103,8 +1103,23 @@ Formalization targets:
     whose ratio tends to the index. First prove the Gaussian
     mass-ratio limit for a finite-index inclusion `V ≤ U`; then
     combine it with pairwise covolume cancellation and
-    `defect3_recurrence`. Until then this is a conjecture with one
-    witness, not a theorem with a general proof.
+    `defect3_recurrence`. The analytic layer of that first step has
+    landed (`Theaetetus.GramAsymptotics`): the Boltzmann sum of a
+    positive-definite Gram form saturates at large coupling
+    (`tendsto_gramTheta_atTop`, the tower saturation applied to
+    `gramTower`), the reflection carries that to the small-scale
+    asymptotic
+
+        (s/π)^(d/2)·gramTheta(M,s) → det(M)^(−1/2)   as s → 0⁺
+
+    (`gramTheta_eq_dual`, `tendsto_gramTheta_nhdsGT_zero`), and the
+    normalization cancels between two forms of the same rank, so
+    their sums compare by the square root of the reciprocal
+    determinant ratio — the ratio of covolumes
+    (`tendsto_gramTheta_ratio`). No sublattice or index machinery is
+    introduced yet. Until the law itself is proved this is a
+    conjecture with one witness, not a theorem with a general
+    proof.
 
 Reconnaissance, falsify-first:
 
