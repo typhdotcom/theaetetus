@@ -143,6 +143,10 @@ import Theaetetus.EvenPartSeparation
 -- finite frequency certificate
 import Theaetetus.LogMassFourier
 
+-- The cluster normalization of the logarithmic mass, and its
+-- truncation estimate in the sparse-dual regime
+import Theaetetus.ClusterExpansion
+
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 

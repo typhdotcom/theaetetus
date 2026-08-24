@@ -1285,10 +1285,41 @@ Formalization targets:
     (`not_finiteCertificate_of_split`) — that direction only.
     Nonvanishing itself is not proved, assumed, or estimated there.
 
-    The remaining chain is therefore: the analytic nonvanishing
-    theorem, kept separate; and the reduction of split forms to their
-    blocks through the orthogonal-sum defect theorem
-    (`orthSum_defect`, `orthSum_defect_eq_zero_iff`).
+    The first analytic foothold under that certificate is the
+    cluster normalization (`Theaetetus.ClusterExpansion`). Dividing
+    the positive dual expansion by its zero-frequency weight puts the
+    mass in the form `zeroMode·(1 + residual)`
+    (`gramMass_eq_zeroMode_mul`), where the residual carries only
+    nonzero dual modes (`hasSum_residual`) and is bounded uniformly
+    in the shift by their total relative weight
+    (`abs_residual_le_totalWeight`). That weight is exactly the
+    excess of the mass at the origin over its zero mode, and is
+    literally the sum of the nonzero relative mode weights
+    (`hasSum_totalWeight`), so the determinant-normalized asymptotic
+    measures it: as the coupling falls to zero the dual energies,
+    scaling like `π²/α`, spread out and the weight vanishes
+    (`totalWeight_eq_scaled`,
+    `tendsto_totalWeight_nhdsGT_zero`,
+    `eventually_totalWeight_lt`). Below unit weight the logarithm
+    expands convergently in the residual
+    (`hasSum_logMass_residual`), with an error after `K` terms
+    bounded by `W^{K+1}/(1−W)` in the weight alone, uniformly in the
+    shift (`abs_logMass_sub_partialSum_le`). This is the
+    sparse-dual, small-coupling regime; it controls small `α` and
+    says nothing about `α → ∞`.
+
+    That is the cluster structure the reconnaissance saw: the `k`-th
+    term is a `k`-fold product of dual modes, so the coefficient at a
+    frequency `ν` collects the decompositions `ν = ν₁ + ⋯ + ν_k`.
+    Turning that reading into an identity between coefficients needs
+    the Fourier coefficient of a product — a convolution theorem on
+    the torus — together with the interchange of the coefficient
+    functional with this series; neither is proved yet. The
+    remaining chain is therefore: the convolution form of the cluster
+    sum; the analytic nonvanishing theorem, kept separate; and the
+    reduction of split forms to their blocks through the
+    orthogonal-sum defect theorem (`orthSum_defect`,
+    `orthSum_defect_eq_zero_iff`).
 
     The earlier CRT/alias transform closes a loop rather than
     opening a mechanism.

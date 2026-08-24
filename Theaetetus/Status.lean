@@ -20,6 +20,7 @@ import Theaetetus.MassMaximum
 import Theaetetus.ParitySeparation
 import Theaetetus.EvenPartSeparation
 import Theaetetus.LogMassFourier
+import Theaetetus.ClusterExpansion
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
@@ -50,8 +51,9 @@ coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the strict maximum of
 the shifted Gaussian mass, the separation of the parity feature
-vectors, its real Gaussian core, and the torus Fourier coefficients
-of the logarithmic mass; the resolution metric; the scale
+vectors, its real Gaussian core, the torus Fourier coefficients of
+the logarithmic mass, and its cluster normalization; the resolution
+metric; the scale
 asymptotics of a Gram Boltzmann sum, the finite-index mass ratio,
 and the pairwise boundary of the sublattice field. -/
 
@@ -1847,5 +1849,61 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (hd : 0 < d)
     (hcert : FiniteCertificate M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) :
     gramDefect M s a b < 0 :=
   gramDefect_neg_of_finiteCertificate hM hd hs ha hb hco hcert
+
+/-! ## The cluster normalization of the logarithmic mass -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    gramMass M α x = zeroMode M α * (1 + residual M α x) :=
+  gramMass_eq_zeroMode_mul hM hα x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    HasSum (fun m : Fin d → ℤ =>
+        if m = 0 then 0
+        else modeWeight M α m * Real.cos (2 * Real.pi * dualPairing m x))
+      (residual M α x) :=
+  hasSum_residual hM hα x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    |residual M α x| ≤ totalWeight M α :=
+  abs_residual_le_totalWeight hM hα x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) :
+    HasSum (fun m : Fin d → ℤ => if m = 0 then 0 else modeWeight M α m)
+      (totalWeight M α) :=
+  hasSum_totalWeight hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) :
+    totalWeight M α
+      = (α / Real.pi) ^ ((d : ℝ) / 2) * gramTheta M α
+          * M.det ^ ((1 : ℝ) / 2) - 1 :=
+  totalWeight_eq_scaled hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) :
+    Tendsto (fun α : ℝ => totalWeight M α) (𝓝[>] (0 : ℝ)) (𝓝 0) :=
+  tendsto_totalWeight_nhdsGT_zero hM
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {ε : ℝ}
+    (hε : 0 < ε) : ∀ᶠ α in 𝓝[>] (0 : ℝ), totalWeight M α < ε :=
+  eventually_totalWeight_lt hM hε
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (hw : totalWeight M α < 1) (x : Fin d → ℝ) :
+    HasSum (fun k : ℕ =>
+        (-1 : ℝ) ^ k * residual M α x ^ (k + 1) / (k + 1))
+      (logMass M α x - Real.log (zeroMode M α)) :=
+  hasSum_logMass_residual hM hα hw x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (hw : totalWeight M α < 1) (K : ℕ) (x : Fin d → ℝ) :
+    |logMass M α x - Real.log (zeroMode M α)
+        - ∑ k ∈ Finset.range K,
+            (-1 : ℝ) ^ k * residual M α x ^ (k + 1) / (k + 1)|
+      ≤ totalWeight M α ^ (K + 1) / (1 - totalWeight M α) :=
+  abs_logMass_sub_partialSum_le hM hα hw K x
 
 end Theaetetus
