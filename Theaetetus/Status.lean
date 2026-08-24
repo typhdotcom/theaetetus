@@ -17,6 +17,7 @@ import Theaetetus.Correlation
 import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
 import Theaetetus.MassMaximum
+import Theaetetus.ParitySeparation
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
@@ -46,7 +47,8 @@ the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the strict maximum of
-the shifted Gaussian mass; the resolution metric; the scale
+the shifted Gaussian mass and the separation of the parity feature
+vectors; the resolution metric; the scale
 asymptotics of a Gram Boltzmann sum, the finite-index mass ratio,
 and the pairwise boundary of the sublattice field. -/
 
@@ -1718,5 +1720,31 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
           (residueShift b r - residueShift a c) e
         < gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) 0 :=
   twoGridReflection_lt_max hM hs ha hb h hc e
+
+/-! ## Separation of the parity feature vectors -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hd : 0 < d) {s : ℝ}
+    {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
+    (hsep : ParitySeparating M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) :
+    ¬ TwoGridReflection M s a b :=
+  not_twoGridReflection_of_paritySeparating hd ha hb hsep
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (hd : 0 < d)
+    {s : ℝ} (hs : 0 < s) {a b : ℕ} (ha : 1 < a) (hb : 1 < b)
+    (hco : Nat.Coprime a b)
+    (hsep : ParitySeparating M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) :
+    gramDefect M s a b < 0 :=
+  gramDefect_neg_of_paritySeparating hM hd hs ha hb hco hsep
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} {T : Finset (Fin d)}
+    (hT : ∀ i j, (i ∈ T) ≠ (j ∈ T) → M i j = 0) (α : ℝ) (z : Fin d → ℝ)
+    (c : Fin d → ZMod 2) :
+    parityVector M α (flipCoords T z) c = parityVector M α z c :=
+  parityVector_flipCoords hT α z c
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} {T : Finset (Fin d)}
+    (hT : ∀ i j, (i ∈ T) ≠ (j ∈ T) → M i j = 0) {i₀ j₀ : Fin d}
+    (hi₀ : i₀ ∈ T) (hj₀ : j₀ ∉ T) (α : ℝ) : ¬ ParitySeparating M α :=
+  not_paritySeparating_of_split hT hi₀ hj₀ α
 
 end Theaetetus

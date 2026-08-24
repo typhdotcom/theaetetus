@@ -1068,6 +1068,70 @@ Formalization targets:
     multiplicity of a submaximal level set, not merely locate the
     top.
 
+    The submaximal geometry has a classical name. Writing `ĉ` for
+    the parity digit and expanding
+    `parityVector(M,α,z)_c = gramMass(M, 2α, (z + ĉ)/2)` around
+    `n = k + ĉ/2` gives, exactly,
+
+        parityVector(M,α,z)_c
+          = e^{−α zᵀMz/2} · Θ[c]( iαM/π , iαMz/(2π) ),
+
+    under the convention
+    `Θ[σ](τ,w) = Σ_{n ∈ ℤᵈ + σ/2} exp(2πi nᵀτn + 4πi nᵀw)`. The
+    period matrix is a genuine Siegel point, since `Im τ = αM/π` is
+    positive definite, and the prefactor `e^{−α zᵀMz/2}` is common
+    to every coordinate — so equality of raw parity vectors already
+    implies equality in the projective map. Those `Θ[σ]` are the
+    second-order theta coordinates, and for an **indecomposable**
+    principally polarized abelian variety the map they define is the
+    Kummer embedding: two-to-one, identifying `z` with `−z` and
+    nothing else. A decomposable variety instead carries one sign
+    per factor, so no single global sign describes its fibers. (For
+    the standard coordinates and the embedding see Grushevsky,
+    [*Cubic equations for the hyperelliptic locus*](https://archive.intlpress.com/site/pub/files/_fulltext/journals/ajm/2004/0008/0001/AJM-2004-0008-0001-a012.pdf).)
+
+    The real locus is what turns that geometry into exactly the
+    predicate used here. The theta argument is
+    `W(z) = iαMz/(2π) = τz/2`, so Kummer separation says
+    `W(z) ≡ ±W(w)` modulo the period lattice `ℤᵈ + τℤᵈ`, that is
+    `τ(z ∓ w)/2 = m + τn` with `m, n ∈ ℤᵈ`. But `z` and `w` are
+    real and `τ` is purely imaginary, so both `τ(z ∓ w)/2` and `τn`
+    are purely imaginary while `m` is real: hence `m = 0`. Since
+    `τ = iαM/π` is invertible for `α > 0` and `M` positive definite,
+    `(z ∓ w)/2 = n ∈ ℤᵈ` — precisely the two alternatives of
+    `ParitySeparating`. The predicate is not merely reminiscent of
+    Kummer geometry; it is that injectivity statement restricted to
+    the real locus, written in these coordinates.
+
+    Siegel theta is not constructed in this development, so
+    `Theaetetus.ParitySeparation` takes that property as a named
+    hypothesis in the normalization above (`ParitySeparating`) and
+    settles what it is worth. It is worth the whole statement: the
+    criterion asserts
+    `parityVector (v_r + v_c) = parityVector (v_r − v_c)` for every
+    residue pair, separation turns each such equality into
+    `v_c ∈ ℤᵈ` or `v_r ∈ ℤᵈ`, and a residue shift is a lattice shift
+    only at the zero class, so at `a, b > 1` in positive rank both
+    can be chosen nonzero at once and the criterion fails
+    (`not_twoGridReflection_of_paritySeparating`,
+    `gramDefect_neg_of_paritySeparating`).
+
+    One direction of its unavailability is proved. If the
+    coordinates split into blocks with no cross terms, negating one
+    block preserves the form and the lattice, hence every entry of
+    the parity vector (`gramMass_flipCoords`,
+    `parityVector_flipCoords`), while moving the point off `±z`; so
+    every proper coordinate block splitting destroys separation
+    (`not_paritySeparating_of_split`). Such a form carries one sign
+    per block, not one sign overall. The converse — that separation
+    holds whenever no such splitting exists — is not proved, and
+    neither is the reduction of a split form to its blocks. The
+    remaining chain is two links: prove the Kummer-style separation
+    statement on the intrinsically indecomposable factors, and
+    formalize that every decomposable case reduces to those factors
+    through the orthogonal-sum defect theorem (`orthSum_defect`,
+    `orthSum_defect_eq_zero_iff`).
+
     That transform closes a loop rather than opening a mechanism.
     The alias sums are not bare positive aggregates: up to one
     positive prefactor each is a shifted Gaussian mass of the

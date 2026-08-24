@@ -131,6 +131,10 @@ import Theaetetus.ReflectionFourier
 -- the two-grid criterion
 import Theaetetus.MassMaximum
 
+-- Separation of the parity feature vectors: conditional coprime
+-- rigidity, and its failure on decomposable forms
+import Theaetetus.ParitySeparation
+
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 
