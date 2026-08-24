@@ -87,11 +87,24 @@ precision.
     uv run recon/harness.py family --family shear_half
     uv run recon/harness.py finescan --family fcc_squash --member y0.10 \
         --window 1.4 --finestep 0.002 --dps 30
+    uv run recon/rigidity.py audit
+    uv run recon/rigidity.py record            # print only
+    uv run recon/rigidity.py record --write    # regenerate the record
 
-Dependencies are pinned in the script's inline metadata (PEP 723:
-`mpmath==1.4.1`, recorded in every data file), so `uv run` needs
-no flags. Lattice points are enumerated over the axis-aligned
-bounding box of the energy ellipsoid `Q ≤ E` —
+`rigidity.py` takes no numeric flags: its sampling grid is the
+`RECORD_CONFIG` literal in the script and its precision escalates on
+its own, so `record --write` is deterministic — two runs produce a
+byte-identical file.
+
+Dependencies are pinned in each script's inline metadata (PEP 723:
+`mpmath==1.4.1` for `harness.py` and `q4.py`, `python-flint==0.9.0`
+for `rigidity.py`, recorded in every data file), so `uv run` needs
+no flags. `python-flint` has no wheel for the newest interpreters,
+so `rigidity.py` pins `requires-python >=3.12,<3.13` and `uv`
+fetches that interpreter itself.
+
+`harness.py` and `q4.py` enumerate lattice points over the
+axis-aligned bounding box of the energy ellipsoid `Q ≤ E` —
 `|xᵢ| ≤ √(E·(M⁻¹)ᵢᵢ)` with the box energy `E` set by the working
 precision and the smallest coupling in use — so the box adapts
 per direction and degenerating forms stay cheap. Checked
@@ -348,3 +361,150 @@ Findings, finite-sample:
    `log θ(s) ≥ 2·log θ(4s)`, crossing near `s = 0.196`, is
    exactly the `n = 4` star model (`√4 = 2`):
    `star_prediction(4) = 0.19636`.
+
+## Two-grid rigidity campaign (`rigidity.py`, `rigidity_two_grid.json`)
+
+Falsify-first pass at the last open roadmap item: whether the Gram
+defect of a coprime pair can vanish in positive rank. The committed
+record is produced in one deterministic run
+(`uv run recon/rigidity.py record --write`, wired into
+`nu tasks.nu recon`), and every number in it carries an enclosure.
+
+Two statistics per point:
+
+- **slack** `−D_s(a,b) ≥ 0`, the scalar obstruction (four lattice
+  sums; zero exactly when the two-grid criterion holds, Lean
+  `gramDefect_eq_zero_iff_twoGridReflection`);
+- **residual**, the largest failure of the reflection identity itself
+  over the sampled classes `(r, c, e)` — the statistic a small scalar
+  slack cannot stand in for. It is reported as an **Arb interval-max
+  fold**, so it encloses the true maximum whether or not the
+  individual comparisons are decided, alongside a separate
+  `witness_at` whose own residual is certified positive. The witness
+  is not claimed to be an argmax: overlapping enclosures leave the
+  ordering undecided, so only the fold carries the maximum.
+
+### What is certified, and what is not
+
+Nothing here is a proof, and the roadmap's formal chain is Lean's
+alone. Inside that limit the arithmetic is rigorous rather than
+heuristic:
+
+- Gram matrices are kept **exact and rational**; the determinant-1
+  convention is carried by the *scale* instead of the matrix, using
+  `gramTheta(M/D^{1/n}, t) = gramTheta(M, t/D^{1/n})`, so no
+  irrational entry enters the enumeration.
+- `lambda_min_lower` is a **certified rational lower bound** for
+  `λ_min`, verified by Sylvester's criterion in exact arithmetic on
+  `M − μI`; the bisection affects sharpness only, never validity.
+- every shift is canonicalized into `[−1/2, 1/2]^d` exactly before
+  enumeration, which is what makes the coordinate bound `|x_i| ≤ 1/2`
+  in the tail estimate true.
+- the tail bound is a genuine **upper bound for the whole omitted
+  infinite sum**: the one-dimensional Gaussian tail is majorized by
+  its first omitted term over a valid geometric ratio, with the
+  remainder included rather than stopped at working precision.
+- **every floating quantity is an Arb ball** (`python-flint`, pinned
+  in the script's PEP 723 header). π, the determinant root, the
+  effective coupling, each quadratic form, each exponential, the
+  finite sum, the geometric tail, the logarithms, the differences and
+  the quotients all carry rigorous radii. The omitted mass is
+  adjoined as `[0,1]·T` with `T` the majorant ball, so the box sum's
+  one-sidedness is represented rather than assumed away. There is no
+  ad hoc floating-point allowance anywhere in the pipeline.
+- working precision **escalates automatically** until the sign a row
+  claims is decided by those enclosures, and the record stores the
+  precision per row. The word *certified* is used only for a **sign**
+  decided that way — never for a digit string.
+- no ordinary binary float enters the record at any point, not even
+  as a sort key: the scan rows keep their enumeration order.
+
+Every row in the committed record decides at the starting precision
+of 96 bits, with room to spare: at `s/s* = 64` the slack encloses to
+`1.11869633948e−14 ± 7.9e−27`, twelve orders inside its own sign.
+The comparisons that carry the findings below are computed as
+*differences of balls*, not by comparing printed digits, so their
+signs are certified in the same sense.
+
+### Findings — in the committed samples
+
+Sampled: pairs `(3,2)` and `(5,2)`; ranks 2 and 3; forms `square2`,
+`hexagonal`, `cubic3`, `fcc`, four diagonal ratios, four shears, two
+rank-3 diagonals; scales `s/s* ∈ {1, 4, 16, 32, 64}` on the profiled
+forms. The half-domain convention is checked at the sampled scale for
+every form in the scan (28 checks; each relative difference encloses
+zero within a radius below `4e−24`, certified under `1e−12`);
+the campaign samples the half-domain `s ≥ s*` and checks the
+convention at reflected points — it does not sample the other side.
+
+1. **No counterexample in the committed samples.** Every slack has a
+   certified positive lower bound. At the self-dual scale, for
+   `(3,2)`: `1.31507` (square), `1.33496` (hexagonal), `1.97260`
+   (cubic3), `2.01608` (fcc), down to `0.05976` for the sharpest
+   sampled degeneration.
+2. **Symmetry does not act uniformly — the sampled profiles cross.**
+   At the self-dual scale the denser member of each pair carries the
+   *larger* slack: `hexagonal − square2 = +0.0198909` and
+   `fcc − cubic3 = +0.0434768`. By `4s*` both inequalities have
+   reversed: `−0.00940326` and `−0.0202102`. All four signs are
+   certified as differences of balls (`symmetry_crossover` in the
+   record). So within the samples symmetry strengthens the obstruction
+   at the centre of the domain and weakens it farther into the
+   large-scale chamber; it does not uniformly help or hurt, and no
+   monotone reading of density against rigidity survives the crossing.
+3. **Orthogonal sums add exactly**, as observed: `square2` is `2×`
+   and `cubic3` is `3×` the same rank-one number `0.65753`,
+   consistent with Lean's `orthSum_defect`.
+4. **The only sampled route toward zero is the scale boundary.** The
+   slack falls as `s → ∞` (and by duality as `s → 0`). The rank-two
+   diagonal degeneration is not a separate route in these samples: at
+   `det = 1` it is the orthogonal sum of two rank-one systems at
+   reciprocal scales, and the numbers show it — `diag2_r16` at `s*`
+   reproduces `square2` at `4s*` to all recorded digits.
+5. **Observed relation between the two statistics.** Along the
+   `square2` profile the ratio `residual/√slack` is `0.50006`, `0.5`,
+   `0.5` at `s/s* = 16, 32, 64` — consistent with the scalar defect
+   being a quadratic Cauchy–Schwarz gap in the residual. It is an
+   observation on one profile, not an established identity: the
+   `hexagonal` profile has not stabilized over the sampled range
+   (`0.639, 0.455, 0.408`), and along the anisotropic degeneration the
+   ratio runs the other way (`1.425` at `s*`).
+6. **The isometry mechanism is impossible in every positive rank** —
+   an exact but **unformalized** argument, of which only the
+   Chinese-remainder arithmetic is executed here. Let `S ∈ GL_d(ℤ)`,
+   `d ≥ 1`, have finite order and induce the CRT dilation:
+   `S ≡ u·I (mod L)` with `L = 2ab`, `u ≡ 1 (mod 2b)`,
+   `u ≡ −1 (mod a)`. Since `u² ≡ 1 (mod L)`, `S² ≡ I (mod L)`, and
+   `S²` has finite order, so `S² = I` by Minkowski's lemma (the
+   kernel of `GL_d(ℤ) → GL_d(ℤ/L)` is torsion-free for `L ≥ 3`; the
+   script does not verify that lemma). Put
+
+       P = (I − S)/2.
+
+   From `u ≡ 1 (mod 2b)` we get `S ≡ I (mod 2b)`, so `I − S` is `2b`
+   times an integral matrix and `P` is integral and divisible by `b`.
+   From `S² = I`,
+
+       P² = (I − 2S + S²)/4 = (2I − 2S)/4 = P,
+
+   so `P` is an integral idempotent divisible by `b > 1`. Writing
+   `P = bN`, idempotency gives `N = bN²`, so `b ∣ N`; substituting
+   repeatedly makes `N` divisible by every power of `b`, hence
+   `N = 0` and `P = 0`, i.e. `S = I`. In positive rank a diagonal
+   entry then reads `1 ≡ u ≡ −1 (mod a)`, so `a ∣ 2` — impossible for
+   odd `a > 1`.
+
+   This is stronger than a rank threshold: no such `S` exists in
+   **any** positive rank, so the structural route is closed outright,
+   not merely out of reach of the sampled ranks.
+
+What the campaign does not settle: ranks above 3, forms outside the
+sampled families, scales outside the sampled grid, whether the
+observed square-root relation has an exact statement, and — the one
+route the audit leaves open — whether an equality could arise as an
+accidental coincidence of Gaussian mass values, with no isometry
+inducing it. That is now the whole remaining question, and it is
+analytic rather than structural: within the samples the obstruction
+is large away from the scale boundary, and the only mechanism that
+would have produced equality by symmetry has been excluded in every
+rank.

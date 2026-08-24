@@ -1,0 +1,1550 @@
+{
+  "meta": {
+    "script": "recon/rigidity.py",
+    "python_flint": "0.9.0",
+    "arithmetic": "Arb balls; every reported quantity is an outward-rounded enclosure",
+    "certification": {
+      "forms": "exact rational Gram matrices",
+      "shifts": "canonicalized into [-1/2, 1/2]^d exactly",
+      "lambda_min": "certified rational lower bound (Sylvester)",
+      "tail": "closed-form infinite majorant, adjoined as [0,1]*T",
+      "signs": "decided by the enclosures; precision escalates until decided"
+    },
+    "config": {
+      "scalar_scan": [
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "max_rank": 3
+        },
+        {
+          "pair": [
+            5,
+            2
+          ],
+          "max_rank": 3
+        }
+      ],
+      "residual_profiles": [
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "form": "square2",
+          "multiples": [
+            1,
+            4,
+            16,
+            32,
+            64
+          ]
+        },
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "form": "hexagonal",
+          "multiples": [
+            1,
+            4,
+            16
+          ]
+        },
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "form": "diag2_r64",
+          "multiples": [
+            1
+          ]
+        },
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "form": "cubic3",
+          "multiples": [
+            1,
+            4
+          ]
+        },
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "form": "fcc",
+          "multiples": [
+            1,
+            4
+          ]
+        },
+        {
+          "pair": [
+            5,
+            2
+          ],
+          "form": "square2",
+          "multiples": [
+            1,
+            4,
+            16
+          ]
+        },
+        {
+          "pair": [
+            5,
+            2
+          ],
+          "form": "hexagonal",
+          "multiples": [
+            1,
+            4,
+            16
+          ]
+        }
+      ],
+      "symmetry_pairs": [
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "plain": "square2",
+          "dense": "hexagonal"
+        },
+        {
+          "pair": [
+            3,
+            2
+          ],
+          "plain": "cubic3",
+          "dense": "fcc"
+        }
+      ],
+      "symmetry_multiples": [
+        1,
+        4
+      ],
+      "audit_pairs": [
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          9,
+          2
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "start_prec_bits": 96,
+      "max_prec_bits": 3072,
+      "tail_target_exp": -30,
+      "duality_target_exp": -12
+    }
+  },
+  "scalar_scan": [
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "scale": "self-dual s* = pi/(ab)",
+      "row_order": "form_entries enumeration order; no numeric sort, so no binary float enters the record",
+      "rows": [
+        {
+          "form": "square2",
+          "rank": 2,
+          "slack": "[1.31506599996 +/- 3.27e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 12
+        },
+        {
+          "form": "hexagonal",
+          "rank": 2,
+          "slack": "[1.33495689636 +/- 3.33e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 15
+        },
+        {
+          "form": "cubic3",
+          "rank": 3,
+          "slack": "[1.97259899994 +/- 4.90e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 12
+        },
+        {
+          "form": "fcc",
+          "rank": 3,
+          "slack": "[2.01607579738 +/- 7.44e-13]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 15
+        },
+        {
+          "form": "diag2_r2",
+          "rank": 2,
+          "slack": "[1.24320743632 +/- 5.49e-13]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 14
+        },
+        {
+          "form": "diag2_r4",
+          "rank": 2,
+          "slack": "[1.03885528058 +/- 4.70e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 17
+        },
+        {
+          "form": "diag2_r16",
+          "rank": 2,
+          "slack": "[0.440159637376 +/- 3.25e-14]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 24
+        },
+        {
+          "form": "diag2_r64",
+          "rank": 2,
+          "slack": "[0.0597567965465 +/- 3.85e-14]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 33
+        },
+        {
+          "form": "shear_t1/4",
+          "rank": 2,
+          "slack": "[1.32207745459 +/- 1.84e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 13
+        },
+        {
+          "form": "shear_t1/2",
+          "rank": 2,
+          "slack": "[1.32906111198 +/- 1.23e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 15
+        },
+        {
+          "form": "shear_t1",
+          "rank": 2,
+          "slack": "[1.31506599996 +/- 3.27e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 19
+        },
+        {
+          "form": "shear_t2",
+          "rank": 2,
+          "slack": "[1.31506599996 +/- 3.27e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 29
+        },
+        {
+          "form": "diag3_r2",
+          "rank": 3,
+          "slack": "[1.69638828057 +/- 3.68e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 17
+        },
+        {
+          "form": "diag3_r5",
+          "rank": 3,
+          "slack": "[0.929896008751 +/- 3.54e-13]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 27
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "scale": "self-dual s* = pi/(ab)",
+      "row_order": "form_entries enumeration order; no numeric sort, so no binary float enters the record",
+      "rows": [
+        {
+          "form": "square2",
+          "rank": 2,
+          "slack": "[1.38318994048 +/- 1.38e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 15
+        },
+        {
+          "form": "hexagonal",
+          "rank": 2,
+          "slack": "[1.38491265414 +/- 3.46e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 20
+        },
+        {
+          "form": "cubic3",
+          "rank": 3,
+          "slack": "[2.07478491072 +/- 2.06e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 15
+        },
+        {
+          "form": "fcc",
+          "rank": 3,
+          "slack": "[2.07811866144 +/- 2.49e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 19
+        },
+        {
+          "form": "diag2_r2",
+          "rank": 2,
+          "slack": "[1.37080016053 +/- 3.61e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 18
+        },
+        {
+          "form": "diag2_r4",
+          "rank": 2,
+          "slack": "[1.30899547769 +/- 4.47e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 21
+        },
+        {
+          "form": "diag2_r16",
+          "rank": 2,
+          "slack": "[0.891767972152 +/- 2.00e-13]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 31
+        },
+        {
+          "form": "diag2_r64",
+          "rank": 2,
+          "slack": "[0.300270233236 +/- 2.03e-13]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 43
+        },
+        {
+          "form": "shear_t1/4",
+          "rank": 2,
+          "slack": "[1.38377393979 +/- 1.80e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 17
+        },
+        {
+          "form": "shear_t1/2",
+          "rank": 2,
+          "slack": "[1.38430660924 +/- 2.19e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 19
+        },
+        {
+          "form": "shear_t1",
+          "rank": 2,
+          "slack": "[1.38318994048 +/- 1.38e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 25
+        },
+        {
+          "form": "shear_t2",
+          "rank": 2,
+          "slack": "[1.38318994048 +/- 1.38e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 37
+        },
+        {
+          "form": "diag3_r2",
+          "rank": 3,
+          "slack": "[2.00059044792 +/- 4.85e-12]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 22
+        },
+        {
+          "form": "diag3_r5",
+          "rank": 3,
+          "slack": "[1.38474215080 +/- 7.41e-13]",
+          "slack_positive_certified": true,
+          "prec_bits": 96,
+          "box_radius": 35
+        }
+      ]
+    }
+  ],
+  "duality_checks": [
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "square2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.28e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "hexagonal",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.98e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "cubic3",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.40e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "fcc",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 3.75e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag2_r2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.80e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag2_r4",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.84e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag2_r16",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.37e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag2_r64",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.64e-24]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "shear_t1/4",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.48e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "shear_t1/2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.85e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "shear_t1",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.88e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "shear_t2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 6.52e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag3_r2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 4.55e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag3_r5",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.84e-24]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "square2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.01e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "hexagonal",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 3.35e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "cubic3",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.29e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "fcc",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 7.05e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "diag2_r2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.80e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "diag2_r4",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 3.87e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "diag2_r16",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.14e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "diag2_r64",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 6.54e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "shear_t1/4",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 2.50e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "shear_t1/2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 3.10e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "shear_t1",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 5.02e-26]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "shear_t2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 1.09e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "diag3_r2",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 7.55e-25]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "diag3_r5",
+      "s_over_star": "1",
+      "relative_difference": "[+/- 3.99e-24]",
+      "below_1e-12_certified": true,
+      "prec_bits": 96
+    }
+  ],
+  "residual_profiles": [
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "1",
+      "slack": "[1.31506599996 +/- 3.27e-12]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.768225422326 +/- 5.68e-14]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.768225422326 +/- 5.67e-14]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.768225422326 +/- 5.68e-14]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 2e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "4",
+      "slack": "[0.440159637376 +/- 3.25e-14]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.350919807174 +/- 1.44e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.350919807174 +/- 1.44e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.350919807174 +/- 1.44e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "16",
+      "slack": "[0.000919651310499 +/- 3.89e-16]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.0151646198645 +/- 4.66e-14]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.0151646198645 +/- 4.66e-14]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.0151646198645 +/- 4.66e-14]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "32",
+      "slack": "[2.11536873491e-7 +/- 1.97e-19]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.000229965695636 +/- 2.01e-16]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.000229965695636 +/- 2.01e-16]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.000229965695636 +/- 2.01e-16]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "64",
+      "slack": "[1.11869633948e-14 +/- 7.88e-27]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[5.28842211694e-8 +/- 4.16e-20]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[5.28842211694e-8 +/- 4.16e-20]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[5.28842211694e-8 +/- 4.16e-20]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "hexagonal",
+      "rank": 2,
+      "s_over_star": "1",
+      "slack": "[1.33495689636 +/- 3.33e-12]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.738593825693 +/- 3.10e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.738593825693 +/- 3.10e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.738593825693 +/- 3.10e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "hexagonal",
+      "rank": 2,
+      "s_over_star": "4",
+      "slack": "[0.430756372907 +/- 2.13e-13]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.298436059192 +/- 2.01e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.298436059192 +/- 2.01e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.298436059192 +/- 2.01e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "hexagonal",
+      "rank": 2,
+      "s_over_star": "16",
+      "slack": "[0.000377467579234 +/- 3.65e-16]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.00793241060030 +/- 4.55e-15]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.00793241060030 +/- 4.55e-15]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.00793241060030 +/- 4.55e-15]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "diag2_r64",
+      "rank": 2,
+      "s_over_star": "1",
+      "slack": "[0.0597567965465 +/- 3.85e-14]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.348305841060 +/- 2.04e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.342158419292 +/- 4.09e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          1,
+          0
+        ],
+        "c": [
+          1,
+          0
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.348305841060 +/- 2.04e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0179666 +/- 4.94e-9]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "cubic3",
+      "rank": 3,
+      "s_over_star": "1",
+      "slack": "[1.97259899994 +/- 4.90e-12]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.768225422326 +/- 5.68e-14]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.768225422326 +/- 5.67e-14]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          0,
+          1
+        ],
+        "c": [
+          0,
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.768225422326 +/- 5.68e-14]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 2e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "cubic3",
+      "rank": 3,
+      "s_over_star": "4",
+      "slack": "[0.660239456064 +/- 4.86e-14]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.350919807174 +/- 1.44e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.350919807174 +/- 1.44e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          0,
+          1
+        ],
+        "c": [
+          0,
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.350919807174 +/- 1.44e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "fcc",
+      "rank": 3,
+      "s_over_star": "1",
+      "slack": "[2.01607579738 +/- 7.44e-13]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.718771695554 +/- 2.06e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.718771695554 +/- 2.06e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          0,
+          1
+        ],
+        "c": [
+          0,
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.718771695554 +/- 2.06e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "form": "fcc",
+      "rank": 3,
+      "s_over_star": "4",
+      "slack": "[0.640029280602 +/- 3.26e-13]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.267299309748 +/- 4.37e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.267299309748 +/- 4.37e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          0,
+          1
+        ],
+        "c": [
+          0,
+          0,
+          1
+        ],
+        "e": [
+          0,
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.267299309748 +/- 4.37e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "1",
+      "slack": "[1.38318994048 +/- 1.38e-12]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.854633013179 +/- 1.73e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.854633013179 +/- 1.73e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          2
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.854633013179 +/- 1.73e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "4",
+      "slack": "[0.891767972152 +/- 2.00e-13]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.533488091091 +/- 1.04e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.533488091091 +/- 1.04e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          2
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.533488091091 +/- 1.04e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "square2",
+      "rank": 2,
+      "s_over_star": "16",
+      "slack": "[0.0260749626290 +/- 7.04e-15]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.0810025921579 +/- 4.32e-14]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.0810025921579 +/- 4.32e-14]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          2
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.0810025921579 +/- 4.32e-14]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "hexagonal",
+      "rank": 2,
+      "s_over_star": "1",
+      "slack": "[1.38491265414 +/- 3.46e-12]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.834117969899 +/- 2.36e-14]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.834117969899 +/- 2.36e-14]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          2
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.834117969899 +/- 2.36e-14]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "hexagonal",
+      "rank": 2,
+      "s_over_star": "4",
+      "slack": "[0.899053145210 +/- 3.56e-13]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.484072908752 +/- 3.81e-13]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.484072908752 +/- 3.81e-13]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          2
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.484072908752 +/- 3.81e-13]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "form": "hexagonal",
+      "rank": 2,
+      "s_over_star": "16",
+      "slack": "[0.0179284396562 +/- 2.90e-14]",
+      "slack_positive_certified": true,
+      "slack_prec_bits": 96,
+      "residual": "[0.0549089465572 +/- 2.39e-14]",
+      "residual_meaning": "enclosure of the maximum over the sampled classes (Arb interval max fold)",
+      "residual_positive_certified": true,
+      "residual_rel": "[0.0549089465572 +/- 2.39e-14]",
+      "residual_prec_bits": 96,
+      "witness_at": {
+        "r": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          2
+        ],
+        "e": [
+          0,
+          0
+        ]
+      },
+      "witness_residual": "[0.0549089465572 +/- 2.39e-14]",
+      "witness_positive_certified": true,
+      "witness_meaning": "one class with a certified positive residual; not a certified argmax",
+      "reference_mass": "[1.0000000 +/- 1e-12]"
+    }
+  ],
+  "symmetry_crossover": [
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "plain": "square2",
+      "dense": "hexagonal",
+      "s_over_star": "1",
+      "slack_dense_minus_plain": "[0.0198908964001 +/- 3.61e-14]",
+      "sign_certified": "dense larger",
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "plain": "square2",
+      "dense": "hexagonal",
+      "s_over_star": "4",
+      "slack_dense_minus_plain": "[-0.00940326446876 +/- 4.87e-15]",
+      "sign_certified": "plain larger",
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "plain": "cubic3",
+      "dense": "fcc",
+      "s_over_star": "1",
+      "slack_dense_minus_plain": "[0.0434767974344 +/- 3.76e-14]",
+      "sign_certified": "dense larger",
+      "prec_bits": 96
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "plain": "cubic3",
+      "dense": "fcc",
+      "s_over_star": "4",
+      "slack_dense_minus_plain": "[-0.0202101754616 +/- 2.62e-14]",
+      "sign_certified": "plain larger",
+      "prec_bits": 96
+    }
+  ],
+  "audit": [
+    {
+      "a": 3,
+      "b": 2,
+      "L": 12,
+      "u": 5,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 2,
+      "projector_divisor": 2,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    },
+    {
+      "a": 5,
+      "b": 2,
+      "L": 20,
+      "u": 9,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 4,
+      "projector_divisor": 2,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    },
+    {
+      "a": 5,
+      "b": 3,
+      "L": 30,
+      "u": 19,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 4,
+      "projector_divisor": 3,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    },
+    {
+      "a": 5,
+      "b": 4,
+      "L": 40,
+      "u": 9,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 4,
+      "projector_divisor": 4,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    },
+    {
+      "a": 7,
+      "b": 2,
+      "L": 28,
+      "u": 13,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 6,
+      "projector_divisor": 2,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    },
+    {
+      "a": 9,
+      "b": 2,
+      "L": 36,
+      "u": 17,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 8,
+      "projector_divisor": 2,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    },
+    {
+      "a": 7,
+      "b": 4,
+      "L": 56,
+      "u": 41,
+      "u_squared_mod_L": 1,
+      "u_mod_2b": 1,
+      "u_mod_a": 6,
+      "projector_divisor": 4,
+      "a_divides_two": false,
+      "excluded_in_every_positive_rank": true,
+      "status": "exact, unformalized argument; excludes the mechanism in every positive rank"
+    }
+  ]
+}

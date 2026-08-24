@@ -1024,7 +1024,20 @@ Formalization targets:
     since the strict sign theorem makes an incomparable defect
     negative (`not_twoGridReflection_rankOne`,
     `exists_aliasSum_ne_rankOne`); the open statement is that the
-    failure persists in every positive rank.
+    failure persists in every positive rank. The first falsify-first
+    campaign against that statement is recorded under
+    reconnaissance: no counterexample in the committed samples
+    (ranks 2–3, every slack sign certified by ball arithmetic), an
+    observed `residual ≈ ½·√slack` along one profile of the only
+    sampled route toward zero, a certified crossing that stops
+    symmetry from reading as a uniform strengthening or weakening of
+    the obstruction, and — by an exact but unformalized argument —
+    the exclusion, in every positive rank, of an integral isometry
+    inducing the CRT dilation: Minkowski's lemma makes `S² = I`, so
+    `(I − S)/2` is an integral idempotent divisible by `b > 1` and
+    therefore zero. What remains is an accidental equality of
+    Gaussian mass values with no isometry behind it, which is an
+    analytic question, not a structural one.
 
     That transform closes a loop rather than opening a mechanism.
     The alias sums are not bare positive aggregates: up to one
@@ -1193,6 +1206,44 @@ Reconnaissance, falsify-first:
    certify the entry intervals and brackets, further intervality
    falsification, and the star-obstruction rate against its
    `s_PSD ~ (1/6)·log n` benchmark.
+3. **Two-grid rigidity** — first campaign complete
+   (`recon/rigidity.py`, deterministic record in
+   `rigidity_two_grid.json`, wired into `nu tasks.nu recon`;
+   findings in `recon/README.md`). Sampled: pairs `(3,2)` and
+   `(5,2)`, ranks 2–3, named symmetric forms, diagonal ratios,
+   shears, degenerations, scales `s/s* ∈ {1,4,16,32,64}` on the
+   profiled forms, all in the half-domain `s ≥ s*` whose convention
+   is checked at the sampled scale for every form (28 checks, each
+   enclosing zero within `4e−24`). Every slack in the record carries
+   a **certified positive sign** — exact rational forms, a certified
+   `λ_min`, shifts canonicalized into `[−1/2,1/2]^d`, an infinite
+   geometric tail majorant, and, replacing every floating-point
+   step, rigorous Arb ball arithmetic from π through the
+   logarithms, with precision escalating until each claimed sign is
+   decided. Findings, scoped to those samples: no counterexample;
+   orthogonal sums add exactly; **the symmetry profiles cross** —
+   at the self-dual scale the denser member of each pair carries the
+   larger slack (`hexagonal − square2 = +0.0198909`,
+   `fcc − cubic3 = +0.0434768`), but by `4s*` both signs reverse
+   (`−0.00940326`, `−0.0202102`), all four certified as differences
+   of balls, so symmetry strengthens the obstruction at the centre
+   and weakens it into the large-scale chamber rather than acting
+   uniformly; the only sampled route toward zero is the scale
+   boundary, the rank-two degeneration being that same route (an
+   orthogonal sum at reciprocal scales); and along the `square2`
+   profile the observed ratio `residual/√slack` is `0.5` to five
+   digits, consistent with a quadratic Cauchy–Schwarz gap, though
+   the `hexagonal` profile has not stabilized over the sampled
+   range. Separately, an exact but **unformalized** argument
+   **closes the one structural mechanism outright**: if an integral
+   isometry `S` of finite order induces the CRT dilation, Minkowski's
+   lemma gives `S² = I`, so `P = (I − S)/2` is an integral idempotent
+   divisible by `b > 1`; infinite divisibility forces `P = 0` and
+   `S = I`, which contradicts `S ≡ −I (mod a)` in positive rank since
+   odd `a > 1` cannot divide `2`. No such isometry exists in **any**
+   positive rank. Next: the remaining possibility is an accidental
+   equality of Gaussian mass values with no isometry inducing it, so
+   the question is analytic rather than structural.
 
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three
