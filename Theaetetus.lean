@@ -147,6 +147,10 @@ import Theaetetus.LogMassFourier
 -- truncation estimate in the sparse-dual regime
 import Theaetetus.ClusterExpansion
 
+-- The cluster expansion read on Fourier coefficients: convolution
+-- powers and the finite cluster approximation
+import Theaetetus.ClusterCoefficient
+
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 

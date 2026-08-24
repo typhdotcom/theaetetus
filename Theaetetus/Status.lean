@@ -21,6 +21,7 @@ import Theaetetus.ParitySeparation
 import Theaetetus.EvenPartSeparation
 import Theaetetus.LogMassFourier
 import Theaetetus.ClusterExpansion
+import Theaetetus.ClusterCoefficient
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
@@ -52,14 +53,14 @@ sublattices; the equality cases of the correlation inequalities and
 the Fourier form of the two-grid criterion; the strict maximum of
 the shifted Gaussian mass, the separation of the parity feature
 vectors, its real Gaussian core, the torus Fourier coefficients of
-the logarithmic mass, and its cluster normalization; the resolution
-metric; the scale
+the logarithmic mass, its cluster normalization, and that expansion
+read on coefficients; the resolution metric; the scale
 asymptotics of a Gram Boltzmann sum, the finite-index mass ratio,
 and the pairwise boundary of the sublattice field. -/
 
 namespace Theaetetus
 
-open Filter Topology Matrix
+open Filter Topology Matrix UnitAddTorus
 
 /-! ## The theta identification -/
 
@@ -1905,5 +1906,56 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
             (-1 : ℝ) ^ k * residual M α x ^ (k + 1) / (k + 1)|
       ≤ totalWeight M α ^ (K + 1) / (1 - totalWeight M α) :=
   abs_logMass_sub_partialSum_le hM hα hw K x
+
+/-! ## The cluster expansion on Fourier coefficients -/
+
+example {d : ℕ} (κ : Fin d → ℤ) :
+    (∫ z : UnitAddTorus (Fin d), mFourier κ z
+        ∂(MeasureTheory.Measure.pi fun _ : Fin d => AddCircle.haarAddCircle))
+      = if κ = 0 then 1 else 0 :=
+  integral_mFourier κ
+
+example {d : ℕ} (m ν : Fin d → ℤ) :
+    mFourierCoeff (fun z => mFourier m z) ν = if m = ν then 1 else 0 :=
+  mFourierCoeff_mFourier m ν
+
+example {d : ℕ} {a : (Fin d → ℤ) → ℂ} {f : UnitAddTorus (Fin d) → ℂ}
+    (h : HasCharSum a f) (ν : Fin d → ℤ) : mFourierCoeff f ν = a ν :=
+  h.mFourierCoeff_eq ν
+
+example {d : ℕ} {a b : (Fin d → ℤ) → ℂ} {f g : UnitAddTorus (Fin d) → ℂ}
+    (ha : HasCharSum a f) (hb : HasCharSum b g) :
+    HasCharSum (convolve a b) (fun z => f z * g z) :=
+  ha.mul hb
+
+example {d : ℕ} {a : (Fin d → ℤ) → ℂ} {f : UnitAddTorus (Fin d) → ℂ}
+    (ha : HasCharSum a f) (k : ℕ) :
+    HasCharSum (convPow a k) (fun z => f z ^ (k + 1)) :=
+  ha.pow k
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) :
+    HasCharSum (modeCoeff M α)
+      (fun z => ((residualTorus M α z : ℝ) : ℂ)) :=
+  hasCharSum_residual hM hα
+
+example {d : ℕ} {f : UnitAddTorus (Fin d) → ℂ} {C : ℝ}
+    (hC : ∀ z, ‖f z‖ ≤ C) (ν : Fin d → ℤ) : ‖mFourierCoeff f ν‖ ≤ C :=
+  norm_mFourierCoeff_le hC ν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (hw : totalWeight M α < 1) (K : ℕ) {ν : Fin d → ℤ}
+    (hν : ν ≠ 0) :
+    ‖logMassCoeff M α ν - clusterPartial M α K ν‖
+      ≤ totalWeight M α ^ (K + 1) / (1 - totalWeight M α) :=
+  norm_logMassCoeff_sub_clusterPartial_le hM hα hw K hν
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (hw : totalWeight M α < 1) {ν : Fin d → ℤ} (hν : ν ≠ 0) :
+    ‖logMassCoeff M α ν
+        - (modeCoeff M α ν
+          - (1 / 2) * convolve (modeCoeff M α) (modeCoeff M α) ν)‖
+      ≤ totalWeight M α ^ 3 / (1 - totalWeight M α) :=
+  norm_logMassCoeff_sub_second_order_le hM hα hw hν
 
 end Theaetetus

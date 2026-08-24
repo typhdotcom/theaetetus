@@ -1308,18 +1308,44 @@ Formalization targets:
     sparse-dual, small-coupling regime; it controls small `α` and
     says nothing about `α → ∞`.
 
-    That is the cluster structure the reconnaissance saw: the `k`-th
-    term is a `k`-fold product of dual modes, so the coefficient at a
-    frequency `ν` collects the decompositions `ν = ν₁ + ⋯ + ν_k`.
-    Turning that reading into an identity between coefficients needs
-    the Fourier coefficient of a product — a convolution theorem on
-    the torus — together with the interchange of the coefficient
-    functional with this series; neither is proved yet. The
-    remaining chain is therefore: the convolution form of the cluster
-    sum; the analytic nonvanishing theorem, kept separate; and the
-    reduction of split forms to their blocks through the
-    orthogonal-sum defect theorem (`orthSum_defect`,
-    `orthSum_defect_eq_zero_iff`).
+    That expansion is now read on coefficients
+    (`Theaetetus.ClusterCoefficient`). A nontrivial character
+    integrates to zero — translate the integral to a point where the
+    character is not `1` (`integral_mFourier`) — so the characters are
+    orthogonal under the coefficient functional
+    (`mFourierCoeff_mFourier`), and a function given by an absolutely
+    summable character series has exactly those coefficients
+    (`HasCharSum`, `HasCharSum.mFourierCoeff_eq`). Multiplying two
+    such series and regrouping by the sum of the indices gives the
+    convolution (`convolve`, `HasCharSum.mul`), and iterating gives
+    the convolution powers (`convPow`, `HasCharSum.pow`). The residual
+    is such a series with its zero mode deleted (`modeCoeff`,
+    `hasCharSum_residual`), so the coefficient of its `k`-th power is
+    the `k`-fold convolution power — a sum over the decompositions
+    `ν = ν₁ + ⋯ + ν_k` into nonzero modes.
+
+    Applying the functional to the **finite** `K`-term truncation,
+    where linearity is elementary, and bounding the remainder by the
+    supremum norm of the uniform pointwise estimate
+    (`norm_mFourierCoeff_le`) gives, at every nonzero frequency,
+
+        ‖ℓ_ν − clusterPartial K ν‖ ≤ W^{K+1}/(1 − W)
+
+    (`norm_logMassCoeff_sub_clusterPartial_le`) — with no interchange
+    with the infinite logarithm series hidden inside. At second order
+    this reads `ℓ_ν = w_ν − ½ Σ_μ w_μ w_{ν−μ} + O(W³)`
+    (`norm_logMassCoeff_sub_second_order_le`). At `ν = e₁ + e₂`, the
+    two ordered decompositions `(e₁, e₂)` and `(e₂, e₁)` contribute
+    exactly `−w_{e₁}w_{e₂}` to the second-order cluster polynomial,
+    explaining the term seen in the hexagonal reconnaissance. Proving
+    that this contribution dominates the direct mode, the other
+    decompositions, and the certified remainder remains the analytic
+    nonvanishing problem.
+
+    The remaining chain is therefore: the analytic nonvanishing
+    theorem, kept separate; and the reduction of split forms to their
+    blocks through the orthogonal-sum defect theorem
+    (`orthSum_defect`, `orthSum_defect_eq_zero_iff`).
 
     The earlier CRT/alias transform closes a loop rather than
     opening a mechanism.
