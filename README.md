@@ -856,7 +856,7 @@ Formalization targets:
     cites, so statement drift fails `lake build`. The companion
     docstring sweep is also done: no Lean docstring or comment
     references a prose coordinate (the one-way rule, now in
-    `CLAUDE.md`).
+    `AGENTS.md`).
 
 07. **The higher-interaction bridge** — done. Descent remains the
     source of truth for the order-separated hierarchy: `defect3`,
@@ -1729,7 +1729,7 @@ weakened statement, or an unwitnessed claim fails the build.
 ## Building
 
 ```
-nix develop -c lake build        # or: nu tasks.nu check
+nix develop -c lake build        # nu tasks.nu check adds nix flake check
 ```
 
 Toolchain `leanprover/lean4:v4.33.1`, Mathlib pinned at `v4.33.1`.
