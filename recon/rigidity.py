@@ -105,9 +105,7 @@ def diagonal_form(n, ratio):
     """diag(1, r, ..., r^(n-1)) -- normalized it is the axis-ratio
     family, the normalization being carried by the scale."""
     r = Fraction(ratio)
-    return [
-        [r**i if i == j else Fraction(0) for j in range(n)] for i in range(n)
-    ]
+    return [[r**i if i == j else Fraction(0) for j in range(n)] for i in range(n)]
 
 
 def shear_form(t):
@@ -153,8 +151,7 @@ def lambda_min_lower(m, steps=40):
     for _ in range(steps):
         mid = (lo + hi) / 2
         shifted = [
-            [m[i][j] - (mid if i == j else 0) for j in range(n)]
-            for i in range(n)
+            [m[i][j] - (mid if i == j else 0) for j in range(n)] for i in range(n)
         ]
         if leading_minors_positive(shifted):
             lo = mid
@@ -170,11 +167,7 @@ def invert_frac(m):
     out = [[Fraction(0)] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):
-            minor = [
-                [m[r][c] for c in range(n) if c != i]
-                for r in range(n)
-                if r != j
-            ]
+            minor = [[m[r][c] for c in range(n) if c != i] for r in range(n) if r != j]
             out[i][j] = ((-1) ** (i + j)) * det_frac(minor) / d
     return out
 
@@ -456,10 +449,7 @@ def form_entries(max_rank):
     """The sampled families, exact and rational."""
     out = [(k, frac_matrix(v)) for k, v in RAW_FORMS.items()]
     out += [(f"diag2_r{r}", diagonal_form(2, r)) for r in (2, 4, 16, 64)]
-    out += [
-        (f"shear_t{t}", shear_form(Fraction(t)))
-        for t in ("1/4", "1/2", "1", "2")
-    ]
+    out += [(f"shear_t{t}", shear_form(Fraction(t))) for t in ("1/4", "1/2", "1", "2")]
     out += [(f"diag3_r{r}", diagonal_form(3, r)) for r in (2, 5)]
     return [(k, v) for k, v in out if len(v) <= max_rank]
 
@@ -540,8 +530,7 @@ def build_record(verbose=True):
                 "shifts": "canonicalized into [-1/2, 1/2]^d exactly",
                 "lambda_min": "certified rational lower bound (Sylvester)",
                 "tail": "closed-form infinite majorant, adjoined as [0,1]*T",
-                "signs": "decided by the enclosures; precision escalates "
-                "until decided",
+                "signs": "decided by the enclosures; precision escalates until decided",
             },
             "config": RECORD_CONFIG,
         },
@@ -632,9 +621,7 @@ def build_record(verbose=True):
                 "residual_prec_bits": res_prec,
                 "witness_at": res["witness"]["at"],
                 "witness_residual": show(res["witness"]["residual"]),
-                "witness_positive_certified": bool(
-                    res["witness"]["residual"] > 0
-                ),
+                "witness_positive_certified": bool(res["witness"]["residual"] > 0),
                 "witness_meaning": "one class with a certified positive "
                 "residual; not a certified argmax",
                 "reference_mass": show(res["reference_mass"], 8),
@@ -656,9 +643,7 @@ def build_record(verbose=True):
         mu_d = lam.setdefault(job["dense"], lambda_min_lower(md))
         for k in RECORD_CONFIG["symmetry_multiples"]:
 
-            def compute(
-                target, k=k, a=a, b=b, md=md, mp=mp, mu_d=mu_d, mu_p=mu_p
-            ):
+            def compute(target, k=k, a=a, b=b, md=md, mp=mp, mu_d=mu_d, mu_p=mu_p):
                 s = self_dual_scale(a, b) * arb(k)
                 return (
                     defect_ball(md, s, a, b, mu_d, target)["slack"]
@@ -718,9 +703,7 @@ def main():
     print("== two-grid rigidity record (Arb ball arithmetic) ==")
     record = build_record()
     if args.write:
-        path = (
-            pathlib.Path(__file__).parent / "data" / "rigidity_two_grid.json"
-        )
+        path = pathlib.Path(__file__).parent / "data" / "rigidity_two_grid.json"
         path.write_text(json.dumps(record, indent=2) + "\n")
         print(f"\n  wrote {path}")
     return 0

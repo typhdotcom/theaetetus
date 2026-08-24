@@ -70,8 +70,7 @@ def bigF(m, s, dps):
 def pairing(p, q, s, dps):
     if p == q:
         return mpf(0)
-    return (bigF(1, s, dps) + bigF(p * q, s, dps)
-            - bigF(p, s, dps) - bigF(q, s, dps))
+    return bigF(1, s, dps) + bigF(p * q, s, dps) - bigF(p, s, dps) - bigF(q, s, dps)
 
 
 def pairing_matrix(ps, s, dps):
@@ -92,8 +91,7 @@ def deficit_matrix(ps, s, dps):
     for i in range(n):
         m[i, i] = f1
         for j in range(i + 1, n):
-            v = (bigF(ps[i], s, dps) + bigF(ps[j], s, dps)
-                 - bigF(ps[i] * ps[j], s, dps))
+            v = bigF(ps[i], s, dps) + bigF(ps[j], s, dps) - bigF(ps[i] * ps[j], s, dps)
             m[i, j] = v
             m[j, i] = v
     return m
@@ -157,8 +155,7 @@ def sweep_set(k, grid_lo, grid_hi, npts, dps, outdir):
         crossings = []
         for i in range(1, len(vals)):
             if (vals[i - 1] > 0) != (vals[i] > 0):
-                crossings.append(
-                    bisect_crossing(stat, ps, grid[i - 1], grid[i], dps))
+                crossings.append(bisect_crossing(stat, ps, grid[i - 1], grid[i], dps))
         # CND valid where stat <= 0; PSD valid where stat >= 0.
         ok_at_top = (vals[-1] <= 0) if name == "cnd" else (vals[-1] >= 0)
         rows[name] = {
@@ -167,17 +164,17 @@ def sweep_set(k, grid_lo, grid_hi, npts, dps, outdir):
             "valid_at_grid_top": bool(ok_at_top),
             "stat_at_grid_top": s(vals[-1], 12),
         }
-        print(f"  {k} primes, {name}: sign changes {len(crossings)}, "
-              f"crossings {[s(c, 6) for c in crossings]}, "
-              f"valid at s = {grid_hi}: {ok_at_top}")
+        print(
+            f"  {k} primes, {name}: sign changes {len(crossings)}, "
+            f"crossings {[s(c, 6) for c in crossings]}, "
+            f"valid at s = {grid_hi}: {ok_at_top}"
+        )
     result = {
         "primes": ps,
-        "grid": {"lo": grid_lo, "hi": grid_hi, "points": npts,
-                 "spacing": "log"},
+        "grid": {"lo": grid_lo, "hi": grid_hi, "points": npts, "spacing": "log"},
         "precision_dps": dps,
         "mpmath_version": mpmath.__version__,
-        "cnd_statistic": "largest zero-sum-restricted eigenvalue of M"
-                         " (CND iff <= 0)",
+        "cnd_statistic": "largest zero-sum-restricted eigenvalue of M (CND iff <= 0)",
         "psd_statistic": "smallest eigenvalue of B (PSD iff >= 0)",
         **rows,
     }
@@ -208,8 +205,10 @@ def witness(dps, outdir):
     outdir.mkdir(parents=True, exist_ok=True)
     out = outdir / "q4_witness.json"
     out.write_text(json.dumps(result, indent=2) + "\n")
-    print(f"[witness] 5 primes at s = 0.12: CND stat {s(c, 8)} "
-          f"(holds: {c <= 0}), PSD stat {s(p, 8)} (holds: {p >= 0})")
+    print(
+        f"[witness] 5 primes at s = 0.12: CND stat {s(c, 8)} "
+        f"(holds: {c <= 0}), PSD stat {s(p, 8)} (holds: {p >= 0})"
+    )
     print(f"  -> {out}")
 
 
@@ -247,8 +246,10 @@ def mean_component(vec):
 
 def star_prediction(n, dps):
     """Crossing of the exact star model: log theta(s) = sqrt(n) log theta(4s)."""
+
     def f(_, s_, d):
         return mp.sqrt(n) * bigF(2, s_, d) - bigF(1, s_, d)
+
     return bisect_crossing(f, None, mpf("0.02"), mpf("3"), dps, iters=45)
 
 
@@ -258,42 +259,52 @@ def star_rate(dps, outdir):
     print(f"[q4 star rate] dps={dps}")
     for n in (4, 8, 16, 32, 64, 96):
         ps = [2] + primes_ge(100, n)
-        cross = bisect_crossing(psd_stat, ps, mpf("0.05"), mpf("3"), dps,
-                                iters=30)
+        cross = bisect_crossing(psd_stat, ps, mpf("0.05"), mpf("3"), dps, iters=30)
         pred = star_prediction(n, dps)
         bench = mp.log(n) / 6
         _, vec = min_eig_vec(deficit_matrix(ps, cross, dps))
         mc = mean_component(vec)
         mc_star = (n - mp.sqrt(n)) / mp.sqrt(mpf(2) * n * (n + 1))
-        rows.append({"n": n, "satellite_base": 100,
-                     "psd_crossing": s(cross, 10),
-                     "exact_star_prediction": s(pred, 10),
-                     "asymptotic_benchmark_log_n_over_6": s(bench, 10),
-                     "mean_component_of_min_eigvec": s(mc, 10),
-                     "mean_component_star_closed_form": s(mc_star, 10),
-                     "mean_component_residual": s(abs(mc - mc_star), 6)})
-        print(f"  n={n:3d}: crossing {s(cross, 8)}, star model {s(pred, 8)}, "
-              f"(1/6)log n {s(bench, 6)}, mean comp {s(mc, 6)}")
+        rows.append(
+            {
+                "n": n,
+                "satellite_base": 100,
+                "psd_crossing": s(cross, 10),
+                "exact_star_prediction": s(pred, 10),
+                "asymptotic_benchmark_log_n_over_6": s(bench, 10),
+                "mean_component_of_min_eigvec": s(mc, 10),
+                "mean_component_star_closed_form": s(mc_star, 10),
+                "mean_component_residual": s(abs(mc - mc_star), 6),
+            }
+        )
+        print(
+            f"  n={n:3d}: crossing {s(cross, 8)}, star model {s(pred, 8)}, "
+            f"(1/6)log n {s(bench, 6)}, mean comp {s(mc, 6)}"
+        )
     base_rows = []
     for base in (3, 30, 300):
         ps = [2] + primes_ge(base, 16)
-        cross = bisect_crossing(psd_stat, ps, mpf("0.05"), mpf("3"), dps,
-                                iters=30)
-        base_rows.append({"n": 16, "satellite_base": base,
-                          "psd_crossing": s(cross, 10)})
+        cross = bisect_crossing(psd_stat, ps, mpf("0.05"), mpf("3"), dps, iters=30)
+        base_rows.append(
+            {"n": 16, "satellite_base": base, "psd_crossing": s(cross, 10)}
+        )
         print(f"  n=16 base={base:4d}: crossing {s(cross, 8)}")
     firstk_rows = []
     for k in (3, 5, 7, 10, 15):
         ps = PRIMES[:k]
-        cross = bisect_crossing(psd_stat, ps, mpf("0.02"), mpf("1.5"), dps,
-                                iters=30)
+        cross = bisect_crossing(psd_stat, ps, mpf("0.02"), mpf("1.5"), dps, iters=30)
         _, vec = min_eig_vec(deficit_matrix(ps, cross, dps))
-        firstk_rows.append({"k_first_primes": k,
-                            "psd_crossing": s(cross, 10),
-                            "mean_component_of_min_eigvec":
-                                s(mean_component(vec), 10)})
-        print(f"  first {k:2d} primes: crossing {s(cross, 8)}, "
-              f"mean comp {s(mean_component(vec), 6)}")
+        firstk_rows.append(
+            {
+                "k_first_primes": k,
+                "psd_crossing": s(cross, 10),
+                "mean_component_of_min_eigvec": s(mean_component(vec), 10),
+            }
+        )
+        print(
+            f"  first {k:2d} primes: crossing {s(cross, 8)}, "
+            f"mean comp {s(mean_component(vec), 6)}"
+        )
     result = {
         "precision_dps": dps,
         "mpmath_version": mpmath.__version__,
@@ -318,20 +329,24 @@ def selftest(dps):
         if not ok:
             failures.append(label)
 
-    print("selftest: [lean] = Lean-backed anchor, "
-          "[num] = numerical consistency check")
+    print("selftest: [lean] = Lean-backed anchor, [num] = numerical consistency check")
     ps = PRIMES[:4]
     x = mpf("0.3")
 
     m = pairing_matrix(ps, x, dps)
     off = [m[i, j] for i in range(4) for j in range(4) if i != j]
-    check("[lean] pairing_pos (off-diagonal entries > 0)",
-          all(v > 0 for v in off), f"min {s(min(off), 8)}")
+    check(
+        "[lean] pairing_pos (off-diagonal entries > 0)",
+        all(v > 0 for v in off),
+        f"min {s(min(off), 8)}",
+    )
 
     base = bigF(1, x, dps)
-    check("[lean] pairing_lt_base (<p,q> < log theta(s))",
-          all(v < base for v in off),
-          f"max gap {s(base - max(off), 8)}")
+    check(
+        "[lean] pairing_lt_base (<p,q> < log theta(s))",
+        all(v < base for v in off),
+        f"max gap {s(base - max(off), 8)}",
+    )
 
     ok = True
     worst = mpf("-inf")
@@ -339,8 +354,11 @@ def selftest(dps):
         c = cnd_stat(PRIMES[:5], mpf(sv), dps)
         worst = max(worst, c)
         ok = ok and c <= 0
-    check("[lean] pairing_cnd_large (restricted lam_max <= 0, s >= 1)",
-          ok, f"largest over s in {{1, 1.5, 3}}: {s(worst, 8)}")
+    check(
+        "[lean] pairing_cnd_large (restricted lam_max <= 0, s >= 1)",
+        ok,
+        f"largest over s in {{1, 1.5, 3}}: {s(worst, 8)}",
+    )
 
     # quadFormOn_pairing_eq: exact zero-sum identity on {2,3,5,7}.
     c = [mpf(1), mpf(2), mpf(-1), mpf(-2)]
@@ -353,17 +371,25 @@ def selftest(dps):
         for j in range(4):
             rhs += c[i] * c[j] * log(theta((mpf(ps[i]) * ps[j]) ** 2 * x, dps))
     for i in range(4):
-        rhs -= c[i] ** 2 * (log(theta(x, dps))
-                            + log(theta(mpf(ps[i]) ** 4 * x, dps))
-                            - 2 * log(theta(mpf(ps[i]) ** 2 * x, dps)))
-    check("[lean] quadFormOn_pairing_eq (exact zero-sum identity)",
-          abs(lhs - rhs) < tol, f"residual {s(lhs - rhs, 8)}")
+        rhs -= c[i] ** 2 * (
+            log(theta(x, dps))
+            + log(theta(mpf(ps[i]) ** 4 * x, dps))
+            - 2 * log(theta(mpf(ps[i]) ** 2 * x, dps))
+        )
+    check(
+        "[lean] quadFormOn_pairing_eq (exact zero-sum identity)",
+        abs(lhs - rhs) < tol,
+        f"residual {s(lhs - rhs, 8)}",
+    )
 
     sv = mpf("0.02")
     sigma = pi**2 / (sv * 36)
     norm = exp(sigma) * pairing(2, 3, sv, dps) / 2
-    check("[num]  tendsto_exp_mul_pairing (loose, s = 0.02)",
-          mpf("0.5") < norm < mpf("1.5"), f"normalized value {s(norm, 8)}")
+    check(
+        "[num]  tendsto_exp_mul_pairing (loose, s = 0.02)",
+        mpf("0.5") < norm < mpf("1.5"),
+        f"normalized value {s(norm, 8)}",
+    )
 
     if failures:
         print(f"selftest: {len(failures)} FAILURE(S)")
@@ -373,8 +399,7 @@ def selftest(dps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("command",
-                    choices=["selftest", "sweep", "witness", "star", "all"])
+    ap.add_argument("command", choices=["selftest", "sweep", "witness", "star", "all"])
     ap.add_argument("--kprimes", type=int, default=None)
     ap.add_argument("--lo", default="0.02")
     ap.add_argument("--hi", default="1.5")
@@ -390,10 +415,14 @@ def main():
         ks = [args.kprimes] if args.kprimes else [3, 5, 7, 10, 15]
         for k in ks:
             if k < 2 or k > len(PRIMES):
-                ap.error(f"--kprimes must be in [2, {len(PRIMES)}]; "
-                         f"extend PRIMES for larger sets")
-            print(f"[q4 sweep] first {k} primes, "
-                  f"s in [{args.lo}, {args.hi}], {args.points} points")
+                ap.error(
+                    f"--kprimes must be in [2, {len(PRIMES)}]; "
+                    f"extend PRIMES for larger sets"
+                )
+            print(
+                f"[q4 sweep] first {k} primes, "
+                f"s in [{args.lo}, {args.hi}], {args.points} points"
+            )
             sweep_set(k, args.lo, args.hi, args.points, args.dps, outdir)
     if args.command in ("witness", "all"):
         witness(args.dps, outdir)

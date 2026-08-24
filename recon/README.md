@@ -81,17 +81,19 @@ precision.
 
 ## Running
 
-    nu tasks.nu recon          # self-tests + committed sweeps
-    uv run recon/harness.py selftest
-    uv run recon/harness.py sweep --form hexagonal
-    uv run recon/harness.py family --family shear_half
-    uv run recon/harness.py finescan --family fcc_squash --member y0.10 \
-        --window 1.4 --finestep 0.002 --dps 30
-    uv run recon/rigidity.py audit
-    uv run recon/rigidity.py record            # print only
-    uv run recon/rigidity.py record --write    # regenerate the record
-    uv run recon/logfourier.py structure       # exact audit only
-    uv run recon/logfourier.py sweep --write   # ~16 min
+```
+nu tasks.nu recon          # self-tests + committed sweeps
+uv run recon/harness.py selftest
+uv run recon/harness.py sweep --form hexagonal
+uv run recon/harness.py family --family shear_half
+uv run recon/harness.py finescan --family fcc_squash --member y0.10 \
+    --window 1.4 --finestep 0.002 --dps 30
+uv run recon/rigidity.py audit
+uv run recon/rigidity.py record            # print only
+uv run recon/rigidity.py record --write    # regenerate the record
+uv run recon/logfourier.py structure       # exact audit only
+uv run recon/logfourier.py sweep --write   # ~16 min
+```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
 `RECORD_CONFIG` literal in the script and its precision escalates on
@@ -157,6 +159,7 @@ committed baselines):
   `3.1438 → 2.8946`, every sampled minimum at the duality
   center. Hexagonal has the largest sampled margin among the
   seven arc members.
+
 - **Shear ray** `τ = ½ + iy`, `y` descending from `√3/2`. On the
   thin tail (`y ≤ 0.18`) the product `λ₁(L)·λ₁(L*)` falls
   monotonically and the sampled min `r` collapses with it toward
@@ -210,9 +213,11 @@ member and every scan.
   FCC/BCC pair — dual to each other, distinct — has the largest
   sampled margin in the program so far: min `r = 3.2972` at the
   center, `λ₁(L)·λ₁(L*) = 1.2247`.
+
 - **Cubic → FCC path** (convex combination of normalized Grams):
   sampled min `r` increases monotonically through the seven
   members, `2.8946 → 3.2972`, every minimum at the center.
+
 - **FCC squash** (`diag(1,1,y)·M_fcc·diag(1,1,y)`,
   det-normalized): the margin collapses much faster than the
   rank-two shear, and the sampled minimum *leaves the duality
@@ -383,7 +388,9 @@ Coprime rigidity follows from `EvenPartSeparating` (Lean:
 nonvanishing of the Fourier coefficients `ℓ_ν` of
 `L(x) = log gramMass(M, α, x)` on the **finite** family
 
-    {e_i} ∪ {e_i + e_j : i < j}
+```
+{e_i} ∪ {e_i + e_j : i < j}
+```
 
 composed with the arithmetic step `isLatticeShift_or_of_pairwise`.
 That family is the certificate. It is **chart dependent** — the
@@ -426,9 +433,11 @@ record.
 The second check is exact references. For a diagonal form the Jacobi
 triple product gives, exactly,
 
-    ℓ_{k·e_i} = (−1)^{k+1} q_i^k / (k(1 − q_i^{2k})),
-                q_i = exp(−π²/(α m_i)),
-    ℓ_ν       = 0  whenever ν is supported on more than one axis.
+```
+ℓ_{k·e_i} = (−1)^{k+1} q_i^k / (k(1 − q_i^{2k})),
+            q_i = exp(−π²/(α m_i)),
+ℓ_ν       = 0  whenever ν is supported on more than one axis.
+```
 
 A unimodular rechart `M′ = UᵀMU` has `L′(x) = L(Ux)`, hence
 `ℓ′_ν = ℓ_{U⁻ᵀν}`, so a rechart of a diagonal form inherits exact
@@ -448,7 +457,9 @@ non-integral shear `shear_t1/2`; the near-decomposable probes
 `neardiag_1/10` and `neardiag_1/100`. The self-dual coupling of the
 raw form is
 
-    α* = π / det(M)^{1/d},
+```
+α* = π / det(M)^{1/d},
+```
 
 which is `π` only after determinant normalization; the record stores
 `alpha_star` and `alpha` for every row. The coupling grid **varies by
@@ -602,6 +613,7 @@ convention at reflected points — it does not sample the other side.
    `(3,2)`: `1.31507` (square), `1.33496` (hexagonal), `1.97260`
    (cubic3), `2.01608` (fcc), down to `0.05976` for the sharpest
    sampled degeneration.
+
 2. **Symmetry does not act uniformly — the sampled profiles cross.**
    At the self-dual scale the denser member of each pair carries the
    *larger* slack: `hexagonal − square2 = +0.0198909` and
@@ -612,15 +624,18 @@ convention at reflected points — it does not sample the other side.
    at the centre of the domain and weakens it farther into the
    large-scale chamber; it does not uniformly help or hurt, and no
    monotone reading of density against rigidity survives the crossing.
+
 3. **Orthogonal sums add exactly**, as observed: `square2` is `2×`
    and `cubic3` is `3×` the same rank-one number `0.65753`,
    consistent with Lean's `orthSum_defect`.
+
 4. **The only sampled route toward zero is the scale boundary.** The
    slack falls as `s → ∞` (and by duality as `s → 0`). The rank-two
    diagonal degeneration is not a separate route in these samples: at
    `det = 1` it is the orthogonal sum of two rank-one systems at
    reciprocal scales, and the numbers show it — `diag2_r16` at `s*`
    reproduces `square2` at `4s*` to all recorded digits.
+
 5. **Observed relation between the two statistics.** Along the
    `square2` profile the ratio `residual/√slack` is `0.50006`, `0.5`,
    `0.5` at `s/s* = 16, 32, 64` — consistent with the scalar defect
@@ -629,6 +644,7 @@ convention at reflected points — it does not sample the other side.
    `hexagonal` profile has not stabilized over the sampled range
    (`0.639, 0.455, 0.408`), and along the anisotropic degeneration the
    ratio runs the other way (`1.425` at `s*`).
+
 6. **The isometry mechanism is impossible in every positive rank** —
    an exact but **unformalized** argument, of which only the
    Chinese-remainder arithmetic is executed here. Let `S ∈ GL_d(ℤ)`,
@@ -639,13 +655,17 @@ convention at reflected points — it does not sample the other side.
    kernel of `GL_d(ℤ) → GL_d(ℤ/L)` is torsion-free for `L ≥ 3`; the
    script does not verify that lemma). Put
 
-       P = (I − S)/2.
+   ```
+   P = (I − S)/2.
+   ```
 
    From `u ≡ 1 (mod 2b)` we get `S ≡ I (mod 2b)`, so `I − S` is `2b`
    times an integral matrix and `P` is integral and divisible by `b`.
    From `S² = I`,
 
-       P² = (I − 2S + S²)/4 = (2I − 2S)/4 = P,
+   ```
+   P² = (I − 2S + S²)/4 = (2I − 2S)/4 = P,
+   ```
 
    so `P` is an integral idempotent divisible by `b > 1`. Writing
    `P = bN`, idempotency gives `N = bN²`, so `b ∣ N`; substituting

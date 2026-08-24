@@ -105,9 +105,7 @@ def frac_matrix(rows):
 
 def diagonal_form(n, ratio):
     r = Fraction(ratio)
-    return [
-        [r**i if i == j else Fraction(0) for j in range(n)] for i in range(n)
-    ]
+    return [[r**i if i == j else Fraction(0) for j in range(n)] for i in range(n)]
 
 
 def rechart(m, u):
@@ -173,8 +171,7 @@ def lambda_min_lower(m, steps=40):
     for _ in range(steps):
         mid = (lo + hi) / 2
         shifted = [
-            [m[i][j] - (mid if i == j else 0) for j in range(n)]
-            for i in range(n)
+            [m[i][j] - (mid if i == j else 0) for j in range(n)] for i in range(n)
         ]
         if leading_minors_positive(shifted):
             lo = mid
@@ -189,11 +186,7 @@ def invert_frac(m):
     out = [[Fraction(0)] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):
-            minor = [
-                [m[r][c] for c in range(n) if c != i]
-                for r in range(n)
-                if r != j
-            ]
+            minor = [[m[r][c] for c in range(n) if c != i] for r in range(n) if r != j]
             out[i][j] = ((-1) ** (i + j)) * det_frac(minor) / d
     return out
 
@@ -260,24 +253,19 @@ def inverse_transpose_int(u):
 
 
 def is_diagonal(m):
-    return all(
-        m[i][j] == 0 for i in range(len(m)) for j in range(len(m)) if i != j
-    )
+    return all(m[i][j] == 0 for i in range(len(m)) for j in range(len(m)) if i != j)
 
 
 # -------------------------------------------------------- evaluation
 
 
 def to_mp(m):
-    return [[mp.mpf(x.numerator) / mp.mpf(x.denominator) for x in row]
-            for row in m]
+    return [[mp.mpf(x.numerator) / mp.mpf(x.denominator) for x in row] for row in m]
 
 
 def quad(mb, y):
     n = len(mb)
-    return mp.fsum(
-        mb[i][j] * y[i] * y[j] for i in range(n) for j in range(n)
-    )
+    return mp.fsum(mb[i][j] * y[i] * y[j] for i in range(n) for j in range(n))
 
 
 def box_radius(alpha, mu, tol):
@@ -326,9 +314,7 @@ def frequencies(n):
     out = [tuple(1 if t == i else 0 for t in range(n)) for i in range(n)]
     for i in range(n):
         for j in range(i + 1, n):
-            out.append(
-                tuple(1 if t in (i, j) else 0 for t in range(n))
-            )
+            out.append(tuple(1 if t in (i, j) else 0 for t in range(n)))
     return out
 
 
@@ -340,8 +326,9 @@ def mesh_nome(alpha, lmax):
     this is not a proved bound on the tail of `log mass`. It is used
     solely to choose a mesh, and empirically tracks the observed
     convergence. Grid doubling, not this quantity, is the check."""
-    return mp.exp(-mp.pi**2 / (alpha * mp.mpf(lmax.numerator)
-                               / mp.mpf(lmax.denominator)))
+    return mp.exp(
+        -(mp.pi**2) / (alpha * mp.mpf(lmax.numerator) / mp.mpf(lmax.denominator))
+    )
 
 
 def adapted_grid(base, q, cap):
@@ -381,9 +368,9 @@ def log_fourier_pair(mb, alpha, mu, grid, tol):
         for idx in itertools.product(range(mesh), repeat=n):
             val = values[tuple(t * skip for t in idx)]
             for f in freqs:
-                phase = 2 * mp.pi * mp.fsum(
-                    mp.mpf(f[i]) * idx[i] for i in range(n)
-                ) / mesh
+                phase = (
+                    2 * mp.pi * mp.fsum(mp.mpf(f[i]) * idx[i] for i in range(n)) / mesh
+                )
                 acc[f] += val * mp.cos(phase)
         total = mp.mpf(mesh) ** n
         out[label] = {f: acc[f] / total for f in freqs}
@@ -405,7 +392,7 @@ def diagonal_coefficient(m, alpha, nu):
     i = support[0]
     k = abs(nu[i])
     mi = mp.mpf(m[i][i].numerator) / mp.mpf(m[i][i].denominator)
-    q = mp.exp(-mp.pi**2 / (alpha * mi))
+    q = mp.exp(-(mp.pi**2) / (alpha * mi))
     return (-1) ** (k + 1) * q**k / (k * (1 - q ** (2 * k)))
 
 
@@ -435,26 +422,48 @@ def reference_for(spec, forms, alpha, nu):
     return None, None, pnu
 
 
-
 # ------------------------------------------------------- the sweep
 
 SWEEP_CONFIG = {
     "dps": 30,
     "tail_tol_exp": -34,
     "jobs": [
-        {"forms": ["rank1"], "grid": 12, "grid_cap": 96,
-         "alpha_over_star": ["1/4", "1/2", "1", "2", "4"]},
-        {"forms": ["square2", "diag2_r4", "hexagonal", "hex_chart2",
-                   "hex_chart3", "shear_t1", "shear_t2", "shear_t1/2",
-                   "neardiag_1/10", "neardiag_1/100"],
-         "grid": 10, "grid_cap": 48,
-         "alpha_over_star": ["1/4", "1/2", "1", "2"]},
-        {"forms": ["diag2_r16"], "grid": 10, "grid_cap": 48,
-         "alpha_over_star": ["1/4", "1/2"]},
-        {"forms": ["cubic3", "fcc"], "grid": 8, "grid_cap": 16,
-         "alpha_over_star": ["1", "2"]},
-        {"forms": ["fcc_chart2"], "grid": 8, "grid_cap": 16,
-         "alpha_over_star": ["1"]},
+        {
+            "forms": ["rank1"],
+            "grid": 12,
+            "grid_cap": 96,
+            "alpha_over_star": ["1/4", "1/2", "1", "2", "4"],
+        },
+        {
+            "forms": [
+                "square2",
+                "diag2_r4",
+                "hexagonal",
+                "hex_chart2",
+                "hex_chart3",
+                "shear_t1",
+                "shear_t2",
+                "shear_t1/2",
+                "neardiag_1/10",
+                "neardiag_1/100",
+            ],
+            "grid": 10,
+            "grid_cap": 48,
+            "alpha_over_star": ["1/4", "1/2", "1", "2"],
+        },
+        {
+            "forms": ["diag2_r16"],
+            "grid": 10,
+            "grid_cap": 48,
+            "alpha_over_star": ["1/4", "1/2"],
+        },
+        {
+            "forms": ["cubic3", "fcc"],
+            "grid": 8,
+            "grid_cap": 16,
+            "alpha_over_star": ["1", "2"],
+        },
+        {"forms": ["fcc_chart2"], "grid": 8, "grid_cap": 16, "alpha_over_star": ["1"]},
     ],
 }
 
@@ -566,17 +575,10 @@ def sweep(verbose=True):
             scale = det ** (mp.mpf(1) / n)
             for ratio in job["alpha_over_star"]:
                 fr = Fraction(ratio)
-                alpha = (
-                    mp.pi
-                    * mp.mpf(fr.numerator)
-                    / mp.mpf(fr.denominator)
-                    / scale
-                )
+                alpha = mp.pi * mp.mpf(fr.numerator) / mp.mpf(fr.denominator) / scale
                 q = mesh_nome(alpha, lambda_max_upper(m))
                 grid = adapted_grid(job["grid"], q, job["grid_cap"])
-                coarse, fine, radius, lmax = log_fourier_pair(
-                    mb, alpha, mu, grid, tol
-                )
+                coarse, fine, radius, lmax = log_fourier_pair(mb, alpha, mu, grid, tol)
                 specs = spec_table()
                 floor = max(
                     arith_floor * max(lmax, mp.mpf(1)),
@@ -593,9 +595,7 @@ def sweep(verbose=True):
                         "grid_doubling_change": show(abs(v - coarse[f]), 3),
                         "below_resolution": bool(abs(v) <= 100 * floor),
                     }
-                    rv, src, pnu = reference_for(
-                        specs[name], forms, alpha, list(f)
-                    )
+                    rv, src, pnu = reference_for(specs[name], forms, alpha, list(f))
                     if pnu is not None:
                         entry["parent_nu"] = pnu
                     if rv is not None:
@@ -605,9 +605,7 @@ def sweep(verbose=True):
                     entries.append(entry)
                 resolved = [e for e in entries if not e["below_resolution"]]
                 smallest = (
-                    min(resolved, key=lambda e: mp.mpf(e["abs"]))
-                    if resolved
-                    else None
+                    min(resolved, key=lambda e: mp.mpf(e["abs"])) if resolved else None
                 )
                 row = {
                     "form": name,
@@ -621,14 +619,9 @@ def sweep(verbose=True):
                     "diagonal": is_diagonal(m),
                     "resolution_floor": show(floor, 3),
                     "entries": entries,
-                    "certificate_holds_above_resolution": len(resolved)
-                    == len(entries),
-                    "smallest_resolved_abs": (
-                        smallest["abs"] if smallest else None
-                    ),
-                    "smallest_resolved_at": (
-                        smallest["nu"] if smallest else None
-                    ),
+                    "certificate_holds_above_resolution": len(resolved) == len(entries),
+                    "smallest_resolved_abs": (smallest["abs"] if smallest else None),
+                    "smallest_resolved_at": (smallest["nu"] if smallest else None),
                 }
                 record["rows"].append(row)
                 xprobe = [mp.mpf(1) / 3 + mp.mpf(i) / 7 for i in range(n)]
@@ -641,9 +634,7 @@ def sweep(verbose=True):
                     {
                         "form": name,
                         "alpha_over_star": ratio,
-                        "relative_difference": show(
-                            abs(direct - dual) / direct, 4
-                        ),
+                        "relative_difference": show(abs(direct - dual) / direct, 4),
                         "probe_point": [show(v, 12) for v in xprobe],
                         "probe_note": "one point per row: x_i = 1/3 + i/7; "
                         "this compares the direct and dual representations "
@@ -682,8 +673,7 @@ def crossings(record):
             if e["below_resolution"]:
                 continue
             key = (row["form"], tuple(e["nu"]))
-            seen.setdefault(key, []).append(
-                (row["alpha_over_star"], e["sign"]))
+            seen.setdefault(key, []).append((row["alpha_over_star"], e["sign"]))
     for key, seq in seen.items():
         signs = {s for _, s in seq}
         if len(signs) > 1:
@@ -691,8 +681,7 @@ def crossings(record):
                 {
                     "form": key[0],
                     "nu": list(key[1]),
-                    "profile": [{"alpha_over_star": a, "sign": s}
-                                for a, s in seq],
+                    "profile": [{"alpha_over_star": a, "sign": s} for a, s in seq],
                 }
             )
     return out
@@ -701,13 +690,9 @@ def crossings(record):
 def summarize(record):
     """Counts, split against the exact structural audit."""
     struct = {f["name"]: f["structure"] for f in record["forms"]}
-    resolved = [
-        r for r in record["rows"] if r["certificate_holds_above_resolution"]
-    ]
+    resolved = [r for r in record["rows"] if r["certificate_holds_above_resolution"]]
     unresolved = [
-        r
-        for r in record["rows"]
-        if not r["certificate_holds_above_resolution"]
+        r for r in record["rows"] if not r["certificate_holds_above_resolution"]
     ]
     return {
         "rows": len(record["rows"]),
@@ -721,9 +706,7 @@ def summarize(record):
         "unresolved_forms_all_decomposable": all(
             struct[r["form"]] == "decomposable" for r in unresolved
         ),
-        "sign_crossings_among_resolved_entries": len(
-            record["sign_crossings"]
-        ),
+        "sign_crossings_among_resolved_entries": len(record["sign_crossings"]),
         "caveat": "an observation on the sampled forms, charts and "
         "couplings; not a proved equivalence between the certificate "
         "and orthogonal indecomposability",
@@ -764,14 +747,15 @@ def main():
         f" unresolved rows all on decomposable forms:"
         f" {s['unresolved_forms_all_decomposable']}"
     )
-    print(f"  sign crossings among resolved entries:"
-          f" {len(record['sign_crossings'])}")
+    print(f"  sign crossings among resolved entries: {len(record['sign_crossings'])}")
     worst = max(
         record["duality_checks"],
         key=lambda c: mp.mpf(c["relative_difference"]),
     )
-    print(f"  worst direct/dual discrepancy: {worst['relative_difference']}"
-          f" ({worst['form']}, a/a* = {worst['alpha_over_star']})")
+    print(
+        f"  worst direct/dual discrepancy: {worst['relative_difference']}"
+        f" ({worst['form']}, a/a* = {worst['alpha_over_star']})"
+    )
     if args.write:
         path = pathlib.Path(__file__).parent / "data" / "log_fourier.json"
         path.write_text(json.dumps(record, indent=2) + "\n")

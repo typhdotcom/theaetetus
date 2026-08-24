@@ -189,8 +189,13 @@ def energy_stability(m, u, dps, beta_min):
 
 # ----------------------------------------------------------- families
 
-FAMILY_NAMES = ["unit_circle_arc", "shear_half", "rank3_baselines",
-                "cubic_to_fcc", "fcc_squash"]
+FAMILY_NAMES = [
+    "unit_circle_arc",
+    "shear_half",
+    "rank3_baselines",
+    "cubic_to_fcc",
+    "fcc_squash",
+]
 
 
 def gram_of_tau(x, y):
@@ -217,12 +222,23 @@ def build_family(name):
             out.append((f"phi{deg}", gram_of_tau(mp.cos(phi), mp.sin(phi))))
         return out
     if name == "shear_half":
-        ys = ["0.86602540378443864676", "0.6", "0.45", "0.35",
-              "0.25", "0.18", "0.12", "0.08", "0.05"]
+        ys = [
+            "0.86602540378443864676",
+            "0.6",
+            "0.45",
+            "0.35",
+            "0.25",
+            "0.18",
+            "0.12",
+            "0.08",
+            "0.05",
+        ]
         return [(f"y{v}", gram_of_tau(mpf("0.5"), mpf(v))) for v in ys]
     if name == "rank3_baselines":
-        return [("cubic3", parse_gram(RAW_FORMS["cubic3"])),
-                ("fcc", parse_gram(RAW_FORMS["fcc"]))]
+        return [
+            ("cubic3", parse_gram(RAW_FORMS["cubic3"])),
+            ("fcc", parse_gram(RAW_FORMS["fcc"])),
+        ]
     if name == "cubic_to_fcc":
         fcc = det_normalize(parse_gram(RAW_FORMS["fcc"]))
         eye = mat_eye(3)
@@ -289,16 +305,18 @@ def profile_pair(m, dps, u0, du, npts):
     energy_stability(md, u0, dps, beta_min)
     qs = qvalues_at(m, dps, beta_min)
     qsd = qvalues_at(md, dps, beta_min)
-    return (qs, qsd,
-            sweep_profile(qs, u0, du, npts),
-            sweep_profile(qsd, u0, du, npts))
+    return (qs, qsd, sweep_profile(qs, u0, du, npts), sweep_profile(qsd, u0, du, npts))
 
 
 def wrap_profile(p):
-    return {k: (s(v) if isinstance(v, mpf) else
-                ({kk: s(vv) for kk, vv in v.items()}
-                 if isinstance(v, dict) else v))
-            for k, v in p.items()}
+    return {
+        k: (
+            s(v)
+            if isinstance(v, mpf)
+            else ({kk: s(vv) for kk, vv in v.items()} if isinstance(v, dict) else v)
+        )
+        for k, v in p.items()
+    }
 
 
 def run_sweep(name, u_span, du, dps, outdir):
@@ -322,21 +340,27 @@ def run_sweep(name, u_span, du, dps, outdir):
         "precision_dps": dps,
         "mpmath_version": mpmath.__version__,
         "box_energy": s(box_energy(dps, exp(u0))),
-        "box_radii": {"L": box_radii(m, box_energy(dps, exp(u0))),
-                      "L_dual": box_radii(dual(m), box_energy(dps, exp(u0)))},
+        "box_radii": {
+            "L": box_radii(m, box_energy(dps, exp(u0))),
+            "L_dual": box_radii(dual(m), box_energy(dps, exp(u0))),
+        },
         "L": wrap_profile(prof),
         "L_dual": wrap_profile(profd),
     }
     outdir.mkdir(parents=True, exist_ok=True)
     out = outdir / f"{name}.json"
     out.write_text(json.dumps(result, indent=2) + "\n")
-    print(f"[{name}] rank {n}, lambda1^2 = {s(l1, 10)}, "
-          f"lambda1(L)*lambda1(L*) = {s(sqrt(l1 * l1d), 10)}")
+    print(
+        f"[{name}] rank {n}, lambda1^2 = {s(l1, 10)}, "
+        f"lambda1(L)*lambda1(L*) = {s(sqrt(l1 * l1d), 10)}"
+    )
     for tag, p in (("L", prof), ("L*", profd)):
-        print(f"  {tag}: H'' > 0 on grid: {p['H2_positive_on_grid']}; "
-              f"H''(log pi) = {s(p['center']['H2'], 10)}; "
-              f"sampled min ratio = {s(p['min_ratio_on_grid'], 10)} "
-              f"at u - log pi = {s(p['min_ratio_at_u_minus_logpi'], 6)}")
+        print(
+            f"  {tag}: H'' > 0 on grid: {p['H2_positive_on_grid']}; "
+            f"H''(log pi) = {s(p['center']['H2'], 10)}; "
+            f"sampled min ratio = {s(p['min_ratio_on_grid'], 10)} "
+            f"at u - log pi = {s(p['min_ratio_at_u_minus_logpi'], 6)}"
+        )
     print(f"  -> {out}")
 
 
@@ -355,23 +379,29 @@ def run_family(name, u_span, du, dps, outdir):
             side, best = "L", prof
         else:
             side, best = "L*", profd
-        rows.append({
-            "label": label,
-            "gram_normalized": gram_strings(m),
-            "lambda1_product": s(sqrt(l1 * l1d)),
-            "box_radii": {
-                "L": box_radii(m, box_energy(dps, exp(u0))),
-                "L_dual": box_radii(dual(m), box_energy(dps, exp(u0)))},
-            "H2_positive_on_grid_both": bool(
-                prof["H2_positive_on_grid"] and profd["H2_positive_on_grid"]),
-            "sampled_min_ratio": s(best["min_ratio_on_grid"]),
-            "min_side": side,
-            "min_at_u_minus_logpi": s(best["min_ratio_at_u_minus_logpi"]),
-        })
-        print(f"  {label:>10}: l1*l1d = {s(sqrt(l1 * l1d), 8):>10}, "
-              f"min r = {s(best['min_ratio_on_grid'], 8):>10} "
-              f"({side} at u-logpi = {s(best['min_ratio_at_u_minus_logpi'], 4)}), "
-              f"H''>0 on grid: {rows[-1]['H2_positive_on_grid_both']}")
+        rows.append(
+            {
+                "label": label,
+                "gram_normalized": gram_strings(m),
+                "lambda1_product": s(sqrt(l1 * l1d)),
+                "box_radii": {
+                    "L": box_radii(m, box_energy(dps, exp(u0))),
+                    "L_dual": box_radii(dual(m), box_energy(dps, exp(u0))),
+                },
+                "H2_positive_on_grid_both": bool(
+                    prof["H2_positive_on_grid"] and profd["H2_positive_on_grid"]
+                ),
+                "sampled_min_ratio": s(best["min_ratio_on_grid"]),
+                "min_side": side,
+                "min_at_u_minus_logpi": s(best["min_ratio_at_u_minus_logpi"]),
+            }
+        )
+        print(
+            f"  {label:>10}: l1*l1d = {s(sqrt(l1 * l1d), 8):>10}, "
+            f"min r = {s(best['min_ratio_on_grid'], 8):>10} "
+            f"({side} at u-logpi = {s(best['min_ratio_at_u_minus_logpi'], 4)}), "
+            f"H''>0 on grid: {rows[-1]['H2_positive_on_grid_both']}"
+        )
     result = {
         "family": name,
         "grid": {"u0": "log(pi)", "span": u_span, "step": du, "points": npts},
@@ -399,8 +429,7 @@ def run_finescan(family, member, window, step, dps, outdir):
     w = mpf(window)
     du = mpf(step)
     npts = int(w / du) + 1
-    print(f"[finescan {family}/{member}] window {window}, step {step}, "
-          f"dps {dps}")
+    print(f"[finescan {family}/{member}] window {window}, step {step}, dps {dps}")
     sides = {}
     for tag, mm in (("L", m), ("L_dual", md)):
         qs = qvalues_at(mm, dps, beta_min)
@@ -411,10 +440,10 @@ def run_finescan(family, member, window, step, dps, outdir):
             st = stats(qs, u)
             if best_v is None or st["ratio"] < best_v:
                 best_v, best_u = st["ratio"], u - u0
-        sides[tag] = {"sampled_min_ratio": s(best_v),
-                      "at_u_minus_logpi": s(best_u)}
-        print(f"  {tag}: sampled min ratio {s(best_v, 12)} "
-              f"at u - log pi = {s(best_u, 6)}")
+        sides[tag] = {"sampled_min_ratio": s(best_v), "at_u_minus_logpi": s(best_u)}
+        print(
+            f"  {tag}: sampled min ratio {s(best_v, 12)} at u - log pi = {s(best_u, 6)}"
+        )
     result = {
         "family": family,
         "member": member,
@@ -424,8 +453,10 @@ def run_finescan(family, member, window, step, dps, outdir):
         "precision_dps": dps,
         "mpmath_version": mpmath.__version__,
         "box_energy": s(box_energy(dps, beta_min)),
-        "box_radii": {"L": box_radii(m, box_energy(dps, beta_min)),
-                      "L_dual": box_radii(md, box_energy(dps, beta_min))},
+        "box_radii": {
+            "L": box_radii(m, box_energy(dps, beta_min)),
+            "L_dual": box_radii(md, box_energy(dps, beta_min)),
+        },
         **sides,
     }
     outdir.mkdir(parents=True, exist_ok=True)
@@ -448,29 +479,36 @@ def selftest(dps):
         if not ok:
             failures.append(label)
 
-    print("selftest: [lean] = Lean-backed anchor, "
-          "[num] = numerical consistency check")
+    print("selftest: [lean] = Lean-backed anchor, [num] = numerical consistency check")
     u0 = log(pi)
     one = det_normalize(parse_gram([["1"]]))
 
     # thetaDeriv_pi: H'(log pi) = -1/4 at rank one.
     qs1 = qvalues_at(one, dps, exp(u0))
-    check("[lean] thetaDeriv_pi (rank one, H'(log pi) = -1/4)",
-          stats(qs1, u0)["H1"] + mpf(1) / 4, tol)
+    check(
+        "[lean] thetaDeriv_pi (rank one, H'(log pi) = -1/4)",
+        stats(qs1, u0)["H1"] + mpf(1) / 4,
+        tol,
+    )
 
     # theta_logDeriv_dual: H'(u) + H'(2 log pi - u) = -1/2 at rank one.
     u = u0 + mpf("0.7")
     qs1w = qvalues_at(one, dps, exp(2 * u0 - u))
-    check("[lean] theta_logDeriv_dual (H'(u) + H'(2 log pi - u) = -1/2)",
-          stats(qs1w, u)["H1"] + stats(qs1w, 2 * u0 - u)["H1"] + mpf(1) / 2,
-          tol)
+    check(
+        "[lean] theta_logDeriv_dual (H'(u) + H'(2 log pi - u) = -1/2)",
+        stats(qs1w, u)["H1"] + stats(qs1w, 2 * u0 - u)["H1"] + mpf(1) / 2,
+        tol,
+    )
 
     # Finite-difference consistency of H'' against H'.
     h = mpf(10) ** (-10)
     ufd = u0 + mpf("0.3")
     fd = (stats(qs1, ufd + h)["H1"] - stats(qs1, ufd - h)["H1"]) / (2 * h)
-    check("[lean] hasDerivAt_thetaDeriv (H'' = d/du H', finite diff)",
-          stats(qs1, ufd)["H2"] - fd, mpf(10) ** (-(dps - 35)))
+    check(
+        "[lean] hasDerivAt_thetaDeriv (H'' = d/du H', finite diff)",
+        stats(qs1, ufd)["H2"] - fd,
+        mpf(10) ** (-(dps - 35)),
+    )
 
     # Poisson duality checks at beta = 2 (each coupling boxed for itself).
     def poisson_residual(mn):
@@ -479,25 +517,37 @@ def selftest(dps):
         n = mn.rows
         zl = sum(exp(-beta * q) for q in qvalues_at(mn, dps, beta))
         zr = (pi / beta) ** (mpf(n) / 2) * sum(
-            exp(-(pi**2 / beta) * q)
-            for q in qvalues_at(md, dps, pi**2 / beta))
+            exp(-(pi**2 / beta) * q) for q in qvalues_at(md, dps, pi**2 / beta)
+        )
         return zl - zr
 
     hexm = det_normalize(parse_gram(RAW_FORMS["hexagonal"]))
-    check("[num]  Poisson duality, hexagonal (rank 2, beta = 2)",
-          poisson_residual(hexm), tol)
+    check(
+        "[num]  Poisson duality, hexagonal (rank 2, beta = 2)",
+        poisson_residual(hexm),
+        tol,
+    )
     fccm = det_normalize(parse_gram(RAW_FORMS["fcc"]))
-    check("[num]  Poisson duality, FCC/BCC (rank 3, beta = 2)",
-          poisson_residual(fccm), tol)
+    check(
+        "[num]  Poisson duality, FCC/BCC (rank 3, beta = 2)",
+        poisson_residual(fccm),
+        tol,
+    )
 
     # Self-dual center values H'(log pi) = -n/4.
     qsh = qvalues_at(hexm, dps, exp(u0))
-    check("[num]  self-dual center (hexagonal, H'(log pi) = -1/2)",
-          stats(qsh, u0)["H1"] + mpf(1) / 2, tol)
+    check(
+        "[num]  self-dual center (hexagonal, H'(log pi) = -1/2)",
+        stats(qsh, u0)["H1"] + mpf(1) / 2,
+        tol,
+    )
     cub = det_normalize(parse_gram(RAW_FORMS["cubic3"]))
     qsc = qvalues_at(cub, dps, exp(u0))
-    check("[num]  self-dual center (cubic, H'(log pi) = -3/4)",
-          stats(qsc, u0)["H1"] + mpf(3) / 4, tol)
+    check(
+        "[num]  self-dual center (cubic, H'(log pi) = -3/4)",
+        stats(qsc, u0)["H1"] + mpf(3) / 4,
+        tol,
+    )
 
     if failures:
         print(f"selftest: {len(failures)} FAILURE(S)")
@@ -510,8 +560,9 @@ def selftest(dps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("command",
-                    choices=["selftest", "sweep", "family", "finescan", "all"])
+    ap.add_argument(
+        "command", choices=["selftest", "sweep", "family", "finescan", "all"]
+    )
     ap.add_argument("--form", choices=sorted(RAW_FORMS), default=None)
     ap.add_argument("--family", choices=FAMILY_NAMES, default=None)
     ap.add_argument("--member", default=None)
@@ -535,8 +586,9 @@ def main():
             run_family(f, args.span, 0.02, 30, outdir)
     if args.command == "finescan":
         assert args.family and args.member, "finescan needs --family and --member"
-        run_finescan(args.family, args.member, args.window, args.finestep,
-                     args.dps, outdir)
+        run_finescan(
+            args.family, args.member, args.window, args.finestep, args.dps, outdir
+        )
     if args.command == "all":
         for f in ("hexagonal", "square2"):
             run_sweep(f, args.span, args.step, args.dps, outdir)
