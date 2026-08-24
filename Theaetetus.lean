@@ -127,6 +127,10 @@ import Theaetetus.CorrelationEquality
 -- The Fourier form of the two-grid reflection criterion
 import Theaetetus.ReflectionFourier
 
+-- The strict maximum of the shifted Gaussian mass, and its reach on
+-- the two-grid criterion
+import Theaetetus.MassMaximum
+
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 

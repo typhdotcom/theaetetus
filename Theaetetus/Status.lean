@@ -16,6 +16,7 @@ import Theaetetus.LatticeDuality
 import Theaetetus.Correlation
 import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
+import Theaetetus.MassMaximum
 import Theaetetus.ResolutionMetric
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
@@ -44,10 +45,10 @@ shifted mass and positive correlation; the orthogonal sum;
 the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
 sublattices; the equality cases of the correlation inequalities and
-the Fourier form of the two-grid criterion; the resolution
-metric; the scale asymptotics of a Gram Boltzmann sum, the
-finite-index mass ratio, and the pairwise boundary of the
-sublattice field. -/
+the Fourier form of the two-grid criterion; the strict maximum of
+the shifted Gaussian mass; the resolution metric; the scale
+asymptotics of a Gram Boltzmann sum, the finite-index mass ratio,
+and the pairwise boundary of the sublattice field. -/
 
 namespace Theaetetus
 
@@ -1678,5 +1679,44 @@ example {d : ℕ} {A B C : AddSubgroup (Fin d → ℤ)} (hA : A.index ≠ 0)
       (𝓝 (Real.log ((((distribLower A B C).relIndex
         (distribUpper A B C) : ℕ)) : ℝ))) :=
   tendsto_defect3_subField hA hB hC
+
+/-! ## The strict maximum of the shifted Gaussian mass -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    gramMass M α x ≤ gramMass M α 0 :=
+  gramMass_le_gramMass_zero hM hα x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) {x : Fin d → ℝ} (hx : ¬ IsLatticeShift x) :
+    gramMass M α x < gramMass M α 0 :=
+  gramMass_lt_gramMass_zero hM hα hx
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (x : Fin d → ℝ) :
+    gramMass M α x = gramMass M α 0 ↔ IsLatticeShift x :=
+  gramMass_eq_gramMass_zero_iff hM hα x
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
+    (hα : 0 < α) (z : Fin d → ℝ) (c : Fin d → ZMod 2) :
+    parityVector M α z c = gramMass M (2 * α) 0
+      ↔ IsLatticeShift ((2 : ℝ)⁻¹ • (z + fun i => ((c i).val : ℝ))) :=
+  parityVector_eq_max_iff hM hα z c
+
+example {d : ℕ} {n : ℕ} (hn : 0 < n) (c : Fin d → ZMod n) :
+    IsLatticeShift (residueShift n c) ↔ c = 0 :=
+  isLatticeShift_residueShift_iff hn c
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {s : ℝ}
+    (hs : 0 < s) {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+    (h : TwoGridReflection M s a b) {r : Fin d → ZMod b}
+    {c : Fin d → ZMod a} (hc : c ≠ 0) (e : Fin d → ZMod 2) :
+    parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+          (residueShift b r + residueShift a c) e
+        < gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) 0
+      ∧ parityVector M ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))
+          (residueShift b r - residueShift a c) e
+        < gramMass M (2 * ((a : ℝ) ^ 2 * ((b : ℝ) ^ 2 * s))) 0 :=
+  twoGridReflection_lt_max hM hs ha hb h hc e
 
 end Theaetetus

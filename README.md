@@ -1039,6 +1039,35 @@ Formalization targets:
     Gaussian mass values with no isometry behind it, which is an
     analytic question, not a structural one.
 
+    The same positivity gives the first purely analytic rigidity
+    statement about the mass itself (`Theaetetus.MassMaximum`).
+    Against the expansion at the origin, where every character
+    contributes its full weight, any other shift loses `1 − cos` of
+    each, so the mass is maximal on the lattice and strictly
+    submaximal off it: `gramMass M α x ≤ gramMass M α 0` with
+    equality exactly at lattice shifts
+    (`gramMass_le_gramMass_zero`, `gramMass_lt_gramMass_zero`,
+    `gramMass_eq_gramMass_zero_iff`, transported entrywise by
+    `parityVector_eq_max_iff`). No accidental maximizer exists at
+    any positive coupling in any rank. That principle also settles
+    what it can do against the criterion on its own: the two
+    reflected shifts differ by the displacement `residueShift a c`,
+    both can be maximal only if that displacement is a lattice shift
+    (`isLatticeShift_of_add_of_sub`), and a residue shift is a
+    lattice shift only at the zero class — for every positive
+    modulus, no coprimality needed
+    (`isLatticeShift_residueShift_iff`) — where the criterion is an
+    identity anyway (`parityVector_zero_displacement`). So every
+    nonzero-displacement pair sits strictly below the maximum on
+    both sides (`twoGridReflection_lt_max`, a conjunction of the two
+    strict inequalities), and the equality the criterion asserts is
+    always between two strictly submaximal masses. The maximum
+    principle alone therefore cannot contradict the criterion; what
+    it contributes alongside a second comparison principle is open.
+    The next analytic mechanism has to control the shape or
+    multiplicity of a submaximal level set, not merely locate the
+    top.
+
     That transform closes a loop rather than opening a mechanism.
     The alias sums are not bare positive aggregates: up to one
     positive prefactor each is a shifted Gaussian mass of the
