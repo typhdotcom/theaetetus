@@ -1219,15 +1219,54 @@ Formalization targets:
     ppav at special couplings is open, and no claim either way is
     made.
 
+    That certificate has been through a falsification gate before
+    any of it is formalized (`recon/logfourier.py`, record in
+    `log_fourier.json`, findings in `recon/README.md`;
+    **not certified** — high-precision floating point with a spectral
+    quadrature whose aliasing is estimated by grid doubling, not
+    bounded). It computes `ℓ_ν` on exactly
+    `{e_i} ∪ {e_i + e_j : i < j}` over ranks 1–3: the diagonal
+    controls, `hexagonal` and `fcc`, unimodular recharts of each, a
+    non-integral shear, and near-decomposable probes `[[1,ε],[ε,1]]`.
+    The self-dual coupling of the raw form is `α* = π/det(M)^{1/d}`,
+    equal to `π` only after determinant normalization, and the grid
+    varies by form — rank one and most rank-two forms straddle the
+    centre; `diag2_r16` and the rank-three forms do not.
+
+    Three checks anchor it. The rank-one coefficient matches the
+    closed form `q/(1−q²)` from the Jacobi triple product. Exact
+    references cover every diagonal form and, through
+    `ℓ′_ν = ℓ_{U⁻ᵀν}`, every unimodular rechart of one — which makes
+    the sheared square lattices sharp controls rather than suggestive
+    ones. And an independent Poisson evaluation of the mass agrees to
+    `1.6e−30`, at one recorded probe point per row.
+
+    It did **not** falsify the certificate. Each form carries an exact
+    structural audit — a rational search for a `v` with
+    `ℤᵈ = ℤv ⊕ (v^⊥ ∩ ℤᵈ)`, exhaustive for rank at most three — and
+    against that classification the 32 rows resolving nonzero at every
+    frequency are exactly the rows on indecomposable forms, the 20
+    with an unresolved frequency exactly those on decomposable ones.
+    Which frequency fails is chart dependent, at exactly the place the
+    rechart predicts: the square lattice loses `(1,1)` in the standard
+    chart and `(1,0)` in the `t = 1` shear chart. Signs are chart
+    dependent too, while nonvanishing survives every rechart sampled,
+    no resolved coefficient changes sign across the coupling grid, and
+    the two near-decomposable probes are positive and smaller at the
+    smaller `ε`. That is evidence for attempting the analytic layer,
+    not a proof of nonvanishing, and the split against decomposability
+    is an observation on the sample, not a proved equivalence.
+
     The remaining chain is therefore: define the Fourier
     coefficients of `logMass` on `ℝᵈ/ℤᵈ` and prove their reality and
     evenness; extract the coefficient equation from equality of even
     parts; package the conditional theorem that nonvanishing on the
-    finite family above implies `EvenPartSeparating`; then, kept
-    separate and falsified numerically before any universal proof is
-    attempted, the nonvanishing itself; and finally the reduction of
-    split forms to their blocks through the orthogonal-sum defect
-    theorem (`orthSum_defect`, `orthSum_defect_eq_zero_iff`).
+    finite family above implies `EvenPartSeparating`, composing it
+    with `isLatticeShift_or_of_pairwise`; then, kept separate as a
+    research theorem, the nonvanishing itself; and finally the
+    reduction of split forms to their blocks through the
+    orthogonal-sum defect theorem (`orthSum_defect`,
+    `orthSum_defect_eq_zero_iff`).
 
     The earlier CRT/alias transform closes a loop rather than
     opening a mechanism.
@@ -1435,6 +1474,34 @@ Reconnaissance, falsify-first:
    positive rank. Next: the remaining possibility is an accidental
    equality of Gaussian mass values with no isometry inducing it, so
    the question is analytic rather than structural.
+
+4. **Log-mass Fourier certificate** — falsification gate complete
+   (`recon/logfourier.py`, deterministic record in
+   `log_fourier.json`, wired into `nu tasks.nu recon`; findings in
+   `recon/README.md`). **Not certified**: high-precision floating
+   point with a spectral quadrature whose aliasing is estimated by
+   grid doubling, not bounded. The gate probes the finite family
+   `{e_i} ∪ {e_i + e_j : i < j}` of Fourier coefficients of
+   `log gramMass`, whose nonvanishing implies `EvenPartSeparating`
+   and hence coprime rigidity. Anchored by the exact `q/(1−q²)` from
+   the Jacobi triple product at rank one, by exact references for
+   every diagonal form and every unimodular rechart of one, and by an
+   independent Poisson evaluation of the mass agreeing to `1.6e−30`
+   at one probe point per row. Each form also carries an exact
+   orthogonal-decomposability audit, exhaustive for rank at most
+   three. The certificate was not falsified: against that audit, the
+   32 rows resolving nonzero at every frequency are exactly those on
+   indecomposable forms and the 20 with an unresolved frequency
+   exactly those on decomposable ones, no resolved coefficient
+   changes sign across the coupling grid, and the two probes
+   `[[1,ε],[ε,1]]` are positive and smaller at the smaller `ε`. Both
+   which frequency fails and the signs are chart dependent — the
+   square lattice loses `(1,1)` in the standard chart and `(1,0)` in
+   the `t = 1` shear chart, each at the frequency the rechart
+   predicts — while nonvanishing survives every rechart sampled. The
+   split against decomposability is an observation on the sample, not
+   a proved equivalence. Next: the Lean torus Fourier layer, with
+   analytic nonvanishing kept separate.
 
 The sequence so far: the restructuring, strict Q5 for diagonal
 forms, the dual-aware harness, the rank-two and rank-three

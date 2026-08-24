@@ -1,0 +1,4473 @@
+{
+  "meta": {
+    "script": "recon/logfourier.py",
+    "mpmath": "1.4.1",
+    "status": "NOT CERTIFIED: ordinary high-precision floating point; the spectral quadrature error is estimated by grid doubling, not bounded",
+    "certificate": "l_nu != 0 on {e_i} union {e_i+e_j, i<j} implies EvenPartSeparating; chart dependent, and strictly stronger than coprime rigidity itself",
+    "reading": "a value at or below resolution_floor is NOT evidence of vanishing; structural zeros are named only where an exact reference predicts them",
+    "config": {
+      "dps": 30,
+      "tail_tol_exp": -34,
+      "jobs": [
+        {
+          "forms": [
+            "rank1"
+          ],
+          "grid": 12,
+          "grid_cap": 96,
+          "alpha_over_star": [
+            "1/4",
+            "1/2",
+            "1",
+            "2",
+            "4"
+          ]
+        },
+        {
+          "forms": [
+            "square2",
+            "diag2_r4",
+            "hexagonal",
+            "hex_chart2",
+            "hex_chart3",
+            "shear_t1",
+            "shear_t2",
+            "shear_t1/2",
+            "neardiag_1/10",
+            "neardiag_1/100"
+          ],
+          "grid": 10,
+          "grid_cap": 48,
+          "alpha_over_star": [
+            "1/4",
+            "1/2",
+            "1",
+            "2"
+          ]
+        },
+        {
+          "forms": [
+            "diag2_r16"
+          ],
+          "grid": 10,
+          "grid_cap": 48,
+          "alpha_over_star": [
+            "1/4",
+            "1/2"
+          ]
+        },
+        {
+          "forms": [
+            "cubic3",
+            "fcc"
+          ],
+          "grid": 8,
+          "grid_cap": 16,
+          "alpha_over_star": [
+            "1",
+            "2"
+          ]
+        },
+        {
+          "forms": [
+            "fcc_chart2"
+          ],
+          "grid": 8,
+          "grid_cap": 16,
+          "alpha_over_star": [
+            "1"
+          ]
+        }
+      ]
+    }
+  },
+  "forms": [
+    {
+      "name": "rank1",
+      "rank": 1,
+      "gram": [
+        [
+          "1"
+        ]
+      ],
+      "determinant": "1",
+      "lambda_min_lower": "549755813887/549755813888",
+      "lambda_max_gershgorin": "1",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "square2",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ]
+      ],
+      "determinant": "1",
+      "lambda_min_lower": "549755813887/549755813888",
+      "lambda_max_gershgorin": "1",
+      "structure": "decomposable",
+      "orthogonal_split_witness": [
+        -1,
+        0
+      ],
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "diag2_r4",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "4"
+        ]
+      ],
+      "determinant": "4",
+      "lambda_min_lower": "1099511627775/1099511627776",
+      "lambda_max_gershgorin": "4",
+      "structure": "decomposable",
+      "orthogonal_split_witness": [
+        -1,
+        0
+      ],
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "diag2_r16",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "16"
+        ]
+      ],
+      "determinant": "16",
+      "lambda_min_lower": "1099511627775/1099511627776",
+      "lambda_max_gershgorin": "16",
+      "structure": "decomposable",
+      "orthogonal_split_witness": [
+        -1,
+        0
+      ],
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "hexagonal",
+      "rank": 2,
+      "gram": [
+        [
+          "1/3",
+          "-1/6"
+        ],
+        [
+          "-1/6",
+          "1/3"
+        ]
+      ],
+      "determinant": "1/12",
+      "lambda_min_lower": "137438953471/824633720832",
+      "lambda_max_gershgorin": "1/2",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "hex_chart2",
+      "rank": 2,
+      "gram": [
+        [
+          "1/3",
+          "1/6"
+        ],
+        [
+          "1/6",
+          "1/3"
+        ]
+      ],
+      "determinant": "1/12",
+      "lambda_min_lower": "137438953471/824633720832",
+      "lambda_max_gershgorin": "1/2",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three",
+      "parent": "hexagonal",
+      "chart_matrix": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "chart_inverse_transpose": [
+        [
+          1,
+          0
+        ],
+        [
+          -1,
+          1
+        ]
+      ],
+      "chart_note": "L'(x) = L(Ux), so l'_nu = l_{U^-T nu}"
+    },
+    {
+      "name": "hex_chart3",
+      "rank": 2,
+      "gram": [
+        [
+          "1/3",
+          "1/2"
+        ],
+        [
+          "1/2",
+          "1"
+        ]
+      ],
+      "determinant": "1/12",
+      "lambda_min_lower": "36141746599/549755813888",
+      "lambda_max_gershgorin": "3/2",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three",
+      "parent": "hexagonal",
+      "chart_matrix": [
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "chart_inverse_transpose": [
+        [
+          1,
+          0
+        ],
+        [
+          -2,
+          1
+        ]
+      ],
+      "chart_note": "L'(x) = L(Ux), so l'_nu = l_{U^-T nu}"
+    },
+    {
+      "name": "shear_t1",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "2"
+        ]
+      ],
+      "determinant": "1",
+      "lambda_min_lower": "209988035391/549755813888",
+      "lambda_max_gershgorin": "3",
+      "structure": "decomposable",
+      "orthogonal_split_witness": [
+        -1,
+        0
+      ],
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three",
+      "parent": "square2",
+      "chart_matrix": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "chart_inverse_transpose": [
+        [
+          1,
+          0
+        ],
+        [
+          -1,
+          1
+        ]
+      ],
+      "chart_note": "L'(x) = L(Ux), so l'_nu = l_{U^-T nu}"
+    },
+    {
+      "name": "shear_t2",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "2"
+        ],
+        [
+          "2",
+          "5"
+        ]
+      ],
+      "determinant": "1",
+      "lambda_min_lower": "23580796419/137438953472",
+      "lambda_max_gershgorin": "7",
+      "structure": "decomposable",
+      "orthogonal_split_witness": [
+        -2,
+        1
+      ],
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three",
+      "parent": "square2",
+      "chart_matrix": [
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "chart_inverse_transpose": [
+        [
+          1,
+          0
+        ],
+        [
+          -2,
+          1
+        ]
+      ],
+      "chart_note": "L'(x) = L(Ux), so l'_nu = l_{U^-T nu}"
+    },
+    {
+      "name": "shear_t1/2",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "1/2"
+        ],
+        [
+          "1/2",
+          "5/4"
+        ]
+      ],
+      "determinant": "1",
+      "lambda_min_lower": "1340550518013/2199023255552",
+      "lambda_max_gershgorin": "7/4",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "neardiag_1/10",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "1/10"
+        ],
+        [
+          "1/10",
+          "1"
+        ]
+      ],
+      "determinant": "99/100",
+      "lambda_min_lower": "494780232499/549755813888",
+      "lambda_max_gershgorin": "11/10",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "neardiag_1/100",
+      "rank": 2,
+      "gram": [
+        [
+          "1",
+          "1/100"
+        ],
+        [
+          "1/100",
+          "1"
+        ]
+      ],
+      "determinant": "9999/10000",
+      "lambda_min_lower": "544258255749/549755813888",
+      "lambda_max_gershgorin": "101/100",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "cubic3",
+      "rank": 3,
+      "gram": [
+        [
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "1"
+        ]
+      ],
+      "determinant": "1",
+      "lambda_min_lower": "549755813887/549755813888",
+      "lambda_max_gershgorin": "1",
+      "structure": "decomposable",
+      "orthogonal_split_witness": [
+        -1,
+        0,
+        0
+      ],
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "fcc",
+      "rank": 3,
+      "gram": [
+        [
+          "2",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "2",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "2"
+        ]
+      ],
+      "determinant": "4",
+      "lambda_min_lower": "1099511627775/1099511627776",
+      "lambda_max_gershgorin": "4",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three"
+    },
+    {
+      "name": "fcc_chart2",
+      "rank": 3,
+      "gram": [
+        [
+          "2",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "6",
+          "2"
+        ],
+        [
+          "1",
+          "2",
+          "2"
+        ]
+      ],
+      "determinant": "4",
+      "lambda_min_lower": "26817956347/68719476736",
+      "lambda_max_gershgorin": "11",
+      "structure": "indecomposable",
+      "orthogonal_split_witness": null,
+      "audit": "exact rational search for a rank-one orthogonal summand; exhaustive for rank at most three",
+      "parent": "fcc",
+      "chart_matrix": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "chart_inverse_transpose": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          -1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "chart_note": "L'(x) = L(Ux), so l'_nu = l_{U^-T nu}"
+    }
+  ],
+  "rows": [
+    {
+      "form": "rank1",
+      "rank": 1,
+      "alpha_over_star": "1/4",
+      "grid": 24,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "3.487e-6",
+      "alpha_star": "3.141592654",
+      "alpha": "0.7853981634",
+      "diagonal": true,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "0.0",
+          "below_resolution": false,
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal",
+          "reference_gap": "1.85e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "3.48734e-6",
+      "smallest_resolved_at": [
+        1
+      ]
+    },
+    {
+      "form": "rank1",
+      "rank": 1,
+      "alpha_over_star": "1/2",
+      "grid": 24,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.001867",
+      "alpha_star": "3.141592654",
+      "alpha": "1.570796327",
+      "diagonal": true,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "9.65e-32",
+          "below_resolution": false,
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal",
+          "reference_gap": "3.81e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.00186745",
+      "smallest_resolved_at": [
+        1
+      ]
+    },
+    {
+      "form": "rank1",
+      "rank": 1,
+      "alpha_over_star": "1",
+      "grid": 24,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.04321",
+      "alpha_star": "3.141592654",
+      "alpha": "3.141592654",
+      "diagonal": true,
+      "resolution_floor": "8.94e-17",
+      "entries": [
+        {
+          "nu": [
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "8.94e-17",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "6.16e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        1
+      ]
+    },
+    {
+      "form": "rank1",
+      "rank": 1,
+      "alpha_over_star": "2",
+      "grid": 48,
+      "box_radius": 5,
+      "mesh_nome_heuristic": "0.2079",
+      "alpha_star": "3.141592654",
+      "alpha": "6.283185307",
+      "diagonal": true,
+      "resolution_floor": "9.22e-18",
+      "entries": [
+        {
+          "nu": [
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "9.22e-18",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "2.47e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.217269",
+      "smallest_resolved_at": [
+        1
+      ]
+    },
+    {
+      "form": "rank1",
+      "rank": 1,
+      "alpha_over_star": "4",
+      "grid": 96,
+      "box_radius": 3,
+      "mesh_nome_heuristic": "0.4559",
+      "alpha_star": "3.141592654",
+      "alpha": "12.56637061",
+      "diagonal": true,
+      "resolution_floor": "2.37e-18",
+      "entries": [
+        {
+          "nu": [
+            1
+          ],
+          "value": "0.5755919355",
+          "sign": "+",
+          "abs": "0.575592",
+          "grid_doubling_change": "2.37e-18",
+          "below_resolution": false,
+          "exact_reference": "0.5755919355",
+          "reference_source": "diagonal",
+          "reference_gap": "1.97e-31"
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.575592",
+      "smallest_resolved_at": [
+        1
+      ]
+    },
+    {
+      "form": "square2",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "3.487e-6",
+      "alpha_star": "3.141592654",
+      "alpha": "0.7853981634",
+      "diagonal": true,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "3.9e-32",
+          "below_resolution": false,
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal",
+          "reference_gap": "1.03e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "6.66e-32",
+          "below_resolution": false,
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal",
+          "reference_gap": "9.04e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "1.87354465e-32",
+          "sign": "+",
+          "abs": "1.87354e-32",
+          "grid_doubling_change": "6.06e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "1.87e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "3.48734e-6",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "square2",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.001867",
+      "alpha_star": "3.141592654",
+      "alpha": "1.570796327",
+      "diagonal": true,
+      "resolution_floor": "3.07e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "3.07e-26",
+          "below_resolution": false,
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal",
+          "reference_gap": "6.63e-32"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "3.07e-26",
+          "below_resolution": false,
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal",
+          "reference_gap": "2.6e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "2.415886522e-32",
+          "sign": "+",
+          "abs": "2.41589e-32",
+          "grid_doubling_change": "3.94e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "2.42e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.00186745",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "square2",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 20,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.04321",
+      "alpha_star": "3.141592654",
+      "alpha": "3.141592654",
+      "diagonal": true,
+      "resolution_floor": "5.85e-14",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "5.85e-14",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "6.29e-28"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "5.85e-14",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "6.29e-28"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-1.60853669e-32",
+          "sign": "-",
+          "abs": "1.60854e-32",
+          "grid_doubling_change": "4.87e-33",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "1.61e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "square2",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 40,
+      "box_radius": 5,
+      "mesh_nome_heuristic": "0.2079",
+      "alpha_star": "3.141592654",
+      "alpha": "6.283185307",
+      "diagonal": true,
+      "resolution_floor": "5.97e-15",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "5.97e-15",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "6.63e-29"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "5.97e-15",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "6.61e-29"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-7.671845261e-32",
+          "sign": "-",
+          "abs": "7.67185e-32",
+          "grid_doubling_change": "4.4e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "7.67e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.217269",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "diag2_r4",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 15,
+      "mesh_nome_heuristic": "0.001867",
+      "alpha_star": "1.570796327",
+      "alpha": "0.3926990817",
+      "diagonal": true,
+      "resolution_floor": "3.07e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "1.216155671e-11",
+          "sign": "+",
+          "abs": "1.21616e-11",
+          "grid_doubling_change": "1.43e-31",
+          "below_resolution": false,
+          "exact_reference": "1.216155671e-11",
+          "reference_source": "diagonal",
+          "reference_gap": "3.71e-32"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "3.07e-26",
+          "below_resolution": false,
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal",
+          "reference_gap": "5.07e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "1.627025617e-32",
+          "sign": "+",
+          "abs": "1.62703e-32",
+          "grid_doubling_change": "2.96e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "1.63e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "1.21616e-11",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "diag2_r4",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "0.04321",
+      "alpha_star": "1.570796327",
+      "alpha": "0.7853981634",
+      "diagonal": true,
+      "resolution_floor": "5.85e-14",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "1.37e-31",
+          "below_resolution": false,
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal",
+          "reference_gap": "2.38e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "5.85e-14",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "6.29e-28"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "1.848892747e-32",
+          "sign": "+",
+          "abs": "1.84889e-32",
+          "grid_doubling_change": "1.87e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "1.85e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "3.48734e-6",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "diag2_r4",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 40,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.2079",
+      "alpha_star": "1.570796327",
+      "alpha": "1.570796327",
+      "diagonal": true,
+      "resolution_floor": "5.97e-15",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "4.81e-33",
+          "below_resolution": false,
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal",
+          "reference_gap": "1.41e-32"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "5.97e-15",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "6.63e-29"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "3.636155735e-33",
+          "sign": "+",
+          "abs": "3.63616e-33",
+          "grid_doubling_change": "2.52e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "3.64e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.00186745",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "diag2_r4",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.4559",
+      "alpha_star": "1.570796327",
+      "alpha": "3.141592654",
+      "diagonal": true,
+      "resolution_floor": "1.53e-15",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "3.14e-31",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "2.22e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.5755919355",
+          "sign": "+",
+          "abs": "0.575592",
+          "grid_doubling_change": "1.53e-15",
+          "below_resolution": false,
+          "exact_reference": "0.5755919355",
+          "reference_source": "diagonal",
+          "reference_gap": "1.72e-29"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-3.002871451e-31",
+          "sign": "-",
+          "abs": "3.00287e-31",
+          "grid_doubling_change": "2.14e-31",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "3.0e-31"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hexagonal",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 14,
+      "mesh_nome_heuristic": "0.0007065",
+      "alpha_star": "10.88279619",
+      "alpha": "2.720699046",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "2.14e-31",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "8.97e-32",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-2.491325464e-13",
+          "sign": "-",
+          "abs": "2.49133e-13",
+          "grid_doubling_change": "3.06e-32",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "2.49133e-13",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "hexagonal",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 10,
+      "mesh_nome_heuristic": "0.02658",
+      "alpha_star": "10.88279619",
+      "alpha": "5.441398093",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "4.64e-30",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "4.57e-30",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-4.980772469e-7",
+          "sign": "-",
+          "abs": "4.98077e-7",
+          "grid_doubling_change": "8.54e-29",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "4.98077e-7",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "hexagonal",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 40,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.163",
+      "alpha_star": "10.88279619",
+      "alpha": "10.88279619",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "1.23e-32",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "4.93e-32",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-0.000655532965",
+          "sign": "-",
+          "abs": "0.000655533",
+          "grid_doubling_change": "2.2e-31",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.000655533",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "hexagonal",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.4038",
+      "alpha_star": "10.88279619",
+      "alpha": "21.76559237",
+      "diagonal": false,
+      "resolution_floor": "1.32e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "2.96e-31",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "1.97e-31",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-0.0186388826",
+          "sign": "-",
+          "abs": "0.0186389",
+          "grid_doubling_change": "1.94e-31",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0186389",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "hex_chart2",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 14,
+      "mesh_nome_heuristic": "0.0007065",
+      "alpha_star": "10.88279619",
+      "alpha": "2.720699046",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "1.47e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "7.15e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "9.86e-33",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "4.99132e-7",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart2",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 10,
+      "mesh_nome_heuristic": "0.02658",
+      "alpha_star": "10.88279619",
+      "alpha": "5.441398093",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "4.69e-30",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "4.58e-30",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "4.52e-30",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.000705995",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart2",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 40,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.163",
+      "alpha_star": "10.88279619",
+      "alpha": "10.88279619",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "1.54e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "1.23e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "4.62e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0259597",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart2",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.4038",
+      "alpha_star": "10.88279619",
+      "alpha": "21.76559237",
+      "diagonal": false,
+      "resolution_floor": "1.32e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "1.73e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "2.22e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "1.73e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.15106",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart3",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 40,
+      "box_radius": 22,
+      "mesh_nome_heuristic": "0.08906",
+      "alpha_star": "10.88279619",
+      "alpha": "2.720699046",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-2.491325464e-13",
+          "sign": "-",
+          "abs": "2.49133e-13",
+          "grid_doubling_change": "1.87e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -2
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "3.27e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "4.991319172e-7",
+          "sign": "+",
+          "abs": "4.99132e-7",
+          "grid_doubling_change": "2.9e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "2.49133e-13",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart3",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 80,
+      "box_radius": 16,
+      "mesh_nome_heuristic": "0.2984",
+      "alpha_star": "10.88279619",
+      "alpha": "5.441398093",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-4.980772469e-7",
+          "sign": "-",
+          "abs": "4.98077e-7",
+          "grid_doubling_change": "2.31e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -2
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "1.82e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.0007059954904",
+          "sign": "+",
+          "abs": "0.000705995",
+          "grid_doubling_change": "2.79e-33",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "4.98077e-7",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart3",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 80,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "0.5463",
+      "alpha_star": "10.88279619",
+      "alpha": "10.88279619",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-0.000655532965",
+          "sign": "-",
+          "abs": "0.000655533",
+          "grid_doubling_change": "7.9e-33",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -2
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "9.24e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.02595971543",
+          "sign": "+",
+          "abs": "0.0259597",
+          "grid_doubling_change": "8.32e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.000655533",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "hex_chart3",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.7391",
+      "alpha_star": "10.88279619",
+      "alpha": "21.76559237",
+      "diagonal": false,
+      "resolution_floor": "1.32e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-0.0186388826",
+          "sign": "-",
+          "abs": "0.0186389",
+          "grid_doubling_change": "8.78e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -2
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "1.73e-31",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.151059571",
+          "sign": "+",
+          "abs": "0.15106",
+          "grid_doubling_change": "4.93e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0186389",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "shear_t1",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 17,
+      "mesh_nome_heuristic": "0.01516",
+      "alpha_star": "3.141592654",
+      "alpha": "0.7853981634",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "9.910065122e-32",
+          "sign": "+",
+          "abs": "9.91007e-32",
+          "grid_doubling_change": "1.17e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "9.91e-32"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "7.35e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "5.99e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "2.96e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ],
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.1e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "3.48734e-6",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t1",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 40,
+      "box_radius": 12,
+      "mesh_nome_heuristic": "0.1231",
+      "alpha_star": "3.141592654",
+      "alpha": "1.570796327",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "1.655375306e-31",
+          "sign": "+",
+          "abs": "1.65538e-31",
+          "grid_doubling_change": "1.47e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "1.66e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "1.58e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.87e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "1.71e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ],
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "3.47e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.00186745",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t1",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 80,
+      "box_radius": 9,
+      "mesh_nome_heuristic": "0.3509",
+      "alpha_star": "3.141592654",
+      "alpha": "3.141592654",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-3.239414166e-33",
+          "sign": "-",
+          "abs": "3.23941e-33",
+          "grid_doubling_change": "2.72e-33",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "3.24e-33"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "1.85e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.47e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "1.85e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ],
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.47e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t1",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 7,
+      "mesh_nome_heuristic": "0.5924",
+      "alpha_star": "3.141592654",
+      "alpha": "6.283185307",
+      "diagonal": false,
+      "resolution_floor": "1.76e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "1.175877129e-31",
+          "sign": "+",
+          "abs": "1.17588e-31",
+          "grid_doubling_change": "2.09e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "1.18e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "6.55e-29",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "5.18e-31"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "6.55e-29",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0
+          ],
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.96e-31"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.217269",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t2",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 40,
+      "box_radius": 25,
+      "mesh_nome_heuristic": "0.1661",
+      "alpha_star": "3.141592654",
+      "alpha": "0.7853981634",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "4.242592556e-31",
+          "sign": "+",
+          "abs": "4.24259e-31",
+          "grid_doubling_change": "5.12e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -2
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "4.24e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "3.487342356e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "2.27e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "3.487342356e-6",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "4.56e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-6.902532921e-33",
+          "sign": "-",
+          "abs": "6.90253e-33",
+          "grid_doubling_change": "2.96e-33",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "6.9e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "3.48734e-6",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t2",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 80,
+      "box_radius": 18,
+      "mesh_nome_heuristic": "0.4075",
+      "alpha_star": "3.141592654",
+      "alpha": "1.570796327",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-2.690138946e-32",
+          "sign": "-",
+          "abs": "2.69014e-32",
+          "grid_doubling_change": "1.21e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -2
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.69e-32"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001867449244",
+          "sign": "+",
+          "abs": "0.00186745",
+          "grid_doubling_change": "6.93e-33",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "0.001867449244",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "4.08e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "2.881191197e-33",
+          "sign": "+",
+          "abs": "2.88119e-33",
+          "grid_doubling_change": "1.37e-32",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.88e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.00186745",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t2",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 80,
+      "box_radius": 13,
+      "mesh_nome_heuristic": "0.6384",
+      "alpha_star": "3.141592654",
+      "alpha": "3.141592654",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-4.760898823e-33",
+          "sign": "-",
+          "abs": "4.7609e-33",
+          "grid_doubling_change": "3.39e-34",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -2
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "4.76e-33"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "5.55e-32",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "8.63e-32"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-2.776035422e-32",
+          "sign": "-",
+          "abs": "2.77604e-32",
+          "grid_doubling_change": "1.73e-32",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "2.78e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t2",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 10,
+      "mesh_nome_heuristic": "0.799",
+      "alpha_star": "3.141592654",
+      "alpha": "6.283185307",
+      "diagonal": false,
+      "resolution_floor": "1.76e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "-3.316761319e-31",
+          "sign": "-",
+          "abs": "3.31676e-31",
+          "grid_doubling_change": "5.46e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -2
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "3.32e-31"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "6.52e-29",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1
+          ],
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "8.38e-31"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-1.386458911e-33",
+          "sign": "-",
+          "abs": "1.38646e-33",
+          "grid_doubling_change": "1.09e-31",
+          "below_resolution": true,
+          "parent_nu": [
+            1,
+            -1
+          ],
+          "exact_reference": "0.0",
+          "reference_source": "diagonal parent square2 via U^-T",
+          "reference_gap": "1.39e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.217269",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "shear_t1/2",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 14,
+      "mesh_nome_heuristic": "0.0007611",
+      "alpha_star": "3.141592654",
+      "alpha": "0.7853981634",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "1.50701202e-7",
+          "sign": "+",
+          "abs": "1.50701e-7",
+          "grid_doubling_change": "1.62e-31",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "3.487342334e-6",
+          "sign": "+",
+          "abs": "3.48734e-6",
+          "grid_doubling_change": "3.5e-32",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "1.50701202e-7",
+          "sign": "+",
+          "abs": "1.50701e-7",
+          "grid_doubling_change": "7.59e-32",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "1.50701e-7",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "shear_t1/2",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 10,
+      "mesh_nome_heuristic": "0.02759",
+      "alpha_star": "3.141592654",
+      "alpha": "1.570796327",
+      "diagonal": false,
+      "resolution_floor": "3.05e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.0003874811284",
+          "sign": "+",
+          "abs": "0.000387481",
+          "grid_doubling_change": "1.06e-28",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001867299662",
+          "sign": "+",
+          "abs": "0.0018673",
+          "grid_doubling_change": "3.05e-26",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.0003874811284",
+          "sign": "+",
+          "abs": "0.000387481",
+          "grid_doubling_change": "1.06e-28",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.000387481",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "shear_t1/2",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 40,
+      "box_radius": 7,
+      "mesh_nome_heuristic": "0.1661",
+      "alpha_star": "3.141592654",
+      "alpha": "3.141592654",
+      "diagonal": false,
+      "resolution_floor": "1.0e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.0189386327",
+          "sign": "+",
+          "abs": "0.0189386",
+          "grid_doubling_change": "2.21e-29",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04296581204",
+          "sign": "+",
+          "abs": "0.0429658",
+          "grid_doubling_change": "2.18e-28",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.0189386327",
+          "sign": "+",
+          "abs": "0.0189386",
+          "grid_doubling_change": "2.2e-29",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0189386",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "shear_t1/2",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 80,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.4075",
+      "alpha_star": "3.141592654",
+      "alpha": "6.283185307",
+      "diagonal": false,
+      "resolution_floor": "1.36e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.1243136263",
+          "sign": "+",
+          "abs": "0.124314",
+          "grid_doubling_change": "2.87e-30",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.2071326455",
+          "sign": "+",
+          "abs": "0.207133",
+          "grid_doubling_change": "9.05e-30",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.1243136263",
+          "sign": "+",
+          "abs": "0.124314",
+          "grid_doubling_change": "3.23e-30",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.124314",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "neardiag_1/10",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "1.157e-5",
+      "alpha_star": "3.157419417",
+      "alpha": "0.7893548542",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "3.273412078e-6",
+          "sign": "+",
+          "abs": "3.27341e-6",
+          "grid_doubling_change": "2.3e-31",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "3.273412078e-6",
+          "sign": "+",
+          "abs": "3.27341e-6",
+          "grid_doubling_change": "6.71e-32",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "1.2325282e-10",
+          "sign": "+",
+          "abs": "1.23253e-10",
+          "grid_doubling_change": "2.37e-32",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "1.23253e-10",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/10",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.003402",
+      "alpha_star": "3.157419417",
+      "alpha": "1.578709708",
+      "diagonal": false,
+      "resolution_floor": "2.31e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.001809252479",
+          "sign": "+",
+          "abs": "0.00180925",
+          "grid_doubling_change": "2.31e-26",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001809252479",
+          "sign": "+",
+          "abs": "0.00180925",
+          "grid_doubling_change": "2.31e-26",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "8.301137888e-6",
+          "sign": "+",
+          "abs": "8.30114e-6",
+          "grid_doubling_change": "5.39e-28",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "8.30114e-6",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/10",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 20,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.05833",
+      "alpha_star": "3.157419417",
+      "alpha": "3.157419417",
+      "diagonal": false,
+      "resolution_floor": "4.73e-14",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.04258055835",
+          "sign": "+",
+          "abs": "0.0425806",
+          "grid_doubling_change": "4.73e-14",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04258055835",
+          "sign": "+",
+          "abs": "0.0425806",
+          "grid_doubling_change": "4.73e-14",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.001601354445",
+          "sign": "+",
+          "abs": "0.00160135",
+          "grid_doubling_change": "1.74e-14",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.00160135",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/10",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 40,
+      "box_radius": 5,
+      "mesh_nome_heuristic": "0.2415",
+      "alpha_star": "3.157419417",
+      "alpha": "6.314838834",
+      "diagonal": false,
+      "resolution_floor": "2.09e-15",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.2143690369",
+          "sign": "+",
+          "abs": "0.214369",
+          "grid_doubling_change": "1.03e-15",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.2143690369",
+          "sign": "+",
+          "abs": "0.214369",
+          "grid_doubling_change": "1.03e-15",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.01763306569",
+          "sign": "+",
+          "abs": "0.0176331",
+          "grid_doubling_change": "2.09e-15",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0176331",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/100",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "3.952e-6",
+      "alpha_star": "3.141749745",
+      "alpha": "0.7854374363",
+      "diagonal": false,
+      "resolution_floor": "1.39e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "3.485151718e-6",
+          "sign": "+",
+          "abs": "3.48515e-6",
+          "grid_doubling_change": "5.47e-32",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "3.485151718e-6",
+          "sign": "+",
+          "abs": "3.48515e-6",
+          "grid_doubling_change": "1.13e-31",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "3.47076546e-12",
+          "sign": "+",
+          "abs": "3.47077e-12",
+          "grid_doubling_change": "4.63e-32",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "3.47077e-12",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/100",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 20,
+      "box_radius": 8,
+      "mesh_nome_heuristic": "0.001988",
+      "alpha_star": "3.141749745",
+      "alpha": "1.570874873",
+      "diagonal": false,
+      "resolution_floor": "3.06e-26",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.001866862509",
+          "sign": "+",
+          "abs": "0.00186686",
+          "grid_doubling_change": "3.06e-26",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.001866862509",
+          "sign": "+",
+          "abs": "0.00186686",
+          "grid_doubling_change": "3.06e-26",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "4.666930036e-7",
+          "sign": "+",
+          "abs": "4.66693e-7",
+          "grid_doubling_change": "1.21e-28",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "4.66693e-7",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/100",
+      "rank": 2,
+      "alpha_over_star": "1",
+      "grid": 20,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.04459",
+      "alpha_star": "3.141749745",
+      "alpha": "3.141749745",
+      "diagonal": false,
+      "resolution_floor": "5.84e-14",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.04328762166",
+          "sign": "+",
+          "abs": "0.0432876",
+          "grid_doubling_change": "5.84e-14",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04328762166",
+          "sign": "+",
+          "abs": "0.0432876",
+          "grid_doubling_change": "5.84e-14",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.0001215486902",
+          "sign": "+",
+          "abs": "0.000121549",
+          "grid_doubling_change": "2.76e-15",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.000121549",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "neardiag_1/100",
+      "rank": 2,
+      "alpha_over_star": "2",
+      "grid": 40,
+      "box_radius": 5,
+      "mesh_nome_heuristic": "0.2112",
+      "alpha_star": "3.141749745",
+      "alpha": "6.28349949",
+      "diagonal": false,
+      "resolution_floor": "5.85e-15",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "0.2172394573",
+          "sign": "+",
+          "abs": "0.217239",
+          "grid_doubling_change": "5.85e-15",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.2172394573",
+          "sign": "+",
+          "abs": "0.217239",
+          "grid_doubling_change": "5.85e-15",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "0.001510573095",
+          "sign": "+",
+          "abs": "0.00151057",
+          "grid_doubling_change": "1.35e-15",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.00151057",
+      "smallest_resolved_at": [
+        1,
+        1
+      ]
+    },
+    {
+      "form": "diag2_r16",
+      "rank": 2,
+      "alpha_over_star": "1/4",
+      "grid": 20,
+      "box_radius": 21,
+      "mesh_nome_heuristic": "0.04321",
+      "alpha_star": "0.7853981634",
+      "alpha": "0.1963495408",
+      "diagonal": true,
+      "resolution_floor": "5.85e-14",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "1.479034616e-22",
+          "sign": "+",
+          "abs": "1.47903e-22",
+          "grid_doubling_change": "2.02e-32",
+          "below_resolution": true,
+          "exact_reference": "1.479034616e-22",
+          "reference_source": "diagonal",
+          "reference_gap": "4.03e-33"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "5.85e-14",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "6.29e-28"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "6.409494855e-33",
+          "sign": "+",
+          "abs": "6.40949e-33",
+          "grid_doubling_change": "6.9e-33",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "6.41e-33"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        0,
+        1
+      ]
+    },
+    {
+      "form": "diag2_r16",
+      "rank": 2,
+      "alpha_over_star": "1/2",
+      "grid": 40,
+      "box_radius": 15,
+      "mesh_nome_heuristic": "0.2079",
+      "alpha_star": "0.7853981634",
+      "alpha": "0.3926990817",
+      "diagonal": true,
+      "resolution_floor": "5.97e-15",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0
+          ],
+          "value": "1.216155671e-11",
+          "sign": "+",
+          "abs": "1.21616e-11",
+          "grid_doubling_change": "3.12e-32",
+          "below_resolution": false,
+          "exact_reference": "1.216155671e-11",
+          "reference_source": "diagonal",
+          "reference_gap": "4.29e-32"
+        },
+        {
+          "nu": [
+            0,
+            1
+          ],
+          "value": "0.217268604",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "5.97e-15",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "6.68e-29"
+        },
+        {
+          "nu": [
+            1,
+            1
+          ],
+          "value": "-3.081487911e-34",
+          "sign": "-",
+          "abs": "3.08149e-34",
+          "grid_doubling_change": "8.2e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "3.08e-34"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "1.21616e-11",
+      "smallest_resolved_at": [
+        1,
+        0
+      ]
+    },
+    {
+      "form": "cubic3",
+      "rank": 3,
+      "alpha_over_star": "1",
+      "grid": 16,
+      "box_radius": 6,
+      "mesh_nome_heuristic": "0.04321",
+      "alpha_star": "3.141592654",
+      "alpha": "3.141592654",
+      "diagonal": true,
+      "resolution_floor": "4.03e-11",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0,
+            0
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "4.03e-11",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "2.29e-22"
+        },
+        {
+          "nu": [
+            0,
+            1,
+            0
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "4.03e-11",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "2.29e-22"
+        },
+        {
+          "nu": [
+            0,
+            0,
+            1
+          ],
+          "value": "0.04329476877",
+          "sign": "+",
+          "abs": "0.0432948",
+          "grid_doubling_change": "4.03e-11",
+          "below_resolution": false,
+          "exact_reference": "0.04329476877",
+          "reference_source": "diagonal",
+          "reference_gap": "2.29e-22"
+        },
+        {
+          "nu": [
+            1,
+            1,
+            0
+          ],
+          "value": "-2.03546721e-32",
+          "sign": "-",
+          "abs": "2.03547e-32",
+          "grid_doubling_change": "4.56e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "2.04e-32"
+        },
+        {
+          "nu": [
+            1,
+            0,
+            1
+          ],
+          "value": "-1.771855549e-32",
+          "sign": "-",
+          "abs": "1.77186e-32",
+          "grid_doubling_change": "4.39e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "1.77e-32"
+        },
+        {
+          "nu": [
+            0,
+            1,
+            1
+          ],
+          "value": "-2.255745447e-32",
+          "sign": "-",
+          "abs": "2.25575e-32",
+          "grid_doubling_change": "6.53e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "2.26e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.0432948",
+      "smallest_resolved_at": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "form": "cubic3",
+      "rank": 3,
+      "alpha_over_star": "2",
+      "grid": 16,
+      "box_radius": 5,
+      "mesh_nome_heuristic": "0.2079",
+      "alpha_star": "3.141592654",
+      "alpha": "6.283185307",
+      "diagonal": true,
+      "resolution_floor": "2.48e-6",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0,
+            0
+          ],
+          "value": "0.2172686041",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "2.48e-6",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "4.05e-12"
+        },
+        {
+          "nu": [
+            0,
+            1,
+            0
+          ],
+          "value": "0.2172686041",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "2.48e-6",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "4.05e-12"
+        },
+        {
+          "nu": [
+            0,
+            0,
+            1
+          ],
+          "value": "0.2172686041",
+          "sign": "+",
+          "abs": "0.217269",
+          "grid_doubling_change": "2.48e-6",
+          "below_resolution": false,
+          "exact_reference": "0.217268604",
+          "reference_source": "diagonal",
+          "reference_gap": "4.05e-12"
+        },
+        {
+          "nu": [
+            1,
+            1,
+            0
+          ],
+          "value": "2.82524895e-32",
+          "sign": "+",
+          "abs": "2.82525e-32",
+          "grid_doubling_change": "4.08e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "2.83e-32"
+        },
+        {
+          "nu": [
+            1,
+            0,
+            1
+          ],
+          "value": "4.3455299e-32",
+          "sign": "+",
+          "abs": "4.34553e-32",
+          "grid_doubling_change": "6.49e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "4.35e-32"
+        },
+        {
+          "nu": [
+            0,
+            1,
+            1
+          ],
+          "value": "-1.567075029e-32",
+          "sign": "-",
+          "abs": "1.56708e-32",
+          "grid_doubling_change": "4.35e-32",
+          "below_resolution": true,
+          "exact_reference": "0.0",
+          "reference_source": "diagonal",
+          "reference_gap": "1.57e-32"
+        }
+      ],
+      "certificate_holds_above_resolution": false,
+      "smallest_resolved_abs": "0.217269",
+      "smallest_resolved_at": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "form": "fcc",
+      "rank": 3,
+      "alpha_over_star": "1",
+      "grid": 16,
+      "box_radius": 7,
+      "mesh_nome_heuristic": "0.2874",
+      "alpha_star": "1.979079357",
+      "alpha": "1.979079357",
+      "diagonal": false,
+      "resolution_floor": "2.86e-13",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0,
+            0
+          ],
+          "value": "0.02338466323",
+          "sign": "+",
+          "abs": "0.0233847",
+          "grid_doubling_change": "2.6e-13",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1,
+            0
+          ],
+          "value": "0.02338466323",
+          "sign": "+",
+          "abs": "0.0233847",
+          "grid_doubling_change": "2.6e-13",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            0,
+            1
+          ],
+          "value": "0.02338466323",
+          "sign": "+",
+          "abs": "0.0233847",
+          "grid_doubling_change": "2.6e-13",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1,
+            0
+          ],
+          "value": "0.005747739332",
+          "sign": "+",
+          "abs": "0.00574774",
+          "grid_doubling_change": "2.86e-13",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            0,
+            1
+          ],
+          "value": "0.005747739332",
+          "sign": "+",
+          "abs": "0.00574774",
+          "grid_doubling_change": "2.86e-13",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1,
+            1
+          ],
+          "value": "0.005747739332",
+          "sign": "+",
+          "abs": "0.00574774",
+          "grid_doubling_change": "2.86e-13",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.00574774",
+      "smallest_resolved_at": [
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "form": "fcc",
+      "rank": 3,
+      "alpha_over_star": "2",
+      "grid": 16,
+      "box_radius": 5,
+      "mesh_nome_heuristic": "0.5361",
+      "alpha_star": "1.979079357",
+      "alpha": "3.958158714",
+      "diagonal": false,
+      "resolution_floor": "6.27e-8",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0,
+            0
+          ],
+          "value": "0.1428211326",
+          "sign": "+",
+          "abs": "0.142821",
+          "grid_doubling_change": "6.27e-8",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1,
+            0
+          ],
+          "value": "0.1428211326",
+          "sign": "+",
+          "abs": "0.142821",
+          "grid_doubling_change": "6.27e-8",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            0,
+            1
+          ],
+          "value": "0.1428211326",
+          "sign": "+",
+          "abs": "0.142821",
+          "grid_doubling_change": "6.27e-8",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            1,
+            0
+          ],
+          "value": "0.04854557779",
+          "sign": "+",
+          "abs": "0.0485456",
+          "grid_doubling_change": "1.46e-8",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            1,
+            0,
+            1
+          ],
+          "value": "0.04854557779",
+          "sign": "+",
+          "abs": "0.0485456",
+          "grid_doubling_change": "1.46e-8",
+          "below_resolution": false
+        },
+        {
+          "nu": [
+            0,
+            1,
+            1
+          ],
+          "value": "0.04854557779",
+          "sign": "+",
+          "abs": "0.0485456",
+          "grid_doubling_change": "1.46e-8",
+          "below_resolution": false
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.0485456",
+      "smallest_resolved_at": [
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "form": "fcc_chart2",
+      "rank": 3,
+      "alpha_over_star": "1",
+      "grid": 16,
+      "box_radius": 11,
+      "mesh_nome_heuristic": "0.6355",
+      "alpha_star": "1.979079357",
+      "alpha": "1.979079357",
+      "diagonal": false,
+      "resolution_floor": "3.21e-12",
+      "entries": [
+        {
+          "nu": [
+            1,
+            0,
+            0
+          ],
+          "value": "-0.000533840626",
+          "sign": "-",
+          "abs": "0.000533841",
+          "grid_doubling_change": "4.32e-13",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1,
+            0
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1,
+            0
+          ],
+          "value": "0.02338466323",
+          "sign": "+",
+          "abs": "0.0233847",
+          "grid_doubling_change": "2.6e-13",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "nu": [
+            0,
+            0,
+            1
+          ],
+          "value": "0.02338466323",
+          "sign": "+",
+          "abs": "0.0233847",
+          "grid_doubling_change": "2.6e-13",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "nu": [
+            1,
+            1,
+            0
+          ],
+          "value": "0.02338466323",
+          "sign": "+",
+          "abs": "0.0233847",
+          "grid_doubling_change": "2.6e-13",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "nu": [
+            1,
+            0,
+            1
+          ],
+          "value": "-0.0001213376415",
+          "sign": "-",
+          "abs": "0.000121338",
+          "grid_doubling_change": "3.21e-12",
+          "below_resolution": false,
+          "parent_nu": [
+            1,
+            -1,
+            1
+          ]
+        },
+        {
+          "nu": [
+            0,
+            1,
+            1
+          ],
+          "value": "0.005747739332",
+          "sign": "+",
+          "abs": "0.00574774",
+          "grid_doubling_change": "2.86e-13",
+          "below_resolution": false,
+          "parent_nu": [
+            0,
+            1,
+            1
+          ]
+        }
+      ],
+      "certificate_holds_above_resolution": true,
+      "smallest_resolved_abs": "0.000121338",
+      "smallest_resolved_at": [
+        1,
+        0,
+        1
+      ]
+    }
+  ],
+  "duality_checks": [
+    {
+      "form": "rank1",
+      "alpha_over_star": "1/4",
+      "relative_difference": "9.861e-32",
+      "probe_point": [
+        "0.333333333333"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 3
+    },
+    {
+      "form": "rank1",
+      "alpha_over_star": "1/2",
+      "relative_difference": "1.397e-31",
+      "probe_point": [
+        "0.333333333333"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 5
+    },
+    {
+      "form": "rank1",
+      "alpha_over_star": "1",
+      "relative_difference": "2.061e-31",
+      "probe_point": [
+        "0.333333333333"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 6
+    },
+    {
+      "form": "rank1",
+      "alpha_over_star": "2",
+      "relative_difference": "1.765e-31",
+      "probe_point": [
+        "0.333333333333"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 5,
+      "dual_radius": 8
+    },
+    {
+      "form": "rank1",
+      "alpha_over_star": "4",
+      "relative_difference": "3.924e-31",
+      "probe_point": [
+        "0.333333333333"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 3,
+      "dual_radius": 11
+    },
+    {
+      "form": "square2",
+      "alpha_over_star": "1/4",
+      "relative_difference": "4.93e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 3
+    },
+    {
+      "form": "square2",
+      "alpha_over_star": "1/2",
+      "relative_difference": "2.975e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 5
+    },
+    {
+      "form": "square2",
+      "alpha_over_star": "1",
+      "relative_difference": "0.0",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 6
+    },
+    {
+      "form": "square2",
+      "alpha_over_star": "2",
+      "relative_difference": "3.159e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 5,
+      "dual_radius": 8
+    },
+    {
+      "form": "diag2_r4",
+      "alpha_over_star": "1/4",
+      "relative_difference": "4.949e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 15,
+      "dual_radius": 5
+    },
+    {
+      "form": "diag2_r4",
+      "alpha_over_star": "1/2",
+      "relative_difference": "5.391e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 6
+    },
+    {
+      "form": "diag2_r4",
+      "alpha_over_star": "1",
+      "relative_difference": "1.668e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 8
+    },
+    {
+      "form": "diag2_r4",
+      "alpha_over_star": "2",
+      "relative_difference": "1.149e-30",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 11
+    },
+    {
+      "form": "hexagonal",
+      "alpha_over_star": "1/4",
+      "relative_difference": "2.958e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 14,
+      "dual_radius": 4
+    },
+    {
+      "form": "hexagonal",
+      "alpha_over_star": "1/2",
+      "relative_difference": "3.949e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 10,
+      "dual_radius": 6
+    },
+    {
+      "form": "hexagonal",
+      "alpha_over_star": "1",
+      "relative_difference": "3.101e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 8
+    },
+    {
+      "form": "hexagonal",
+      "alpha_over_star": "2",
+      "relative_difference": "0.0",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 10
+    },
+    {
+      "form": "hex_chart2",
+      "alpha_over_star": "1/4",
+      "relative_difference": "2.958e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 14,
+      "dual_radius": 4
+    },
+    {
+      "form": "hex_chart2",
+      "alpha_over_star": "1/2",
+      "relative_difference": "1.975e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 10,
+      "dual_radius": 6
+    },
+    {
+      "form": "hex_chart2",
+      "alpha_over_star": "1",
+      "relative_difference": "1.049e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 8
+    },
+    {
+      "form": "hex_chart2",
+      "alpha_over_star": "2",
+      "relative_difference": "1.536e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 10
+    },
+    {
+      "form": "hex_chart3",
+      "alpha_over_star": "1/4",
+      "relative_difference": "6.903e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 22,
+      "dual_radius": 6
+    },
+    {
+      "form": "hex_chart3",
+      "alpha_over_star": "1/2",
+      "relative_difference": "2.962e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 16,
+      "dual_radius": 8
+    },
+    {
+      "form": "hex_chart3",
+      "alpha_over_star": "1",
+      "relative_difference": "5.162e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 11
+    },
+    {
+      "form": "hex_chart3",
+      "alpha_over_star": "2",
+      "relative_difference": "1.357e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 16
+    },
+    {
+      "form": "shear_t1",
+      "alpha_over_star": "1/4",
+      "relative_difference": "7.889e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 17,
+      "dual_radius": 5
+    },
+    {
+      "form": "shear_t1",
+      "alpha_over_star": "1/2",
+      "relative_difference": "1.977e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 12,
+      "dual_radius": 7
+    },
+    {
+      "form": "shear_t1",
+      "alpha_over_star": "1",
+      "relative_difference": "1.045e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 9,
+      "dual_radius": 9
+    },
+    {
+      "form": "shear_t1",
+      "alpha_over_star": "2",
+      "relative_difference": "1.448e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 7,
+      "dual_radius": 12
+    },
+    {
+      "form": "shear_t2",
+      "alpha_over_star": "1/4",
+      "relative_difference": "2.958e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 25,
+      "dual_radius": 7
+    },
+    {
+      "form": "shear_t2",
+      "alpha_over_star": "1/2",
+      "relative_difference": "0.0",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 18,
+      "dual_radius": 10
+    },
+    {
+      "form": "shear_t2",
+      "alpha_over_star": "1",
+      "relative_difference": "1.099e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 13,
+      "dual_radius": 13
+    },
+    {
+      "form": "shear_t2",
+      "alpha_over_star": "2",
+      "relative_difference": "9.205e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 10,
+      "dual_radius": 18
+    },
+    {
+      "form": "shear_t1/2",
+      "alpha_over_star": "1/4",
+      "relative_difference": "3.944e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 14,
+      "dual_radius": 4
+    },
+    {
+      "form": "shear_t1/2",
+      "alpha_over_star": "1/2",
+      "relative_difference": "2.97e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 10,
+      "dual_radius": 6
+    },
+    {
+      "form": "shear_t1/2",
+      "alpha_over_star": "1",
+      "relative_difference": "5.422e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 7,
+      "dual_radius": 7
+    },
+    {
+      "form": "shear_t1/2",
+      "alpha_over_star": "2",
+      "relative_difference": "8.79e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 10
+    },
+    {
+      "form": "neardiag_1/10",
+      "alpha_over_star": "1/4",
+      "relative_difference": "2.958e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 4
+    },
+    {
+      "form": "neardiag_1/10",
+      "alpha_over_star": "1/2",
+      "relative_difference": "2.974e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 5
+    },
+    {
+      "form": "neardiag_1/10",
+      "alpha_over_star": "1",
+      "relative_difference": "1.124e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 6
+    },
+    {
+      "form": "neardiag_1/10",
+      "alpha_over_star": "2",
+      "relative_difference": "0.0",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 5,
+      "dual_radius": 8
+    },
+    {
+      "form": "neardiag_1/100",
+      "alpha_over_star": "1/4",
+      "relative_difference": "9.861e-32",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 4
+    },
+    {
+      "form": "neardiag_1/100",
+      "alpha_over_star": "1/2",
+      "relative_difference": "3.966e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 8,
+      "dual_radius": 5
+    },
+    {
+      "form": "neardiag_1/100",
+      "alpha_over_star": "1",
+      "relative_difference": "1.127e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 6
+    },
+    {
+      "form": "neardiag_1/100",
+      "alpha_over_star": "2",
+      "relative_difference": "5.272e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 5,
+      "dual_radius": 8
+    },
+    {
+      "form": "diag2_r16",
+      "alpha_over_star": "1/4",
+      "relative_difference": "3.235e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 21,
+      "dual_radius": 6
+    },
+    {
+      "form": "diag2_r16",
+      "alpha_over_star": "1/2",
+      "relative_difference": "3.329e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 15,
+      "dual_radius": 8
+    },
+    {
+      "form": "cubic3",
+      "alpha_over_star": "1",
+      "relative_difference": "8.422e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619",
+        "0.619047619048"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 6,
+      "dual_radius": 6
+    },
+    {
+      "form": "cubic3",
+      "alpha_over_star": "2",
+      "relative_difference": "1.071e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619",
+        "0.619047619048"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 5,
+      "dual_radius": 8
+    },
+    {
+      "form": "fcc",
+      "alpha_over_star": "1",
+      "relative_difference": "7.833e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619",
+        "0.619047619048"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 7,
+      "dual_radius": 9
+    },
+    {
+      "form": "fcc",
+      "alpha_over_star": "2",
+      "relative_difference": "4.928e-31",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619",
+        "0.619047619048"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 5,
+      "dual_radius": 12
+    },
+    {
+      "form": "fcc_chart2",
+      "alpha_over_star": "1",
+      "relative_difference": "1.625e-30",
+      "probe_point": [
+        "0.333333333333",
+        "0.47619047619",
+        "0.619047619048"
+      ],
+      "probe_note": "one point per row: x_i = 1/3 + i/7; this compares the direct and dual representations of the mass there, not the quadrature mesh and not the Fourier coefficients",
+      "direct_radius": 11,
+      "dual_radius": 12
+    }
+  ],
+  "sign_crossings": [],
+  "summary": {
+    "rows": 52,
+    "rows_all_frequencies_resolved_nonzero": 32,
+    "rows_with_an_unresolved_frequency": 20,
+    "resolved_forms": [
+      "fcc",
+      "fcc_chart2",
+      "hex_chart2",
+      "hex_chart3",
+      "hexagonal",
+      "neardiag_1/10",
+      "neardiag_1/100",
+      "rank1",
+      "shear_t1/2"
+    ],
+    "unresolved_forms": [
+      "cubic3",
+      "diag2_r16",
+      "diag2_r4",
+      "shear_t1",
+      "shear_t2",
+      "square2"
+    ],
+    "resolved_forms_all_indecomposable": true,
+    "unresolved_forms_all_decomposable": true,
+    "sign_crossings_among_resolved_entries": 0,
+    "caveat": "an observation on the sampled forms, charts and couplings; not a proved equivalence between the certificate and orthogonal indecomposability"
+  }
+}

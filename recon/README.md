@@ -90,15 +90,20 @@ precision.
     uv run recon/rigidity.py audit
     uv run recon/rigidity.py record            # print only
     uv run recon/rigidity.py record --write    # regenerate the record
+    uv run recon/logfourier.py structure       # exact audit only
+    uv run recon/logfourier.py sweep --write   # ~16 min
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
 `RECORD_CONFIG` literal in the script and its precision escalates on
 its own, so `record --write` is deterministic — two runs produce a
-byte-identical file.
+byte-identical file. The same holds for `logfourier.py`, whose grid is
+the `SWEEP_CONFIG` literal; at about sixteen minutes it is by far the
+slowest committed sweep, and it dominates `nu tasks.nu recon`.
 
 Dependencies are pinned in each script's inline metadata (PEP 723:
-`mpmath==1.4.1` for `harness.py` and `q4.py`, `python-flint==0.9.0`
-for `rigidity.py`, recorded in every data file), so `uv run` needs
+`mpmath==1.4.1` for `harness.py`, `q4.py` and `logfourier.py`,
+`python-flint==0.9.0` for `rigidity.py`, recorded in every data file),
+so `uv run` needs
 no flags. `python-flint` has no wheel for the newest interpreters,
 so `rigidity.py` pins `requires-python >=3.12,<3.13` and `uv`
 fetches that interpreter itself.
@@ -361,6 +366,161 @@ Findings, finite-sample:
    `log θ(s) ≥ 2·log θ(4s)`, crossing near `s = 0.196`, is
    exactly the `n = 4` star model (`√4 = 2`):
    `star_prediction(4) = 0.19636`.
+
+## Log-mass Fourier certificate — falsification gate
+
+(`logfourier.py`, `log_fourier.json`)
+
+**Nothing in this section is certified.** Unlike the rigidity campaign
+above, this is ordinary high-precision floating point (mpmath, 30
+digits) with a spectral quadrature whose aliasing error is *estimated*
+by grid doubling, not bounded. Its job is falsification.
+
+### What is being probed
+
+Coprime rigidity follows from `EvenPartSeparating` (Lean:
+`gramDefect_neg_of_evenPartSeparating`), and that in turn follows from
+nonvanishing of the Fourier coefficients `ℓ_ν` of
+`L(x) = log gramMass(M, α, x)` on the **finite** family
+
+    {e_i} ∪ {e_i + e_j : i < j}
+
+composed with the arithmetic step `isLatticeShift_or_of_pairwise`.
+That family is the certificate. It is **chart dependent** — the
+frequencies belong to a chosen integral chart — and **strictly
+stronger than rigidity**, so a failure here refutes the certificate,
+not the roadmap item.
+
+### Method and its limits
+
+`L` is smooth and periodic, so the uniform trapezoidal rule is
+spectrally accurate: on an `N`-point mesh the computed coefficient
+differs from `ℓ_ν` by the aliasing sum over `ν + NZᵈ`. Doubling `N` is
+therefore a sharp empirical convergence test, and the change under
+doubling is reported for every entry. `L` is even, so only one of each
+`±x` pair is evaluated; the coarse mesh is a subsample of the fine
+one.
+
+Each row records a `mesh_nome_heuristic`, `exp(−π²/(α·λmax(M)))` with
+`λmax` bounded by Gershgorin. It is a **heuristic only**: Gershgorin
+bounds the Gaussian coefficients of the *mass*, but taking the
+logarithm moves the decay rate to the nearest complex zero, so this is
+not a proved bound on the tail of `log mass` — the rank-one
+coefficients already decay geometrically rather than at the Gaussian
+rate. It is used solely to choose a mesh, doubling until the
+heuristic estimate is small or a cap is reached, and it empirically
+tracks the observed convergence. The falsification check is grid
+doubling, not this quantity. Each row also reports a
+`resolution_floor` (the larger of the arithmetic floor and the
+observed grid-doubling change); an entry at or below `100×` that floor
+is marked `below_resolution` and is **not** evidence of vanishing.
+
+Two independent checks run alongside. The mass is evaluated a second
+way, through the Poisson/dual character sum with its own truncation
+radius. That comparison is made at **one recorded probe point per
+row**, `x_i = 1/3 + i/7` — it checks the two representations of the
+mass there, not the quadrature mesh and not the Fourier coefficients
+themselves; the probe, both radii, and the discrepancy are in the
+record.
+
+The second check is exact references. For a diagonal form the Jacobi
+triple product gives, exactly,
+
+    ℓ_{k·e_i} = (−1)^{k+1} q_i^k / (k(1 − q_i^{2k})),
+                q_i = exp(−π²/(α m_i)),
+    ℓ_ν       = 0  whenever ν is supported on more than one axis.
+
+A unimodular rechart `M′ = UᵀMU` has `L′(x) = L(Ux)`, hence
+`ℓ′_ν = ℓ_{U⁻ᵀν}`, so a rechart of a diagonal form inherits exact
+references as well. That is what makes the sheared square lattices
+sharp controls: `shear_t1` has an exact reference `0` at `(1,0)` —
+because `U⁻ᵀ(1,0) = (1,−1)` is off-axis for the parent — and the
+exact rank-one value at both `(0,1)` and `(1,1)`. The record carries
+the chart matrix, its inverse transpose, the transported `parent_nu`
+for each frequency, and the resulting reference and gap.
+
+### Findings — in the committed samples
+
+Sampled: ranks 1–3; the diagonal controls `square2`, `diag2_r4`,
+`diag2_r16`, `cubic3`; `hexagonal` and `fcc`; unimodular recharts
+`hex_chart2`, `hex_chart3`, `fcc_chart2`, `shear_t1`, `shear_t2`; the
+non-integral shear `shear_t1/2`; the near-decomposable probes
+`neardiag_1/10` and `neardiag_1/100`. The self-dual coupling of the
+raw form is
+
+    α* = π / det(M)^{1/d},
+
+which is `π` only after determinant normalization; the record stores
+`alpha_star` and `alpha` for every row. The coupling grid **varies by
+form**: `α/α* ∈ {1/4, 1/2, 1, 2, 4}` at rank one and
+`{1/4, 1/2, 1, 2}` for most rank-two forms, so those straddle the
+duality centre — but `diag2_r16` was sampled only at `{1/4, 1/2}` and
+the rank-three forms only at `{1, 2}` (`fcc_chart2` only at `1`), so
+those were **not** sampled on both sides.
+
+1. **Rank-one calibration.** The computed `ℓ_1` matches the closed
+   form `q/(1−q²)` to the arithmetic floor at every sampled coupling.
+2. **Diagonal controls behave as predicted.** Every mixed coefficient
+   of every diagonal form lands at the floor (`~1e−32`), and every
+   single-index coefficient matches its exact reference.
+3. **The certificate splits the samples along decomposability.**
+   Each form carries an **exact** structural audit (`structure` task):
+   a rational search for a nonzero `v` with
+   `ℤᵈ = ℤv ⊕ (v^⊥ ∩ ℤᵈ)`, which holds exactly when `Q(v)` divides
+   every entry of `Mv`, over a box bounded by
+   `Q(v) ≤ det M / λmin^{d−1}`. The search is exhaustive for rank at
+   most three, where any proper splitting has a rank-one summand, and
+   it is the audit — not "is the Gram diagonal", which is a chart
+   property — that classifies the forms. It finds
+   `square2`, `diag2_r4`, `diag2_r16`, `cubic3`, `shear_t1` and
+   `shear_t2` decomposable (with witnesses, `[−2,1]` in the last
+   case), and `rank1`, `hexagonal` with both recharts, `shear_t1/2`,
+   both `neardiag` probes, `fcc` and its rechart indecomposable.
+   Against that classification: of 52 rows, the 32 in which every
+   frequency is resolved and nonzero are exactly the rows on
+   indecomposable forms, and the 20 with an unresolved frequency
+   exactly the rows on decomposable ones. This is an observation on
+   the sampled forms, charts and couplings — not a proved
+   equivalence.
+4. **Which frequency fails is chart dependent; that one fails is
+   not.** `shear_t1` and `shear_t2` are the square lattice in other
+   integral charts, so their exact references are the parent's
+   transported by `U⁻ᵀ`. In the standard chart the reference zero is
+   at `(1,1)`; for `t = 1` it is at `(1,0)`, with `(0,1)` and `(1,1)`
+   both carrying the exact rank-one value; for `t = 2` both `(1,0)`
+   and `(1,1)` are reference zeros. Every measurement matches its
+   reference. The lattice is decomposable, so the certificate must
+   fail in every chart — and it does, at the frequency the rechart
+   predicts each time.
+5. **Signs are chart dependent too.** For `hexagonal` the mixed
+   coefficient is negative; in `hex_chart2` all three are positive and
+   equal; in `hex_chart3` it is `(1,0)` that is negative. `fcc` has all
+   six positive, `fcc_chart2` two negative. Nonvanishing survives every
+   rechart sampled.
+6. **No sign crossing.** Among resolved entries there is no sign change
+   anywhere on the sampled coupling grid.
+7. **Two probes toward the decomposable locus.** For
+   `[[1,ε],[ε,1]]` the mixed coefficient is positive at both sampled
+   `ε` and smaller at the smaller one — at `α = α*`, `1.60e−3` at
+   `ε = 1/10` and `1.22e−4` at `ε = 1/100`. Two values are consistent
+   with a continuous approach to the structural zero at `ε = 0`; the
+   sweep does not establish that approach.
+8. **An observed relation on one profile.** Along the `hexagonal`
+   profile at small coupling `ℓ_{(1,1)} ≈ −ℓ_{(1,0)}·ℓ_{(0,1)}`: at
+   `α/α* = 1/4` the product is `2.4913e−13` against a measured
+   `−2.49133e−13`. This *suggests* that the mixed coefficient is
+   dominated by a second-order cross term when `e_1 + e_2` is long in
+   the dual form, which would account for the negative sign and the
+   smallness. One profile does not establish that mechanism, and no
+   expansion or error term is proved here.
+
+What this does not settle: ranks above three, forms and charts outside
+the sampled families, couplings outside the sampled grid, whether the
+certificate can fail on an indecomposable form at some special
+coupling, and whether every failure of separation comes from a
+splitting. The gate did not falsify the certificate on any sampled
+indecomposable form; that is evidence for attempting the analytic
+layer, not a proof of nonvanishing.
 
 ## Two-grid rigidity campaign (`rigidity.py`, `rigidity_two_grid.json`)
 

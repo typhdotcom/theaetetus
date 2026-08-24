@@ -19,4 +19,5 @@ def "main recon" [] {
     uv run recon/harness.py all
     uv run recon/q4.py all
     uv run recon/rigidity.py record --write
+    uv run recon/logfourier.py sweep --write
 }
