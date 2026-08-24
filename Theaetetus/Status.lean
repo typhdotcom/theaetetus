@@ -1644,29 +1644,39 @@ example {d : ℕ} {H : AddSubgroup (Fin d → ℤ)} (s : ℝ)
     subMass s H = gramTheta (subGram b) s :=
   subMass_eq_gramTheta s b
 
-example {d : ℕ} {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
-    (hU : U.index ≠ 0) (hV : V.index ≠ 0) (bU : Module.Basis (Fin d) ℤ U)
-    (bV : Module.Basis (Fin d) ℤ V) :
-    Tendsto (fun s => subMass s U / subMass s V) (𝓝[>] (0 : ℝ))
-      (𝓝 (((V.relIndex U : ℕ) : ℝ))) :=
-  tendsto_subMass_ratio hle hU hV bU bV
+noncomputable example {d : ℕ} {H : AddSubgroup (Fin d → ℤ)}
+    (hH : H.index ≠ 0) : Module.Basis (Fin d) ℤ H :=
+  subBasis hH
 
 example {d : ℕ} {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
-    (hU : U.index ≠ 0) (hV : V.index ≠ 0) (bU : Module.Basis (Fin d) ℤ U)
-    (bV : Module.Basis (Fin d) ℤ V) :
+    (hU : U.index ≠ 0) (hV : V.index ≠ 0) :
+    Tendsto (fun s => subMass s U / subMass s V) (𝓝[>] (0 : ℝ))
+      (𝓝 (((V.relIndex U : ℕ) : ℝ))) :=
+  tendsto_subMass_ratio hle hU hV
+
+example {d : ℕ} {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+    (hU : U.index ≠ 0) (hV : V.index ≠ 0) :
     Tendsto (fun s => Real.log (subMass s U) - Real.log (subMass s V))
       (𝓝[>] (0 : ℝ)) (𝓝 (Real.log (((V.relIndex U : ℕ) : ℝ)))) :=
-  tendsto_log_subMass_sub hle hU hV bU bV
+  tendsto_log_subMass_sub hle hU hV
 
 /-! ## The pairwise boundary of the sublattice field -/
 
 example {d : ℕ} {A B : AddSubgroup (Fin d → ℤ)} (hA : A.index ≠ 0)
-    (hB : B.index ≠ 0) (bA : Module.Basis (Fin d) ℤ A)
-    (bB : Module.Basis (Fin d) ℤ B)
-    (bI : Module.Basis (Fin d) ℤ (A ⊓ B : AddSubgroup (Fin d → ℤ)))
-    (bS : Module.Basis (Fin d) ℤ (A ⊔ B : AddSubgroup (Fin d → ℤ))) :
+    (hB : B.index ≠ 0) :
     Tendsto (fun s => Descent.defect (subField s) A B) (𝓝[>] (0 : ℝ))
       (𝓝 0) :=
-  tendsto_defect_subField hA hB bA bB bI bS
+  tendsto_defect_subField hA hB
+
+example {d : ℕ} (A B C : AddSubgroup (Fin d → ℤ)) :
+    distribLower A B C ≤ distribUpper A B C :=
+  distribLower_le_upper A B C
+
+example {d : ℕ} {A B C : AddSubgroup (Fin d → ℤ)} (hA : A.index ≠ 0)
+    (hB : B.index ≠ 0) (hC : C.index ≠ 0) :
+    Tendsto (fun s => Descent.defect3 (subField s) A B C) (𝓝[>] (0 : ℝ))
+      (𝓝 (Real.log ((((distribLower A B C).relIndex
+        (distribUpper A B C) : ℕ)) : ℝ))) :=
+  tendsto_defect3_subField hA hB hC
 
 end Theaetetus

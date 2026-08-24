@@ -1,5 +1,6 @@
 import Theaetetus.GramAsymptotics
 import Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient
+import Mathlib.LinearAlgebra.FreeModule.Int
 
 /-! # The finite-index mass ratio
 
@@ -203,7 +204,8 @@ theorem subMass_pos {H : AddSubgroup (Fin d → ℤ)} (hidx : H.index ≠ 0)
 /-- **The finite-index mass ratio**: for a full-rank finite-index
 inclusion `V ≤ U` of the integer lattice the Gaussian masses compare,
 at small scale, by the relative index. -/
-theorem tendsto_subMass_ratio {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+theorem tendsto_subMass_ratio_chart {U V : AddSubgroup (Fin d → ℤ)}
+    (hle : V ≤ U)
     (hU : U.index ≠ 0) (hV : V.index ≠ 0) (bU : Module.Basis (Fin d) ℤ U)
     (bV : Module.Basis (Fin d) ℤ V) :
     Tendsto (fun s => subMass s U / subMass s V) (𝓝[>] (0 : ℝ))
@@ -230,7 +232,8 @@ theorem tendsto_subMass_ratio {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U
 /-- **The logarithmic form**: the gap between the two log-masses
 converges to the logarithm of the relative index. This is the field
 gap the order-three recurrence consumes. -/
-theorem tendsto_log_subMass_sub {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+theorem tendsto_log_subMass_sub_chart {U V : AddSubgroup (Fin d → ℤ)}
+    (hle : V ≤ U)
     (hU : U.index ≠ 0) (hV : V.index ≠ 0) (bU : Module.Basis (Fin d) ℤ U)
     (bV : Module.Basis (Fin d) ℤ V) :
     Tendsto (fun s => Real.log (subMass s U) - Real.log (subMass s V))
@@ -245,12 +248,42 @@ theorem tendsto_log_subMass_sub {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤
     have : 0 < V.relIndex U := Nat.pos_of_ne_zero hrel
     exact_mod_cast this
   have hcomp := (Real.continuousAt_log hrelR.ne').tendsto.comp
-    (tendsto_subMass_ratio hle hU hV bU bV)
+    (tendsto_subMass_ratio_chart hle hU hV bU bV)
   refine hcomp.congr' (Filter.eventuallyEq_of_mem self_mem_nhdsWithin
     fun s hs => ?_)
   have hs' : (0 : ℝ) < s := hs
   show Real.log (subMass s U / subMass s V)
     = Real.log (subMass s U) - Real.log (subMass s V)
   exact Real.log_div (subMass_pos hU bU hs').ne' (subMass_pos hV bV hs').ne'
+
+/-! ## The intrinsic form -/
+
+/-- A chart for any finite-index subgroup: a finite-index subgroup of
+the integer lattice is itself free of the ambient rank, so the
+standard basis transports to it. -/
+noncomputable def subBasis {H : AddSubgroup (Fin d → ℤ)} (hH : H.index ≠ 0) :
+    Module.Basis (Fin d) ℤ H :=
+  (Pi.basisFun ℤ (Fin d)).map
+    (Int.addSubgroup_index_ne_zero_iff.mp hH).some.toIntLinearEquiv.symm
+
+theorem subMass_pos' {H : AddSubgroup (Fin d → ℤ)} (hidx : H.index ≠ 0)
+    {s : ℝ} (hs : 0 < s) : 0 < subMass s H :=
+  subMass_pos hidx (subBasis hidx) hs
+
+/-- **The finite-index mass ratio**, chart-free: for a finite-index
+inclusion of the integer lattice the Gaussian masses compare, at
+small scale, by the relative index. -/
+theorem tendsto_subMass_ratio {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+    (hU : U.index ≠ 0) (hV : V.index ≠ 0) :
+    Tendsto (fun s => subMass s U / subMass s V) (𝓝[>] (0 : ℝ))
+      (𝓝 (((V.relIndex U : ℕ) : ℝ))) :=
+  tendsto_subMass_ratio_chart hle hU hV (subBasis hU) (subBasis hV)
+
+/-- **The logarithmic form**, chart-free. -/
+theorem tendsto_log_subMass_sub {U V : AddSubgroup (Fin d → ℤ)} (hle : V ≤ U)
+    (hU : U.index ≠ 0) (hV : V.index ≠ 0) :
+    Tendsto (fun s => Real.log (subMass s U) - Real.log (subMass s V))
+      (𝓝[>] (0 : ℝ)) (𝓝 (Real.log (((V.relIndex U : ℕ) : ℝ)))) :=
+  tendsto_log_subMass_sub_chart hle hU hV (subBasis hU) (subBasis hV)
 
 end Theaetetus

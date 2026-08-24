@@ -1085,9 +1085,10 @@ Formalization targets:
     geometry in which Q4's CND/Schoenberg question naturally lives.
     Completion and diameter claims remain outside the target until
     they are proved.
-12. **The distributivity-index law.** Conjectural, and stated as
-    such. For full-rank finite-index sublattices `A, B, C`, with
-    `U = (A+B) ∩ C` and `V = (A∩C) + (B∩C)` the two ends of the
+12. **The distributivity-index law** — done
+    (`Theaetetus.SublatticeAsymptotics`), for finite-index subgroups
+    of the standard integer lattice with its euclidean Gaussian.
+    With `U = (A+B) ∩ C` and `V = (A∩C) + (B∩C)` the two ends of the
     distributivity-defect interval, the landing is
 
         D₃,s(A,B,C) → log [U : V]   as   s → 0⁺,
@@ -1139,12 +1140,26 @@ Formalization targets:
     `A∩B ≤ B` contribute the indices `[A+B : A]` and `[B : A∩B]`,
     which the second isomorphism theorem equates, so covolume is
     multiplicative across meet and join and the boundary field loses
-    its pairwise curvature. That is what leaves the
-    distributivity-gap index as the only possible surviving
-    order-three value. What remains is the composition of the two
-    halves through the recurrence; until it is proved this is a
-    conjecture with one witness, not a theorem with a general
-    proof.
+    its pairwise curvature.
+
+    The two halves compose in one rewrite of `defect3_recurrence`:
+    its three pairwise defects go to zero, its field gap goes to the
+    logarithm of the interval's index, and
+
+        D₃,s(A,B,C) → log [(A+B)∩C : (A∩C)+(B∩C)]
+
+    (`tendsto_defect3_subField`, over `distribUpper`,
+    `distribLower`, `distribLower_le_upper`). The statement's only
+    inputs are the three subgroups and their nonzero indices; the
+    charts are internal (`subBasis`, from
+    `Int.addSubgroup_index_ne_zero_iff`) and the chart-level
+    theorems remain as implementation API. The reading is plain: the
+    Gaussian field becomes pairwise modular at the boundary, but
+    non-distributivity leaves a finite interval, and the entire
+    surviving third-order interaction is the logarithm of that
+    interval's index. What is *not* claimed: the same law over an
+    arbitrary positive-definite ambient form, or across rank loss or
+    infinite index.
 
 Reconnaissance, falsify-first:
 
@@ -1192,14 +1207,17 @@ isolation, and the Gaussian `M₃` diamond, whose order-three defect
 is strictly positive and survives the small-scale boundary. The
 resolution metric (target 11) is complete: the join kernel of the
 normalized field, a pseudometric by the correlation theorem and a
-metric by strict Boltzmann decay. Still open: the equality chain
-(target 10), complete through the intrinsic two-grid criterion and
-awaiting only the rigidity theorem that the criterion is impossible
-for coprime `a, b > 1`; and the distributivity-index law (target
-12), a conjecture whose first nontrivial case is that diamond. The
-verdicts to date: Q5 stays a universal conjecture, with margins
-vanishing toward every degenerate boundary probed and its binding
-point leaving the duality center under dual asymmetry; Q4's
+metric by strict Boltzmann decay. The distributivity-index law
+(target 12) is complete for finite-index subgroups of the standard
+integer lattice: at the boundary the field is pairwise modular and
+its whole third-order value is the logarithm of the
+distributivity-gap index. Still open: the equality chain (target
+10), complete through the intrinsic two-grid criterion and awaiting
+only the rigidity theorem that the criterion is impossible for
+coprime `a, b > 1`. The verdicts to date: Q5 stays a universal
+conjecture, with margins vanishing toward every degenerate boundary
+probed and its binding point leaving the duality center under dual
+asymmetry; Q4's
 uniform-PSD question is resolved negatively by the star
 obstruction, leaving the rate and intervality open.
 
