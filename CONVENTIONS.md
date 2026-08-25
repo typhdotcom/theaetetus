@@ -38,6 +38,12 @@ be conservative- the user appreciates using the best tool for the job.
 If a tool is general purpose, consider asking the user to add it to the nixos
 config (~/nixos).
 
+## Template
+
+When a Copier update conflicts, understand why the project and template
+diverged before resolving the text. Raise anything the conflict reveals beyond
+this project.
+
 ## Flake layout
 
 `flake.nix` imports every `*.nix` file in `nix/` as a flake-parts module.
@@ -77,15 +83,24 @@ already says).
 ### Commit process
 
 - Update the README.md if it's stale.
+- Bump any version the change makes stale.
 - Run `nix flake check`.
 - Commit.
 
 ## Documentation
 
-Do not edit CLAUDE.md/AGENTS.md/CONVENTIONS.md until explicitly requested.
+Where a thing is written decides how far it travels. CONVENTIONS.md arrives
+from the template and reaches every project through it; AGENTS.md reaches the
+agents working in this one, and CLAUDE.md points at it; README.md reaches
+whoever reads the repo.
 
-Keep the README.md about the project as it exists at time of commit. Don't use
-it to record history. Don't treat it like part of a conversation. This also
+A general convention written into this copy of CONVENTIONS.md reaches only
+this project and conflicts on the next update. Where it should reach instead
+is the question worth raising — the template, a plugin, the nixos config, a
+check that enforces it rather than prose that asks.
+
+Keep the README.md about the project as it exists at time of commit. Don't
+use it to record history. Don't treat it like part of a conversation. This also
 goes for code comments. Be concise and high signal, code is hard to read if
 there's multiline commentary everywhere.
 
