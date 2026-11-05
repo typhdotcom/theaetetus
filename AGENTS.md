@@ -1,5 +1,3 @@
-@CONVENTIONS.md
-
 # Theaetetus
 
 Read `README.md` first — the object, the theorems, the open

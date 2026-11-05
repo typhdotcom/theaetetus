@@ -1,10 +1,45 @@
 # Lints report and fail; they never edit the tree, so a false positive costs
 # an argument rather than deleted code.
-{ self, ... }:
 {
-  perSystem =
+  self,
+  lib,
+  config,
+  ...
+}:
+let
+  cfg = config.typh;
+in
+{
+  options.typh = {
+    ownedPaths = lib.mkOption {
+      type = lib.types.nullOr (lib.types.listOf lib.types.str);
+      default = null;
+      description = ''
+        Paths, relative to the flake root, that the lints and formatters
+        cover. `null` covers the whole tree.
+      '';
+    };
+
+    # A missing owned path fails evaluation here rather than silently
+    # narrowing the check to nothing.
+    checkRoot = lib.mkOption {
+      type = lib.types.path;
+      readOnly = true;
+      default =
+        if cfg.ownedPaths == null then
+          self
+        else
+          lib.fileset.toSource {
+            root = ../.;
+            fileset = lib.fileset.unions (map (path: ../. + "/${path}") cfg.ownedPaths);
+          };
+    };
+  };
+
+  config.perSystem =
     { pkgs, ... }:
     let
+      root = cfg.checkRoot;
       lint =
         name: command:
         pkgs.runCommand "lint-${name}" { } ''
@@ -15,9 +50,12 @@
     in
     {
       checks = {
-        statix = lint "statix" "${pkgs.statix}/bin/statix check ${self}";
-        deadnix = lint "deadnix" "${pkgs.deadnix}/bin/deadnix --fail ${self}";
-        gitleaks = lint "gitleaks" "${pkgs.gitleaks}/bin/gitleaks dir --no-banner --redact ${self}";
+        # statix looks for statix.toml from the -c path, defaulting to the cwd,
+        # which in the sandbox is the build directory. Without -c a project's
+        # statix.toml is silently ignored and every lint stays enabled.
+        statix = lint "statix" "${pkgs.statix}/bin/statix check -c ${root} ${root}";
+        deadnix = lint "deadnix" "${pkgs.deadnix}/bin/deadnix --fail ${root}";
+        gitleaks = lint "gitleaks" "${pkgs.gitleaks}/bin/gitleaks dir --no-banner --redact ${root}";
 
         # `-exec ... +` does not run at all when nothing matches, so a project with
         # no shell scripts passes rather than erroring on an empty argument list.
@@ -26,7 +64,7 @@
         # script, so it has no shebang and SC2148 would fail every project. shfmt
         # still formats it -- layout is safe to touch where lint advice is not.
         shellcheck = lint "shellcheck" ''
-          cd ${self}
+          cd ${root}
           ${pkgs.findutils}/bin/find . -type f \( -name '*.sh' -o -name '*.bash' \) \
             -exec ${pkgs.shellcheck}/bin/shellcheck {} +
         '';
@@ -34,7 +72,7 @@
         # Skipping absent directories keeps find from erroring under `set -e`,
         # which matters because most projects have no workflows at all.
         actionlint = lint "actionlint" ''
-          cd ${self}
+          cd ${root}
           for dir in .github/workflows .gitea/workflows .forgejo/workflows; do
             [ -d "$dir" ] || continue
             ${pkgs.findutils}/bin/find "$dir" -type f \( -name '*.yml' -o -name '*.yaml' \) \
@@ -46,7 +84,7 @@
         # matched explicitly rather than inverted -- otherwise a broken rg
         # invocation would read as a clean tree.
         markers = lint "markers" ''
-          cd ${self}
+          cd ${root}
           set +e
           found=$(${pkgs.ripgrep}/bin/rg \
             --line-number --no-heading --color never --hidden \

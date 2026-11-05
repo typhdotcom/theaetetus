@@ -19,8 +19,8 @@
       systems = [ "x86_64-linux" ];
 
       # Every *.nix file in nix/ is a flake-parts module, imported here
-      # automatically. Extending the flake means adding a file, not editing
-      # one that came from the template.
+      # automatically. Outputs extend through those modules; inputs remain
+      # declarations above.
       imports = map (name: ./nix + "/${name}") (
         builtins.filter (name: builtins.match ".*\\.nix" name != null) (
           builtins.attrNames (builtins.readDir ./nix)

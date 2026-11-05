@@ -1,0 +1,12 @@
+# claude code runtime state
+/settings.local.json
+/scheduled_tasks.json
+/scheduled_tasks.lock
+/routines/.state/
+/worktrees/
+/checkpoints/
+/mailbox/
+/agent-registry.json
+/agent-memory-local/
+/first-run
+/assistant-daemon-state.json

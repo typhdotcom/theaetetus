@@ -4,7 +4,15 @@
 # Enabling a formatter for a language no project uses costs nothing: treefmt
 # matches on filename, so an unused one never runs. The list is therefore
 # aspirational rather than a description of what exists today.
-{ inputs, self, ... }:
+{
+  inputs,
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (config.typh) ownedPaths checkRoot;
+in
 {
   perSystem =
     { pkgs, ... }:
@@ -24,6 +32,7 @@
           # which always expands arrays; prettier collapses the short ones.
           "recon/data/*.json"
 
+          ".copier-answers.yml" # copier
           "Manifest.toml" # julia
           "lake-manifest.json"
           "package-lock.json"
@@ -31,6 +40,19 @@
           "*.min.js"
           "*.min.css"
         ];
+
+        # Neither treefmt-nix nor nixpkgs packages a Julia formatter. Runic is
+        # the configless one, as gofmt is for go; JuliaFormatter has style
+        # knobs and a history of breaking changes between majors.
+        settings.formatter.runic = {
+          command = "${pkgs.julia.withPackages [ "Runic" ]}/bin/julia";
+          options = [
+            "-m"
+            "Runic"
+            "--inplace"
+          ];
+          includes = [ "*.jl" ];
+        };
 
         programs = {
           nixfmt.enable = true;
@@ -107,10 +129,21 @@
       # generated config is shared with the formatting check, which runs in a
       # sandbox that git-inits the source. The jujutsu walker has no repo to
       # consult there and exits 1 rather than falling back.
-      formatter = pkgs.writeShellScriptBin "treefmt" ''
-        exec ${treefmt.config.build.wrapper}/bin/treefmt --walk jujutsu "$@"
-      '';
+      #
+      # Without arguments a project that owns only part of its tree formats
+      # just that part, from the root so the paths resolve.
+      formatter = pkgs.writeShellScriptBin "treefmt" (
+        lib.optionalString (ownedPaths != null) ''
+          if [ $# -eq 0 ]; then
+            cd "$(jj root)"
+            set -- ${lib.escapeShellArgs ownedPaths}
+          fi
+        ''
+        + ''
+          exec ${treefmt.config.build.wrapper}/bin/treefmt --walk jujutsu "$@"
+        ''
+      );
 
-      checks.formatting = treefmt.config.build.check self;
+      checks.formatting = treefmt.config.build.check checkRoot;
     };
 }
