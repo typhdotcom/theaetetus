@@ -119,11 +119,15 @@ in
       };
     in
     {
-      # treefmt's `auto` walker picks git in a colocated repo, and git reports an
-      # untracked nested repo as a single entry, which a formatter then fails to
-      # read as a file. The jujutsu walker lists tracked files only, so a subrepo
-      # stays visible to fd and rg -- which gitignoring it would not -- while
-      # staying out of the formatter's way.
+      # The walker follows the nearest repo: jujutsu where `jj root` answers,
+      # git where it does not or where a git repo sits nested inside the jj
+      # one, which jujutsu would walk instead. Git reports an untracked nested
+      # repo as a single entry, which a formatter then fails to read as a
+      # file, so a colocated repo wants the jujutsu walker: it lists tracked
+      # files only, so a subrepo stays visible to fd and rg -- which
+      # gitignoring it would not -- while staying out of the formatter's way.
+      # Once treefmt's `auto` tries jujutsu before git, `--walk auto` can
+      # replace this, bar the git-inside-jj case.
       #
       # This belongs on the wrapper rather than in the settings, because the
       # generated config is shared with the formatting check, which runs in a
@@ -131,16 +135,25 @@ in
       # consult there and exits 1 rather than falling back.
       #
       # Without arguments a project that owns only part of its tree formats
-      # just that part, from the root so the paths resolve.
+      # just that part, from the repo root so the paths resolve.
       formatter = pkgs.writeShellScriptBin "treefmt" (
-        lib.optionalString (ownedPaths != null) ''
+        ''
+          root=$(jj root --ignore-working-copy 2>/dev/null)
+          git=$(git rev-parse --show-toplevel 2>/dev/null)
+          if [ -n "$root" ] && [ "''${git#"$root"/}" = "$git" ]; then
+            walk=jujutsu
+          else
+            walk=git root=$git
+          fi
+        ''
+        + lib.optionalString (ownedPaths != null) ''
           if [ $# -eq 0 ]; then
-            cd "$(jj root)"
+            cd "$root"
             set -- ${lib.escapeShellArgs ownedPaths}
           fi
         ''
         + ''
-          exec ${treefmt.config.build.wrapper}/bin/treefmt --walk jujutsu "$@"
+          exec ${treefmt.config.build.wrapper}/bin/treefmt --walk "$walk" "$@"
         ''
       );
 
