@@ -395,7 +395,7 @@ pairwise versus higher-order interaction.
   forced: against a least element the defect vanishes, the centred
   Gram kernel at it is minus half the matrix, and the matrix is
   then CND only if it is zero
-  (`condNegSemidef_defectMatrix_iff_of_base`) — a positive sample
+  (`Descent.condNegSemidef_defectMatrix_iff_of_base`) — a positive sample
   containing `1` is CND exactly when it is a divisibility chain
   (`isCNDOn_pairing_iff_chain_of_one_mem`), so `1` with two
   distinct primes never is (`not_isCNDOn_pairing_one_prime_prime`).
@@ -550,11 +550,14 @@ pairwise versus higher-order interaction.
   ```
 
   proved for the log-partition field of any `Z` at any scale
-  (`defectFam_logField_eq_telescope`): coprimality collapses the
-  meet-translated subfamily of Descent's exact recurrence to the
-  trivial resolution and annihilates its distributivity-gap
-  remainder, and the join of a coprime family is its product
-  (`supFam_of_pairwiseCoprime`). Eliminating from the front prices
+  (`defectFam_logField_eq_telescope`). The telescope is Descent's:
+  coprimality is disjointness on the divisibility carrier, and a
+  pairwise disjoint family in a distributive lattice loses both
+  correction terms of the exact recurrence
+  (`Descent.Arith.defectFam_eq_telescope_of_pairwise_coprime`);
+  Theaetetus reads it arithmetically, the join of a coprime family
+  being its product (`supFam_of_pairwiseCoprime`,
+  `telescope_eq_descent_telescope`). Eliminating from the front prices
   each entry against the product of those following it, but the
   total does not depend on that order: the telescope computes the
   symmetric abstract defect, so any two presentations of the same

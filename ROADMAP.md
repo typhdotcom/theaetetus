@@ -205,8 +205,8 @@ Formalization targets:
       `defect_neg_of_incomparable` and
       `QuadLatticeAction.defect_nonpos`, giving the strict rank-one
       and non-strict all-lattice sign laws for every corrected order
-      — done (`defectFam_logField_eq_telescope`, through the peeling
-      step `defectFam_cons_coprime` and the coprime join
+      — done (`defectFam_logField_eq_telescope`, from Descent's
+      coprime telescope through the coprime join
       `supFam_of_pairwiseCoprime`, with elimination order immaterial
       by `telescope_eq_of_perm`; signs in `defectFam_theta_neg` and
       `QuadLatticeAction.defectFam_nonpos`);
@@ -255,12 +255,16 @@ Formalization targets:
     This closes the original resolution-tower question and opens the
     genuinely new one on non-distributive sublattice carriers.
 
-    **Consider upstreaming to Descent:** if the coprime telescope
-    naturally produces a reusable theorem for pairwise-disjoint
-    families on distributive lattices, Descent may eventually want
-    that abstraction. Theaetetus will prove and use the needed
-    specialization locally; this note creates no upstream task and
-    does not block the target.
+    **Where the telescope lives:** the abstraction is Descent's —
+    the telescope of a family (`Descent.telescope`), its value on
+    telescopic and pairwise disjoint families in a distributive
+    lattice (`Descent.defectFam_eq_telescope`,
+    `Descent.defectFam_eq_telescope_of_pairwise_disjoint`), and its
+    coprime specialization on the arithmetic carrier
+    (`Descent.Arith.defectFam_eq_telescope_of_pairwise_coprime`).
+    Theaetetus keeps the arithmetic reading — the coprime join as a
+    product, the telescope as a sum of field defects
+    (`telescope_eq_descent_telescope`) — and the sign corollaries.
 
 08. **The star obstruction** — done (`deficit_not_psd`,
     `cnd_not_psd` in `Theaetetus.StarObstruction`): the explicit

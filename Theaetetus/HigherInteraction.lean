@@ -26,16 +26,17 @@ specializes to partition fields.
 
 On a pairwise coprime family of resolutions the abstract
 inclusion–exclusion defect of every arity telescopes into pairwise
-defects (`defectFam_logField_eq_telescope`): coprimality collapses
-the meet-translated subfamily of the recurrence to the trivial
-resolution and annihilates the distributivity-gap remainder, so
-peeling one entry costs exactly the pairwise defect of that entry
-against the product of the others. The recursion follows the
-abstract recurrence and so eliminates from the front, pricing each
-entry against the product of those following it; because its value
-is the symmetric abstract defect, it does not depend on that
-presentation (`telescope_eq_of_perm`), and every elimination order
-gives the same total. At arity three that coherence reads
+defects (`defectFam_logField_eq_telescope`). The telescope itself is
+Descent's: coprimality is disjointness on the divisibility carrier,
+and a pairwise disjoint family in a distributive lattice telescopes
+(`Descent.Arith.defectFam_eq_telescope_of_pairwise_coprime`). What
+this module adds is the arithmetic reading — the join of a coprime
+family is its product (`supFam_of_pairwiseCoprime`), so the abstract
+telescope is the sum of field defects of each entry against the
+product of those following it (`telescope_eq_descent_telescope`).
+Because its value is the symmetric abstract defect, it does not
+depend on the presentation (`telescope_eq_of_perm`), and every
+elimination order gives the same total. At arity three that coherence reads
 `D(a,b) + D(ab,c) = D(b,c) + D(a,bc)`. The telescope is a
 reorganization, not a vanishing theorem: at rank one every
 corrected order of a nontrivial coprime family is strictly
@@ -144,6 +145,19 @@ private theorem one_lt_prodFam {a : ℕ+} (ha : 1 < (a : ℕ)) (l : List ℕ+) :
         _ ≤ (b : ℕ) * ((prodFam a t : ℕ+) : ℕ) :=
             Nat.le_mul_of_pos_left _ b.pos
 
+theorem prodFam_coe (n : ℕ+) (l : List ℕ+) :
+    ((prodFam n l : ℕ+) : ℕ) = (n : ℕ) * (l.map fun x : ℕ+ => (x : ℕ)).prod := by
+  induction l with
+  | nil => simp
+  | cons b t ih => rw [prodFam_cons, PNat.mul_coe, ih, List.map_cons, List.prod_cons]; ring
+
+/-- A pairwise coprime family of resolutions is a pairwise coprime
+family of contexts of the arithmetic carrier. -/
+private theorem pairwise_map_of {l : List ℕ+} (h : PairwiseCoprime l) :
+    (l.map Descent.Arith.of).Pairwise fun a b =>
+      Nat.Coprime (Descent.Arith.num a) (Descent.Arith.num b) :=
+  List.pairwise_map.mpr h
+
 /-- **A coprime family joins to its product**: on the arithmetic
 carrier the join of a pairwise coprime family is the product of its
 entries. -/
@@ -151,33 +165,13 @@ theorem supFam_of_pairwiseCoprime {a : ℕ+} {l : List ℕ+}
     (h : PairwiseCoprime (a :: l)) :
     Descent.supFam (Descent.Arith.of a) (l.map Descent.Arith.of)
       = Descent.Arith.of (prodFam a l) := by
-  induction l with
-  | nil => rfl
-  | cons b t ih =>
-      have hhead := (List.pairwise_cons.mp h).1
-      have htail := (List.pairwise_cons.mp h).2
-      have hbt := (List.pairwise_cons.mp htail).1
-      have hat : PairwiseCoprime (a :: t) :=
-        List.pairwise_cons.mpr
-          ⟨fun x hx => hhead x (List.mem_cons_of_mem b hx),
-            (List.pairwise_cons.mp htail).2⟩
-      have hbp : Nat.Coprime ((b : ℕ+) : ℕ) ((prodFam a t : ℕ+) : ℕ) := by
-        refine coprime_prodFam (a := a) (l := t) fun x hx => ?_
-        rcases List.mem_cons.mp hx with rfl | hx'
-        · exact (hhead b (List.mem_cons_self ..)).symm
-        · exact hbt x hx'
-      rw [List.map_cons, Descent.supFam_cons, ih hat]
-      refine arith_ext ?_
-      rw [Descent.Arith.num_sup]
-      show Nat.lcm ((b : ℕ+) : ℕ) ((prodFam a t : ℕ+) : ℕ)
-        = ((prodFam a (b :: t) : ℕ+) : ℕ)
-      rw [hbp.lcm_eq_mul, prodFam_cons, PNat.mul_coe]
+  refine arith_ext ?_
+  rw [Descent.Arith.num_supFam_of_pairwise_coprime (pairwise_map_of h), List.map_map]
+  exact (prodFam_coe a l).symm
 
 /-- **The coprime peeling step**: on a pairwise coprime family
 extended by a coprime resolution, the exact recurrence of the
-abstract hierarchy loses both correction terms — the
-meet-translated subfamily collapses to the trivial resolution and
-the distributivity-gap remainder cancels — leaving one pairwise
+abstract hierarchy loses both correction terms, leaving one pairwise
 defect against the product of the family. -/
 theorem defectFam_cons_coprime (K : Descent.ContextField Descent.Arith ℝ)
     (d a : ℕ+) (l : List ℕ+)
@@ -187,30 +181,11 @@ theorem defectFam_cons_coprime (K : Descent.ContextField Descent.Arith ℝ)
       = Descent.defectFam K (Descent.Arith.of a) (l.map Descent.Arith.of)
         + Descent.defect K (Descent.Arith.of (prodFam a l))
             (Descent.Arith.of d) := by
-  have hnum : ∀ y : ℕ+, Nat.Coprime (y : ℕ) (d : ℕ) →
-      (Descent.Arith.num
-        (Descent.Arith.of y ⊓ Descent.Arith.of d) : ℕ) = 1 := by
-    intro y hy
-    rw [Descent.Arith.num_inf]
-    exact hy
-  have hprod : Nat.Coprime ((prodFam a l : ℕ+) : ℕ) (d : ℕ) :=
-    (coprime_prodFam (d := d) (a := a) (l := l)
-      fun x hx => (hd x hx).symm).symm
-  have hdom : ∀ x ∈ (l.map Descent.Arith.of).map (· ⊓ Descent.Arith.of d),
-      x ≤ Descent.Arith.of a ⊓ Descent.Arith.of d := by
-    intro x hx
-    obtain ⟨y, hy, rfl⟩ := List.mem_map.mp hx
-    obtain ⟨z, hz, rfl⟩ := List.mem_map.mp hy
-    refine Descent.Arith.le_iff_dvd.mpr ?_
-    rw [hnum z (hd z (List.mem_cons_of_mem a hz)),
-      hnum a (hd a (List.mem_cons_self ..))]
-  have hinf : Descent.Arith.of (prodFam a l) ⊓ Descent.Arith.of d
-      = Descent.Arith.of a ⊓ Descent.Arith.of d :=
-    arith_ext (by rw [hnum _ hprod, hnum a (hd a (List.mem_cons_self ..))])
-  rw [List.map_cons, Descent.defectFam_cons, supFam_of_pairwiseCoprime hl,
-    Descent.defectFam_of_forall_le hdom, Descent.supFam_of_forall_le hdom,
-    hinf]
-  ring
+  have hdl : PairwiseCoprime (d :: a :: l) :=
+    List.pairwise_cons.mpr ⟨fun x hx => (hd x hx).symm, hl⟩
+  rw [Descent.Arith.defectFam_eq_telescope_of_pairwise_coprime K (pairwise_map_of hdl),
+    Descent.Arith.defectFam_eq_telescope_of_pairwise_coprime K (pairwise_map_of hl),
+    List.map_cons, Descent.telescope_cons, supFam_of_pairwiseCoprime hl]
 
 /-- The telescoped sum of pairwise defects along a family: each
 entry is priced against the product of the entries following it. -/
@@ -228,6 +203,20 @@ theorem telescope_cons (Z : ℝ → ℝ) (s : ℝ) (d a : ℕ+) (l : List ℕ+) 
       = telescope Z s a l
         + fieldDefect Z s ((prodFam a l : ℕ+) : ℕ) ((d : ℕ+) : ℕ) := rfl
 
+/-- On a coprime family the arithmetic telescope is Descent's abstract
+telescope of the logarithmic context field: the join of the entries
+following each one is their product. -/
+theorem telescope_eq_descent_telescope (Z : ℝ → ℝ) (s : ℝ)
+    (d : ℕ+) (l : List ℕ+) (h : PairwiseCoprime (d :: l)) :
+    telescope Z s d l
+      = Descent.telescope (logField Z s) (Descent.Arith.of d) (l.map Descent.Arith.of) := by
+  induction l generalizing d with
+  | nil => rfl
+  | cons a t ih =>
+      have htail := (List.pairwise_cons.mp h).2
+      rw [telescope_cons, List.map_cons, Descent.telescope_cons, ih a htail,
+        supFam_of_pairwiseCoprime htail, fieldDefect_eq_defect]
+
 /-- **The coprime telescope**: on a pairwise coprime family the
 abstract inclusion–exclusion defect of a partition field's
 logarithmic context field, at every arity, is the sum of the
@@ -240,28 +229,20 @@ theorem defectFam_logField_eq_telescope (Z : ℝ → ℝ) (s : ℝ)
     Descent.defectFam (logField Z s) (Descent.Arith.of d)
         (l.map Descent.Arith.of)
       = telescope Z s d l := by
-  induction l generalizing d with
-  | nil => simp [Descent.defectFam_nil]
-  | cons a t ih =>
-      have hhead := (List.pairwise_cons.mp h).1
-      have htail := (List.pairwise_cons.mp h).2
-      rw [defectFam_cons_coprime _ d a t
-        (fun x hx => (hhead x hx).symm) htail, ih a htail,
-        telescope_cons, ← fieldDefect_eq_defect]
+  rw [telescope_eq_descent_telescope Z s d l h,
+    Descent.Arith.defectFam_eq_telescope_of_pairwise_coprime _ (pairwise_map_of h)]
 
 /-- **The telescope does not see the presentation**: two coprime
 families with the same entries have the same telescope, so the
-order in which entries are eliminated does not change the total.
-The abstract defect of a family is symmetric, and the telescope
-computes it. -/
+order in which entries are eliminated does not change the total. -/
 theorem telescope_eq_of_perm (Z : ℝ → ℝ) (s : ℝ) {d d' : ℕ+} {l l' : List ℕ+}
     (hp : (d :: l).Perm (d' :: l')) (h : PairwiseCoprime (d :: l)) :
     telescope Z s d l = telescope Z s d' l' := by
   have h' : PairwiseCoprime (d' :: l') :=
     (hp.pairwise_iff fun hxy => Nat.Coprime.symm hxy).mp h
-  rw [← defectFam_logField_eq_telescope Z s d l h,
-    ← defectFam_logField_eq_telescope Z s d' l' h',
-    Descent.defectFam_perm (logField Z s) (hp.map Descent.Arith.of)]
+  rw [telescope_eq_descent_telescope Z s d l h, telescope_eq_descent_telescope Z s d' l' h']
+  exact Descent.telescope_perm_of_pairwise_disjoint _ (hp.map Descent.Arith.of)
+    ((pairwise_map_of h).imp Descent.Arith.disjoint_iff_coprime.mpr)
 
 /-! ## The sign of every corrected order -/
 

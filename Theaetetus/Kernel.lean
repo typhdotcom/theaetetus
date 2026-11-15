@@ -1,4 +1,5 @@
 import Theaetetus.Pairing
+import Descent.Geometry.Definiteness
 
 /-! # The kernel interface: quadratic forms on finite prime sets
 
@@ -11,10 +12,13 @@ semidefiniteness (`IsPSDOn`). Symmetry and the zero diagonal are
 properties of the pairing, not of the interface — the predicates
 stay reusable for the saturation deficit and any future kernel.
 
-The restriction lemmas (`IsCNDOn.subset`, `IsPSDOn.subset`) —
-weights extend by zero across `P ⊆ Q` — are the monotonicity
-behind the chamber structure: enlarging the prime set can only
-shrink the valid-scale set. -/
+On a finite set the kernel is a matrix (`kernelMatrix`), and
+`IsCNDOn` is Descent's `CondNegSemidef` of that matrix
+(`isCNDOn_iff_condNegSemidef`). The restriction lemmas
+(`IsCNDOn.subset`, from Descent's `CondNegSemidef.submatrix`;
+`IsPSDOn.subset`, weights extended by zero across `P ⊆ Q`) are the
+monotonicity behind the chamber structure: enlarging the prime set
+can only shrink the valid-scale set. -/
 
 namespace Theaetetus
 
@@ -50,18 +54,56 @@ theorem quadFormOn_extend [DecidableEq ι] (K : ι → ι → ℝ)
     hPQ (fun q _ hq => by simp [hq])]
   exact Finset.sum_congr rfl fun q hq => by simp [hp, hq]
 
+/-! ## Finite-set kernels as matrices -/
+
+/-- The matrix of a kernel restricted to a finite index set. -/
+def kernelMatrix (K : ι → ι → ℝ) (P : Finset ι) :
+    Matrix P P ℝ :=
+  Matrix.of fun i j => K i j
+
+theorem quadFormOn_eq_dotProduct (K : ι → ι → ℝ)
+    (P : Finset ι) (c : ι → ℝ) :
+    quadFormOn K P c
+      = dotProduct (fun i : P => c i)
+          ((kernelMatrix K P).mulVec fun i : P => c i) := by
+  unfold quadFormOn
+  simp only [dotProduct, Matrix.mulVec, kernelMatrix, Matrix.of_apply,
+    Finset.mul_sum]
+  rw [← Finset.sum_coe_sort P]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [← Finset.sum_coe_sort P]
+  exact Finset.sum_congr rfl fun j _ => by ring
+
+/-- **Finite-set CND is matrix CND**: conditional negative
+definiteness of a kernel on a finite set is conditional negative
+semidefiniteness of its restricted matrix. -/
+theorem isCNDOn_iff_condNegSemidef (K : ι → ι → ℝ)
+    (P : Finset ι) :
+    IsCNDOn K P ↔ Descent.CondNegSemidef (kernelMatrix K P) := by
+  classical
+  constructor
+  · intro h x hx
+    let c : ι → ℝ := fun p => if hp : p ∈ P then x ⟨p, hp⟩ else 0
+    have hcx : (fun i : P => c i) = x := funext fun i => by simp [c]
+    have hc : (∑ p ∈ P, c p) = 0 := by
+      rw [← Finset.sum_coe_sort P, ← hx]
+      exact Finset.sum_congr rfl fun i _ => congrFun hcx i
+    have hq := h c hc
+    rwa [quadFormOn_eq_dotProduct, hcx] at hq
+  · intro h c hc
+    rw [quadFormOn_eq_dotProduct]
+    refine h _ ?_
+    rw [Finset.sum_coe_sort P c]
+    exact hc
+
 /-- **Restriction, CND**: conditional negative definiteness on a
 set restricts to every subset — the zero-sum weight extends by
 zero. Thresholds are therefore monotone in the prime set. -/
 theorem IsCNDOn.subset [DecidableEq ι] {K : ι → ι → ℝ}
     {P Q : Finset ι} (hQ : IsCNDOn K Q) (hPQ : P ⊆ Q) :
     IsCNDOn K P := by
-  intro c hc
-  have hzero : (∑ p ∈ Q, if p ∈ P then c p else 0) = 0 := by
-    rw [Finset.sum_ite_mem, Finset.inter_eq_right.mpr hPQ]
-    exact hc
-  have h := hQ (fun p => if p ∈ P then c p else 0) hzero
-  rwa [quadFormOn_extend K hPQ c] at h
+  rw [isCNDOn_iff_condNegSemidef] at hQ ⊢
+  exact hQ.submatrix fun i : P => (⟨i, hPQ i.2⟩ : Q)
 
 /-- **Restriction, PSD**: positive semidefiniteness on a set
 restricts to every subset. -/

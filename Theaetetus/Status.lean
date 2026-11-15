@@ -1395,6 +1395,13 @@ example (K : Descent.ContextField Descent.Arith ℝ) (d a : ℕ+) (l : List ℕ+
 
 example (Z : ℝ → ℝ) (s : ℝ) (d : ℕ+) (l : List ℕ+)
     (h : PairwiseCoprime (d :: l)) :
+    telescope Z s d l
+      = Descent.telescope (logField Z s) (Descent.Arith.of d)
+          (l.map Descent.Arith.of) :=
+  telescope_eq_descent_telescope Z s d l h
+
+example (Z : ℝ → ℝ) (s : ℝ) (d : ℕ+) (l : List ℕ+)
+    (h : PairwiseCoprime (d :: l)) :
     Descent.defectFam (logField Z s) (Descent.Arith.of d)
         (l.map Descent.Arith.of)
       = telescope Z s d l :=
@@ -1609,7 +1616,7 @@ example {R : Type*} [Lattice R] {ι : Type*} [Fintype ι] [DecidableEq ι]
     (hbase : ∀ i, r i₀ ≤ r i) :
     Descent.CondNegSemidef (Descent.defectMatrix K r)
       ↔ Descent.defectMatrix K r = 0 :=
-  condNegSemidef_defectMatrix_iff_of_base hbase
+  Descent.condNegSemidef_defectMatrix_iff_of_base hbase
 
 example {s : ℝ} (hs : 0 < s) {P : Finset ℕ} (hpos : ∀ p ∈ P, 0 < p)
     (h1 : 1 ∈ P) :

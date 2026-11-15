@@ -22,7 +22,7 @@ vanishing defect against that element, so its centred Gram kernel
 at the base is minus half the defect matrix; conditional negativity
 then forces the matrix to be negative semidefinite, and a hollow
 symmetric matrix is that only when it vanishes
-(`condNegSemidef_defectMatrix_iff_of_base`). At rank one the defect
+(`Descent.condNegSemidef_defectMatrix_iff_of_base`). At rank one the defect
 detects divisibility, so a positive sample containing `1` is CND at
 a positive scale exactly when it is a divisibility chain
 (`isCNDOn_pairing_iff_chain_of_one_mem`); `1` together with two
@@ -31,78 +31,6 @@ distinct primes is never CND (`not_isCNDOn_pairing_one_prime_prime`). -/
 namespace Theaetetus
 
 open Filter Topology
-
-/-! ## Finite-set kernels as matrices -/
-
-/-- The matrix of a kernel restricted to a finite index set. -/
-def kernelMatrix {ι : Type*} (K : ι → ι → ℝ) (P : Finset ι) :
-    Matrix P P ℝ :=
-  Matrix.of fun i j => K i j
-
-theorem quadFormOn_eq_dotProduct {ι : Type*} (K : ι → ι → ℝ)
-    (P : Finset ι) (c : ι → ℝ) :
-    quadFormOn K P c
-      = dotProduct (fun i : P => c i)
-          ((kernelMatrix K P).mulVec fun i : P => c i) := by
-  unfold quadFormOn
-  simp only [dotProduct, Matrix.mulVec, kernelMatrix, Matrix.of_apply,
-    Finset.mul_sum]
-  rw [← Finset.sum_coe_sort P]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [← Finset.sum_coe_sort P]
-  exact Finset.sum_congr rfl fun j _ => by ring
-
-/-- **Finite-set CND is matrix CND**: conditional negative
-definiteness of a kernel on a finite set is conditional negative
-semidefiniteness of its restricted matrix. -/
-theorem isCNDOn_iff_condNegSemidef {ι : Type*} (K : ι → ι → ℝ)
-    (P : Finset ι) :
-    IsCNDOn K P ↔ Descent.CondNegSemidef (kernelMatrix K P) := by
-  classical
-  constructor
-  · intro h x hx
-    let c : ι → ℝ := fun p => if hp : p ∈ P then x ⟨p, hp⟩ else 0
-    have hcx : (fun i : P => c i) = x := funext fun i => by simp [c]
-    have hc : (∑ p ∈ P, c p) = 0 := by
-      rw [← Finset.sum_coe_sort P, ← hx]
-      exact Finset.sum_congr rfl fun i _ => congrFun hcx i
-    have hq := h c hc
-    rwa [quadFormOn_eq_dotProduct, hcx] at hq
-  · intro h c hc
-    rw [quadFormOn_eq_dotProduct]
-    refine h _ ?_
-    rw [Finset.sum_coe_sort P c]
-    exact hc
-
-/-! ## Samples with a base point -/
-
-/-- **Conditional negativity at a based sample**: when the sample
-has a least element, the defect matrix is conditionally negative
-semidefinite only if it vanishes. The defect against the base is
-zero, so the centred Gram kernel at the base is minus half the
-defect matrix, and a hollow matrix with positive semidefinite
-negative is zero. -/
-theorem condNegSemidef_defectMatrix_iff_of_base {R : Type*} [Lattice R]
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {K : Descent.ContextField R ℝ}
-    {r : ι → R} {i₀ : ι} (hbase : ∀ i, r i₀ ≤ r i) :
-    Descent.CondNegSemidef (Descent.defectMatrix K r)
-      ↔ Descent.defectMatrix K r = 0 := by
-  have hgram : Descent.centeredGram (Descent.defectMatrix K r) i₀
-      = (1 / 2 : ℝ) • -Descent.defectMatrix K r := by
-    ext i j
-    simp only [Descent.centeredGram_apply, Descent.defectMatrix_apply,
-      Descent.defect_of_ge K (hbase i), Descent.defect_of_le K (hbase j),
-      Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul]
-    ring
-  rw [Descent.condNegSemidef_iff_posSemidef_centeredGram
-    (Descent.isHermitian_defectMatrix K r) (Descent.defectMatrix_diag K r i₀),
-    hgram, ← Descent.posSemidef_neg_defectMatrix_iff]
-  constructor
-  · intro h
-    have h2 := h.smul (show (0 : ℝ) ≤ 2 by norm_num)
-    rwa [smul_smul, show (2 : ℝ) * (1 / 2) = 1 by norm_num, one_smul] at h2
-  · intro h
-    exact h.smul (by norm_num)
 
 /-! ## The pairing as the defect matrix of the resolution field -/
 
@@ -170,7 +98,7 @@ theorem isCNDOn_pairing_iff_chain_of_one_mem {s : ℝ} (hs : 0 < s)
     {P : Finset ℕ} (hpos : ∀ p ∈ P, 0 < p) (h1 : 1 ∈ P) :
     IsCNDOn (pairing s) P ↔ ∀ p ∈ P, ∀ q ∈ P, p ∣ q ∨ q ∣ p := by
   rw [isCNDOn_pairing_iff s hpos,
-    condNegSemidef_defectMatrix_iff_of_base (i₀ := ⟨1, h1⟩)
+    Descent.condNegSemidef_defectMatrix_iff_of_base (i₀ := ⟨1, h1⟩)
       fun i => Descent.Arith.le_iff_dvd.mpr (by
         show ((Nat.toPNat' 1 : ℕ+) : ℕ) ∣ _
         exact one_dvd _),

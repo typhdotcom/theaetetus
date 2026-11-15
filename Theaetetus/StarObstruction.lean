@@ -56,28 +56,11 @@ weights the deficit's quadratic form is the negated pairing form,
 theorem quadFormOn_deficit_eq_neg {s : ℝ} {P : Finset ℕ} {c : ℕ → ℝ}
     (hc : (∑ p ∈ P, c p) = 0) :
     quadFormOn (deficit s) P c = -quadFormOn (pairing s) P c := by
-  unfold quadFormOn
-  have hstep : ∀ p ∈ P, ∀ q ∈ P,
-      c p * c q * deficit s p q
-        = c p * (c q * Real.log (theta s))
-          - c p * c q * pairing s p q := by
-    intro p _ q _
-    unfold deficit
-    ring
-  rw [Finset.sum_congr rfl
-    (fun p hp => Finset.sum_congr rfl fun q hq => hstep p hp q hq)]
-  have hinner : ∀ p ∈ P,
-      (∑ q ∈ P, (c p * (c q * Real.log (theta s))
-        - c p * c q * pairing s p q))
-        = (∑ q ∈ P, c p * (c q * Real.log (theta s)))
-          - ∑ q ∈ P, c p * c q * pairing s p q :=
-    fun p _ => by rw [Finset.sum_sub_distrib]
-  have hB : ∀ p ∈ P,
-      (∑ q ∈ P, c p * (c q * Real.log (theta s))) = 0 := by
-    intro p _
-    rw [← Finset.mul_sum, ← Finset.sum_mul, hc, zero_mul, mul_zero]
-  rw [Finset.sum_congr rfl hinner, Finset.sum_sub_distrib,
-    Finset.sum_congr rfl hB, Finset.sum_const_zero, zero_sub]
+  have hB : kernelMatrix (deficit s) P
+      = Matrix.of (fun _ _ => Real.log (theta s)) - kernelMatrix (pairing s) P := rfl
+  rw [quadFormOn_eq_dotProduct, quadFormOn_eq_dotProduct, hB,
+    Descent.dotProduct_const_sub_mulVec_of_sum_eq_zero _ _
+      ((Finset.sum_coe_sort P c).trans hc)]
 
 /-- **Deficit-PSD implies CND**, outright: one direction of the
 chamber coupling. The converse fails at every scale `s ≥ 1`

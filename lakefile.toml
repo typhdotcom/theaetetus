@@ -18,7 +18,7 @@ rev = "v4.34.1"
 [[require]]
 name = "descent"
 git = "https://git.typh.com/typh/descent.git"
-rev = "e78ccb34d970f45f600162247b4a0147260fe5e4"
+rev = "4f676a0109d3a89f431eb6632fc5b8586c0713ae"
 
 [[lean_lib]]
 name = "Theaetetus"
