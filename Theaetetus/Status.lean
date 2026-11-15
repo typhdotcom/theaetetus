@@ -23,6 +23,7 @@ import Theaetetus.LogMassFourier
 import Theaetetus.ClusterExpansion
 import Theaetetus.ClusterCoefficient
 import Theaetetus.ResolutionMetric
+import Theaetetus.DefinitenessBridge
 import Theaetetus.GramAsymptotics
 import Theaetetus.FiniteIndex
 import Theaetetus.SublatticeAsymptotics
@@ -1539,6 +1540,87 @@ example :
 
 example {α β : ℝ} (hα : 0 < α) (hαβ : α < β) : theta β < theta α :=
   theta_lt_theta hα hαβ
+
+example {s : ℝ} (hs : 0 < s) :
+    Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)
+      = (0,
+        2 * Real.log (theta (2 * s)) - Real.log (theta s)
+          - Real.log (theta (4 * s)),
+        2 * Real.log (theta (2 * s)) - Real.log (theta s)
+          - Real.log (theta (4 * s)),
+        2 * Real.log (theta (2 * s) / theta (4 * s))) :=
+  canonicalDatum_diamondHom hs
+
+example {s : ℝ} (hs : 0 < s) :
+    ¬ Descent.Diamond.CanonicalDatumRealizable
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).1
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.1
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.1
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.2
+      ∧ ¬ Descent.Diamond.CanonicalDatumRealizable
+        (-(Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).1)
+        (-(Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.1)
+        (-(Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.1)
+        (-(Descent.Diamond.canonicalDatum
+          (latField s ∘ diamondHom)).2.2.2) :=
+  not_canonicalDatumRealizable_diamondHom hs
+
+example {s : ℝ} (hs : 0 < s) :
+    ¬ Descent.Realizable (latField s ∘ diamondHom) :=
+  not_realizable_diamondHom hs
+
+example {s : ℝ} (hs : 0 < s) :
+    (∀ p q, 0 ≤ Descent.defect (-(latField s ∘ diamondHom)) p q)
+      ∧ ¬ Descent.Realizable (-(latField s ∘ diamondHom)) :=
+  not_realizable_neg_diamondHom hs
+
+/-! ## The definiteness bridge -/
+
+example {ι : Type*} (K : ι → ι → ℝ) (P : Finset ι) :
+    IsCNDOn K P ↔ Descent.CondNegSemidef (kernelMatrix K P) :=
+  isCNDOn_iff_condNegSemidef K P
+
+example (s : ℝ) {P : Finset ℕ} (hpos : ∀ p ∈ P, 0 < p) :
+    kernelMatrix (pairing s) P
+      = Descent.defectMatrix (resField theta s) (resSample P) :=
+  pairingMatrix_eq_defectMatrix s hpos
+
+example (s : ℝ) {P : Finset ℕ} (hpos : ∀ p ∈ P, 0 < p) :
+    IsCNDOn (pairing s) P
+      ↔ Descent.CondNegSemidef
+          (Descent.defectMatrix (resField theta s) (resSample P)) :=
+  isCNDOn_pairing_iff s hpos
+
+example {s : ℝ} (hs : 1 ≤ s) {P : Finset ℕ}
+    (hprime : ∀ p ∈ P, Nat.Prime p) :
+    Descent.CondNegSemidef
+      (Descent.defectMatrix (resField theta s) (resSample P)) :=
+  condNegSemidef_resField_large hs hprime
+
+example (P : Finset ℕ) (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hcard : 3 ≤ P.card) :
+    ∃ ε : ℝ, 0 < ε ∧ ∀ s : ℝ, 0 < s → s < ε →
+      ¬ Descent.CondNegSemidef
+          (Descent.defectMatrix (resField theta s) (resSample P)) :=
+  not_condNegSemidef_resField_small P hprime hcard
+
+example {R : Type*} [Lattice R] {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {K : Descent.ContextField R ℝ} {r : ι → R} {i₀ : ι}
+    (hbase : ∀ i, r i₀ ≤ r i) :
+    Descent.CondNegSemidef (Descent.defectMatrix K r)
+      ↔ Descent.defectMatrix K r = 0 :=
+  condNegSemidef_defectMatrix_iff_of_base hbase
+
+example {s : ℝ} (hs : 0 < s) {P : Finset ℕ} (hpos : ∀ p ∈ P, 0 < p)
+    (h1 : 1 ∈ P) :
+    IsCNDOn (pairing s) P ↔ ∀ p ∈ P, ∀ q ∈ P, p ∣ q ∨ q ∣ p :=
+  isCNDOn_pairing_iff_chain_of_one_mem hs hpos h1
+
+example {s : ℝ} (hs : 0 < s) {P : Finset ℕ} (hpos : ∀ p ∈ P, 0 < p)
+    (h1 : 1 ∈ P) {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hpq : p ≠ q)
+    (hpP : p ∈ P) (hqP : q ∈ P) :
+    ¬ IsCNDOn (pairing s) P :=
+  not_isCNDOn_pairing_one_prime_prime hs hpos h1 hp hq hpq hpP hqP
 
 /-! ## The resolution metric -/
 

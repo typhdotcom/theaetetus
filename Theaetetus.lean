@@ -154,6 +154,10 @@ import Theaetetus.ClusterCoefficient
 -- The resolution metric: the join kernel of the normalized field
 import Theaetetus.ResolutionMetric
 
+-- The pairing as a sampled defect matrix: the chambers in Descent's
+-- definiteness vocabulary, and the base point that forbids CND
+import Theaetetus.DefinitenessBridge
+
 -- The scale asymptotics of a Gram Boltzmann sum
 import Theaetetus.GramAsymptotics
 

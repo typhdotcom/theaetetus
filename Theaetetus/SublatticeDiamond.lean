@@ -76,7 +76,20 @@ doubled lattice has index two inside the checkerboard
 (`relIndex_evenBoth_evenSum`) — the two ends of the
 distributivity-defect interval — so the boundary value is the
 logarithm of that relative index
-(`tendsto_defect3_diamond_index`). -/
+(`tendsto_defect3_diamond_index`).
+
+The Gaussian diamond lies outside the finite Gibbs class. Its
+canonical datum — the three atom-pair defects and the order-3
+defect — is `(0, m, m, 2·log(θ(2s)/θ(4s)))` with `m` the midpoint
+defect (`canonicalDatum_diamondHom`). Finite Gibbs realizations of
+the diamond are constant, so they attain only the zero datum, and
+the strictly positive order-3 coordinate excludes the Gaussian
+datum and its negation alike
+(`not_canonicalDatumRealizable_diamondHom`). At the level of fields
+the pulled-back Gaussian field fails the realizable sign — a strictly
+negative pairwise defect (`not_realizable_diamondHom`) — while its
+negation passes the sign and is excluded by the constancy of finite
+Gibbs fields alone (`not_realizable_neg_diamondHom`). -/
 
 namespace Theaetetus
 
@@ -747,5 +760,94 @@ theorem tendsto_defect3_diamond_index :
       (𝓝 (Real.log ((evenBoth.relIndex evenSum : ℕ) : ℝ))) := by
   rw [relIndex_evenBoth_evenSum]
   simpa using tendsto_defect3_diamond
+
+/-! ## The finite Gibbs boundary -/
+
+/-- **The canonical datum of the Gaussian diamond**: the orthogonal
+atom pair carries no defect, both pairs against the checkerboard
+carry the strict midpoint defect, and the order-3 coordinate is the
+mass gap across the distributivity-defect interval. -/
+theorem canonicalDatum_diamondHom {s : ℝ} (hs : 0 < s) :
+    Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)
+      = (0,
+        2 * Real.log (theta (2 * s)) - Real.log (theta s)
+          - Real.log (theta (4 * s)),
+        2 * Real.log (theta (2 * s)) - Real.log (theta s)
+          - Real.log (theta (4 * s)),
+        2 * Real.log (theta (2 * s) / theta (4 * s))) := by
+  simp only [Descent.Diamond.canonicalDatum, Descent.defect_comp,
+    diamondHom_apply, diamondSub, defect3_diamondHom hs,
+    Descent.defect_comm (latField s) evenSnd evenFst,
+    defect_evenFst_evenSnd hs, defect_evenSnd_evenSum hs,
+    defect_evenFst_evenSum hs]
+
+/-- **No finite Gibbs law attains the diamond's datum, in either
+sign**: finite Gibbs realizations of the diamond attain only the
+zero canonical datum, and the Gaussian order-3 coordinate is
+strictly positive. -/
+theorem not_canonicalDatumRealizable_diamondHom {s : ℝ} (hs : 0 < s) :
+    ¬ Descent.Diamond.CanonicalDatumRealizable
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).1
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.1
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.1
+        (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.2
+      ∧ ¬ Descent.Diamond.CanonicalDatumRealizable
+        (-(Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).1)
+        (-(Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.1)
+        (-(Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.1)
+        (-(Descent.Diamond.canonicalDatum
+          (latField s ∘ diamondHom)).2.2.2) := by
+  have hd : (Descent.Diamond.canonicalDatum (latField s ∘ diamondHom)).2.2.2
+      ≠ 0 := by
+    have hpos := defect3_diamond_pos hs
+    rw [defect3_diamond_eq hs] at hpos
+    show Descent.defect3 (latField s ∘ diamondHom) Descent.Diamond.x
+      Descent.Diamond.y Descent.Diamond.z ≠ 0
+    rw [defect3_diamondHom hs]
+    exact hpos.ne'
+  refine ⟨fun h => hd ?_, fun h => hd ?_⟩
+  · have h0 := congrArg (fun t => t.2.2.2)
+      (Descent.Diamond.canonicalDatumRealizable_iff.mp h)
+    exact h0
+  · have h0 := congrArg (fun t => t.2.2.2)
+      (Descent.Diamond.canonicalDatumRealizable_iff.mp h)
+    exact neg_eq_zero.mp h0
+
+/-- **The Gaussian diamond is not a finite Gibbs field**: realizable
+fields have nonnegative pairwise defect, and the pulled-back Gaussian
+field has a strictly negative one. -/
+theorem not_realizable_diamondHom {s : ℝ} (hs : 0 < s) :
+    ¬ Descent.Realizable (latField s ∘ diamondHom) := by
+  intro h
+  have h0 := h.defect_nonneg Descent.Diamond.x Descent.Diamond.z
+  rw [Descent.defect_comp] at h0
+  exact absurd h0 (not_le.mpr (defect_evenSnd_evenSum_neg hs))
+
+/-- **Nor is its negation**, though the sign obstruction is silent
+there: the negated field has nonnegative pairwise defects, and is
+excluded because finite Gibbs fields on the diamond are constant
+while its order-3 defect does not vanish. -/
+theorem not_realizable_neg_diamondHom {s : ℝ} (hs : 0 < s) :
+    (∀ p q, 0 ≤ Descent.defect (-(latField s ∘ diamondHom)) p q)
+      ∧ ¬ Descent.Realizable (-(latField s ∘ diamondHom)) := by
+  refine ⟨fun p q => ?_, fun h => ?_⟩
+  · rw [Descent.defect_neg]
+    exact neg_nonneg.mpr (defect_diamondHom_nonpos hs p q)
+  · obtain ⟨c, hc⟩ := Descent.Diamond.realizable_iff_exists_const.mp h
+    have h3 := congrFun (congrFun (congrFun (Descent.defect3_const
+      (R := Descent.Diamond) c) Descent.Diamond.x) Descent.Diamond.y)
+      Descent.Diamond.z
+    rw [← hc] at h3
+    have hneg : Descent.defect3 (-(latField s ∘ diamondHom))
+        Descent.Diamond.x Descent.Diamond.y Descent.Diamond.z
+          = -Descent.defect3 (latField s ∘ diamondHom)
+            Descent.Diamond.x Descent.Diamond.y Descent.Diamond.z := by
+      simp only [Descent.defect3, Pi.neg_apply]
+      abel
+    simp only [Pi.zero_apply] at h3
+    rw [hneg, defect3_diamondHom hs, neg_eq_zero] at h3
+    have hpos := defect3_diamond_pos hs
+    rw [defect3_diamond_eq hs] at hpos
+    exact hpos.ne' h3
 
 end Theaetetus
