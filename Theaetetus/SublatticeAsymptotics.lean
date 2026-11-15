@@ -18,13 +18,7 @@ the difference of those two logarithms, so it vanishes
 (`tendsto_defect_subField`): covolume is multiplicative across meet
 and join, and the boundary field loses its pairwise curvature.
 
-That is what leaves room for an order-three value. With every
-pairwise term gone at the boundary, whatever survives the
-order-three recurrence can only be the field gap across the
-distributivity-defect interval — the index of that interval. The
-composition is not performed here.
-
-The capstone follows in one rewrite. The exact order-three
+That is what leaves room for an order-three value. The exact order-three
 recurrence writes `D₃` as three pairwise defects plus the field gap
 across the distributivity-defect interval; at the boundary every
 pairwise term vanishes and the gap becomes the logarithm of the

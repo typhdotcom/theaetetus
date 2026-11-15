@@ -31,9 +31,13 @@ law proves `D(q,q′) = [K(lcm) + K(gcd)] − [K(q) + K(q′)]`
 `L ⧸ qL` for an arbitrary lattice is part of Q3; until then the
 general defect **is** the cross-ratio.
 
-`D ≡ 0` would say `q ↦ log Z(q²)` is a valuation — the algebraic
-shadow of an Euler product, the resolution tower localizing over
-the primes. For the towers formalized here it never is, unless
+`D ≡ 0` would say `q ↦ log Z(q²)` is a valuation on the
+divisibility lattice — `Z(gcd²)·Z(lcm²) = Z(q²)·Z(q′²)`, the
+resolution tower localizing over the primes. That is not an Euler
+product of the form's Epstein zeta: the hexagonal form below has
+one (its Epstein zeta is a multiple of `ζ(s)·L(s, χ₋₃)`), yet its
+defect at `(2,3)` is strictly negative
+(`thetaGraph_towerDefect_neg`). For the towers formalized here it never is, unless
 there is nothing to couple: the defect matrix vanishes identically
 **iff** the modal sector is the only sector
 (`defect_forall_eq_zero_iff`) — for a graph carrier, iff its
@@ -613,26 +617,28 @@ pairwise versus higher-order interaction.
   nonpositive (`defect_diamondHom_nonpos`); the positive
   order-three one is the formal contrast.
 
-  The boundary value being an index is the suggestive part, and
-  what follows is a conjecture, not a theorem. For full-rank
-  finite-index sublattices `A, B, C`, put `U = (A+B) ∩ C` and
+  The boundary value being an index is general. For finite-index
+  subgroups `A, B, C` of `ℤᵈ`, each priced by the logarithm of its
+  euclidean Gaussian mass (`subField`), put `U = (A+B) ∩ C` and
   `V = (A∩C) + (B∩C)` — the two ends of the distributivity-defect
-  interval. Then
+  interval (`distribUpper`, `distribLower`). Then
 
   ```
-  D₃,s(A,B,C) → log [U : V]   as   s → 0⁺.
+  D₃,s(A,B,C) → log [U : V]   as   s → 0⁺
   ```
 
-  The proposed mechanism is one sentence: at the boundary the
-  pairwise terms tend to zero by multiplicativity of covolume in
-  the Gaussian mass, while `defect3_recurrence` leaves exactly the
-  Gaussian mass gap from `V` to `U`, whose ratio is the index. The
-  proved diamond is the first nontrivial case, `[U : V] = 2`
-  (`relIndex_evenBoth_evenSum`, `tendsto_defect3_diamond_index`);
-  the general statement is target 12. What remains beyond it is
-  the equality mechanisms and the interaction of this order-three
-  observable with lattice duality — a sharply bounded research
-  problem rather than an unending tower of new couplings.
+  (`tendsto_defect3_subField`): at the boundary every pairwise
+  term tends to zero by multiplicativity of covolume
+  (`tendsto_defect_subField`), and `defect3_recurrence` leaves
+  exactly the Gaussian mass gap from `V` to `U`, whose ratio tends
+  to the index. The diamond is the first nontrivial case,
+  `[U : V] = 2` (`relIndex_evenBoth_evenSum`,
+  `tendsto_defect3_diamond_index`). Open beyond it: other ambient
+  positive-definite forms on `ℤᵈ`, rank loss and infinite index
+  (where covolume no longer normalizes the masses), the equality
+  mechanisms — when `D₃` vanishes, or reaches its boundary value,
+  at positive scale — and the interaction of this order-three
+  observable with lattice duality.
 
 - **Q7 — realizability.** Which abstract hierarchies actually come from
   lattices: which mixed Hessians, which kernels, which deficit
