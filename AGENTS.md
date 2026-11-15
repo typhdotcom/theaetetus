@@ -1,7 +1,8 @@
 # Theaetetus
 
 Read `README.md` first — the object, the theorems, the open
-questions, and the standards.
+questions, and the standards. `ROADMAP.md` holds the numbered
+formalization targets and the reconnaissance program.
 
 Ground rules, restated for every session:
 
