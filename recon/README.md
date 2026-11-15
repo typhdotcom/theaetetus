@@ -4,9 +4,10 @@ Numerical evidence for the frontier questions — never proof.
 `lake build` remains the only definition of done for mathematics;
 this directory produces the *numerical record* the main README
 cites, as reviewable code and committed summary data instead of
-remembered sessions. Certified tails and interval linear algebra
-(roadmap target 5) will harden it later; until then every cutoff
-is a documented heuristic.
+remembered sessions. The Lean certification chain
+(`Theaetetus.Certification`, `Theaetetus.Tails`,
+`Theaetetus.Shells`) is not yet applied to these sweeps: outside
+the rigidity campaign, every cutoff is a documented heuristic.
 
 ## Conventions
 
@@ -38,9 +39,9 @@ now encoded once and enforced by executable self-tests.
   rank 3. Poisson summation gives
   `Z_L(β) = (π/β)^{n/2}·Z_{L*}(π²/β)`, hence
   `H_L″(u) = H_{L*}″(2·log π − u)`: sweeping `u ≥ log π` on both
-  `L` and `L*` covers the whole line. Lean witness at rank one:
-  `theta_duality_real`; the higher-rank identity is roadmap
-  target 1 and is *checked numerically* here (self-test).
+  `L` and `L*` covers the whole line. Lean witnesses:
+  `theta_duality_real` at rank one, `gramTheta_dual` in every
+  rank; the self-test also checks the identity numerically.
 - **Q4 orientation** (implemented in `q4.py`): CND is controlled
   by the **largest** eigenvalue of the pairing restricted to the
   zero-sum subspace (CND iff `≤ 0`); deficit-PSD by the ordinary
@@ -48,7 +49,7 @@ now encoded once and enforced by executable self-tests.
 
 ## Anchors
 
-`python3 recon/harness.py selftest` reproduces, at working
+`uv run recon/harness.py selftest` reproduces, at working
 precision, two classes of anchors — if a convention is
 mis-encoded, an anchor breaks.
 
@@ -60,9 +61,9 @@ Lean-backed anchors (rank one; each is a theorem in the tree):
 | `H′(u) + H′(2·log π − u) = −1/2` | `theta_logDeriv_dual` |
 | `H″` = derivative of `H′` (finite difference) | `hasDerivAt_thetaDeriv` |
 
-Higher-rank consistency checks (numerical only — no Lean witness
-yet; higher-rank duality is roadmap target 1, and its rank-one
-shadow is `theta_duality_real`):
+Higher-rank consistency checks (run numerically; the Poisson
+duality they test is the theorem `gramTheta_dual`, with rank-one
+case `theta_duality_real`):
 
 | Check | Status |
 |---|---|
@@ -116,8 +117,9 @@ axis-aligned bounding box of the energy ellipsoid `Q ≤ E` —
 precision and the smallest coupling in use — so the box adapts
 per direction and degenerating forms stay cheap. Checked
 empirically at every run by an energy-stability comparison (`E`
-vs `1.5E` on `H′`, `H″`, and the ratio); not a tail bound, and
-certified tails are roadmap target 5. Baseline sweeps: 50-digit
+vs `1.5E` on `H′`, `H″`, and the ratio); not a tail bound — the
+certified tail estimate (`QuadraticAction.tail_le`) is not yet
+applied here. Baseline sweeps: 50-digit
 precision, grid `u − log π ∈ [0, 4]` step `0.01`; families:
 30 digits, step `0.02`.
 

@@ -462,7 +462,7 @@ theorem gramDefect_nonpos (hM : M.PosDef) {s : ℝ} (hs : 0 < s)
   rw [e1, e2]
   linarith [hlog]
 
-/-- **The sign for every lattice** — Q1's inequality half, the
+/-- **The sign for every lattice** — the
 Regev–Stephens-Davidowitz implication: the intrinsic defect of
 every positive-definite lattice action is nonpositive at every
 positive scale and pair of positive resolutions. -/

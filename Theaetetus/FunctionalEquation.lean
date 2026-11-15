@@ -2,8 +2,8 @@ import Theaetetus.Gibbs
 
 /-! # The functional equation: the reflection law differentiated
 
-**Fact 2 of the Faulhuber–Steinerberger port.** Squaring the duality `θ(π²/α) = √(α/π)·θ(α)`
-removes the square root; differentiating the squared identity
+**Fact 2 of the Faulhuber–Steinerberger port.** Squaring the
+duality `θ(π²/α) = √(α/π)·θ(α)` removes the square root; differentiating the squared identity
 through the Gibbs bridge and cancelling common factors yields the
 functional equation of the logarithmic derivative
 

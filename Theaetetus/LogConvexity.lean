@@ -4,8 +4,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-! # The refined log-convexity at rank one
 
-**The assembly of the Faulhuber–Steinerberger port.** Fact 1 (`theta_logDeriv_numer_pos_large`)
-makes `f(α) = α·θ′(α)/θ(α)` strictly increasing on `[π, ∞)` by
+**The assembly of the Faulhuber–Steinerberger port.** Fact 1
+(`theta_logDeriv_numer_pos_large`) makes `f(α) = α·θ′(α)/θ(α)` strictly increasing on `[π, ∞)` by
 the mean value theorem. Fact 2 (`theta_logDeriv_dual`) says
 `f(α) = −1/2 − f(π²/α)`, and `α ↦ π²/α` reverses order — so the
 half-line reflects onto `(0, π]` with no further differentiation,

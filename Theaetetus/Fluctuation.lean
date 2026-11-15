@@ -4,8 +4,8 @@ import Mathlib.Analysis.Real.Pi.Bounds
 
 /-! # The fluctuation inequality: Fact 1 at large coupling
 
-**Fact 1 of the Faulhuber–Steinerberger port.** The target monotonicity of `α·θ′(α)/θ(α)` says,
-in Gibbs language, that the coupling-weighted energy fluctuation
+**Fact 1 of the Faulhuber–Steinerberger port.** The target
+monotonicity of `α·θ′(α)/θ(α)` says, in Gibbs language, that the coupling-weighted energy fluctuation
 beats the mean energy: dividing its derivative numerator by `θ²`,
 
     α·Var(E) > ⟨E⟩.

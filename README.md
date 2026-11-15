@@ -388,8 +388,8 @@ pairwise versus higher-order interaction.
   and deficit-PSD fails, every negative direction has nonzero
   mean — the star obstruction's witness is such a direction.
   Open is the geometry
-  of the middle, one clause per matrix. **Q4-CND**: for a finite prime set `P`, is the
-  valid-scale set `{ s : pairing CND on P }` an upper interval?
+  of the middle, one clause per matrix. **Q4-CND**: for a finite
+  prime set `P`, is the valid-scale set `{ s : pairing CND on P }` an upper interval?
   The controlling statistic is the largest eigenvalue of the
   pairing matrix restricted to the zero-sum subspace — CND holds
   iff it is `≤ 0` — and no symmetry forces a single crossing:
@@ -434,8 +434,8 @@ pairwise versus higher-order interaction.
   agreement to explicit bounds. The first falsification
   hunt found one detected sign change per statistic on each
   sampled grid, brackets bisected (`recon/README.md`) —
-  consistent with intervality, still unproven. The transform-realization question that
-  used to close this entry now seeds Q7. A second geometry is now
+  consistent with intervality, still unproven. The
+  transform-realization question that used to close this entry now seeds Q7. A second geometry is now
   visible as well: the join kernel of `q ↦ -log Z(q²s)` is the
   resolution distance in target 11, and on coprime primes the
   pairing is a difference of two of its distances.
@@ -887,8 +887,9 @@ Formalization targets:
       corrected sign `defect3_theta_235_neg`);
     - formalize the canonical `M₃` witness from the three index-two
       sublattices of `ℤ²` — done (`Theaetetus.SublatticeDiamond`).
-      The five sublattices `2ℤ² ≤ {a even}, {b even}, {a+b even} ≤ ℤ²` realize the diamond faithfully in the subgroup lattice of
-      `ℤ²` (`diamondHom`, `diamondSub_injective`), with distinct
+      The five sublattices
+      `2ℤ² ≤ {a even}, {b even}, {a+b even} ≤ ℤ²` realize the
+      diamond faithfully in the subgroup lattice of `ℤ²` (`diamondHom`, `diamondSub_injective`), with distinct
       atoms meeting at `2ℤ²` and joining to `ℤ²`. Each is priced by
       its own convergent Gaussian mass (`latMass`, `latMass_pos`),
       and the table is exact — `ρ(ℤ²) = θ(s)²`, `ρ(2ℤ²) = θ(4s)²`,
@@ -1732,6 +1733,9 @@ weakened statement, or an unwitnessed claim fails the build.
 nix develop -c lake build        # nu tasks.nu check adds nix flake check
 ```
 
+Without nix, with `elan` installed: `lake exe cache get`, then
+`lake build`.
+
 Toolchain `leanprover/lean4:v4.33.1`, Mathlib pinned at `v4.33.1`.
 Zero `sorry`, zero `axiom` declarations; `lake build` green is the
 only definition of done. Where a desired statement fails, the
@@ -1739,8 +1743,8 @@ counterexample becomes a theorem. Version control is jujutsu.
 
 ## History
 
-Built in eight milestones, `M0`–`M7`: scaffold; the scalar core and chain-vanishing; the
-witness `θ(4/3)·θ(3) < θ(1/3)·θ(12)`; the sign at `(2,3)` for all
+Built in eight milestones, `M0`–`M7`: scaffold; the scalar core
+and chain-vanishing; the witness `θ(4/3)·θ(3) < θ(1/3)·θ(12)`; the sign at `(2,3)` for all
 scales; the carrier — graph homology, the residue tower, the
 cross-ratio law, the rank-two witness; outward — Q1 closed at rank
 one, the pairing, the rank function, the kernel on `C₃`; the
