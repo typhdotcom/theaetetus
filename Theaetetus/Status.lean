@@ -13,6 +13,7 @@ import Theaetetus.Tails
 import Theaetetus.Shells
 import Theaetetus.GramDuality
 import Theaetetus.LatticeDuality
+import Theaetetus.GramCurvature
 import Theaetetus.Correlation
 import Theaetetus.CorrelationEquality
 import Theaetetus.ReflectionFourier
@@ -46,7 +47,8 @@ reflection law; the midpoint inequalities; the kernel chambers;
 the star obstruction; the derivative bridge, functional equation,
 fluctuation, and the strict rectangle; diagonal forms; certified
 coercivity; certified tails; certified shell counts; higher-rank
-defect duality; the field defect and the intrinsic lift; the
+defect duality; higher-rank thermodynamic curvature and its
+duality; the field defect and the intrinsic lift; the
 shifted mass and positive correlation; the orthogonal sum;
 the arithmetic realization of the abstract defect and the
 coprime telescope of its corrected orders; the Gaussian diamond of
@@ -856,6 +858,59 @@ example (Q : QuadLatticeAction) {s : ℝ} (hs : 0 < s) {q q' : ℕ}
       = Q.dual.defect (Real.pi ^ 2 / ((Nat.lcm q q' : ℝ) ^ 2 * s))
           (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
   Q.defect_dual hs hq hq'
+
+/-! ## Higher-rank thermodynamic curvature -/
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (m : ℕ)
+    {α : ℝ} (hα : 0 < α) :
+    HasDerivAt (gramMoment M m) (-gramMoment M (m + 1) α) α :=
+  hasDerivAt_gramMoment hM m hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) :
+    HasDerivAt (fun β => Real.log (gramTheta M β)) (-gramMeanEnergy M α) α :=
+  hasDerivAt_log_gramTheta hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) :
+    HasDerivAt (gramMeanEnergy M) (-gramVariance M α) α :=
+  hasDerivAt_gramMeanEnergy hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (hd : 0 < d) :
+    StrictAntiOn (gramMeanEnergy M) (Set.Ioi 0) :=
+  gramMeanEnergy_strictAntiOn hM hd
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) :
+    α * gramMeanEnergy M α + Real.pi ^ 2 / α * gramMeanEnergy M⁻¹ (Real.pi ^ 2 / α)
+      = (d : ℝ) / 2 :=
+  gramMeanEnergy_dual hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {α : ℝ} (hα : 0 < α) :
+    gramCurvature M α = gramCurvature M⁻¹ (Real.pi ^ 2 / α) :=
+  gramCurvature_dual hM hα
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    {β : ℝ} (hβ : 0 < β) :
+    logCurvature (gramTheta M) β = β ^ 2 * gramVariance M β - β * gramMeanEnergy M β :=
+  logCurvature_gramTheta hM hβ
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef)
+    (h : ∀ β, Real.pi ≤ β → β * gramMeanEnergy M β < β ^ 2 * gramVariance M β)
+    (h' : ∀ β, Real.pi ≤ β → β * gramMeanEnergy M⁻¹ β < β ^ 2 * gramVariance M⁻¹ β)
+    {β : ℝ} (hβ : 0 < β) : β * gramMeanEnergy M β < β ^ 2 * gramVariance M β :=
+  gramCurvature_pos_of_ge_pi hM h h' hβ
+
+example (Q : QuadLatticeAction) {β : ℝ} (hβ : 0 < β) :
+    logCurvature Q.scaledPartFn β = logCurvature Q.dual.scaledPartFn (Real.pi ^ 2 / β) :=
+  Q.logCurvature_dual hβ
+
+example (Q : QuadLatticeAction)
+    (h : ∀ β, Real.pi ≤ β → 0 < logCurvature Q.scaledPartFn β)
+    (h' : ∀ β, Real.pi ≤ β → 0 < logCurvature Q.dual.scaledPartFn β)
+    {β : ℝ} (hβ : 0 < β) : 0 < logCurvature Q.scaledPartFn β :=
+  Q.logCurvature_pos_of_ge_pi h h' hβ
 
 /-! ## The shifted mass and positive correlation -/
 

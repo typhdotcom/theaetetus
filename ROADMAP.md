@@ -882,7 +882,8 @@ Reconnaissance, falsify-first:
    `β* = π·√12`, not `π` — the `√12`-rescaling is the genuinely
    isodual normalization. Test dual pairs together on the
    half-profile `u ≥ log π` only: the reflection makes
-   `[π, ∞) × {L, L*}` a complete search domain. Sweep whole
+   `[π, ∞) × {L, L*}` a complete search domain
+   (`gramCurvature_pos_of_ge_pi`). Sweep whole
    half-profiles, never the center alone — an isodual profile
    constrains a failure window to be symmetric, not absent. Start
    at the normalized hexagonal form, then the binary shear family

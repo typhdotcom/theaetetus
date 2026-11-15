@@ -41,7 +41,9 @@ now encoded once and enforced by executable self-tests.
   `H_L″(u) = H_{L*}″(2·log π − u)`: sweeping `u ≥ log π` on both
   `L` and `L*` covers the whole line. Lean witnesses:
   `theta_duality_real` at rank one, `gramTheta_dual` in every
-  rank; the self-test also checks the identity numerically.
+  rank, and for the curvature itself `gramCurvature_dual` with the
+  reduction `gramCurvature_pos_of_ge_pi`; the self-test also
+  checks the identity numerically.
 - **Q4 orientation** (implemented in `q4.py`): CND is controlled
   by the **largest** eigenvalue of the pairing restricted to the
   zero-sum subspace (CND iff `≤ 0`); deficit-PSD by the ordinary

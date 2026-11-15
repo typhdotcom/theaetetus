@@ -503,10 +503,23 @@ pairwise versus higher-order interaction.
   contradicts Q5. The shape of a possible failure is already
   constrained: at large coupling the shortest shell dominates and
   `β²Var − β⟨E⟩ ≈ βλ₁N₁e^{−βλ₁}(βλ₁ − 1) > 0` — the rank-one
-  Fact-1 mechanism, universal; the duality
-  `H_L″(u) = H_{L*}″(2·log π − u)` transports it to small
-  coupling for `L*` — convexity for every lattice on `β ≥ π` is
-  convexity everywhere, the class closed under duality, an
+  Fact-1 mechanism, universal. The duality transports it to
+  small coupling for `L*`, and this step is a theorem: the Gram
+  Boltzmann sum differentiates termwise, with mean energy and
+  variance its first and second logarithmic derivatives
+  (`hasDerivAt_log_gramTheta`, `hasDerivAt_gramMeanEnergy`); the
+  Gram reflection differentiates to
+  `β·⟨E⟩_M(β) + (π²/β)·⟨E⟩_{M⁻¹}(π²/β) = d/2`
+  (`gramMeanEnergy_dual`) and then to equality of the curvature
+  `β²·Var − β·⟨E⟩` of `M` at `β` and of `M⁻¹` at `π²/β`
+  (`gramCurvature_dual`), which is `H_L″(u) = H_{L*}″(2·log π − u)`
+  since the curvature is `H_L″` at `u = log β`
+  (`logCurvature_gramTheta`). So strict convexity for `L` and `L*`
+  on `β ≥ π` is strict convexity for `L` everywhere
+  (`gramCurvature_pos_of_ge_pi`; intrinsically
+  `QuadLatticeAction.logCurvature_dual`,
+  `QuadLatticeAction.logCurvature_pos_of_ge_pi`) — the class closed
+  under duality, an
   individual profile self-symmetric when `L` and `L*` are
   theta-equivalent (isoduality sufficient, not necessary); and
   orthogonal sums inherit convexity from their summands — the

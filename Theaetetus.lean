@@ -118,6 +118,9 @@ import Theaetetus.Classification
 -- Intrinsic defect duality: the lattice and its dual
 import Theaetetus.LatticeDuality
 
+-- Higher-rank curvature: the mean-energy and curvature reflections
+import Theaetetus.GramCurvature
+
 -- Positive correlation and the sign of the defect
 import Theaetetus.Correlation
 
