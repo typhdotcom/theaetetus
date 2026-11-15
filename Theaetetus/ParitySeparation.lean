@@ -158,7 +158,7 @@ theorem quadForm_flipCoords {T : Finset (Fin d)}
   rw [← quadForm_dotProduct, ← quadForm_dotProduct]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   by_cases hi : i ∈ T <;> by_cases hj : j ∈ T <;>
-    simp only [flipCoords, hi, hj, if_true, if_false]
+    simp only [flipCoords, hi, hj, ite_true, ite_false]
   · ring
   · rw [hT i j (by simp [hi, hj])]; ring
   · rw [hT i j (by simp [hi, hj])]; ring
@@ -204,7 +204,7 @@ theorem parityVector_flipCoords {T : Finset (Fin d)}
       = flipCoords T u + fun i => ((m i : ℤ) : ℝ) := by
     funext i
     by_cases hi : i ∈ T <;>
-      simp only [hu, hm, flipCoords, hi, if_true, if_false, Pi.smul_apply,
+      simp only [hu, hm, flipCoords, hi, ite_true, ite_false, Pi.smul_apply,
         Pi.add_apply, smul_eq_mul, Int.cast_natCast, Int.cast_zero] <;>
       ring
   show gramMass M (2 * α) _ = gramMass M (2 * α) _
@@ -234,12 +234,12 @@ theorem not_paritySeparating_of_split {T : Finset (Fin d)}
   rcases hsep _ _ heq with ⟨k, hk⟩ | ⟨k, hk⟩
   · refine hthird (k i₀) ?_
     have h := congrFun hk i₀
-    simp only [hz, flipCoords, hi₀, if_true, Pi.smul_apply, Pi.sub_apply,
+    simp only [hz, flipCoords, hi₀, ite_true, Pi.smul_apply, Pi.sub_apply,
       smul_eq_mul, sub_neg_eq_add] at h
     linarith
   · refine hthird (k j₀) ?_
     have h := congrFun hk j₀
-    simp only [hz, flipCoords, hj₀, if_false, Pi.smul_apply, Pi.add_apply,
+    simp only [hz, flipCoords, hj₀, ite_false, Pi.smul_apply, Pi.add_apply,
       smul_eq_mul] at h
     linarith
 

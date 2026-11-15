@@ -40,7 +40,7 @@ theorem diagTheta_rect_strict (hr : r ≠ 0) (hc : ∀ i, 0 < c i)
   have : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
   unfold diagTheta
   rw [← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-  refine Finset.prod_lt_prod_of_nonempty (fun i _ => ?_) (fun i _ => ?_)
+  refine Finset.prod_lt_prod_of_nonempty₀ (fun i _ => ?_) (fun i _ => ?_)
     Finset.univ_nonempty
   · have hci := hc i
     exact mul_pos (theta_pos _ (by positivity)) (theta_pos _ (by positivity))

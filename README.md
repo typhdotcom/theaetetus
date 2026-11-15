@@ -683,7 +683,7 @@ nix develop -c lake build        # nu tasks.nu check adds nix flake check
 Without nix, with `elan` installed: `lake exe cache get`, then
 `lake build`.
 
-Toolchain `leanprover/lean4:v4.33.1`, Mathlib pinned at `v4.33.1`.
+Toolchain `leanprover/lean4:v4.34.1`, Mathlib pinned at `v4.34.1`.
 Zero `sorry`, zero `axiom` declarations; `lake build` green is the
 only definition of done. Where a desired statement fails, the
 counterexample becomes a theorem. Version control is jujutsu.

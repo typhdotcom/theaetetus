@@ -152,11 +152,11 @@ theorem one_lt_classScaledPartFn {β : ℝ} (hβ : 0 < β)
     by_cases hκ : κ = 0
     · subst hκ
       simp [G.harmonicEnergy_zero]
-    · simp only [if_neg hκ]
+    · simp only [ite_eq_right hκ]
       exact (Real.exp_pos _).le
   have hstrict : (if κ₀ = 0 then (1 : ℝ) else 0)
       < Real.exp (-(β * G.harmonicEnergy κ₀)) := by
-    rw [if_neg hκ₀]
+    rw [ite_eq_right hκ₀]
     exact Real.exp_pos _
   calc (1 : ℝ)
       = ∑' κ : (G.E → ℤ) ⧸ LinearMap.range (G.gradLin ℤ),

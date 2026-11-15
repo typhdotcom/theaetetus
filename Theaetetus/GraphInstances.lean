@@ -38,13 +38,13 @@ theorem cycleGraph_boundary_eq {R : Type*} [CommRing R]
       by_cases h1 : e + 1 = v
       · have h1' : e = v - 1 := by rw [eq_sub_iff_add_eq]; exact h1
         by_cases h2 : e = v
-        · rw [if_pos h1, if_pos h2, if_pos h1', if_pos h2]; ring
-        · rw [if_pos h1, if_neg h2, if_pos h1', if_neg h2]; ring
+        · rw [ite_eq_left h1, ite_eq_left h2, ite_eq_left h1', ite_eq_left h2]; ring
+        · rw [ite_eq_left h1, ite_eq_right h2, ite_eq_left h1', ite_eq_right h2]; ring
       · have h1' : ¬(e = v - 1) := fun hc =>
           h1 (by rw [← eq_sub_iff_add_eq]; exact hc)
         by_cases h2 : e = v
-        · rw [if_neg h1, if_pos h2, if_neg h1', if_pos h2]; ring
-        · rw [if_neg h1, if_neg h2, if_neg h1', if_neg h2]; ring]
+        · rw [ite_eq_right h1, ite_eq_left h2, ite_eq_right h1', ite_eq_left h2]; ring
+        · rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h1', ite_eq_right h2]; ring]
   rw [Finset.sum_sub_distrib, Finset.sum_ite_eq' Finset.univ (v - 1) ω,
     Finset.sum_ite_eq' Finset.univ v ω]
   simp

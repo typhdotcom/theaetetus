@@ -121,7 +121,7 @@ theorem quadFormOn_triple (s : ℝ) {p q r : ℕ} (hpq : p ≠ q)
   have hqmem : q ∉ ({r} : Finset ℕ) := by simp [hqr]
   unfold quadFormOn
   simp only [Finset.sum_insert hpmem, Finset.sum_insert hqmem,
-    Finset.sum_singleton, hpq, hpr, hqr, hqp, hrp, hrq, if_true, if_false,
+    Finset.sum_singleton, hpq, hpr, hqr, hqp, hrp, hrq, ite_true, ite_false,
     pairing_self, mul_zero]
   rw [pairing_comm s q p, pairing_comm s r p, pairing_comm s r q]
   ring

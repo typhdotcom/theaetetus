@@ -105,11 +105,11 @@ theorem quadFormOn_pairing_eq {s : ℝ} {P : Finset ℕ}
     intro p hp q hq
     by_cases hqp : q = p
     · subst hqp
-      rw [pairing_self, if_pos rfl]
+      rw [pairing_self, ite_eq_left rfl]
       ring
     · have hco : Nat.Coprime p q :=
         (Nat.coprime_primes (hprime p hp) (hprime q hq)).mpr (Ne.symm hqp)
-      rw [if_neg hqp]
+      rw [ite_eq_right hqp]
       unfold pairing
       rw [defect_coprime hco]
       ring
@@ -147,7 +147,7 @@ theorem quadFormOn_pairing_eq {s : ℝ} {P : Finset ℕ}
             + Real.log (theta (((p : ℝ) * (p : ℝ)) ^ 2 * s))
             - 2 * Real.log (theta ((p : ℝ) ^ 2 * s))) := by
     intro p hp
-    rw [Finset.sum_ite_eq' P p, if_pos hp]
+    rw [Finset.sum_ite_eq' P p, ite_eq_left hp]
   rw [Finset.sum_congr rfl hB, Finset.sum_congr rfl hC,
     Finset.sum_congr rfl hE, hD, Finset.sum_const_zero]
   ring

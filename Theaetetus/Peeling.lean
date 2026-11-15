@@ -136,26 +136,26 @@ theorem tendsto_exp_mul_Z_sub_one (hnt : ∃ k : T.Λ, k ≠ T.modal) :
       · subst hk
         have hfv : ∀ β : ℝ, (if T.modal = T.modal then (0 : ℝ)
             else Real.exp (-(β * (T.E T.modal - T.leastEnergy)))) = 0 :=
-          fun _ => if_pos rfl
+          fun _ => ite_eq_left rfl
         have hgv : (if T.modal ≠ T.modal ∧ T.E T.modal = T.leastEnergy
-            then (1 : ℝ) else 0) = 0 := if_neg fun h => h.1 rfl
+            then (1 : ℝ) else 0) = 0 := ite_eq_right fun h => h.1 rfl
         rw [hgv]
         exact tendsto_const_nhds.congr fun β => (hfv β).symm
       · by_cases hE : T.E k = T.leastEnergy
         · have hfv : ∀ β : ℝ, (if k = T.modal then (0 : ℝ)
               else Real.exp (-(β * (T.E k - T.leastEnergy)))) = 1 := by
             intro β
-            rw [if_neg hk, hE, sub_self, mul_zero, neg_zero, Real.exp_zero]
+            rw [ite_eq_right hk, hE, sub_self, mul_zero, neg_zero, Real.exp_zero]
           have hgv : (if k ≠ T.modal ∧ T.E k = T.leastEnergy
-              then (1 : ℝ) else 0) = 1 := if_pos ⟨hk, hE⟩
+              then (1 : ℝ) else 0) = 1 := ite_eq_left ⟨hk, hE⟩
           simp only [hfv, hgv]
           exact tendsto_const_nhds
         · have hfv : ∀ β : ℝ, (if k = T.modal then (0 : ℝ)
               else Real.exp (-(β * (T.E k - T.leastEnergy))))
               = Real.exp (-(β * (T.E k - T.leastEnergy))) :=
-            fun _ => if_neg hk
+            fun _ => ite_eq_right hk
           have hgv : (if k ≠ T.modal ∧ T.E k = T.leastEnergy
-              then (1 : ℝ) else 0) = 0 := if_neg fun h => hE h.2
+              then (1 : ℝ) else 0) = 0 := ite_eq_right fun h => hE h.2
           simp only [hfv, hgv]
           have hpos : 0 < T.E k - T.leastEnergy := by
             have := T.leastEnergy_le hnt hk
@@ -171,9 +171,9 @@ theorem tendsto_exp_mul_Z_sub_one (hnt : ∃ k : T.Λ, k ≠ T.modal) :
       filter_upwards [eventually_ge_atTop (1 : ℝ)] with β hβ
       intro k
       by_cases hk : k = T.modal
-      · simp only [if_pos hk, norm_zero]
+      · simp only [ite_eq_left hk, norm_zero]
         positivity
-      · simp only [if_neg hk, Real.norm_eq_abs,
+      · simp only [ite_eq_right hk, Real.norm_eq_abs,
           abs_of_pos (Real.exp_pos _)]
         have hE : 0 ≤ T.E k - T.leastEnergy := by
           linarith [T.leastEnergy_le hnt hk]
@@ -191,12 +191,12 @@ theorem tendsto_exp_mul_Z_sub_one (hnt : ∃ k : T.Λ, k ≠ T.modal) :
         (if k ≠ T.modal ∧ T.E k = T.leastEnergy then (1 : ℝ) else 0)
           = 0 := by
       intro k hk
-      refine if_neg fun hpred => hk ?_
+      refine ite_eq_right fun hpred => hk ?_
       rw [Set.Finite.mem_toFinset]
       exact hpred
     rw [tsum_eq_sum h0]
     rw [Finset.sum_congr rfl
-      (fun k hk => if_pos
+      (fun k hk => ite_eq_left
         (show k ≠ T.modal ∧ T.E k = T.leastEnergy from
           T.finite_level.mem_toFinset.mp hk)),
       Finset.sum_const, nsmul_eq_mul, mul_one, leastEnergyMult]
@@ -220,7 +220,7 @@ theorem tendsto_exp_mul_Z_sub_one (hnt : ∃ k : T.Λ, k ≠ T.modal) :
   refine tsum_congr fun k => ?_
   by_cases hk : k = T.modal
   · simp [hk]
-  · simp only [if_neg hk]
+  · simp only [ite_eq_right hk]
     rw [← Real.exp_add]
     congr 1
     ring

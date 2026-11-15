@@ -125,8 +125,8 @@ theorem hasSum_residual (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
   refine h.congr_fun fun m => ?_
   by_cases hm : m = 0
   · subst hm
-    rw [if_pos rfl, if_pos rfl, hz, sub_self]
-  · rw [if_neg hm, if_neg hm, sub_zero]
+    rw [ite_eq_left rfl, ite_eq_left rfl, hz, sub_self]
+  · rw [ite_eq_right hm, ite_eq_right hm, sub_zero]
 
 /-! ## The total weight of the nonzero modes -/
 
@@ -147,8 +147,8 @@ theorem hasSum_totalWeight (hM : M.PosDef) {α : ℝ} (hα : 0 < α) :
   rw [← totalWeight_eq_residual_zero] at h
   refine h.congr_fun fun m => ?_
   by_cases hm : m = 0
-  · rw [if_pos hm, if_pos hm]
-  · rw [if_neg hm, if_neg hm,
+  · rw [ite_eq_left hm, ite_eq_left hm]
+  · rw [ite_eq_right hm, ite_eq_right hm,
       show dualPairing m (0 : Fin d → ℝ) = 0 by simp [dualPairing]]
     norm_num
 
@@ -156,8 +156,8 @@ theorem totalWeight_nonneg (hM : M.PosDef) {α : ℝ} (hα : 0 < α) :
     0 ≤ totalWeight M α := by
   refine (hasSum_totalWeight hM hα).nonneg fun m => ?_
   by_cases hm : m = 0
-  · rw [if_pos hm]
-  · rw [if_neg hm]
+  · rw [ite_eq_left hm]
+  · rw [ite_eq_right hm]
     exact (modeWeight_pos hM hα m).le
 
 /-- **The uniform bound**: the residual never exceeds the total weight
@@ -171,7 +171,7 @@ theorem abs_residual_le_totalWeight (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
     refine hasSum_le (fun m => ?_) hx.neg h0
     by_cases hm : m = 0
     · simp [hm]
-    · simp only [hm, if_false]
+    · simp only [hm, ite_false]
       have hcos : Real.cos (2 * Real.pi * dualPairing m 0) = 1 := by
         rw [show dualPairing m (0 : Fin d → ℝ) = 0 by simp [dualPairing]]
         norm_num
@@ -181,7 +181,7 @@ theorem abs_residual_le_totalWeight (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
   · refine hasSum_le (fun m => ?_) hx h0
     by_cases hm : m = 0
     · simp [hm]
-    · simp only [hm, if_false]
+    · simp only [hm, ite_false]
       have hcos : Real.cos (2 * Real.pi * dualPairing m 0) = 1 := by
         rw [show dualPairing m (0 : Fin d → ℝ) = 0 by simp [dualPairing]]
         norm_num

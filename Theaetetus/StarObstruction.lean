@@ -230,11 +230,11 @@ theorem deficit_not_psd {s : ℝ} (hs : 0 < s) :
   set c : ℕ → ℝ := fun m =>
     if m = 2 then (n : ℝ) * Real.log (theta (4 * s))
     else -Real.log (theta s) with hc_def
-  have hc2 : c 2 = (n : ℝ) * Real.log (theta (4 * s)) := if_pos rfl
+  have hc2 : c 2 = (n : ℝ) * Real.log (theta (4 * s)) := ite_eq_left rfl
   have hcQ : ∀ q ∈ Q, c q = -Real.log (theta s) := by
     intro q hq
     have := hQ3 q hq
-    exact if_neg (by omega)
+    exact ite_eq_right (by omega)
   -- entry bounds
   have hK2q : ∀ q ∈ Q, Real.log (theta (4 * s)) - ε ≤ deficit s 2 q := by
     intro q hq

@@ -83,11 +83,11 @@ theorem one_lt_Z {β : ℝ} (hβ : 1 ≤ β) (hnt : ∃ k : T.Λ, k ≠ T.modal)
     by_cases hk : k = T.modal
     · subst hk
       simp [T.E_modal]
-    · simp only [if_neg hk]
+    · simp only [ite_eq_right hk]
       exact (Real.exp_pos _).le
   have hstrict : (if k₀ = T.modal then (1 : ℝ) else 0)
       < Real.exp (-(β * T.E k₀)) := by
-    rw [if_neg hk₀]
+    rw [ite_eq_right hk₀]
     exact Real.exp_pos _
   calc (1 : ℝ)
       = ∑' k : T.Λ, (if k = T.modal then (1 : ℝ) else 0) :=
@@ -143,9 +143,9 @@ theorem tendsto_Z_atTop : Tendsto T.Z atTop (𝓝 1) := by
       intro k
       by_cases hk : k = T.modal
       · subst hk
-        simp only [T.E_modal, mul_zero, neg_zero, Real.exp_zero, if_pos]
+        simp only [T.E_modal, mul_zero, neg_zero, Real.exp_zero, ite_eq_left]
         exact tendsto_const_nhds
-      · simp only [if_neg hk]
+      · simp only [ite_eq_right hk]
         have hE : 0 < T.E k := T.E_pos k hk
         have h1 : Tendsto (fun β : ℝ => β * T.E k) atTop atTop :=
           (tendsto_mul_const_atTop_of_pos hE).mpr tendsto_id

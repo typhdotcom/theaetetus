@@ -118,8 +118,8 @@ theorem boundary_single (e : G.E) (w : G.V) :
       = if e' = e then (G.bcoeff w e' : R) else 0 := fun e' => by
     rcases eq_or_ne e' e with h | h
     · subst h
-      rw [if_pos rfl, Pi.single_eq_same, mul_one]
-    · rw [if_neg h, Pi.single_eq_of_ne h, mul_zero]
+      rw [ite_eq_left rfl, Pi.single_eq_same, mul_one]
+    · rw [ite_eq_right h, Pi.single_eq_of_ne h, mul_zero]
   rw [boundary_eq_sum, Finset.sum_congr rfl fun e' _ => hfun e',
     Finset.sum_ite_eq' Finset.univ e (fun e' => G.bcoeff w e')]
   simp
@@ -167,8 +167,8 @@ private lemma sum_ite_one_mul (f : G.V → R) (a : G.V) :
   rw [show (fun v => (if a = v then (1 : R) else 0) * f v)
       = fun v => if a = v then f v else 0 from funext fun v => by
     by_cases h : a = v
-    · rw [if_pos h, if_pos h, one_mul]
-    · rw [if_neg h, if_neg h, zero_mul]]
+    · rw [ite_eq_left h, ite_eq_left h, one_mul]
+    · rw [ite_eq_right h, ite_eq_right h, zero_mul]]
   rw [Finset.sum_ite_eq Finset.univ a f]
   simp
 
@@ -294,8 +294,8 @@ private lemma dotProduct_single_one (ω : G.E → R) (e : G.E) :
       = if e' = e then ω e' else 0 := fun e' => by
     rcases eq_or_ne e' e with h | h
     · subst h
-      rw [if_pos rfl, Pi.single_eq_same, mul_one]
-    · rw [if_neg h, Pi.single_eq_of_ne h, mul_zero]
+      rw [ite_eq_left rfl, Pi.single_eq_same, mul_one]
+    · rw [ite_eq_right h, Pi.single_eq_of_ne h, mul_zero]
   show ∑ e', ω e' * (Pi.single e (1 : R) : G.E → R) e' = ω e
   rw [Finset.sum_congr rfl fun e' _ => hfun e',
     Finset.sum_ite_eq' Finset.univ e ω]

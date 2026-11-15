@@ -59,7 +59,7 @@ theorem integral_mFourier (κ : Fin d → ℤ) :
   by_cases hκ : κ = 0
   · subst hκ
     simp [mFourier]
-  · rw [if_neg hκ]
+  · rw [ite_eq_right hκ]
     obtain ⟨i, hi⟩ : ∃ i, κ i ≠ 0 := by
       by_contra hall
       exact hκ (funext fun i => by
@@ -71,7 +71,7 @@ theorem integral_mFourier (κ : Fin d → ℤ) :
       rw [dualPairing, Finset.sum_eq_single i]
       · show ((κ i : ℤ) : ℝ)
             * (if i = i then (1 : ℝ) / (2 * (κ i : ℝ)) else 0) = 1 / 2
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         field_simp
       · intro j _ hj
         simp [hx, hj]
@@ -106,7 +106,7 @@ theorem mFourierCoeff_mFourier (m ν : Fin d → ℤ) :
   by_cases h : m = ν
   · subst h
     simp
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     intro hz
     exact h (by rwa [add_neg_eq_zero] at hz)
 
@@ -314,7 +314,7 @@ theorem summable_modeCoeff (hM : M.PosDef) {α : ℝ} (hα : 0 < α) :
   refine ((hasSum_totalWeight hM hα).summable).congr fun m => ?_
   by_cases hm : m = 0
   · simp [modeCoeff, hm]
-  · simp only [modeCoeff, hm, if_false, Complex.norm_real,
+  · simp only [modeCoeff, hm, ite_false, Complex.norm_real,
       Real.norm_eq_abs, abs_of_pos (modeWeight_pos hM hα m)]
 
 /-- **The residual is an absolutely convergent character series** with
@@ -339,10 +339,10 @@ theorem hasCharSum_residual (hM : M.PosDef) {α : ℝ} (hα : 0 < α) :
   refine hsub.congr_fun fun m => ?_
   by_cases hm : m = 0
   · subst hm
-    rw [modeCoeff, if_pos rfl, if_pos rfl, zero_mul]
+    rw [modeCoeff, ite_eq_left rfl, ite_eq_left rfl, zero_mul]
     rw [show ((massFourierCoeff M α 0 : ℝ) : ℂ) = ((zeroMode M α : ℝ) : ℂ)
       from rfl, mFourier_zero_eq, mul_one, div_self h0, sub_self]
-  · rw [modeCoeff, if_neg hm, if_neg hm, sub_zero, modeWeight]
+  · rw [modeCoeff, ite_eq_right hm, ite_eq_right hm, sub_zero, modeWeight]
     push_cast
     ring
 
@@ -402,7 +402,7 @@ private theorem mFourierCoeff_const (c : ℂ) {ν : Fin d → ℤ} (hν : ν ≠
   rw [show (fun _ : UnitAddTorus (Fin d) => c)
       = fun z => c * mFourier (0 : Fin d → ℤ) z from funext fun z => by
     rw [mFourier_zero_eq, mul_one],
-    mFourierCoeff_const_mul, mFourierCoeff_mFourier, if_neg (Ne.symm hν),
+    mFourierCoeff_const_mul, mFourierCoeff_mFourier, ite_eq_right (Ne.symm hν),
     mul_zero]
 
 /-- The coefficient functional is bounded by the supremum norm: the

@@ -99,7 +99,7 @@ theorem theta_tail_le {α : ℝ} (hα : 0 < α) (N : ℕ) :
       have hcond : ¬ (N : ℤ) < |((n : ℤ) + 1)| := by
         rw [abs_of_nonneg (by positivity)]
         omega
-      rw [if_neg hcond]
+      rw [ite_eq_right hcond]
     rw [← hinj.hasSum_iff hvanish]
     have hfeq : ((fun n : ℕ => if (N : ℤ) < |((n : ℤ) + 1)| then
         Real.exp (-α * ((((n : ℤ) + 1) : ℤ) : ℝ) ^ 2) else 0)
@@ -111,7 +111,7 @@ theorem theta_tail_le {α : ℝ} (hα : 0 < α) (N : ℕ) :
         rw [abs_of_nonneg (by positivity)]
         push_cast
         omega
-      rw [if_pos hcond]
+      rw [ite_eq_left hcond]
       congr 1
       push_cast
       ring
@@ -128,11 +128,11 @@ theorem theta_tail_le {α : ℝ} (hα : 0 < α) (N : ℕ) :
       funext n
       rw [abs_neg]
       by_cases hc : (N : ℤ) < |((n : ℤ) + 1)|
-      · rw [if_pos hc, if_pos hc]
+      · rw [ite_eq_left hc, ite_eq_left hc]
         congr 1
         push_cast
         ring
-      · rw [if_neg hc, if_neg hc]
+      · rw [ite_eq_right hc, ite_eq_right hc]
     rw [heq]
     exact hpos
   have hZ : HasSum (fun m : ℤ =>
@@ -147,7 +147,7 @@ theorem theta_tail_le {α : ℝ} (hα : 0 < α) (N : ℕ) :
     have hcond : ¬ (N : ℤ) < |(0 : ℤ)| := by
       rw [abs_zero]
       omega
-    rw [if_neg hcond]
+    rw [ite_eq_right hcond]
   rw [hZ.tsum_eq, h0]
   linarith [tsum_tail_shift_le hα N]
 
@@ -212,16 +212,16 @@ theorem tail_exp_le {r : ℕ} {E : (Fin r → ℤ) → ℝ} {ν : ℝ}
   have hfam_nn : ∀ (i j : Fin r) (m : ℤ),
       0 ≤ (if j = i then tailg else gauss) m := fun i j m => by
     by_cases hj : j = i
-    · rw [if_pos hj]
+    · rw [ite_eq_left hj]
       exact htailg_nn m
-    · rw [if_neg hj]
+    · rw [ite_eq_right hj]
       exact hgauss_nn m
   have hfam_sum : ∀ i j : Fin r,
       Summable (if j = i then tailg else gauss) := fun i j => by
     by_cases hj : j = i
-    · rw [if_pos hj]
+    · rw [ite_eq_left hj]
       exact htailg_sum
-    · rw [if_neg hj]
+    · rw [ite_eq_right hj]
       exact hgauss_sum
   have hP_sum : ∀ i : Fin r, Summable (fun k : Fin r → ℤ =>
       ∏ j, (if j = i then tailg else gauss) (k j)) := fun i =>
@@ -243,10 +243,10 @@ theorem tail_exp_le {r : ℕ} {E : (Fin r → ℤ) → ℝ} {ν : ℝ}
         refine Finset.prod_congr rfl fun j _ => ?_
         by_cases hj : j = i₀
         · subst hj
-          rw [if_pos rfl]
+          rw [ite_eq_left rfl]
           simp only [hgauss, htailg]
-          rw [if_pos hi₀]
-        · rw [if_neg hj]
+          rw [ite_eq_left hi₀]
+        · rw [ite_eq_right hj]
       calc Real.exp (-E k)
           ≤ ∏ j, gauss (k j) := hgdom k
         _ = ∏ j, (if j = i₀ then tailg else gauss) (k j) := hswitch
@@ -296,12 +296,12 @@ theorem tail_exp_le {r : ℕ} {E : (Fin r → ℤ) → ℝ} {ν : ℝ}
           (fun j => ∑' m : ℤ, (if j = i then tailg else gauss) m)
           (Finset.mem_univ i)]
         congr 1
-        · rw [if_pos rfl]
+        · rw [ite_eq_left rfl]
         · calc (∏ j ∈ Finset.univ.erase i,
                 ∑' m : ℤ, (if j = i then tailg else gauss) m)
               = ∏ _j ∈ Finset.univ.erase i, theta ν :=
                 Finset.prod_congr rfl fun j hj => by
-                  rw [if_neg (Finset.ne_of_mem_erase hj), htheta]
+                  rw [ite_eq_right (Finset.ne_of_mem_erase hj), htheta]
             _ = theta ν ^ (r - 1) := by
                 rw [Finset.prod_const,
                   Finset.card_erase_of_mem (Finset.mem_univ i),

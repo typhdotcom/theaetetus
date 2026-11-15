@@ -240,8 +240,8 @@ theorem cast_independent (x : Fin n → ℝ)
               = fun i => if j = i then x i else 0 from funext fun i => by
             rcases eq_or_ne j i with h | h
             · subst h
-              rw [if_pos rfl, Pi.single_eq_same, mul_one]
-            · rw [if_neg h, Pi.single_eq_of_ne h, mul_zero]]
+              rw [ite_eq_left rfl, Pi.single_eq_same, mul_one]
+            · rw [ite_eq_right h, Pi.single_eq_of_ne h, mul_zero]]
           rw [Finset.sum_ite_eq Finset.univ j x]
           simp
   rw [hx, Matrix.mulVec_zero] at hlin
@@ -343,8 +343,8 @@ theorem periods_onto (k : Fin n → ℤ) :
             = fun i => if i = j then k i else 0 from funext fun i => by
           rcases eq_or_ne i j with h | h
           · subst h
-            rw [if_pos rfl, Pi.single_eq_same, mul_one]
-          · rw [if_neg h, Pi.single_eq_of_ne h, mul_zero]]
+            rw [ite_eq_left rfl, Pi.single_eq_same, mul_one]
+          · rw [ite_eq_right h, Pi.single_eq_of_ne h, mul_zero]]
         rw [Finset.sum_ite_eq' Finset.univ j k]
         simp
 

@@ -42,7 +42,7 @@ private theorem sum_dual_delta {Λ : Type u} [AddCommGroup Λ]
       * ((c.dualBasis j (c l) : ℤ) : ℝ)) = 0 := by
     intro k hk
     refine Finset.sum_eq_zero fun l _ => ?_
-    rw [Module.Basis.dualBasis_apply_self, if_neg hk]
+    rw [Module.Basis.dualBasis_apply_self, ite_eq_right hk]
     push_cast
     ring
   rw [Fintype.sum_eq_single i houter]
@@ -50,12 +50,12 @@ private theorem sum_dual_delta {Λ : Type u} [AddCommGroup Λ]
       * ((c.dualBasis i (c i) : ℤ) : ℝ)
       * ((c.dualBasis j (c l) : ℤ) : ℝ) = 0 := by
     intro l hl
-    rw [Module.Basis.dualBasis_apply_self c j l, if_neg hl]
+    rw [Module.Basis.dualBasis_apply_self c j l, ite_eq_right hl]
     push_cast
     ring
   rw [Fintype.sum_eq_single j hinner,
     Module.Basis.dualBasis_apply_self, Module.Basis.dualBasis_apply_self,
-    if_pos rfl, if_pos rfl]
+    ite_eq_left rfl, ite_eq_left rfl]
   push_cast
   ring
 
