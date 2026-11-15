@@ -1,5 +1,5 @@
 name = "theaetetus"
-version = "0.2.0"
+version = "0.3.0"
 description = "The arithmetic of coupled resolutions: the defect of a positive-definite quadratic form on a lattice, and its failure to factor over the primes."
 keywords = ["math", "number-theory", "lattices", "theta-functions"]
 homepage = "https://github.com/typhdotcom/theaetetus"
