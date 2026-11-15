@@ -386,6 +386,19 @@ pairwise versus higher-order interaction.
   is itself a zero-sum deficit-PSD failure, while if CND holds
   and deficit-PSD fails, every negative direction has nonzero
   mean — the star obstruction's witness is such a direction.
+  The pairing matrix on a finite positive sample is Descent's sampled
+  defect matrix of the normalized field `−log θ(q²s)`
+  (`pairingMatrix_eq_defectMatrix`), and `IsCNDOn` is its
+  `CondNegSemidef` (`isCNDOn_pairing_iff`), so both chambers read
+  in Descent's vocabulary (`condNegSemidef_resField_large`,
+  `not_condNegSemidef_resField_small`). The prime-only sample is
+  forced: against a least element the defect vanishes, the centred
+  Gram kernel at it is minus half the matrix, and the matrix is
+  then CND only if it is zero
+  (`condNegSemidef_defectMatrix_iff_of_base`) — a positive sample
+  containing `1` is CND exactly when it is a divisibility chain
+  (`isCNDOn_pairing_iff_chain_of_one_mem`), so `1` with two
+  distinct primes never is (`not_isCNDOn_pairing_one_prime_prime`).
   Open is the geometry
   of the middle, one clause per matrix. **Q4-CND**: for a finite
   prime set `P`, is the valid-scale set
@@ -615,7 +628,16 @@ pairwise versus higher-order interaction.
   while the hierarchy stays observationally capped at order three.
   Every pairwise observation on that five-point carrier is
   nonpositive (`defect_diamondHom_nonpos`); the positive
-  order-three one is the formal contrast.
+  order-three one is the formal contrast. It also places the
+  Gaussian diamond outside Descent's finite Gibbs class, whose
+  realizations of the diamond are constant and attain only the zero
+  canonical datum: the Gaussian datum is
+  `(0, m, m, 2·log(θ(2s)/θ(4s)))`, `m` the midpoint defect
+  (`canonicalDatum_diamondHom`), excluded with its negation
+  (`not_canonicalDatumRealizable_diamondHom`); the field itself
+  fails the realizable sign (`not_realizable_diamondHom`), and its
+  negation, which passes it, is excluded by constancy alone
+  (`not_realizable_neg_diamondHom`).
 
   The boundary value being an index is general. For finite-index
   subgroups `A, B, C` of `ℤᵈ`, each priced by the logarithm of its
