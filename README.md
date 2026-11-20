@@ -306,6 +306,14 @@ negative.
   has distinct degree-two representation numbers
   (`schiemann_siegelSet_ne`): the theta series it shares in
   degree one (a numerical fact here) splits in degree two.
+  In every degree, injective `k`-tuples of energy-`m` sectors in
+  one class are a Gram predicate on the first sector and the half
+  differences (`classTuplesEquivPred`), so equal representation
+  numbers in degree `k` give equivalent class tuples
+  (`classTuplesEquivOfSiegel`). With the frame bounds this
+  separates `E8 ⊕ E8` from `D16⁺` in degree 17
+  (`e8sq_d16plus_siegel_ne`); their known separation is in degree
+  4, where the recon's fourth class moments split.
 
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here

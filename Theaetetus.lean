@@ -203,5 +203,9 @@ import Theaetetus.SiegelDegree
 -- E8 ⊕ E8 from D16⁺
 import Theaetetus.FrameSeparation
 
+-- Class tuples are Siegel data in every degree; degree 17 separates
+-- E8 ⊕ E8 from D16⁺
+import Theaetetus.SiegelTuples
+
 -- The manifest: public statements restated as compiler-checked examples
 import Theaetetus.Status

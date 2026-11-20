@@ -900,7 +900,17 @@ Formalization targets:
     degree-two representation numbers force equal class-pair counts
     (`classPairs_ncard_eq_of_siegelSet`) and Schiemann's pair has
     distinct degree-two representation numbers
-    (`schiemann_siegelSet_ne`). Open: general `k`. Ordered `k`-tuples of
+    (`schiemann_siegelSet_ne`). General `k` has landed too
+    (`Theaetetus.SiegelTuples`): class tuples are a Gram predicate
+    in first-sector and half-difference coordinates
+    (`classTuplesEquivPred`), sorted by Gram matrix
+    (`gramFiberEquiv`), so equal representation numbers in degree
+    `k + 1` give equivalent class tuples
+    (`classTuplesEquivOfSiegel`); with the frame bounds, `E8 ⊕ E8`
+    and `D16⁺` differ in degree 17 (`e8sq_d16plus_siegel_ne`). The
+    known separation is in degree 4; reaching it needs the
+    fourth class moments themselves, not only the frame maxima.
+    The original plan: ordered `k`-tuples of
     distinct sectors of energy `m` in one class mod `2` biject with
     `k`-tuples `(x, y₂, …, y_k)` whose Gram matrix lies in an
     explicit set (`Q(x) = m`, `⟨x, yᵢ⟩ = −Q(yᵢ)`, `yᵢ ≠ 0`,

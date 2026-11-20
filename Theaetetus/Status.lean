@@ -4,6 +4,7 @@ import Theaetetus.CosetDuality
 import Theaetetus.CosetSign
 import Theaetetus.SiegelDegree
 import Theaetetus.FrameSeparation
+import Theaetetus.SiegelTuples
 import Theaetetus.Midpoint
 import Theaetetus.Factorization
 import Theaetetus.RankFunction
@@ -2147,5 +2148,9 @@ example {n : ℕ} {G : Matrix (Fin n) (Fin n) ℤ} (hG : EvenPosForm G)
 example : ¬ ∃ U : GL (Fin 16) ℤ, (U : Matrix (Fin 16) (Fin 16) ℤ)ᵀ * e8sq *
     (U : Matrix (Fin 16) (Fin 16) ℤ) = d16plus :=
   e8sq_not_isometric_d16plus
+
+example : ∃ T : Matrix (Fin 17) (Fin 17) ℤ,
+    IsEmpty (siegelSetK e8sq T ≃ siegelSetK d16plus T) :=
+  e8sq_d16plus_siegel_ne
 
 end Theaetetus
