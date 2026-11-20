@@ -104,6 +104,7 @@ uv run recon/q3.py pair --pair as1_as2 --q 13 --bound 200 --write
 uv run recon/q3field.py selftest
 uv run recon/q3field.py sweep --write      # ~3 min
 uv run recon/q3roots.py --write            # ~20 s
+uv run recon/q3survey.py --write           # ~15 min
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -839,3 +840,26 @@ Not explained here: why the root quadruples summing into `2L` and
 the ordered `D4` bases differ by the same amount (a plausible route:
 four orthogonal roots summing into `2L` span a `D4` and are its
 `4A1` frame).
+
+## Survey of the Conway–Sloane family (`q3survey.py`, `q3_survey_conway_sloane.json`)
+
+`L∓(a, b, c, d)`, Gram `M∓ᵀ·diag(a, b, c, d)·M∓ / 12`, for coprime
+`a < b < c < d ≤ 50` giving integral Gram matrices: 104 pairs, all
+theta-equal through energy 400 and none isometric (a backtracking
+basis search). For each modulus `q ∈ {2, 3, 4, 5, 7, 11, 13}` the
+energy bound starts at `q²λ₁/4 + 20` and doubles up to 1600 until the
+coset profiles differ; the first fixed bound of 40 left 40 pairs
+falsely unseparated, all of large determinant.
+
+- **No survivor.** Every pair is separated at every modulus tried,
+  `q = 2` included.
+- **Always degree two.** At `q = 2`, 79 pairs split in the second
+  falling moment at one energy, and the other 25 in mixed-energy
+  class pairs `Σ_c n_c(m₁)·n_c(m₂)` with `m₁ ≠ m₂` — the
+  representation numbers of binary Gram matrices with distinct
+  diagonal entries. Schiemann's `(1, 7, 13, 19)` is the first row.
+
+Within this family the mod-2 residue datum never needs more than
+degree-two Siegel data. The pairs that can test it further are those
+with equal Siegel theta series through degree two or beyond, as
+`E8²`, `D16⁺` are through degree three.

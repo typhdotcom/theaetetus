@@ -497,7 +497,15 @@ pairwise versus higher-order interaction.
   its second falling moment differs at every modulus tried
   (`q = 2, 3, 5, 7, 13, 19`, once the energy bound reaches the
   informative range), and at `q = 2` the separation is a theorem
-  (`schiemann_not_isometric`). The same
+  (`schiemann_not_isometric`). A survey of 104 pairs of the
+  Conway–Sloane family `L∓(a, b, c, d)` (`recon/q3survey.py`) found
+  no pair unseparated by mod-`q` coset data for any `q ≤ 13`; every
+  separation at `q = 2` is degree-two, by equal- or mixed-energy
+  class pairs. Since the degree-`r` representation number of a
+  rank-`r` lattice's own Gram matrix detects isometry, coset data is
+  a congruence-filtered sum of Siegel data that may or may not reach
+  it; the open cases are pairs equal in Siegel degree two or
+  more. The same
   order governs the classwise defect, the cross-ratio of
   `log Θ_{c+2L}` along the dilation tower (`recon/q3field.py`):
   Poisson summation reflects it class by class onto the
