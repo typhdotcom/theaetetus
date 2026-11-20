@@ -950,6 +950,13 @@ Formalization targets:
     degree-four theta difference. A formal degree-four separation of the pair can
     land through that count — two finite root-configuration
     censuses — without the full class census.
+    The coefficient itself is formal Siegel data
+    (`Theaetetus.EvenSums`): quadruples of energy-`m` sectors summing
+    into `2ℤⁿ` are a Gram predicate on `(u₀, u₁, u₂, w)` with
+    `u₃ = 2w − u₀ − u₁ − u₂` (`evenQuadsEquivPred`), so equal
+    degree-four representation numbers give equivalent even
+    quadruples (`evenQuadsEquivOfSiegel`), with no positivity
+    hypothesis. `N₄` is the count at `m = 2`.
 
 Reconnaissance, falsify-first:
 

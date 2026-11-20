@@ -207,5 +207,8 @@ import Theaetetus.FrameSeparation
 -- E8 ⊕ E8 from D16⁺
 import Theaetetus.SiegelTuples
 
+-- Even quadruples are degree-four Siegel data
+import Theaetetus.EvenSums
+
 -- The manifest: public statements restated as compiler-checked examples
 import Theaetetus.Status

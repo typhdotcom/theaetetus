@@ -314,6 +314,11 @@ negative.
   separates `E8 ⊕ E8` from `D16⁺` in degree 17
   (`e8sq_d16plus_siegel_ne`); their known separation is in degree
   4, where the recon's fourth class moments split.
+  The coefficient of the classwise degree-four law is Siegel data
+  too: quadruples of energy-`m` sectors summing into `2ℤⁿ` are a
+  Gram predicate on `(u₀, u₁, u₂, w)`, `u₃ = 2w − u₀ − u₁ − u₂`, so
+  equal degree-four representation numbers give equivalent even
+  quadruples (`evenQuadsEquivOfSiegel`).
 
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here
