@@ -289,6 +289,20 @@ calculation (`QuadLatticeAction.defect_dual`, through
 `gramDefect_dual` and the weight-annihilation law
 `fieldDefect_dual_of_log_reflect`).
 
+In Arakelov terms, `log Z_L(π)` is the arithmetic `h⁰` of the
+lattice with its Gaussian metric, and Poisson summation is
+arithmetic Riemann–Roch: `h⁰(L) − h⁰(L*) = −log covol(L)` up to
+normalization. The prefactors the cross-ratio annihilates are the
+Euler characteristic `χ = −log covol`, which is a valuation on the
+dilation tower (`covol(qL) = qʳ·covol(L)`). So the defect of `h⁰`
+on `L` is the defect of `h¹ = h⁰(L*)` at the reflected scale,
+`χ` carries none of it, and at the boundary `s → 0`, where `h¹`
+vanishes and `h⁰ → χ`, so does the defect. On the Dirichlet side
+the same cancellation is total: dilation multiplies the Epstein
+zeta by `q^{−2s}`, a character of `q`, so every defect is
+invisible to Euler-product and covolume data and lives in the
+logarithm of the theta sum itself.
+
 ## The questions
 
 Three strata are kept apart: closed results live in **What is
