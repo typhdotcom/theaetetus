@@ -185,5 +185,9 @@ import Theaetetus.SublatticeDiamond
 import Theaetetus.ThetaBounds
 import Theaetetus.RankTwo
 
+-- Coset separation: the mod-2 residue datum separates a theta-equivalent
+-- quaternary pair, and class pairs are an isometry invariant
+import Theaetetus.CosetSeparation
+
 -- The manifest: public statements restated as compiler-checked examples
 import Theaetetus.Status

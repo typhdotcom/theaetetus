@@ -67,9 +67,21 @@ def block(*grams):
     return out
 
 
+def gram(rows):
+    return lambda: np.array(rows, dtype=np.int64)
+
+
 FORMS = {
     "e8e8": lambda: block(e8_gram(), e8_gram()),
     "d16plus": d16plus_gram,
+    # Schiemann's quaternary pair, determinant 1729, level 1729
+    "as1": gram([[4, 2, 0, 1], [2, 8, 3, 1], [0, 3, 10, 5], [1, 1, 5, 10]]),
+    "as2": gram([[4, 0, 1, 1], [0, 8, 1, -4], [1, 1, 8, 2], [1, -4, 2, 10]]),
+}
+
+PAIRS = {
+    "e8e8_d16plus": ("e8e8", "d16plus"),
+    "as1_as2": ("as1", "as2"),
 }
 
 
@@ -142,7 +154,6 @@ def run(pair, q, bound):
     rows = {}
     for name in pair:
         gram = FORMS[name]()
-        assert round(np.linalg.det(gram)) == 1
         pts, norms = enumerate_short(gram, bound)
         prof = coset_profile(pts, norms, q, bound)
         rows[name] = dict(
@@ -190,15 +201,20 @@ def separating_shapes(rows, pair):
 def cmd_selftest(_):
     # E8 x E8 and D16+ share the theta series E4^2 = 1 + 480q + 61920q^2 + ...
     expected = [1, 0, 480, 0, 61920]
-    for name in FORMS:
+    for name in PAIRS["e8e8_d16plus"]:
         _, norms = enumerate_short(FORMS[name](), 4)
         got = theta_counts(norms, 4)
         assert got == expected, (name, got)
+    # Schiemann's pair: equal theta series, determinant 1729
+    a, b = (FORMS[n]() for n in PAIRS["as1_as2"])
+    assert round(np.linalg.det(a)) == round(np.linalg.det(b)) == 1729
+    na, nb = (theta_counts(enumerate_short(g, 60)[1], 60) for g in (a, b))
+    assert na == nb
     print("selftest ok")
 
 
 def cmd_pair(args):
-    pair = ("e8e8", "d16plus")
+    pair = PAIRS[args.pair]
     rows, same_theta, same_profile = run(pair, args.q, args.bound)
     record = dict(
         pair=list(pair),
@@ -212,12 +228,13 @@ def cmd_pair(args):
         falling_moments={
             str(m): {p: falling_moments(rows[p]["profile"], m, 6) for p in pair}
             for m in range(2, args.bound + 1, 2)
+            if any(falling_moments(rows[p]["profile"], m, 2)[1] for p in pair)
         },
         numpy=np.__version__,
     )
     text = json.dumps(record, indent=2) + "\n"
     if args.write:
-        path = DATA / f"q3_e8e8_d16plus_q{args.q}_n{args.bound}.json"
+        path = DATA / f"q3_{args.pair}_q{args.q}_n{args.bound}.json"
         path.write_text(text)
         print(f"wrote {path}", file=sys.stderr)
     print(text, end="")
@@ -227,7 +244,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(required=True)
     sub.add_parser("selftest").set_defaults(fn=cmd_selftest)
-    p = sub.add_parser("pair", help="E8+E8 versus D16+")
+    p = sub.add_parser("pair", help="a theta-equivalent pair")
+    p.add_argument("--pair", choices=sorted(PAIRS), default="e8e8_d16plus")
     p.add_argument("--q", type=int, default=2)
     p.add_argument("--bound", type=int, default=4)
     p.add_argument("--write", action="store_true")

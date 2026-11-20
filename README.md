@@ -227,6 +227,20 @@ negative.
   `diagTheta_sq_lt`) — rank-one Q5 lifted axis-by-axis, the same
   orthogonal-sum lift that carries Q1 (`diagDefect_eq_sum`). No
   positive diagonal form is a Q5 counterexample.
+- **Coset separation, rank four.** For an integral Gram matrix,
+  the class pairs at energy `m` — ordered pairs of distinct sectors
+  of energy `m` congruent modulo `2` — are carried bijectively by
+  every integral isometry (`classPairs_ncard_eq_of_isometry`).
+  Schiemann's quaternary pair (determinant `1729`), which has a
+  single theta series, has ten sectors each at energy `12`
+  (`schiemannA_shell`, `schiemannB_shell`) but `10` and `18` class
+  pairs there (`schiemannA_classPairs_ncard`,
+  `schiemannB_classPairs_ncard`), so the mod-`2` residue datum
+  separates what every scalar defect identifies
+  (`schiemann_not_isometric`). The shells are certified by
+  diagonal dominance as a sum of squares and a kernel check of the
+  box `[-3, 3]⁴`. Equality of the two theta series is not
+  formalized.
 
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here
@@ -386,7 +400,12 @@ pairwise versus higher-order interaction.
   degree at which the Siegel theta series of the pair are known
   to separate. Coset data reaches below theta-equivalence
   through higher-degree correlations, and a refinement of the
-  datum is measured by the Siegel degree it reaches. The same
+  datum is measured by the Siegel degree it reaches. Schiemann's
+  quaternary theta-equivalent pair separates one degree earlier:
+  its second falling moment differs at every modulus tried
+  (`q = 2, 3, 5, 7, 13, 19`, once the energy bound reaches the
+  informative range), and at `q = 2` the separation is a theorem
+  (`schiemann_not_isometric`). The same
   order governs the classwise defect, the cross-ratio of
   `log Θ_{c+2L}` along the dilation tower (`recon/q3field.py`):
   Poisson summation reflects it class by class onto the

@@ -1,4 +1,5 @@
 import Theaetetus.Duality
+import Theaetetus.CosetSeparation
 import Theaetetus.Midpoint
 import Theaetetus.Factorization
 import Theaetetus.RankFunction
@@ -2101,5 +2102,17 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ}
           - (1 / 2) * convolve (modeCoeff M α) (modeCoeff M α) ν)‖
       ≤ totalWeight M α ^ 3 / (1 - totalWeight M α) :=
   norm_logMassCoeff_sub_second_order_le hM hα hw hν
+
+example {n : ℕ} (G : Matrix (Fin n) (Fin n) ℤ) (U : GL (Fin n) ℤ) (m : ℤ) :
+    (classPairs ((U : Matrix (Fin n) (Fin n) ℤ)ᵀ * G *
+      (U : Matrix (Fin n) (Fin n) ℤ)) m).ncard = (classPairs G m).ncard :=
+  classPairs_ncard_eq_of_isometry G U m
+
+example : (classPairs schiemannA 12).ncard = 10 ∧ (classPairs schiemannB 12).ncard = 18 :=
+  ⟨schiemannA_classPairs_ncard, schiemannB_classPairs_ncard⟩
+
+example : ¬ ∃ U : GL (Fin 4) ℤ, (U : Matrix (Fin 4) (Fin 4) ℤ)ᵀ * schiemannA *
+    (U : Matrix (Fin 4) (Fin 4) ℤ) = schiemannB :=
+  schiemann_not_isometric
 
 end Theaetetus

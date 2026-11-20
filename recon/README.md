@@ -99,6 +99,8 @@ uv run recon/logfourier.py sweep --write   # ~16 min
 uv run recon/q3.py selftest
 uv run recon/q3.py pair --q 2 --bound 4 --write
 uv run recon/q3.py pair --q 3 --bound 6 --write   # ~40 s
+uv run recon/q3.py pair --pair as1_as2 --q 2 --bound 80 --write
+uv run recon/q3.py pair --pair as1_as2 --q 13 --bound 200 --write
 uv run recon/q3field.py selftest
 uv run recon/q3field.py sweep --write      # ~3 min
 ```
@@ -788,3 +790,27 @@ checks `Σ_c Θ_c = Z_L`, `Θ_0(β) = Z_L(4β)`, classwise Poisson to
   shell. At large scale the summed difference is instead linear in
   `s`, with slope fixed by `Δ Σ_c m_c = 21420`: the classes'
   minimal norms total `399360` on `E8²`, `377940` on `D16⁺`.
+
+## Schiemann's quaternary pair (`q3.py --pair as1_as2`)
+
+`AS1`, `AS2` (determinant `1729`; Gram matrices from Schiemann,
+as transcribed in a public PARI/GP check that also matches them to
+Conway–Sloane's `L∓(1, 7, 13, 19)`) share a theta series; the
+self-test checks equality through energy `60`. The mod-`q` coset
+data separates them at every modulus tried, once the bound is
+informative: a nonzero vector of `qL` has energy at least `4q²`,
+so classes carry information only from energy about `q²` on.
+
+| `q` | bound | first separating energy | second falling moment there |
+|---|---|---|---|
+| 2 | 80 | 12 | `10` vs `18` |
+| 3 | 80 | 16 | `4` vs `0` |
+| 5 | 80 | 32 | `4` vs `0` |
+| 7 | 80 | 56 | `4` vs `0` |
+| 13 | 200 | 176 | `4` vs `0` |
+| 19 | 400 | 368 | `4` vs `0` |
+
+Here the separation is already second order — degree-2 Siegel
+data — where `E8²` and `D16⁺` needed the fourth. The `q = 2`
+entry is the theorem `schiemann_not_isometric`
+(committed: `q3_as1_as2_q2_n80.json`, `q3_as1_as2_q13_n200.json`).
