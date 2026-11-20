@@ -1,0 +1,78 @@
+{
+ "rank": 4,
+ "even": true,
+ "max_det": 2000,
+ "theta_bound": 80,
+ "pair_bound": 24,
+ "theta_equal_groups": 1,
+ "degree_two_equal": [],
+ "theta_groups": [
+  {
+   "rank": 4,
+   "det": 1729,
+   "even": true,
+   "classes": 43,
+   "theta_bound": 204,
+   "pair_bound": 80,
+   "theta_group": [
+    [
+     [
+      4,
+      -1,
+      0,
+      -1
+     ],
+     [
+      -1,
+      8,
+      1,
+      3
+     ],
+     [
+      0,
+      1,
+      8,
+      4
+     ],
+     [
+      -1,
+      3,
+      4,
+      10
+     ]
+    ],
+    [
+     [
+      4,
+      2,
+      0,
+      1
+     ],
+     [
+      2,
+      8,
+      3,
+      3
+     ],
+     [
+      0,
+      3,
+      10,
+      5
+     ],
+     [
+      1,
+      3,
+      5,
+      10
+     ]
+    ]
+   ],
+   "degree_two_groups": [
+    1,
+    1
+   ]
+  }
+ ],
+ "seconds": 1690
+}

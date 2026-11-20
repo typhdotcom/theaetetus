@@ -32,6 +32,7 @@ def "main recon" [] {
     uv run recon/q3roots.py --write
     uv run recon/q3survey.py --write
     uv run recon/q3odd.py --q 3 --bound 8 --write
+    sage -python recon/q3genus.py --rank 4 --max-det 2000 --write
 }
 
 # Rewrite the tree with the flake's formatters

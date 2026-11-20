@@ -508,7 +508,9 @@ pairwise versus higher-order interaction.
   rank-`r` lattice's own Gram matrix detects isometry, coset data is
   a congruence-filtered sum of Siegel data that may or may not reach
   it; the open cases are pairs equal in Siegel degree two or
-  more. The same
+  more. None occurs among even quaternary lattices of determinant
+  `≤ 2000` (`recon/q3genus.py`): the only theta-equal pair there is
+  Schiemann's. The same
   order governs the classwise defect, the cross-ratio of
   `log Θ_{c+2L}` along the dilation tower (`recon/q3field.py`):
   Poisson summation reflects it class by class onto the

@@ -106,6 +106,7 @@ uv run recon/q3field.py sweep --write      # ~3 min
 uv run recon/q3roots.py --write            # ~20 s
 uv run recon/q3survey.py --write           # ~15 min
 uv run recon/q3odd.py --q 3 --bound 8 --write   # ~3 min, 3 GB
+sage -python recon/q3genus.py --rank 4 --max-det 2000 --write   # ~30 min, 22 cores
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -888,3 +889,19 @@ Within this family the mod-2 residue datum never needs more than
 degree-two Siegel data. The pairs that can test it further are those
 with equal Siegel theta series through degree two or beyond, as
 `E8²`, `D16⁺` are through degree three.
+
+## Genus survey (`q3genus.py`, `q3_genus_rank4_even_d2000.json`)
+
+Runs under Sage. Every positive definite even genus of rank 4 and
+determinant `≤ 2000`; classes by Kneser neighbours, theta series by
+PARI `qfrep`, then degree-two counts (ordered pairs by
+`(Q(x), Q(y), B(x, y))`) within theta-equal groups. Both bounds are
+raised to a multiple of the genus's largest basis norm: at a fixed
+theta bound of 80, thirty genera `A2 ⊕ (binary with a norm-82…112 basis vector)` looked theta-equal and degree-two-equal, and all
+differ past the long vector. Truncation only merges classes, so the
+screen misses no theta-equal group.
+
+- **One theta-equal group:** Schiemann's genus, `d = 1729`, 43
+  classes, two of them theta-equal.
+- **No degree-two-equal pair.** Schiemann's two classes already
+  differ in degree two.
