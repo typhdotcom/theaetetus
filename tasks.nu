@@ -25,6 +25,8 @@ def "main recon" [] {
     uv run recon/q3.py selftest
     uv run recon/q3.py pair --q 2 --bound 4 --write
     uv run recon/q3.py pair --q 3 --bound 6 --write
+    uv run recon/q3field.py selftest
+    uv run recon/q3field.py sweep --write
 }
 
 # Rewrite the tree with the flake's formatters

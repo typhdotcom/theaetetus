@@ -386,7 +386,17 @@ pairwise versus higher-order interaction.
   degree at which the Siegel theta series of the pair are known
   to separate. Coset data reaches below theta-equivalence
   through higher-degree correlations, and a refinement of the
-  datum is measured by the Siegel degree it reaches.
+  datum is measured by the Siegel degree it reaches. The same
+  order governs the classwise defect, the cross-ratio of
+  `log Θ_{c+2L}` along the dilation tower (`recon/q3field.py`):
+  Poisson summation reflects it class by class onto the
+  character-twisted field, and summed over classes it separates
+  the pair by `(2¹⁶/4)·ΔN₄·e^{−8t}` at small scale, `N₄` the root
+  quadruples summing into `2L` — fourth order, with the predicted
+  coefficient matched to `3·10⁻⁵` at `t = 8`. The sign does not refine:
+  every class without a zero vector has eventually positive
+  defect, `D_c → s·m_c·(q² − 1)(q′² − 1)` with `m_c` its minimal
+  norm, so the nonpositive sign belongs to the zero-energy sector.
 
 - **Q4 — phase geometry: Q4-CND and Q4-PSD.** Both asymptotic
   regimes of Q4-CND are theorems (established, the kernel

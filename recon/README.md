@@ -99,6 +99,8 @@ uv run recon/logfourier.py sweep --write   # ~16 min
 uv run recon/q3.py selftest
 uv run recon/q3.py pair --q 2 --bound 4 --write
 uv run recon/q3.py pair --q 3 --bound 6 --write   # ~40 s
+uv run recon/q3field.py selftest
+uv run recon/q3field.py sweep --write      # ~3 min
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -733,3 +735,56 @@ degree at which the Siegel theta series of the pair are known to
 separate (Igusa). The mod-2 coset datum sees the pair through
 four-point correlations, and no statistic of it built from three
 or fewer points can.
+
+## The classwise defect (`q3field.py`, `q3_field_e8e8_d16plus.json`)
+
+For a class `c` of `L ⧸ 2L`, `D_c(q, q′)_s` is the four-term
+cross-ratio of `log Θ_c` along the dilation tower, with
+`Θ_c(β) = Σ_{x ∈ c+2L} e^{−β|x|²}`. Class `0` carries the scalar
+defect of `2L`. Both lattices are `D_n⁺` or sums of them, so every
+mass is a parity-recursed product of one-dimensional theta sums:
+no enumeration cutoff, no cancellation (dps 40). The self-test
+checks `Σ_c Θ_c = Z_L`, `Θ_0(β) = Z_L(4β)`, classwise Poisson to
+`10⁻²⁵`, and the pair's scalar masses equal.
+
+- **Reflection.** The cross-ratio has weight zero, so Poisson over
+  `2L` reflects the classwise field onto the character-twisted
+  one, class by class:
+  `D_c(q, q′)_s = D̂_c(q/g, q′/g)_t`, `t = π²/(4s·lcm²)`, with
+  `Ŵ_c(β) = Σ_{u ∈ L} (−1)^{⟨u,c⟩} e^{−β|u|²}` computed from its
+  own product formula. Residual `≤ 10⁻⁴⁰` wherever computed (the
+  twisted side cancels genuinely, and the sweep skips scales
+  needing more than 300 extra digits).
+
+- **No classwise sign.** Only class `0` is nonpositive at every
+  sampled point. At large scale `Θ_c(β) ≈ N_c e^{−β m_c}`, the
+  multiplicities cancel at weight zero, and
+  `D_c → s·m_c·(q² − 1)(q′² − 1)` for coprime `q, q′` (e.g. `576`
+  at `s = 3`, `(2, 3)`, minimal norm `8`): every class without a
+  zero vector is eventually strictly positive. Within the sample,
+  the sign of the scalar defect is a property of the zero-energy
+  sector, consistent with the partition tower's first field.
+
+- **Separation, and its order.** The multiset of classwise fields
+  differs between the pair at every sampled scale; the power
+  moments `Σ_c Θ_c(s)^k` agree to working precision for `k ≤ 3`
+  and split from `k = 4`. Summed over classes, the defect separates
+  the pair at fourth order in the twisted masses: moments of order
+  `≤ 3` agree, so
+  `ΔΣ_c D_c ≈ (2¹⁶/4)·ΔN₄·e^{−8t}`, `N₄` the ordered root
+  quadruples summing into `2L` (`27432960` for `E8²`, `22272000`
+  for `D16⁺`; Walsh–Hadamard over the classes). For `(2, 3)`:
+
+  | `t` | observed / predicted |
+  |---|---|
+  | 3 | 0.5628 |
+  | 4 | 0.9170 |
+  | 5 | 0.9882 |
+  | 6 | 0.99839 |
+  | 7 | 0.999782 |
+  | 8 | 0.9999705 |
+
+  The deficit shrinks by about `e⁻²` per unit of `t`, the next
+  shell. At large scale the summed difference is instead linear in
+  `s`, with slope fixed by `Δ Σ_c m_c = 21420`: the classes'
+  minimal norms total `399360` on `E8²`, `377940` on `D16⁺`.
