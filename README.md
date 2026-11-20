@@ -57,6 +57,7 @@ negative.
   and below `Z(β)` abbreviates the carrier's class Boltzmann sum at
   inverse temperature `β`, base scale normalized to `1`; `θ(s)` is
   its rank-one case.
+
 - **The coupling reading.** Chinese remainder on the tower: the
   `lcm`-resolution *is* the fiber product of the two coarser ones
   over their shared base (`h1ReductionCRT`) — arithmetic descent is
@@ -68,12 +69,14 @@ negative.
   incomparable pair is strictly positively associated given its
   shared constraint (`condProb_mul_lt_of_incomparable`; coprime
   unconditional form `resProb_mul_lt_of_coprime`).
+
 - **The sign, rank one, closed.** `D_s(q,q′) < 0` at every
   incomparable pair and every scale, zero exactly on chains — the
   defect detects divisibility (`defect_neg_of_incomparable`,
   `defect_eq_zero_iff`), and residue complexity is a submodular
   rank function on the divisibility lattice, strictly off chains
   (`resComplexity_strictSubmodular`).
+
 - **The sign, every lattice, non-strict.** The shifted-mass parity
   decomposition turns products of Gaussian masses into inner
   products of finite positive feature vectors
@@ -83,12 +86,14 @@ negative.
   (`gramDefect_nonpos`, `QuadLatticeAction.defect_nonpos`) — the
   Regev–Stephens-Davidowitz correlation theorem ported through to
   the defect.
+
 - **The strict sign, diagonal forms, every rank.** Orthogonal sums add
   defects, so every positive diagonal form inherits the rank-one
   sign in every rank ≥ 1: strictly negative off chains, zero on
   them (`diagDefect_neg_of_incomparable`, `diagDefect_eq_zero_iff`).
   What remains unformalized is failure of orthogonal
   diagonalization into rank-one summands, not rank.
+
 - **The classification, through the partition tower.** The
   argument consumes only three fields — a distinguished zero-energy
   sector, strictly positive energy at every other sector, a
@@ -113,6 +118,7 @@ negative.
   (`towerDefect_eq_partitionTower_defect`,
   `towerDefect_forall_eq_zero_iff`) — and **every positive-definite
   lattice action** (`QuadLatticeAction.toPartitionTower`).
+
 - **Spectral peeling, the first layer.** On a nontrivial tower
   summability forces a locally finite spectrum
   (`finite_energy_le`), so the least positive energy is attained
@@ -150,16 +156,19 @@ negative.
   enumeration. At carrier level, only the modal sector survives
   every peel: `⋂ₙ range(peelEmbed n) = {modal}`
   (`iInter_range_peelEmbed`).
+
 - **The prime pairing, rank one.** `⟨p,q⟩ := −D` is strictly
   positive for distinct primes and saturates at the base complexity
   `log θ(s)` along coprime pairs at infinity (`pairing_pos`,
   `tendsto_pairing`); the tower-level coprime analogue is the
   staircase saturation `−D(n+1, n+2) → log Z(1)`
   (`tendsto_defect_succ`).
+
 - **Rank two.** On the theta graph the cycle Gram inverts to the
   hexagonal form `(a² − ab + b²)/3`, and the defect is strictly
   negative at `(2,3)` (`thetaGraph_towerDefect_neg`), through the
   factorization `hexTheta s ≤ θ(s/3)·θ(s/4)`.
+
 - **The kernel chambers, rank one.** Write `F(m) := log θ(m²s)`,
   `h_s(x) := log θ(s·e^{2x})`, `x_p := log p`. On distinct primes
   the pairing is the Hankel-cocycle second difference
@@ -183,6 +192,7 @@ negative.
   at every scale `s ≥ 1` (`cnd_not_psd`). Both notions
   restrict to subsets (`IsCNDOn.subset`, `IsPSDOn.subset`), so
   enlarging the prime set only shrinks the valid-scale sets.
+
 - **The star obstruction: no uniform deficit-PSD threshold.**
   At every scale `s > 0` some finite prime set has non-PSD
   saturation deficit (`deficit_not_psd`; the kernel `deficit`
@@ -195,6 +205,7 @@ negative.
   with `pairing_cnd_large` the converse CND ⇒ deficit-PSD fails
   at every scale `s ≥ 1` (`cnd_not_psd`), not merely at the
   numerical `s = 0.12` witness.
+
 - **The refined log-convexity, rank one — Q5's base case,
   closed.** The Gibbs bridge `θ′(α) = −∑ k²·e^{−αk²}`,
   `θ″(α) = ∑ k⁴·e^{−αk²}` (`hasDerivAt_theta`,
@@ -220,6 +231,7 @@ negative.
   2.2–2.3; also [Faulhuber
   2020](https://arxiv.org/abs/1709.06006), Proposition 3.13):
   `u ↦ log θ(eᵘ)` is strictly convex.
+
 - **Strict Q5 for diagonal forms, every rank.** The factored
   Boltzmann sum of a positive diagonal form satisfies the strict
   rectangle and midpoint inequalities for `r ≥ 1`, `t > 0` and
@@ -227,6 +239,7 @@ negative.
   `diagTheta_sq_lt`) — rank-one Q5 lifted axis-by-axis, the same
   orthogonal-sum lift that carries Q1 (`diagDefect_eq_sum`). No
   positive diagonal form is a Q5 counterexample.
+
 - **Coset duality.** Poisson summation sends the shifted mass
   `gramMass M α y` to the character-twisted dual Boltzmann sum
   `twistTheta M⁻¹ y (π²/α) = ∑_m cos(2π⟨m, y⟩)·e^{−(π²/α)·mᵀM⁻¹m}`
@@ -239,6 +252,7 @@ negative.
   (`cos_dualPairing_halfShift`), so the classwise defect reflects
   class by class onto the twisted dual field at scale
   `π²/(4·lcm²·s)` (`cosetDefect_dual`).
+
 - **The classwise defect has no sign.** The scalar defect is
   nonpositive (`gramDefect_nonpos`); a class without a zero vector
   is not. At rank one the odd class has mass squeezed between
@@ -246,6 +260,16 @@ negative.
   `oddMass_le_four_exp`), and its defect at `s = 1`, `(2, 3)` is
   strictly positive (`cosetDefect_odd_pos`). The sign belongs to
   the zero-energy sector.
+
+  Adelically, these are local θ-functions: `cosetMass` is the
+  `S = {∞, 2}` θ-function `Σ_{ξ} f(ξg)` of a Gaussian times a
+  residue indicator, `twistTheta` its character twist, and
+  `cosetDefect_dual` the Tate functional equation `f ↦ f̂`. The
+  dilation tower moves the idele at the primes dividing the
+  resolution. Traces and Mellin transforms are linear in `f` and
+  factor place by place; the defect is the logarithmic coupling
+  between places that such linear functionals do not see.
+
 - **Coset separation, rank four.** For an integral Gram matrix,
   the class pairs at energy `m` — ordered pairs of distinct sectors
   of energy `m` congruent modulo `2` — are carried bijectively by
@@ -260,6 +284,17 @@ negative.
   diagonal dominance as a sum of squares and a kernel check of the
   box `[-3, 3]⁴`. Equality of the two theta series is not
   formalized.
+
+- **Class pairs are degree-two Siegel data.** For a symmetric
+  positive-definite integral Gram matrix, class pairs at energy `m`
+  are the disjoint union over `t ≠ 0` of the representation sets of
+  the binary Gram matrices `!![m, −t; −t, t]`
+  (`classPairsEquivSigma`), so equal degree-two representation
+  numbers force equal class-pair counts
+  (`classPairs_ncard_eq_of_siegelSet`). Schiemann's pair therefore
+  has distinct degree-two representation numbers
+  (`schiemann_siegelSet_ne`): the theta series it shares in
+  degree one (a numerical fact here) splits in degree two.
 
 Why there is a sign at all: in the continuum limit the Gaussian
 factors exactly and the defect vanishes with it. Everything here

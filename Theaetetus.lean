@@ -196,5 +196,8 @@ import Theaetetus.CosetSign
 -- quaternary pair, and class pairs are an isometry invariant
 import Theaetetus.CosetSeparation
 
+-- Class pairs are degree-two Siegel data
+import Theaetetus.SiegelDegree
+
 -- The manifest: public statements restated as compiler-checked examples
 import Theaetetus.Status

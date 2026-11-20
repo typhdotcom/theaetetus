@@ -873,6 +873,59 @@ Formalization targets:
     arbitrary positive-definite ambient form, or across rank loss or
     infinite index.
 
+13. **Coset duality and the classwise sign** — done
+    (`Theaetetus.CosetDuality`, `Theaetetus.CosetSign`). The shifted
+    mass reflects onto the character-twisted dual Boltzmann sum
+    (`gramMass_dual`), so the shifted and classwise defects reflect
+    shift for shift and class by class (`shiftDefect_dual`,
+    `cosetDefect_dual`); the odd class of `ℤ ⧸ 2ℤ` has positive
+    defect at `s = 1`, `(2, 3)` (`cosetDefect_odd_pos`). In adelic
+    terms `cosetMass` is the `S = {∞, 2}` local θ-function of a
+    Gaussian times a residue indicator, `twistTheta` its character
+    twist, and `cosetDefect_dual` the Tate functional equation
+    `f ↦ f̂` read through the logarithmic cross-ratio.
+
+14. **Coset separation, rank four** — done
+    (`Theaetetus.CosetSeparation`): class pairs are an isometry
+    invariant (`classPairs_ncard_eq_of_isometry`) and separate
+    Schiemann's pair, `10` against `18` at energy `12`
+    (`schiemann_not_isometric`). Not formalized: equality of the
+    pair's theta series (a level-1729 weight-2 modular-form
+    computation).
+
+15. **Class moments are Siegel data** — landed at `k = 2`
+    (`Theaetetus.SiegelDegree`): class pairs at energy `m` are the
+    disjoint union over `t ≠ 0` of the representation sets of
+    `!![m, −t; −t, t]` (`classPairsEquivSigma`), so equal
+    degree-two representation numbers force equal class-pair counts
+    (`classPairs_ncard_eq_of_siegelSet`) and Schiemann's pair has
+    distinct degree-two representation numbers
+    (`schiemann_siegelSet_ne`). Open: general `k`. Ordered `k`-tuples of
+    distinct sectors of energy `m` in one class mod `2` biject with
+    `k`-tuples `(x, y₂, …, y_k)` whose Gram matrix lies in an
+    explicit set (`Q(x) = m`, `⟨x, yᵢ⟩ = −Q(yᵢ)`, `yᵢ ≠ 0`,
+    `yᵢ ≠ yⱼ` — all Gram conditions under positive definiteness),
+    so the `k`-th falling moment of the class counts is a sum of
+    degree-`k` representation numbers. Landing first at `k = 2`,
+    where it makes `schiemann_not_isometric` a statement about
+    degree-two theta series: some binary Gram matrix is represented
+    a different number of times by the pair.
+
+16. **The frame separation of `E8 ⊕ E8` and `D16⁺`.** One class of
+    `D16⁺ ⧸ 2D16⁺` holds the 32 vectors `±2eᵢ`; no class of
+    `E8² ⧸ 2E8²` holds more than 16. A structural proof avoids the
+    61920-vector enumeration: in an even unimodular lattice, norm-4
+    vectors congruent mod `2` are equal up to sign or orthogonal,
+    so a class is a frame, and the frames of `E8` have 8 pairs.
+
+17. **The degree-four separation law.** Summed over classes, the
+    classwise defect of a theta-equivalent pair with equal
+    moments through order three separates at fourth order in the
+    twisted masses: `ΔΣ_c D_c ~ (|L/2L|/4)·ΔN₄·e^{−8t}`
+    (numerically to `3·10⁻⁵` on `E8²`, `D16⁺`). The statement needs
+    only the cluster expansion of `log twistTheta` and the moment
+    identities; the pair-specific input is `ΔN₄`.
+
 Reconnaissance, falsify-first:
 
 1. **Higher-rank Q5.** Normalize every Gram matrix to determinant
