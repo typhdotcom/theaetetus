@@ -248,7 +248,7 @@ theorem energyD16_sos (z : Fin 16 → ℤ) :
   push_cast
   ring
 
-set_option maxHeartbeats 4000000 in
+set_option maxHeartbeats 1000000 in
 theorem d16plus_pos (z : Fin 16 → ℤ) (hz : z ≠ 0) : 0 < intEnergy d16plus z := by
   rw [intEnergy_d16plus]
   by_contra hle
@@ -271,54 +271,70 @@ theorem d16plus_pos (z : Fin 16 → ℤ) (hz : z ≠ 0) : 0 < intEnergy d16plus 
   have s13 := sq_nonneg ((z 13 : ℚ) + (-13/15) * (z 14 : ℚ))
   have s14 := sq_nonneg ((z 14 : ℚ) + (15/4) * (z 15 : ℚ))
   have s15 := sq_nonneg ((z 15 : ℚ))
+  generalize ha0 : ((z 0 : ℚ) + (-1/2) * (z 1 : ℚ)) ^ 2 = a0 at hq s0
+  generalize ha1 : ((z 1 : ℚ) + (-2/3) * (z 2 : ℚ)) ^ 2 = a1 at hq s1
+  generalize ha2 : ((z 2 : ℚ) + (-3/4) * (z 3 : ℚ)) ^ 2 = a2 at hq s2
+  generalize ha3 : ((z 3 : ℚ) + (-4/5) * (z 4 : ℚ)) ^ 2 = a3 at hq s3
+  generalize ha4 : ((z 4 : ℚ) + (-5/6) * (z 5 : ℚ)) ^ 2 = a4 at hq s4
+  generalize ha5 : ((z 5 : ℚ) + (-6/7) * (z 6 : ℚ)) ^ 2 = a5 at hq s5
+  generalize ha6 : ((z 6 : ℚ) + (-7/8) * (z 7 : ℚ)) ^ 2 = a6 at hq s6
+  generalize ha7 : ((z 7 : ℚ) + (-8/9) * (z 8 : ℚ)) ^ 2 = a7 at hq s7
+  generalize ha8 : ((z 8 : ℚ) + (-9/10) * (z 9 : ℚ)) ^ 2 = a8 at hq s8
+  generalize ha9 : ((z 9 : ℚ) + (-10/11) * (z 10 : ℚ)) ^ 2 = a9 at hq s9
+  generalize ha10 : ((z 10 : ℚ) + (-11/12) * (z 11 : ℚ)) ^ 2 = a10 at hq s10
+  generalize ha11 : ((z 11 : ℚ) + (-12/13) * (z 12 : ℚ)) ^ 2 = a11 at hq s11
+  generalize ha12 : ((z 12 : ℚ) + (-13/14) * (z 13 : ℚ) + (-13/14) * (z 14 : ℚ)) ^ 2 = a12 at hq s12
+  generalize ha13 : ((z 13 : ℚ) + (-13/15) * (z 14 : ℚ)) ^ 2 = a13 at hq s13
+  generalize ha14 : ((z 14 : ℚ) + (15/4) * (z 15 : ℚ)) ^ 2 = a14 at hq s14
+  generalize ha15 : ((z 15 : ℚ)) ^ 2 = a15 at hq s15
   have l15 : (z 15 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha15.trans (by linarith))
   have l14 : (z 14 : ℚ) + (15/4) * (z 15 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha14.trans (by linarith))
   have l13 : (z 13 : ℚ) + (-13/15) * (z 14 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha13.trans (by linarith))
   have l12 : (z 12 : ℚ) + (-13/14) * (z 13 : ℚ) + (-13/14) * (z 14 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha12.trans (by linarith))
   have l11 : (z 11 : ℚ) + (-12/13) * (z 12 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha11.trans (by linarith))
   have l10 : (z 10 : ℚ) + (-11/12) * (z 11 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha10.trans (by linarith))
   have l9 : (z 9 : ℚ) + (-10/11) * (z 10 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha9.trans (by linarith))
   have l8 : (z 8 : ℚ) + (-9/10) * (z 9 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha8.trans (by linarith))
   have l7 : (z 7 : ℚ) + (-8/9) * (z 8 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha7.trans (by linarith))
   have l6 : (z 6 : ℚ) + (-7/8) * (z 7 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha6.trans (by linarith))
   have l5 : (z 5 : ℚ) + (-6/7) * (z 6 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha5.trans (by linarith))
   have l4 : (z 4 : ℚ) + (-5/6) * (z 5 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha4.trans (by linarith))
   have l3 : (z 3 : ℚ) + (-4/5) * (z 4 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha3.trans (by linarith))
   have l2 : (z 2 : ℚ) + (-3/4) * (z 3 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha2.trans (by linarith))
   have l1 : (z 1 : ℚ) + (-2/3) * (z 2 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha1.trans (by linarith))
   have l0 : (z 0 : ℚ) + (-1/2) * (z 1 : ℚ) = 0 :=
-    pow_eq_zero_iff (n := 2) (by norm_num) |>.mp (by linarith)
-  have q15 : (z 15 : ℚ) = 0 := by linarith
-  have q14 : (z 14 : ℚ) = 0 := by linarith
-  have q13 : (z 13 : ℚ) = 0 := by linarith
-  have q12 : (z 12 : ℚ) = 0 := by linarith
-  have q11 : (z 11 : ℚ) = 0 := by linarith
-  have q10 : (z 10 : ℚ) = 0 := by linarith
-  have q9 : (z 9 : ℚ) = 0 := by linarith
-  have q8 : (z 8 : ℚ) = 0 := by linarith
-  have q7 : (z 7 : ℚ) = 0 := by linarith
-  have q6 : (z 6 : ℚ) = 0 := by linarith
-  have q5 : (z 5 : ℚ) = 0 := by linarith
-  have q4 : (z 4 : ℚ) = 0 := by linarith
-  have q3 : (z 3 : ℚ) = 0 := by linarith
-  have q2 : (z 2 : ℚ) = 0 := by linarith
-  have q1 : (z 1 : ℚ) = 0 := by linarith
-  have q0 : (z 0 : ℚ) = 0 := by linarith
+    (pow_eq_zero_iff (n := 2) two_ne_zero).mp (ha0.trans (by linarith))
+  have q15 : (z 15 : ℚ) = 0 := by linarith only [l15]
+  have q14 : (z 14 : ℚ) = 0 := by linarith only [l14, q15]
+  have q13 : (z 13 : ℚ) = 0 := by linarith only [l13, q14, q15]
+  have q12 : (z 12 : ℚ) = 0 := by linarith only [l12, q13, q14, q15]
+  have q11 : (z 11 : ℚ) = 0 := by linarith only [l11, q12, q13, q14, q15]
+  have q10 : (z 10 : ℚ) = 0 := by linarith only [l10, q11, q12, q13, q14, q15]
+  have q9 : (z 9 : ℚ) = 0 := by linarith only [l9, q10, q11, q12, q13, q14, q15]
+  have q8 : (z 8 : ℚ) = 0 := by linarith only [l8, q9, q10, q11, q12, q13, q14, q15]
+  have q7 : (z 7 : ℚ) = 0 := by linarith only [l7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q6 : (z 6 : ℚ) = 0 := by linarith only [l6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q5 : (z 5 : ℚ) = 0 := by linarith only [l5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q4 : (z 4 : ℚ) = 0 := by linarith only [l4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q3 : (z 3 : ℚ) = 0 := by linarith only [l3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q2 : (z 2 : ℚ) = 0 := by linarith only [l2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q1 : (z 1 : ℚ) = 0 := by linarith only [l1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
+  have q0 : (z 0 : ℚ) = 0 := by linarith only [l0, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
   apply hz
   funext i
   have h : ∀ j, (z j : ℚ) = 0 := by
