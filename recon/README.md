@@ -96,6 +96,9 @@ uv run recon/rigidity.py record            # print only
 uv run recon/rigidity.py record --write    # regenerate the record
 uv run recon/logfourier.py structure       # exact audit only
 uv run recon/logfourier.py sweep --write   # ~16 min
+uv run recon/q3.py selftest
+uv run recon/q3.py pair --q 2 --bound 4 --write
+uv run recon/q3.py pair --q 3 --bound 6 --write   # ~40 s
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -692,3 +695,41 @@ analytic rather than structural: within the samples the obstruction
 is large away from the scale boundary, and the only mechanism that
 would have produced equality by symmetry has been excluded in every
 rank.
+
+## Coset refinement on a theta-equivalent pair (`q3.py`)
+
+`E8 ⊕ E8` and `D16⁺` share the theta series `E₄²`, so every
+scalar defect agrees on them. `q3.py` enumerates each lattice
+through a norm bound (Fincke–Pohst, exact integer norms; the
+self-test checks `1 + 480q + 61920q²`) and bins the vectors by
+class in `L ⧸ qL`. The record is the multiset of truncated coset
+theta series: exact integer counts, so a separation is a finite
+fact rather than a heuristic.
+
+- **`q = 2`, norm ≤ 4** (`q3_e8e8_d16plus_q2_n4.json`):
+  separated. Classes with minimal norm 4, by number of minimal
+  vectors: `E8²` has 14400 classes of 4 and 270 of 16; `D16⁺` has
+  16384 of 2, 3640 of 8 and one of 32 (the class of `2eᵢ`).
+- **`q = 3`, norm ≤ 6** (`q3_e8e8_d16plus_q3_n6.json`): not
+  separated. Below norm 6 no mod-3 class can hold two vectors
+  (a nonzero vector of `3L` has norm at least 18), so bound 6 is
+  the first informative one.
+
+The `k`-th falling moment `Σ_c n_c(n_c − 1)⋯(n_c − k + 1)` of the
+norm-4 class counts counts ordered `k`-tuples of distinct vectors
+in one class, which is a condition on the Gram matrix of
+`(x, y₂, …, y_k)` with `xᵢ = x + 2yᵢ`. It is therefore fixed by
+the degree-`k` Siegel theta series. On the pair:
+
+| `k` | `E8²` | `D16⁺` |
+|---|---|---|
+| 1 | 61920 | 61920 |
+| 2 | 237600 | 237600 |
+| 3 | 1252800 | 1252800 |
+| 4 | 12139200 | 6978240 |
+
+The moments agree through `k = 3` and split at `k = 4`, the
+degree at which the Siegel theta series of the pair are known to
+separate (Igusa). The mod-2 coset datum sees the pair through
+four-point correlations, and no statistic of it built from three
+or fewer points can.

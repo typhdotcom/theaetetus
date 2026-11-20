@@ -373,7 +373,20 @@ pairwise versus higher-order interaction.
   coarser relation? The tower side is computable today —
   `h1ReductionCRT` and the residue actions are formalized — so
   small cospectral pairs can be tested before the scalar theory
-  settles.
+  settles. First numerical record (`recon/q3.py`): the
+  theta-equivalent even unimodular pair `E8 ⊕ E8`, `D16⁺` is
+  separated by its mod-2 coset theta series already at norm 4 —
+  one class of `D16⁺ ⧸ 2D16⁺` holds 32 norm-4 vectors, while no
+  class of `E8² ⧸ 2E8²` holds more than 16 — and not by the mod-3
+  series through norm 6. The separation has a precise order. The
+  `k`-th falling moment of the per-class counts counts `k`-tuples
+  in one class, a Gram-matrix condition on `k` lattice vectors,
+  so it is fixed by the degree-`k` Siegel theta series; the
+  moments agree for `k ≤ 3` and first differ at `k = 4`, the
+  degree at which the Siegel theta series of the pair are known
+  to separate. Coset data reaches below theta-equivalence
+  through higher-degree correlations, and a refinement of the
+  datum is measured by the Siegel degree it reaches.
 
 - **Q4 — phase geometry: Q4-CND and Q4-PSD.** Both asymptotic
   regimes of Q4-CND are theorems (established, the kernel

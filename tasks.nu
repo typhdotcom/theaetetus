@@ -22,6 +22,9 @@ def "main recon" [] {
     uv run recon/q4.py all
     uv run recon/rigidity.py record --write
     uv run recon/logfourier.py sweep --write
+    uv run recon/q3.py selftest
+    uv run recon/q3.py pair --q 2 --bound 4 --write
+    uv run recon/q3.py pair --q 3 --bound 6 --write
 }
 
 # Rewrite the tree with the flake's formatters
