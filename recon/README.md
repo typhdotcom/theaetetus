@@ -103,6 +103,7 @@ uv run recon/q3.py pair --pair as1_as2 --q 2 --bound 80 --write
 uv run recon/q3.py pair --pair as1_as2 --q 13 --bound 200 --write
 uv run recon/q3field.py selftest
 uv run recon/q3field.py sweep --write      # ~3 min
+uv run recon/q3roots.py --write            # ~20 s
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -814,3 +815,27 @@ Here the separation is already second order — degree-2 Siegel
 data — where `E8²` and `D16⁺` needed the fourth. The `q = 2`
 entry is the theorem `schiemann_not_isometric`
 (committed: `q3_as1_as2_q2_n80.json`, `q3_as1_as2_q13_n200.json`).
+
+## Root configurations (`q3roots.py`, `q3_root_configurations.json`)
+
+Ordered tuples of roots with a prescribed Cartan Gram matrix — the
+representation numbers of the pair at those matrices:
+
+| configuration | `E8²` | `D16⁺` | difference |
+|---|---|---|---|
+| `A1` | 480 | 480 | 0 |
+| `A2` | 26880 | 26880 | 0 |
+| `A3` | 725760 | 725760 | 0 |
+| `D4` | 7257600 | 2096640 | 5160960 |
+| `A4` | 11612160 | 16773120 | −5160960 |
+
+Degree `≤ 3` agrees, as the pair's equal Siegel theta series through
+degree three require; degree four splits at the `D4` and `A4` matrices, so the
+difference of the degree-four theta series (a multiple of the
+Schottky form) has nonzero coefficients there. The split is exactly `±ΔN₄`, the
+coefficient of the classwise degree-four law above: the summed
+classwise defect separates the pair by the `D4`-configuration count.
+Not explained here: why the root quadruples summing into `2L` and
+the ordered `D4` bases differ by the same amount (a plausible route:
+four orthogonal roots summing into `2L` span a `D4` and are its
+`4A1` frame).

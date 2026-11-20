@@ -942,7 +942,14 @@ Formalization targets:
     twisted masses: `ΔΣ_c D_c ~ (|L/2L|/4)·ΔN₄·e^{−8t}`
     (numerically to `3·10⁻⁵` on `E8²`, `D16⁺`). The statement needs
     only the cluster expansion of `log twistTheta` and the moment
-    identities; the pair-specific input is `ΔN₄`.
+    identities; the pair-specific input is `ΔN₄`. Numerically
+    `ΔN₄ = 5160960` is also the difference of ordered `D4` root
+    bases, and minus that of `A4` bases, while `A1`–`A3` agree
+    (`recon/q3roots.py`): the coefficient of the law is the `D4`
+    representation-number gap, a Fourier coefficient of the
+    degree-four theta difference. A formal degree-four separation of the pair can
+    land through that count — two finite root-configuration
+    censuses — without the full class census.
 
 Reconnaissance, falsify-first:
 
