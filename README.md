@@ -239,6 +239,13 @@ negative.
   (`cos_dualPairing_halfShift`), so the classwise defect reflects
   class by class onto the twisted dual field at scale
   `π²/(4·lcm²·s)` (`cosetDefect_dual`).
+- **The classwise defect has no sign.** The scalar defect is
+  nonpositive (`gramDefect_nonpos`); a class without a zero vector
+  is not. At rank one the odd class has mass squeezed between
+  `2e^{−β}` and `4e^{−β}` for `β ≥ 1` (`two_exp_le_oddMass`,
+  `oddMass_le_four_exp`), and its defect at `s = 1`, `(2, 3)` is
+  strictly positive (`cosetDefect_odd_pos`). The sign belongs to
+  the zero-energy sector.
 - **Coset separation, rank four.** For an integral Gram matrix,
   the class pairs at energy `m` — ordered pairs of distinct sectors
   of energy `m` congruent modulo `2` — are carried bijectively by

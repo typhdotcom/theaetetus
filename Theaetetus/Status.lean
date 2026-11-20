@@ -1,6 +1,7 @@
 import Theaetetus.Duality
 import Theaetetus.CosetSeparation
 import Theaetetus.CosetDuality
+import Theaetetus.CosetSign
 import Theaetetus.Midpoint
 import Theaetetus.Factorization
 import Theaetetus.RankFunction
@@ -2129,5 +2130,8 @@ example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (c : Fin d �
           (Real.pi ^ 2 / (4 * (Nat.lcm q q' : ℝ) ^ 2 * s))
           (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
   cosetDefect_dual hM c hs hq hq'
+
+example : 0 < fieldDefect (cosetMass (!![1] : Matrix (Fin 1) (Fin 1) ℝ) ![1]) 1 2 3 :=
+  cosetDefect_odd_pos
 
 end Theaetetus

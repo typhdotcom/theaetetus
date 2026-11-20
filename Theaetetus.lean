@@ -189,6 +189,9 @@ import Theaetetus.RankTwo
 -- character-twisted dual Boltzmann sums
 import Theaetetus.CosetDuality
 
+-- The classwise defect has no sign: the odd class of ℤ/2ℤ
+import Theaetetus.CosetSign
+
 -- Coset separation: the mod-2 residue datum separates a theta-equivalent
 -- quaternary pair, and class pairs are an isometry invariant
 import Theaetetus.CosetSeparation
