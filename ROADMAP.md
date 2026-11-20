@@ -911,7 +911,15 @@ Formalization targets:
     degree-two theta series: some binary Gram matrix is represented
     a different number of times by the pair.
 
-16. **The frame separation of `E8 ⊕ E8` and `D16⁺`.** One class of
+16. **The frame separation of `E8 ⊕ E8` and `D16⁺`** — done
+    (`Theaetetus.FrameSeparation`): in an even positive form,
+    energy-four sectors of one class are equal, opposite or
+    orthogonal (`pairing_of_congr_four`), so a class holds at most
+    `2n` of them (`frame_card_le`, by linear independence over `ℚ`);
+    on `E8 ⊕ E8` the block split sharpens this to `16`
+    (`e8sq_class_card_le`), `D16⁺` has the 32-sector class `±2eᵢ`
+    (`d16plus_frame`), and no integral isometry joins them
+    (`e8sq_not_isometric_d16plus`). The original plan: one class of
     `D16⁺ ⧸ 2D16⁺` holds the 32 vectors `±2eᵢ`; no class of
     `E8² ⧸ 2E8²` holds more than 16. A structural proof avoids the
     61920-vector enumeration: in an even unimodular lattice, norm-4

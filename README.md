@@ -285,6 +285,17 @@ negative.
   box `[-3, 3]⁴`. Equality of the two theta series is not
   formalized.
 
+- **Frame separation, rank sixteen.** In an even positive form two
+  energy-four sectors congruent mod `2` are equal, opposite or
+  orthogonal (`pairing_of_congr_four`), so a mod-`2` class holds at
+  most `2n` of them (`frame_card_le`). On `E8 ⊕ E8` (Cartan blocks,
+  positive by an `LDLᵀ` certificate) every class holds at most 16
+  (`e8sq_class_card_le`), while `D16⁺` has the class of the 32
+  sectors `±2eᵢ` (`d16plus_frame`): the mod-`2` residue datum
+  separates the theta-equivalent pair
+  (`e8sq_not_isometric_d16plus`). Equality of their theta series
+  (`E₄²`) is not formalized.
+
 - **Class pairs are degree-two Siegel data.** For a symmetric
   positive-definite integral Gram matrix, class pairs at energy `m`
   are the disjoint union over `t ≠ 0` of the representation sets of

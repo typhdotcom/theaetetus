@@ -3,6 +3,7 @@ import Theaetetus.CosetSeparation
 import Theaetetus.CosetDuality
 import Theaetetus.CosetSign
 import Theaetetus.SiegelDegree
+import Theaetetus.FrameSeparation
 import Theaetetus.Midpoint
 import Theaetetus.Factorization
 import Theaetetus.RankFunction
@@ -2137,5 +2138,14 @@ example : 0 < fieldDefect (cosetMass (!![1] : Matrix (Fin 1) (Fin 1) ℝ) ![1]) 
 
 example : ∃ T, IsEmpty (siegelSet schiemannA T ≃ siegelSet schiemannB T) :=
   schiemann_siegelSet_ne
+
+example {n : ℕ} {G : Matrix (Fin n) (Fin n) ℤ} (hG : EvenPosForm G)
+    (S : Finset (Fin n → ℤ)) (hS : ∀ x ∈ S, intEnergy G x = 4)
+    (hc : ∀ x ∈ S, ∀ y ∈ S, ∀ i, (2 : ℤ) ∣ x i - y i) : S.card ≤ 2 * n :=
+  frame_card_le hG S hS hc
+
+example : ¬ ∃ U : GL (Fin 16) ℤ, (U : Matrix (Fin 16) (Fin 16) ℤ)ᵀ * e8sq *
+    (U : Matrix (Fin 16) (Fin 16) ℤ) = d16plus :=
+  e8sq_not_isometric_d16plus
 
 end Theaetetus

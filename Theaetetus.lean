@@ -199,5 +199,9 @@ import Theaetetus.CosetSeparation
 -- Class pairs are degree-two Siegel data
 import Theaetetus.SiegelDegree
 
+-- Frames: energy-four classes of even lattices, and the separation of
+-- E8 ⊕ E8 from D16⁺
+import Theaetetus.FrameSeparation
+
 -- The manifest: public statements restated as compiler-checked examples
 import Theaetetus.Status
