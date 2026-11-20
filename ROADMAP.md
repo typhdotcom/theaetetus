@@ -949,7 +949,10 @@ Formalization targets:
     representation-number gap, a Fourier coefficient of the
     degree-four theta difference. A formal degree-four separation of the pair can
     land through that count — two finite root-configuration
-    censuses — without the full class census.
+    censuses — without the full class census. Mod 3 reads the
+    other coefficient: at norm 8 every ordered class 4-tuple is an
+    `A4` basis (`recon/q3odd.py`), so the mod-3 fourth moment is
+    `r(A4)` and its gap `−ΔN₄`.
     The coefficient itself is formal Siegel data
     (`Theaetetus.EvenSums`): quadruples of energy-`m` sectors summing
     into `2ℤⁿ` are a Gram predicate on `(u₀, u₁, u₂, w)` with

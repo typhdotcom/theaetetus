@@ -497,7 +497,10 @@ pairwise versus higher-order interaction.
   its second falling moment differs at every modulus tried
   (`q = 2, 3, 5, 7, 13, 19`, once the energy bound reaches the
   informative range), and at `q = 2` the separation is a theorem
-  (`schiemann_not_isometric`). A survey of 104 pairs of the
+  (`schiemann_not_isometric`). Mod 3 also separates `E8²`, `D16⁺`
+  in degree four, at norm 8: every ordered 4-tuple in one class has
+  the Gram matrix of an `A4` basis, so the fourth moment is `r(A4)`,
+  where mod 2 reads `r(D4)`; both gaps are `±ΔN₄`. A survey of 104 pairs of the
   Conway–Sloane family `L∓(a, b, c, d)` (`recon/q3survey.py`) found
   no pair unseparated by mod-`q` coset data for any `q ≤ 13`; every
   separation at `q = 2` is degree-two, by equal- or mixed-energy

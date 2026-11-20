@@ -30,6 +30,8 @@ def "main recon" [] {
     uv run recon/q3field.py selftest
     uv run recon/q3field.py sweep --write
     uv run recon/q3roots.py --write
+    uv run recon/q3survey.py --write
+    uv run recon/q3odd.py --q 3 --bound 8 --write
 }
 
 # Rewrite the tree with the flake's formatters

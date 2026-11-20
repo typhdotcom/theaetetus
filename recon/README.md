@@ -105,6 +105,7 @@ uv run recon/q3field.py selftest
 uv run recon/q3field.py sweep --write      # ~3 min
 uv run recon/q3roots.py --write            # ~20 s
 uv run recon/q3survey.py --write           # ~15 min
+uv run recon/q3odd.py --q 3 --bound 8 --write   # ~3 min, 3 GB
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -840,6 +841,30 @@ Not explained here: why the root quadruples summing into `2L` and
 the ordered `D4` bases differ by the same amount (a plausible route:
 four orthogonal roots summing into `2L` span a `D4` and are its
 `4A1` frame).
+
+## Odd modulus (`q3odd.py`, `q3_odd_e8e8_d16plus_q3_n8.json`)
+
+For odd `q` the class of `x` in `L/qL` is the residue of `2x` in
+`(ℤ/q)¹⁶`, both lattices having 2-power index over `ℤ¹⁶`. Distinct
+norm-`m` vectors congruent mod `q` have `2q² ≤ |u − v|² ≤ 4m`, so
+classes are singletons below norm `q²/2`: mod 3 is informative from
+norm 6, mod 5 only from norm 14.
+
+At `q = 3` through norm 8 the class profiles differ. Power sums of
+the per-class counts agree through order three and split at order
+four, only at norm 8: `E8²` has 3840 classes of 9 norm-8 vectors,
+`D16⁺` 139776 classes of 5 (the classes of 3 agree). Congruent
+distinct norm-8 vectors differ by `3r`, `r` a root, so an ordered
+4-tuple in one class has the single Gram matrix of
+`(u₀, d₁, d₂, d₃)` with `u_i = u₀ + 3d_i`,
+
+```
+[[8,−3,−3,−3],[−3,2,1,1],[−3,1,2,1],[−3,1,1,2]] ≅ A4,
+```
+
+and the fourth falling moments are `r(A4)` exactly: 11612160 and
+16773120\. Mod 2 reads the `D4` coefficient of the degree-four theta
+difference, mod 3 the `A4` coefficient, and the two are `±ΔN₄`.
 
 ## Survey of the Conway–Sloane family (`q3survey.py`, `q3_survey_conway_sloane.json`)
 
