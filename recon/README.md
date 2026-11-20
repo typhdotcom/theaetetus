@@ -754,7 +754,7 @@ checks `Σ_c Θ_c = Z_L`, `Θ_0(β) = Z_L(4β)`, classwise Poisson to
   one, class by class:
   `D_c(q, q′)_s = D̂_c(q/g, q′/g)_t`, `t = π²/(4s·lcm²)`, with
   `Ŵ_c(β) = Σ_{u ∈ L} (−1)^{⟨u,c⟩} e^{−β|u|²}` computed from its
-  own product formula. Residual `≤ 10⁻⁴⁰` wherever computed (the
+  own product formula; the law is the theorem `cosetDefect_dual`. Residual `≤ 10⁻⁴⁰` wherever computed (the
   twisted side cancels genuinely, and the sweep skips scales
   needing more than 300 extra digits).
 

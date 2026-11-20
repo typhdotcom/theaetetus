@@ -1,5 +1,6 @@
 import Theaetetus.Duality
 import Theaetetus.CosetSeparation
+import Theaetetus.CosetDuality
 import Theaetetus.Midpoint
 import Theaetetus.Factorization
 import Theaetetus.RankFunction
@@ -2114,5 +2115,19 @@ example : (classPairs schiemannA 12).ncard = 10 ∧ (classPairs schiemannB 12).n
 example : ¬ ∃ U : GL (Fin 4) ℤ, (U : Matrix (Fin 4) (Fin 4) ℤ)ᵀ * schiemannA *
     (U : Matrix (Fin 4) (Fin 4) ℤ) = schiemannB :=
   schiemann_not_isometric
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) {α : ℝ} (hα : 0 < α)
+    (y : Fin d → ℝ) :
+    twistTheta M⁻¹ y (Real.pi ^ 2 / α)
+      = (α / Real.pi) ^ ((d : ℝ) / 2) * M.det ^ ((1 : ℝ) / 2) * gramMass M α y :=
+  gramMass_dual hM hα y
+
+example {d : ℕ} {M : Matrix (Fin d) (Fin d) ℝ} (hM : M.PosDef) (c : Fin d → ℤ) {s : ℝ}
+    (hs : 0 < s) {q q' : ℕ} (hq : 0 < q) (hq' : 0 < q') :
+    fieldDefect (cosetMass M c) s q q'
+      = fieldDefect (twistTheta M⁻¹ (halfShift c))
+          (Real.pi ^ 2 / (4 * (Nat.lcm q q' : ℝ) ^ 2 * s))
+          (q / Nat.gcd q q') (q' / Nat.gcd q q') :=
+  cosetDefect_dual hM c hs hq hq'
 
 end Theaetetus

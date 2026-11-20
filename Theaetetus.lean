@@ -185,6 +185,10 @@ import Theaetetus.SublatticeDiamond
 import Theaetetus.ThetaBounds
 import Theaetetus.RankTwo
 
+-- Coset duality: the shifted and classwise defects reflect onto the
+-- character-twisted dual Boltzmann sums
+import Theaetetus.CosetDuality
+
 -- Coset separation: the mod-2 residue datum separates a theta-equivalent
 -- quaternary pair, and class pairs are an isometry invariant
 import Theaetetus.CosetSeparation

@@ -227,6 +227,18 @@ negative.
   `diagTheta_sq_lt`) — rank-one Q5 lifted axis-by-axis, the same
   orthogonal-sum lift that carries Q1 (`diagDefect_eq_sum`). No
   positive diagonal form is a Q5 counterexample.
+- **Coset duality.** Poisson summation sends the shifted mass
+  `gramMass M α y` to the character-twisted dual Boltzmann sum
+  `twistTheta M⁻¹ y (π²/α) = ∑_m cos(2π⟨m, y⟩)·e^{−(π²/α)·mᵀM⁻¹m}`
+  with the weight of `gramTheta_dual` (`gramMass_dual`), so the
+  twisted sum is positive (`twistTheta_pos`) and the shifted defect
+  reflects onto the twisted one, shift for shift
+  (`shiftDefect_dual`). The mass of a residue class `c + 2ℤᵈ` is the
+  shifted mass at quadrupled coupling and half shift
+  (`cosetMass_eq_gramMass`), with character `(−1)^⟨m,c⟩`
+  (`cos_dualPairing_halfShift`), so the classwise defect reflects
+  class by class onto the twisted dual field at scale
+  `π²/(4·lcm²·s)` (`cosetDefect_dual`).
 - **Coset separation, rank four.** For an integral Gram matrix,
   the class pairs at energy `m` — ordered pairs of distinct sectors
   of energy `m` congruent modulo `2` — are carried bijectively by
@@ -423,7 +435,7 @@ pairwise versus higher-order interaction.
   order governs the classwise defect, the cross-ratio of
   `log Θ_{c+2L}` along the dilation tower (`recon/q3field.py`):
   Poisson summation reflects it class by class onto the
-  character-twisted field, and summed over classes it separates
+  character-twisted field (`cosetDefect_dual`), and summed over classes it separates
   the pair by `(2¹⁶/4)·ΔN₄·e^{−8t}` at small scale, `N₄` the root
   quadruples summing into `2L` — fourth order, with the predicted
   coefficient matched to `3·10⁻⁵` at `t = 8`. The sign does not refine:
