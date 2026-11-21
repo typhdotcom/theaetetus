@@ -107,6 +107,8 @@ uv run recon/q3roots.py --write            # ~20 s
 uv run recon/q3survey.py --write           # ~15 min
 uv run recon/q3odd.py --q 3 --bound 8 --write   # ~3 min, 3 GB
 sage -python recon/q3genus.py --rank 4 --max-det 2000 --write   # ~30 min, 22 cores
+sage -python recon/q3genus.py --rank 4 --odd --max-det 1000 --write   # ~3.5 h, 11 cores
+sage -python recon/q3genus.py --rank 5 --max-det 1000 --write   # ~2.5 h, 11 cores
 ```
 
 `rigidity.py` takes no numeric flags: its sampling grid is the
@@ -905,3 +907,9 @@ screen misses no theta-equal group.
   classes, two of them theta-equal.
 - **No degree-two-equal pair.** Schiemann's two classes already
   differ in degree two.
+
+The same survey on odd rank-4 genera (`--odd`, `d ≤ 1000`,
+`q3_genus_rank4_odd_d1000.json`) finds one theta-equal pair, at
+`d = 961`, and on even rank-5 genera (`d ≤ 1000`,
+`q3_genus_rank5_even_d1000.json`) ten, the first at `d = 128`. Every
+one differs in degree two.

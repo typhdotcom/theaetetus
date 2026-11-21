@@ -509,8 +509,9 @@ pairwise versus higher-order interaction.
   a congruence-filtered sum of Siegel data that may or may not reach
   it; the open cases are pairs equal in Siegel degree two or
   more. None occurs among even quaternary lattices of determinant
-  `≤ 2000` (`recon/q3genus.py`): the only theta-equal pair there is
-  Schiemann's. The same
+  `≤ 2000`, odd quaternary or even quinary of determinant `≤ 1000`
+  (`recon/q3genus.py`): their twelve theta-equal pairs all differ in
+  degree two. The same
   order governs the classwise defect, the cross-ratio of
   `log Θ_{c+2L}` along the dilation tower (`recon/q3field.py`):
   Poisson summation reflects it class by class onto the
